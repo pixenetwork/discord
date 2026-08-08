@@ -1,4 +1,5 @@
 import { createServer } from 'node:http';
+import { parseJsonBody } from './webhook-body.mjs';
 import { Client, Events, GatewayIntentBits } from 'discord.js';
 import { loadConfig, assertDiscordConfig } from './config.mjs';
 import { createStore } from './store.mjs';
@@ -85,13 +86,12 @@ const server = createServer(async (request, response) => {
         return response.end(JSON.stringify({ ok: false, error: 'invalid_hmac' }));
       }
 
-      let order;
-      try {
-        order = JSON.parse(rawBody.toString('utf8'));
-      } catch (error) {
+      const parsedBody = parseJsonBody(rawBody);
+      if (!parsedBody.ok) {
         response.writeHead(400, { 'Content-Type': 'application/json' });
-        return response.end(JSON.stringify({ ok: false, error: 'invalid_json' }));
+        return response.end(JSON.stringify({ ok: false, error: parsedBody.error }));
       }
+      const order = parsedBody.value;
 
       const webhookId = `shopify:orders-paid:${order.id}`;
       const claim = await store.claimWebhook(webhookId);

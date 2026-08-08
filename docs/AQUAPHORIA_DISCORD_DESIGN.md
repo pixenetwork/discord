@@ -1,11 +1,11 @@
 # Aquaphoria Discord Design
 
-The Aquaphoria Discord is a customer community, support desk, vendor fulfillment portal, and Aquapedia research entry point. It is intentionally separate from Pixel Network/FiveM staff operations.
+The Aquaphoria Discord is a customer community, support desk, private vendor fulfillment portal, and private Aquapedia research entry point. It is intentionally separate from Pixel Network/FiveM staff operations.
 
 ## Core roles
 
-- `Aquaphoria Staff` — customer support, marketplace oversight, order exceptions and audit access.
-- `Verified Aquaphoria Vendor` — shared private breeder/vendor area and vendor commands.
+- `Aquaphoria Staff` — customer support, marketplace oversight, order exceptions, collection management support, and audit access.
+- `Verified Aquaphoria Vendor` — shared private breeder/vendor area, private Aquapedia research, and vendor commands.
 - `Aquaphoria Member` — general community role.
 - `Vendor • <name>` — one private role per approved vendor. This role is used for that vendor's private workspace and order tickets.
 
@@ -18,7 +18,8 @@ The owner is identified by `AQUAPHORIA_OWNER_USER_ID` and retains access to all 
 - `👋・welcome`
 - `📢・announcements`
 - `🛒・shop`
-- `🧬・aquapedia`
+
+Aquapedia is intentionally not exposed in the public section yet.
 
 ### 🎫・CUSTOMER SUPPORT
 
@@ -30,7 +31,7 @@ Customers use `/ticket open` to create a private support channel. Vendor roles a
 
 ### 🐟・BREEDER MARKETPLACE
 
-Visible only to the owner, Aquaphoria staff, and approved vendors.
+Hidden from normal members. Visible only to the owner, Aquaphoria staff, and approved vendors.
 
 - `📢・vendor-updates`
 - `📖・vendor-guide`
@@ -40,11 +41,13 @@ Visible only to the owner, Aquaphoria staff, and approved vendors.
 
 ### 🔬・AQUAPEDIA RESEARCH
 
+Hidden from normal members. Visible only to the owner, Aquaphoria staff, and approved vendors.
+
 - `🔎・research`
 - `🧬・research-results`
 - `📝・research-queue`
 
-`/research type:strain name:<name>` and `/research type:breeder name:<name>` hand work to Jarvis when the research endpoint is configured. Results are written or updated in Aquapedia using its evidence rules. Without a live Jarvis endpoint, the command creates a source-verification request in Aquapedia's Discord research inbox rather than fabricating a result.
+`/research` and authorized `/gpt` requests hand evidence-backed work to Jarvis/Aquapedia. Without a live Jarvis research endpoint, requests are queued for verification rather than represented as completed research.
 
 ### 🛡️・AQUAPHORIA STAFF
 
@@ -65,10 +68,23 @@ Every approved vendor receives a private category such as `🐟・TOA HQ` with:
 
 Only that vendor's private role, Aquaphoria staff and the owner can view the workspace.
 
-When a paid Shopify order contains multiple vendors, the worker creates a separate fulfillment ticket for each vendor. A vendor receives only their own products and the shipping information needed to fulfill their part of the order.
+## Catalog permissions
+
+A vendor can be assigned to one Shopify collection/catalog with `/collection assign` or through an owner `/gpt` request. The assignment is persisted and a Shopify collection source is added that matches products whose Shopify vendor is that breeder. This lets new products automatically populate the breeder's catalog while product mutations remain protected by the separate vendor ownership metadata.
+
+A collection cannot be assigned to two active vendors, and a vendor cannot be silently moved from one assigned collection to another.
+
+## GPT access
+
+- Owner: full exposed GPT tool set, including collection creation/assignment and vendor onboarding.
+- Aquaphoria staff: read/research GPT tools only.
+- Approved vendor: own-catalog/research GPT tools only.
+- Normal member: `/gpt` is disabled for now.
+
+GPT tool selection never overrides server authorization.
 
 ## Applying the layout
 
-Run `/aquaphoria setup` as the configured owner after the worker is connected to the guild. The provisioner is idempotent: it creates missing roles/categories/channels and synchronizes channel topics without deliberately deleting unrelated existing channels.
+Run `/aquaphoria setup` as the configured owner after the worker is connected to the guild. The provisioner is idempotent: it creates missing roles/categories/channels and synchronizes private permission boundaries without deliberately deleting unrelated existing channels.
 
-This first migration is intentionally non-destructive. Once the new layout is verified live, legacy channels can be archived manually or through a separate migration step.
+This migration is intentionally non-destructive. Legacy channels can be archived after the new layout is verified live.

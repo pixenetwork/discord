@@ -1,6 +1,7 @@
 import { ChannelType, SlashCommandBuilder } from 'discord.js';
 import { ensureVendorWorkspace, provisionAquaphoriaLayout } from './layout.mjs';
 import { centsToMoney, moneyToCents } from './pricing.mjs';
+import { isCanonicalStaff } from './authorization.mjs';
 
 const PRODUCT_CATEGORIES = ['live_fish', 'eggs', '3d_printed', 'food', 'bacteria_water_care', 'accessories', 'other'];
 
@@ -33,10 +34,6 @@ function findTextChannel(guild, name) {
 async function audit(guild, message) {
   const channel = findTextChannel(guild, '🧾・audit-log');
   if (channel) await channel.send(message.slice(0, 1900)).catch(() => undefined);
-}
-
-function isStaff(interaction) {
-  return interaction.member?.roles?.cache?.some((role) => role.name === 'Aquaphoria Staff') ?? false;
 }
 
 function tool(name, description, properties = {}, required = []) {
@@ -196,7 +193,10 @@ async function ensureVendorFromTool(interaction, deps, args) {
   const id = slugify(args.vendor_id || displayName);
   if (!id) throw new Error('Vendor ID could not be generated');
 
-  const layout = await provisionAquaphoriaLayout(interaction.guild, { ownerUserId: deps.config.discord.ownerUserId });
+  const layout = await provisionAquaphoriaLayout(interaction.guild, {
+    ownerUserId: deps.config.discord.ownerUserId,
+    store: deps.store,
+  });
   let vendor = await deps.store.upsertVendor({ id, discordUserId: userId, displayName, catalogSlug: id, active: true });
   const workspace = await ensureVendorWorkspace(interaction.guild, {
     vendor,
@@ -318,7 +318,7 @@ async function executeTool(interaction, deps, actor, name, args, attachmentUrl) 
 
 async function runGpt(interaction, deps) {
   const owner = interaction.user.id === deps.config.discord.ownerUserId;
-  const staff = isStaff(interaction);
+  const staff = await isCanonicalStaff(interaction, deps.store);
   const vendor = await deps.store.getVendorByDiscordUser(interaction.user.id);
   if (!owner && !staff && !vendor) {
     throw new Error('/gpt is currently limited to the Aquaphoria owner, staff, and approved vendors');

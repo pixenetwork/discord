@@ -1,5 +1,4 @@
 import { createServer } from 'node:http';
-import { parseJsonBody } from './webhook-body.mjs';
 import { Client, Events, GatewayIntentBits } from 'discord.js';
 import { loadConfig, assertDiscordConfig } from './config.mjs';
 import { createStore } from './store.mjs';
@@ -9,6 +8,7 @@ import { createCollectionService } from './collections.mjs';
 import { createResearchService } from './research.mjs';
 import { createOrderService } from './orders.mjs';
 import { createGptController } from './gpt.mjs';
+import { createPaidOrderWebhookHandler } from './webhook-handler.mjs';
 import { handleInteraction, registerGuildCommands } from './commands.mjs';
 
 const config = loadConfig();
@@ -36,6 +36,14 @@ async function logBotError(message) {
   const channel = guild?.channels?.cache?.find((candidate) => candidate.name === '🤖・bot-log' && candidate.isTextBased());
   if (channel) await channel.send(`❌ ${String(message).slice(0, 1800)}`).catch(() => undefined);
 }
+
+const handlePaidOrderWebhook = createPaidOrderWebhookHandler({
+  shopify,
+  store,
+  orders,
+  getGuild: aquaphoriaGuild,
+  logError: logBotError,
+});
 
 client.once(Events.ClientReady, async (readyClient) => {
   try {
@@ -81,37 +89,9 @@ const server = createServer(async (request, response) => {
     if (request.method === 'POST' && url.pathname === '/webhooks/shopify/orders-paid') {
       const rawBody = await readRawBody(request);
       const hmac = request.headers['x-shopify-hmac-sha256'];
-      if (!shopify.verifyWebhook(rawBody, hmac)) {
-        response.writeHead(401, { 'Content-Type': 'application/json' });
-        return response.end(JSON.stringify({ ok: false, error: 'invalid_hmac' }));
-      }
-
-      const parsedBody = parseJsonBody(rawBody);
-      if (!parsedBody.ok) {
-        response.writeHead(400, { 'Content-Type': 'application/json' });
-        return response.end(JSON.stringify({ ok: false, error: parsedBody.error }));
-      }
-      const order = parsedBody.value;
-
-      const webhookId = `shopify:orders-paid:${order.id}`;
-      const claim = await store.claimWebhook(webhookId);
-      if (!claim.claimed) {
-        response.writeHead(200, { 'Content-Type': 'application/json' });
-        return response.end(JSON.stringify({ ok: true, duplicate: true }));
-      }
-
-      response.writeHead(200, { 'Content-Type': 'application/json' });
-      response.end(JSON.stringify({ ok: true }));
-
-      void (async () => {
-        try {
-          const guild = await aquaphoriaGuild();
-          await orders.routePaidOrder(guild, order);
-        } catch (error) {
-          await logBotError(`Shopify order routing failed for ${order?.name ?? order?.id ?? 'unknown order'}: ${error.stack ?? error.message}`);
-        }
-      })();
-      return;
+      const result = await handlePaidOrderWebhook({ rawBody, hmac });
+      response.writeHead(result.statusCode, { 'Content-Type': 'application/json' });
+      return response.end(JSON.stringify(result.body));
     }
 
     response.writeHead(404, { 'Content-Type': 'application/json' });

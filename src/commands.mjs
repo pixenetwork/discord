@@ -6,6 +6,11 @@ import {
 } from 'discord.js';
 import { centsToMoney, moneyToCents } from './pricing.mjs';
 import { ensureVendorWorkspace, provisionAquaphoriaLayout } from './layout.mjs';
+import {
+  getCanonicalStaffRole,
+  isCanonicalStaff,
+  revokeVendorAccess,
+} from './authorization.mjs';
 
 const PRODUCT_CATEGORIES = [
   ['Live fish', 'live_fish'],
@@ -35,10 +40,6 @@ function productGid(shopify, value) {
 
 function isOwner(interaction, config) {
   return interaction.user.id === config.discord.ownerUserId;
-}
-
-function isStaff(interaction) {
-  return interaction.member?.roles?.cache?.some((role) => role.name === 'Aquaphoria Staff') ?? false;
 }
 
 function findTextChannel(guild, name) {
@@ -188,7 +189,10 @@ async function requireVendor(interaction, store) {
 async function handleSetup(interaction, deps) {
   if (!isOwner(interaction, deps.config)) return interaction.reply({ content: 'Only the Aquaphoria owner can run setup.', ephemeral: true });
   await interaction.deferReply({ ephemeral: true });
-  const result = await provisionAquaphoriaLayout(interaction.guild, { ownerUserId: deps.config.discord.ownerUserId });
+  const result = await provisionAquaphoriaLayout(interaction.guild, {
+    ownerUserId: deps.config.discord.ownerUserId,
+    store: deps.store,
+  });
   await interaction.editReply(`✅ Aquaphoria layout synchronized: ${result.channels.length} core channels and vendor/staff roles are ready.`);
 }
 
@@ -208,9 +212,13 @@ async function handleVendor(interaction, deps) {
     const id = interaction.options.getString('vendor', true);
     const current = await deps.store.getVendor(id);
     if (!current) return interaction.reply({ content: `Vendor \`${id}\` was not found.`, ephemeral: true });
+    const revoked = await revokeVendorAccess(interaction.guild, current, deps.store);
     await deps.store.upsertVendor({ ...current, active: false });
     await audit(interaction.guild, `⛔ Vendor **${current.displayName}** (\`${id}\`) was disabled by <@${interaction.user.id}>.`);
-    return interaction.reply({ content: `✅ Disabled **${current.displayName}**. Existing orders/history were preserved.`, ephemeral: true });
+    return interaction.reply({
+      content: `✅ Disabled **${current.displayName}** and revoked ${revoked.removedRoleIds.length} vendor role(s). Existing orders/history were preserved.`,
+      ephemeral: true,
+    });
   }
 
   const user = interaction.options.getUser('user', true);
@@ -304,7 +312,8 @@ async function handleCatalog(interaction, deps) {
 
 async function handleResearch(interaction, deps) {
   const vendor = await deps.store.getVendorByDiscordUser(interaction.user.id);
-  if (!isOwner(interaction, deps.config) && !isStaff(interaction) && !vendor) {
+  const staff = await isCanonicalStaff(interaction, deps.store);
+  if (!isOwner(interaction, deps.config) && !staff && !vendor) {
     return interaction.reply({ content: 'Aquapedia research commands are currently limited to Aquaphoria staff and approved vendors.', ephemeral: true });
   }
   await interaction.deferReply();
@@ -353,14 +362,13 @@ async function handleOrder(interaction, deps) {
   }
 
   await interaction.deferReply({ ephemeral: true });
-  const ticket = await deps.orders.markShipped({
-    guild: interaction.guild,
-    vendor,
+  const ticket = await deps.orders.markShipped(interaction.guild, {
+    vendorId: vendor.id,
     orderName,
     trackingNumber: interaction.options.getString('tracking', true),
-    carrier: interaction.options.getString('carrier') || null,
+    trackingCompany: interaction.options.getString('carrier') || null,
   });
-  await audit(interaction.guild, `🚚 **${vendor.displayName}** shipped **${orderName}** • ${ticket.trackingNumber}${ticket.carrier ? ` • ${ticket.carrier}` : ''}.`);
+  await audit(interaction.guild, `🚚 **${vendor.displayName}** shipped **${orderName}** • ${ticket.trackingNumber}${ticket.trackingCompany ? ` • ${ticket.trackingCompany}` : ''}.`);
   await interaction.editReply(`✅ **${orderName}** marked shipped and tracking sent to Shopify/customer. Tracking: **${ticket.trackingNumber}**.`);
 }
 
@@ -372,19 +380,21 @@ async function handlePayout(interaction, deps) {
     const orderName = interaction.options.getString('order', true);
     const ticket = await deps.store.findVendorTicketByOrderName(vendorId, orderName);
     if (!ticket) return interaction.reply({ content: `No ${orderName} ticket belongs to vendor \`${vendorId}\`.`, ephemeral: true });
-    const entry = await deps.store.appendPayout({
-      id: `paid:${ticket.key}`,
+    const result = await deps.store.markTicketPayoutPaid(ticket.key, {
       vendorId,
-      orderId: ticket.shopifyOrderId,
-      orderName,
-      amountCents: ticket.payoutCents,
-      type: 'paid',
       note: `Owner marked ${orderName} paid`,
     });
+    const entry = result.entry;
     const payoutChannel = findTextChannel(interaction.guild, '💳・payout-log');
-    if (payoutChannel) await payoutChannel.send(`💳 Vendor \`${vendorId}\` paid **$${centsToMoney(entry.amountCents)}** for **${orderName}** by <@${interaction.user.id}>.`);
-    await deps.store.updateTicket(ticket.key, { payoutStatus: 'paid', payoutPaidAt: new Date().toISOString() });
-    return interaction.reply({ content: `✅ Marked **$${centsToMoney(entry.amountCents)}** paid to vendor \`${vendorId}\` for **${orderName}**.`, ephemeral: true });
+    if (!result.alreadyPaid && payoutChannel) {
+      await payoutChannel.send(`💳 Vendor \`${vendorId}\` paid **$${centsToMoney(entry.amountCents)}** for **${orderName}** by <@${interaction.user.id}>.`);
+    }
+    return interaction.reply({
+      content: result.alreadyPaid
+        ? `ℹ️ **${orderName}** was already marked paid for vendor \`${vendorId}\`.`
+        : `✅ Marked **$${centsToMoney(entry.amountCents)}** paid to vendor \`${vendorId}\` for **${orderName}**.`,
+      ephemeral: true,
+    });
   }
 
   const vendor = await requireVendor(interaction, deps.store);
@@ -399,7 +409,7 @@ async function handlePayout(interaction, deps) {
 async function handleTicket(interaction, deps) {
   const type = interaction.options.getString('type', true);
   const details = interaction.options.getString('details', true);
-  const staffRole = interaction.guild.roles.cache.find((role) => role.name === 'Aquaphoria Staff');
+  const staffRole = await getCanonicalStaffRole(interaction.guild, deps.store);
   if (!staffRole) return interaction.reply({ content: 'Aquaphoria support is not configured yet.', ephemeral: true });
 
   const supportCategory = interaction.guild.channels.cache.find((channel) => channel.type === ChannelType.GuildCategory && channel.name === '🎫・CUSTOMER SUPPORT');

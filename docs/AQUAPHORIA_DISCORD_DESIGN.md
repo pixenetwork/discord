@@ -68,6 +68,8 @@ Every approved vendor receives a private category such as `🐟・TOA HQ` with:
 
 Only that vendor's private role, Aquaphoria staff and the owner can view the workspace.
 
+Disabling a vendor preserves the workspace and order history but removes both the shared vendor role and the vendor's private role from that Discord member.
+
 ## Catalog permissions
 
 A vendor can be assigned to one Shopify collection/catalog with `/collection assign` or through an owner `/gpt` request. The assignment is persisted and a Shopify collection source is added that matches products whose Shopify vendor is that breeder. This lets new products automatically populate the breeder's catalog while product mutations remain protected by the separate vendor ownership metadata.
@@ -86,5 +88,7 @@ GPT tool selection never overrides server authorization.
 ## Applying the layout
 
 Run `/aquaphoria setup` as the configured owner after the worker is connected to the guild. The provisioner is idempotent: it creates missing roles/categories/channels and synchronizes private permission boundaries without deliberately deleting unrelated existing channels.
+
+The provisioner persists canonical role IDs. Authorization continues to use those IDs if a role is renamed and fails closed if duplicate role names make first-time provisioning ambiguous.
 
 This migration is intentionally non-destructive. Legacy channels can be archived after the new layout is verified live.

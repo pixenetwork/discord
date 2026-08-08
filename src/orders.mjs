@@ -22,6 +22,31 @@ function findChannel(guild, name) {
   return guild.channels.cache.find((channel) => channel.type === ChannelType.GuildText && channel.name === name) ?? null;
 }
 
+function ticketMarker(key) {
+  return `Aquaphoria ticket key: ${key}`;
+}
+
+function findTicketChannel(guild, parentId, key) {
+  const marker = ticketMarker(key);
+  return guild.channels.cache.find((channel) => (
+    channel.type === ChannelType.GuildText
+    && channel.parentId === parentId
+    && String(channel.topic ?? '').includes(marker)
+  )) ?? null;
+}
+
+async function hasTicketNotice(channel, key) {
+  if (String(channel.topic ?? '').includes('state=notified')) return true;
+  if (!channel.messages?.fetch) return false;
+  const messages = await channel.messages.fetch({ limit: 50 }).catch(() => null);
+  if (!messages?.values) return false;
+  for (const message of messages.values()) {
+    const embeds = message.embeds ?? [];
+    if (embeds.some((embed) => String(embed.footer?.text ?? '').includes(ticketMarker(key)))) return true;
+  }
+  return false;
+}
+
 async function audit(guild, text) {
   const channel = findChannel(guild, '🧾・audit-log');
   if (channel) await channel.send(text).catch(() => undefined);
@@ -63,7 +88,12 @@ export function createOrderService({ config, store, shopify }) {
         continue;
       }
 
-      await store.setProductOwner(productId, vendor.id);
+      try {
+        await store.setProductOwner(productId, vendor.id);
+      } catch (error) {
+        unresolved.push({ title: line.title, productId, reason: error.message });
+        continue;
+      }
       const quantity = Number.isInteger(line.quantity) && line.quantity > 0 ? line.quantity : 1;
       const vendorUnitPayoutCents = metadata.vendorPriceCents + metadata.vendorShippingCents;
       const group = groups.get(vendor.id) ?? {
@@ -94,7 +124,6 @@ export function createOrderService({ config, store, shopify }) {
   async function createVendorTicket(guild, order, group, roles) {
     const key = `shopify:${order.id}:${group.vendor.id}`;
     const existing = await store.getTicket(key);
-    if (existing) return existing;
 
     const workspace = await ensureVendorWorkspace(guild, {
       vendor: group.vendor,
@@ -114,13 +143,19 @@ export function createOrderService({ config, store, shopify }) {
       if (privateVendorRole) await vendorMember.roles.add(privateVendorRole).catch(() => undefined);
     }
 
-    const channel = await guild.channels.create({
-      name: `order-${channelSafe(order.name || order.order_number || order.id)}`,
-      type: ChannelType.GuildText,
-      parent: workspace.categoryId,
-      topic: `Aquaphoria vendor fulfillment • ${order.name ?? order.id} • ${group.vendor.displayName}`,
-      reason: 'Aquaphoria Shopify paid-order fulfillment ticket',
-    });
+    let channel = existing?.channelId ? guild.channels.cache.get(existing.channelId) : null;
+    if (!channel) channel = findTicketChannel(guild, workspace.categoryId, key);
+    const createdChannel = !channel;
+    const baseTopic = `Aquaphoria vendor fulfillment • ${order.name ?? order.id} • ${group.vendor.displayName} • ${ticketMarker(key)}`;
+    if (!channel) {
+      channel = await guild.channels.create({
+        name: `order-${channelSafe(order.name || order.order_number || order.id)}`,
+        type: ChannelType.GuildText,
+        parent: workspace.categoryId,
+        topic: `${baseTopic} • state=created`,
+        reason: 'Aquaphoria Shopify paid-order fulfillment ticket',
+      });
+    }
 
     const itemText = group.items
       .map((item) => `${item.quantity}× ${item.title} — vendor payout $${centsToMoney(item.vendorUnitPayoutCents)} each`)
@@ -135,15 +170,10 @@ export function createOrderService({ config, store, shopify }) {
         { name: 'Vendor payout', value: `$${centsToMoney(group.payoutCents)}`, inline: true },
         { name: 'Status', value: 'Awaiting fulfillment', inline: true },
       )
-      .setFooter({ text: 'Vendor payout includes the vendor product price and the shipping amount submitted for the listing.' })
+      .setFooter({ text: `${ticketMarker(key)} • Payout includes vendor product price and submitted shipping.` })
       .setTimestamp();
 
-    await channel.send({
-      content: `<@${group.vendor.discordUserId}> New order ready for fulfillment. When shipped, use \`/order shipped\` with the order name and tracking number.`,
-      embeds: [embed],
-    });
-
-    const ticket = await store.recordTicket({
+    const saved = await store.recordTicketWithPayout({
       key,
       vendorId: group.vendor.id,
       channelId: channel.id,
@@ -153,18 +183,27 @@ export function createOrderService({ config, store, shopify }) {
       productIds: group.productIds,
       payoutCents: group.payoutCents,
       status: 'awaiting_fulfillment',
-    });
-
-    await store.appendPayout({
+    }, {
       id: `owed:${order.id}:${group.vendor.id}`,
       vendorId: group.vendor.id,
       orderId: String(order.id),
       amountCents: group.payoutCents,
       type: 'owed',
-      note: `Vendor fulfillment payout for ${ticket.orderName}`,
+      note: `Vendor fulfillment payout for ${String(order.name ?? order.order_number ?? order.id)}`,
     });
+    const ticket = saved.ticket;
 
-    await audit(guild, `📦 Created vendor ticket **${ticket.orderName}** for **${group.vendor.displayName}** • payout $${centsToMoney(group.payoutCents)} • <#${channel.id}>`);
+    if (!(await hasTicketNotice(channel, key))) {
+      await channel.send({
+        content: `<@${group.vendor.discordUserId}> New order ready for fulfillment. When shipped, use \`/order shipped\` with the order name and tracking number.`,
+        embeds: [embed],
+      });
+      if (channel.setTopic) await channel.setTopic(`${baseTopic} • state=notified`, 'Mark Aquaphoria ticket notification complete');
+    }
+
+    if (createdChannel || !existing) {
+      await audit(guild, `📦 Created vendor ticket **${ticket.orderName}** for **${group.vendor.displayName}** • payout $${centsToMoney(group.payoutCents)} • <#${channel.id}>`);
+    }
     return ticket;
   }
 

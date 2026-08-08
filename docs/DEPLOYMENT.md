@@ -90,7 +90,7 @@ Configure Shopify's paid-order webhook to POST to:
 
 `/webhooks/shopify/orders-paid`
 
-The worker verifies the raw request with `X-Shopify-Hmac-Sha256` and `SHOPIFY_WEBHOOK_SECRET` before routing the order.
+The worker verifies the raw request with `X-Shopify-Hmac-Sha256` and `SHOPIFY_WEBHOOK_SECRET` before parsing or routing the order. It returns a successful response only after the durable event record, vendor tickets and payout records are complete. Routing failures return a retryable non-2xx response; failed and stale in-progress events can be reclaimed on Shopify redelivery.
 
 Do not place Shopify tokens, Discord tokens or webhook secrets in source control.
 
@@ -123,7 +123,7 @@ If Jarvis research is not configured, `/research` and `/gpt` research requests c
 
 `AQUAPHORIA_DEFAULT_MARKUP_PERCENT=5` is the default. It can be changed later without changing vendor ownership records.
 
-`DATA_DIR=./data` stores local runtime state. Production should mount this on persistent storage and back it up because it contains vendor mappings, Shopify collection assignments, ticket state and payout ledger entries. It does not contain Discord/Shopify/OpenAI credentials.
+`DATA_DIR=./data` stores local runtime state. Production should mount this on persistent storage and back it up because it contains vendor mappings, canonical Discord role IDs, Shopify collection assignments, webhook lifecycle state, ticket state and payout ledger entries. It does not contain Discord/Shopify/OpenAI credentials.
 
 ## Go-live order
 

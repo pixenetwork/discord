@@ -166,13 +166,20 @@ export function createShopifyClient(config) {
   return Object.freeze({
     graphql,
 
-    async upsertVendorProduct({ vendor, product, pricing, locationId = null }) {
+    async upsertVendorProduct({
+      vendor,
+      product,
+      pricing,
+      locationId = null,
+      assertExistingOwner = null,
+    }) {
       const handle = product.handle || `${slugify(vendor.catalogSlug)}-${slugify(product.name)}`;
       const existing = await productByHandle(handle);
       if (existing) {
         if (existing.vendorId !== vendor.id) {
           throw new Error(`Shopify handle ${handle} already exists and is not owned by vendor ${vendor.id}`);
         }
+        if (assertExistingOwner) await assertExistingOwner(existing.id);
         if (existing.variants.length !== 1) {
           throw new Error('Aquaphoria vendor catalog v1 only supports single-variant products; refusing to overwrite an existing multi-variant listing');
         }

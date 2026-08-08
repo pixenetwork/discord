@@ -49,8 +49,17 @@ const CORE_LAYOUT = [
   },
 ];
 
-async function ensureRole(guild, name) {
-  const existing = guild.roles.cache.find((role) => role.name === name);
+async function ensureRole(guild, name, preferredRoleId = null) {
+  if (preferredRoleId) {
+    const canonical = guild.roles.cache.get(String(preferredRoleId));
+    if (canonical) return canonical;
+  }
+
+  const matches = guild.roles.cache.filter((role) => role.name === name);
+  if (matches.size > 1) {
+    throw new Error(`Multiple Discord roles named "${name}" exist; remove the ambiguity before provisioning`);
+  }
+  const existing = matches.first();
   if (existing) return existing;
   return guild.roles.create({ name, reason: 'Aquaphoria Discord layout provisioning' });
 }
@@ -95,10 +104,11 @@ function privateOverwrites(guild, { ownerUserId, staffRoleId, vendorRoleId = nul
   ];
 }
 
-export async function provisionAquaphoriaLayout(guild, { ownerUserId }) {
-  const staffRole = await ensureRole(guild, 'Aquaphoria Staff');
-  const vendorRole = await ensureRole(guild, 'Verified Aquaphoria Vendor');
-  const memberRole = await ensureRole(guild, 'Aquaphoria Member');
+export async function provisionAquaphoriaLayout(guild, { ownerUserId, store = null }) {
+  const previousRoles = store ? await store.getLayoutRoles() : null;
+  const staffRole = await ensureRole(guild, 'Aquaphoria Staff', previousRoles?.staffRoleId);
+  const vendorRole = await ensureRole(guild, 'Verified Aquaphoria Vendor', previousRoles?.vendorRoleId);
+  const memberRole = await ensureRole(guild, 'Aquaphoria Member', previousRoles?.memberRoleId);
   const created = [];
 
   for (const section of CORE_LAYOUT) {

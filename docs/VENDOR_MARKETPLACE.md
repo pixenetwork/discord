@@ -107,6 +107,8 @@ New `/catalog add` requests also refuse to claim a pre-existing Shopify handle t
 8. The worker fulfills only that vendor's Shopify line items and requests customer tracking notification.
 9. Fulfillment actions, pricing changes, payouts and exceptions are audit logged.
 
+Webhook deliveries use a durable processing/completed/failed lifecycle. The worker does not acknowledge success before routing completes, concurrent deliveries do not create duplicate tickets, and a failed or stale delivery remains retryable. Ticket creation and the owed payout entry are recorded together; marking a payout paid updates the ledger and ticket state atomically.
+
 ## Product model limitation in v1
 
 Vendor-managed products are intentionally treated as a single sellable Shopify variant in this first release. The worker checks this before variant mutations and refuses multi-variant products rather than risk Shopify `productSet` removing variants that were not included in a synchronization request.

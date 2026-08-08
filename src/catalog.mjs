@@ -1,9 +1,15 @@
 import { calculateRetailBreakdown, moneyToCents } from './pricing.mjs';
 
 export function createCatalogService({ config, store, shopify }) {
-  async function assertOwned(vendor, productId) {
+  async function assertLocalOwner(vendor, productId) {
     const localOwner = await store.getProductOwner(productId);
-    if (localOwner && localOwner !== vendor.id) throw new Error('This product belongs to another vendor catalog');
+    if (localOwner && localOwner !== vendor.id) {
+      throw new Error('This product belongs to another vendor catalog');
+    }
+  }
+
+  async function assertOwned(vendor, productId) {
+    await assertLocalOwner(vendor, productId);
 
     const metadata = await shopify.getVendorMetadata(productId);
     if (!metadata) throw new Error('Shopify product not found');
@@ -46,6 +52,7 @@ export function createCatalogService({ config, store, shopify }) {
         product,
         pricing,
         locationId: config.shopify.locationId || null,
+        assertExistingOwner: (productId) => assertLocalOwner(vendor, productId),
       });
       await store.setProductOwner(synced.id, vendor.id);
       return { product: synced, pricing };

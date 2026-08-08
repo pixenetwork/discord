@@ -41,6 +41,7 @@ export function loadConfig(env = process.env) {
       accessToken: clean(env.SHOPIFY_ADMIN_ACCESS_TOKEN),
       apiVersion: clean(env.SHOPIFY_API_VERSION) || '2026-07',
       webhookSecret: clean(env.SHOPIFY_WEBHOOK_SECRET),
+      locationId: clean(env.SHOPIFY_LOCATION_ID),
     }),
     jarvis: Object.freeze({
       researchEndpoint: clean(env.JARVIS_RESEARCH_ENDPOINT),

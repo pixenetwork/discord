@@ -43,6 +43,50 @@ export function createShopifyClient(config) {
     return payload.data;
   }
 
+  async function productByHandle(handle) {
+    const data = await graphql(
+      `query AquaphoriaProductByHandle($identifier: ProductIdentifierInput!) {
+        productByIdentifier(identifier: $identifier) {
+          id
+          title
+          handle
+          variants(first: 2) { nodes { id price inventoryQuantity } }
+          vendorId: metafield(namespace: "aquaphoria", key: "vendor_id") { value }
+        }
+      }`,
+      { identifier: { handle } },
+    );
+    const product = data.productByIdentifier;
+    if (!product) return null;
+    return {
+      ...product,
+      vendorId: product.vendorId?.value ?? null,
+      variants: product.variants?.nodes ?? [],
+    };
+  }
+
+  async function assertSingleVariant(productId, expectedVariantId = null) {
+    const data = await graphql(
+      `query AquaphoriaSingleVariantGuard($id: ID!) {
+        product(id: $id) {
+          id
+          variants(first: 2) { nodes { id price inventoryQuantity } }
+        }
+      }`,
+      { id: productId },
+    );
+    const product = data.product;
+    const variants = product?.variants?.nodes ?? [];
+    if (!product) throw new Error('Shopify product not found');
+    if (variants.length !== 1) {
+      throw new Error('Aquaphoria vendor catalog v1 only supports single-variant products; refusing a potentially destructive update');
+    }
+    if (expectedVariantId && variants[0].id !== expectedVariantId) {
+      throw new Error('Shopify primary variant changed; refresh the product before updating it');
+    }
+    return variants[0];
+  }
+
   async function setAquaphoriaMetafields(productId, values) {
     const data = await graphql(
       `mutation MetafieldsSet($metafields: [MetafieldsSetInput!]!) {
@@ -59,6 +103,7 @@ export function createShopifyClient(config) {
           { ownerId: productId, namespace: 'aquaphoria', key: 'vendor_shipping_cents', type: 'number_integer', value: String(values.vendorShippingCents) },
           { ownerId: productId, namespace: 'aquaphoria', key: 'markup_percent', type: 'number_decimal', value: String(values.markupPercent) },
           { ownerId: productId, namespace: 'aquaphoria', key: 'product_category', type: 'single_line_text_field', value: String(values.category) },
+          { ownerId: productId, namespace: 'aquaphoria', key: 'shipping_included', type: 'boolean', value: 'true' },
           { ownerId: productId, namespace: 'aquaphoria', key: 'managed_by', type: 'single_line_text_field', value: 'discord_vendor_portal' },
         ],
       },
@@ -69,6 +114,8 @@ export function createShopifyClient(config) {
 
   async function setPrimaryVariant({ productId, variantId, priceCents, locationId = null, stock = null }) {
     if (!variantId) throw new Error('Shopify product has no primary variant');
+    await assertSingleVariant(productId, variantId);
+
     const variant = {
       id: variantId,
       price: centsToMoney(priceCents),
@@ -83,7 +130,7 @@ export function createShopifyClient(config) {
           product {
             id
             title
-            variants(first: 5) { nodes { id price inventoryQuantity } }
+            variants(first: 2) { nodes { id price inventoryQuantity } }
           }
           userErrors { field message code }
         }
@@ -121,6 +168,16 @@ export function createShopifyClient(config) {
 
     async upsertVendorProduct({ vendor, product, pricing, locationId = null }) {
       const handle = product.handle || `${slugify(vendor.catalogSlug)}-${slugify(product.name)}`;
+      const existing = await productByHandle(handle);
+      if (existing) {
+        if (existing.vendorId !== vendor.id) {
+          throw new Error(`Shopify handle ${handle} already exists and is not owned by vendor ${vendor.id}`);
+        }
+        if (existing.variants.length !== 1) {
+          throw new Error('Aquaphoria vendor catalog v1 only supports single-variant products; refusing to overwrite an existing multi-variant listing');
+        }
+      }
+
       const input = {
         title: product.name,
         handle,
@@ -148,23 +205,27 @@ export function createShopifyClient(config) {
               handle
               status
               onlineStoreUrl
-              variants(first: 1) { nodes { id price inventoryQuantity } }
+              variants(first: 2) { nodes { id price inventoryQuantity } }
             }
             userErrors { field message code }
           }
         }`,
-        { input, identifier: { handle }, synchronous: true },
+        {
+          input,
+          identifier: existing ? { id: existing.id } : { handle },
+          synchronous: true,
+        },
       );
 
       throwUserErrors('Shopify product sync failed', data.productSet.userErrors);
       let synced = data.productSet.product;
       if (!synced?.id) throw new Error('Shopify product sync returned no product id');
-      const variantId = synced.variants?.nodes?.[0]?.id;
-      if (!variantId) throw new Error('Shopify product sync returned no primary variant');
+      const variants = synced.variants?.nodes ?? [];
+      if (variants.length !== 1) throw new Error('Shopify vendor listing is not a single-variant product');
 
       synced = await setPrimaryVariant({
         productId: synced.id,
-        variantId,
+        variantId: variants[0].id,
         priceCents: pricing.retailTotalCents,
         locationId,
         stock: product.stock,
@@ -190,25 +251,28 @@ export function createShopifyClient(config) {
             title
             handle
             status
-            variants(first: 1) { nodes { id price inventoryQuantity } }
+            variants(first: 2) { nodes { id price inventoryQuantity } }
             vendorId: metafield(namespace: "aquaphoria", key: "vendor_id") { value }
             vendorPrice: metafield(namespace: "aquaphoria", key: "vendor_price_cents") { value }
             vendorShipping: metafield(namespace: "aquaphoria", key: "vendor_shipping_cents") { value }
             markup: metafield(namespace: "aquaphoria", key: "markup_percent") { value }
             category: metafield(namespace: "aquaphoria", key: "product_category") { value }
+            shippingIncluded: metafield(namespace: "aquaphoria", key: "shipping_included") { value }
           }
         }`,
         { id: productId },
       );
       const product = data.product;
       if (!product) return null;
-      const variant = product.variants?.nodes?.[0] ?? null;
+      const variants = product.variants?.nodes ?? [];
+      const variant = variants.length === 1 ? variants[0] : null;
       return {
         id: product.id,
         title: product.title,
         handle: product.handle,
         status: product.status,
         variantId: variant?.id ?? null,
+        variantCount: variants.length,
         retailPrice: variant?.price ?? null,
         inventoryQuantity: variant?.inventoryQuantity ?? null,
         vendorId: product.vendorId?.value ?? null,
@@ -216,6 +280,7 @@ export function createShopifyClient(config) {
         vendorShippingCents: Number.parseInt(product.vendorShipping?.value ?? '0', 10),
         markupPercent: Number(product.markup?.value ?? 0),
         category: product.category?.value ?? null,
+        shippingIncluded: product.shippingIncluded?.value === 'true',
       };
     },
 
@@ -242,14 +307,7 @@ export function createShopifyClient(config) {
       if (!locationId) throw new Error('SHOPIFY_LOCATION_ID is required for inventory updates');
       if (!Number.isInteger(quantity) || quantity < 0) throw new Error('Stock must be a non-negative integer');
 
-      const productData = await graphql(
-        `query AquaphoriaPrimaryVariant($id: ID!) {
-          product(id: $id) { variants(first: 1) { nodes { id price } } }
-        }`,
-        { id: productId },
-      );
-      const variant = productData.product?.variants?.nodes?.[0];
-      if (!variant?.id) throw new Error('Product has no variant to update');
+      const variant = await assertSingleVariant(productId);
       const currentPriceCents = Math.round(Number(variant.price) * 100);
       if (!Number.isSafeInteger(currentPriceCents) || currentPriceCents < 0) throw new Error('Shopify returned an invalid current price');
 

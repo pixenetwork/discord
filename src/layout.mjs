@@ -55,9 +55,17 @@ async function ensureRole(guild, name) {
   return guild.roles.create({ name, reason: 'Aquaphoria Discord layout provisioning' });
 }
 
+async function syncPrivateOverwrites(channel, permissionOverwrites) {
+  if (!permissionOverwrites) return;
+  await channel.permissionOverwrites.set(permissionOverwrites, 'Enforce Aquaphoria private access boundary');
+}
+
 async function ensureCategory(guild, name, permissionOverwrites = undefined) {
   const existing = guild.channels.cache.find((channel) => channel.type === ChannelType.GuildCategory && channel.name === name);
-  if (existing) return existing;
+  if (existing) {
+    await syncPrivateOverwrites(existing, permissionOverwrites);
+    return existing;
+  }
   return guild.channels.create({ name, type: ChannelType.GuildCategory, permissionOverwrites, reason: 'Aquaphoria Discord layout provisioning' });
 }
 
@@ -65,6 +73,7 @@ async function ensureTextChannel(guild, parent, name, topic, permissionOverwrite
   const existing = guild.channels.cache.find((channel) => channel.type === ChannelType.GuildText && channel.name === name && channel.parentId === parent.id);
   if (existing) {
     if (topic && existing.topic !== topic) await existing.setTopic(topic, 'Sync Aquaphoria channel topic');
+    await syncPrivateOverwrites(existing, permissionOverwrites);
     return existing;
   }
   return guild.channels.create({

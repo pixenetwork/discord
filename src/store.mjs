@@ -47,6 +47,11 @@ export function createStore({ dataDir }) {
     return operation;
   }
 
+  async function getProductOwner(shopifyProductId) {
+    const state = await load();
+    return state.productOwners[String(shopifyProductId)] ?? null;
+  }
+
   return Object.freeze({
     statePath,
 
@@ -91,13 +96,17 @@ export function createStore({ dataDir }) {
       });
     },
 
-    async getProductOwner(shopifyProductId) {
+    getProductOwner,
+
+    async listVendorProductIds(vendorId) {
       const state = await load();
-      return state.productOwners[String(shopifyProductId)] ?? null;
+      return Object.entries(state.productOwners)
+        .filter(([, owner]) => owner === String(vendorId))
+        .map(([productId]) => productId);
     },
 
     async assertProductOwnership(shopifyProductId, vendorId) {
-      const owner = await this.getProductOwner(shopifyProductId);
+      const owner = await getProductOwner(shopifyProductId);
       if (!owner || owner !== String(vendorId)) throw new Error('This product does not belong to your vendor catalog');
       return true;
     },
@@ -128,11 +137,20 @@ export function createStore({ dataDir }) {
       return Object.values(state.tickets).filter((ticket) => ticket.vendorId === String(vendorId));
     },
 
+    async findVendorTicketByOrderName(vendorId, orderName) {
+      const state = await load();
+      const normalized = String(orderName).trim().toLowerCase();
+      return Object.values(state.tickets).find((ticket) => ticket.vendorId === String(vendorId) && String(ticket.orderName ?? '').trim().toLowerCase() === normalized) ?? null;
+    },
+
     async appendPayout(entry) {
       if (!entry?.vendorId || !Number.isSafeInteger(entry.amountCents)) throw new Error('Payout vendor id and amount cents are required');
       return mutate((state) => {
+        const id = entry.id ?? `${entry.vendorId}:${Date.now()}`;
+        const existing = state.payoutLedger.find((item) => item.id === id);
+        if (existing) return existing;
         const normalized = {
-          id: entry.id ?? `${entry.vendorId}:${Date.now()}`,
+          id,
           vendorId: String(entry.vendorId),
           orderId: entry.orderId ? String(entry.orderId) : null,
           amountCents: entry.amountCents,

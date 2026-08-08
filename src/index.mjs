@@ -4,8 +4,10 @@ import { loadConfig, assertDiscordConfig } from './config.mjs';
 import { createStore } from './store.mjs';
 import { createShopifyClient } from './shopify.mjs';
 import { createCatalogService } from './catalog.mjs';
+import { createCollectionService } from './collections.mjs';
 import { createResearchService } from './research.mjs';
 import { createOrderService } from './orders.mjs';
+import { createGptController } from './gpt.mjs';
 import { handleInteraction, registerGuildCommands } from './commands.mjs';
 
 const config = loadConfig();
@@ -14,9 +16,11 @@ assertDiscordConfig(config);
 const store = createStore({ dataDir: config.runtime.dataDir });
 const shopify = createShopifyClient(config.shopify);
 const catalog = createCatalogService({ config, store, shopify });
+const collections = createCollectionService({ shopify, store });
 const research = createResearchService({ jarvis: config.jarvis, aquapedia: config.aquapedia, store });
 const orders = createOrderService({ config, store, shopify });
-const deps = Object.freeze({ config, store, shopify, catalog, research, orders });
+const deps = Object.freeze({ config, store, shopify, catalog, collections, research, orders });
+const gpt = createGptController(deps);
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
@@ -36,6 +40,7 @@ client.once(Events.ClientReady, async (readyClient) => {
   try {
     const guild = await aquaphoriaGuild();
     await registerGuildCommands(guild);
+    await gpt.register(guild);
     console.log(`Aquaphoria Discord worker ready as ${readyClient.user.tag} in ${guild.name}`);
   } catch (error) {
     await logBotError(`Discord startup failed: ${error.stack ?? error.message}`);
@@ -43,7 +48,10 @@ client.once(Events.ClientReady, async (readyClient) => {
 });
 
 client.on(Events.InteractionCreate, (interaction) => {
-  void handleInteraction(interaction, deps);
+  void (async () => {
+    const handledByGpt = await gpt.handle(interaction);
+    if (!handledByGpt) await handleInteraction(interaction, deps);
+  })().catch((error) => logBotError(`Interaction routing failed: ${error.stack ?? error.message}`));
 });
 
 client.on(Events.Error, (error) => {
@@ -66,7 +74,7 @@ const server = createServer(async (request, response) => {
     const url = new URL(request.url ?? '/', `http://${request.headers.host ?? 'localhost'}`);
     if (request.method === 'GET' && url.pathname === '/health') {
       response.writeHead(client.isReady() ? 200 : 503, { 'Content-Type': 'application/json' });
-      return response.end(JSON.stringify({ ok: client.isReady(), service: 'aquaphoria-discord' }));
+      return response.end(JSON.stringify({ ok: client.isReady(), service: 'aquaphoria-discord', gptConfigured: Boolean(config.openai.apiKey) }));
     }
 
     if (request.method === 'POST' && url.pathname === '/webhooks/shopify/orders-paid') {

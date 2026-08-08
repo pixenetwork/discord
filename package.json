@@ -1,0 +1,18 @@
+{
+  "name": "pixel-discord-workers",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node src/index.mjs",
+    "check": "node --check src/index.mjs && node --check src/config.mjs && node --check src/store.mjs && node --check src/pricing.mjs && node --check src/shopify.mjs && node --check src/research.mjs && node --check src/layout.mjs && node --check src/commands.mjs",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "discord.js": "^14.0.0",
+    "dotenv": "^16.0.0"
+  }
+}

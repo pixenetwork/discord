@@ -19,24 +19,47 @@ function safeAquapediaPath(filePath) {
   return normalized;
 }
 
+function githubHeaders(token, includeContentType = false) {
+  return {
+    Accept: 'application/vnd.github+json',
+    Authorization: `Bearer ${token}`,
+    'X-GitHub-Api-Version': '2022-11-28',
+    ...(includeContentType ? { 'Content-Type': 'application/json' } : {}),
+  };
+}
+
 export function createResearchService({ jarvis, aquapedia, store }) {
   async function writeAquapediaFile(filePath, content, message) {
     if (!aquapedia.githubToken) throw new Error('AQUAPEDIA_GITHUB_TOKEN is not configured');
     const [owner, repo] = aquapedia.repository.split('/');
     if (!owner || !repo) throw new Error('AQUAPEDIA_REPOSITORY must be owner/repo');
+
     const safePath = safeAquapediaPath(filePath);
-    const response = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${safePath}`, {
+    const encodedPath = safePath.split('/').map(encodeURIComponent).join('/');
+    const endpoint = `https://api.github.com/repos/${owner}/${repo}/contents/${encodedPath}`;
+
+    const existingResponse = await fetch(`${endpoint}?ref=${encodeURIComponent(aquapedia.branch)}`, {
+      headers: githubHeaders(aquapedia.githubToken),
+    });
+
+    let existingSha = null;
+    if (existingResponse.ok) {
+      const existing = await existingResponse.json();
+      if (Array.isArray(existing)) throw new Error(`Aquapedia path points to a directory: ${safePath}`);
+      existingSha = existing.sha ?? null;
+    } else if (existingResponse.status !== 404) {
+      const payload = await existingResponse.json().catch(() => ({}));
+      throw new Error(`Aquapedia lookup failed (${existingResponse.status}): ${payload.message ?? 'unknown error'}`);
+    }
+
+    const response = await fetch(endpoint, {
       method: 'PUT',
-      headers: {
-        Accept: 'application/vnd.github+json',
-        Authorization: `Bearer ${aquapedia.githubToken}`,
-        'X-GitHub-Api-Version': '2022-11-28',
-        'Content-Type': 'application/json',
-      },
+      headers: githubHeaders(aquapedia.githubToken, true),
       body: JSON.stringify({
         message,
         branch: aquapedia.branch,
         content: Buffer.from(String(content), 'utf8').toString('base64'),
+        ...(existingSha ? { sha: existingSha } : {}),
       }),
     });
     const payload = await response.json().catch(() => ({}));

@@ -73,14 +73,17 @@ export function createStore({ dataDir }) {
     async upsertVendor(vendor) {
       if (!vendor?.id || !vendor?.discordUserId || !vendor?.displayName) throw new Error('Vendor id, Discord user id, and display name are required');
       return mutate((state) => {
+        const previous = state.vendors[vendor.id] ?? {};
         const normalized = {
           id: String(vendor.id),
           discordUserId: String(vendor.discordUserId),
           displayName: String(vendor.displayName),
-          catalogSlug: String(vendor.catalogSlug ?? vendor.id),
-          discordRoleId: vendor.discordRoleId ? String(vendor.discordRoleId) : null,
+          catalogSlug: String(vendor.catalogSlug ?? previous.catalogSlug ?? vendor.id),
+          catalogCollectionId: vendor.catalogCollectionId ? String(vendor.catalogCollectionId) : previous.catalogCollectionId ?? null,
+          catalogCollectionTitle: vendor.catalogCollectionTitle ? String(vendor.catalogCollectionTitle) : previous.catalogCollectionTitle ?? null,
+          discordRoleId: vendor.discordRoleId ? String(vendor.discordRoleId) : previous.discordRoleId ?? null,
           active: vendor.active !== false,
-          createdAt: state.vendors[vendor.id]?.createdAt ?? new Date().toISOString(),
+          createdAt: previous.createdAt ?? new Date().toISOString(),
           updatedAt: new Date().toISOString(),
         };
         state.vendors[normalized.id] = normalized;
@@ -130,6 +133,15 @@ export function createStore({ dataDir }) {
     async getTicket(key) {
       const state = await load();
       return state.tickets[String(key)] ?? null;
+    },
+
+    async updateTicket(key, updates) {
+      return mutate((state) => {
+        const existing = state.tickets[String(key)];
+        if (!existing) throw new Error(`Ticket ${key} was not found`);
+        state.tickets[String(key)] = { ...existing, ...updates, updatedAt: new Date().toISOString() };
+        return state.tickets[String(key)];
+      });
     },
 
     async listVendorTickets(vendorId) {

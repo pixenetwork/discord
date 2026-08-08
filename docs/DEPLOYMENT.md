@@ -53,7 +53,7 @@ Minimum intended product permissions:
 - `read_products`
 - `write_products`
 
-The product sync uses Shopify `productSet` and Aquaphoria product metafields. Vendor-managed listings are treated as single-variant products in v1.
+The product sync uses Shopify `productSet` and Aquaphoria product metafields. Vendor-managed listings are treated as single-variant products in v1. The worker verifies existing handles/ownership before an upsert and refuses multi-variant catalog mutations rather than risk destructive list synchronization.
 
 For order routing and vendor shipment/tracking, the app also needs access to the relevant orders and fulfillment orders. For merchant-managed locations this normally means:
 
@@ -64,6 +64,12 @@ For order routing and vendor shipment/tracking, the app also needs access to the
 If Aquaphoria later fulfills from third-party fulfillment-service locations, grant the matching third-party or assigned fulfillment-order scopes only for the locations/workflow actually used.
 
 The Shopify user/app context also needs permission to create products and fulfill/ship orders.
+
+### Shipping-included vendor products
+
+Vendor shipping is included in the calculated Aquaphoria retail amount. The worker marks those products with `aquaphoria.shipping_included=true`.
+
+Before live vendor sales are enabled, configure Shopify so these products do not receive a second normal shipping charge at checkout. Use an appropriate free/included-shipping profile or equivalent checkout rule for Aquaphoria vendor-managed products. Test a mixed-vendor cart before launch.
 
 ### Paid-order webhook
 
@@ -112,7 +118,8 @@ If Jarvis research is not configured, `/research` still creates a structured ver
 4. Run `/aquaphoria setup`.
 5. Approve a test vendor with `/vendor add`.
 6. Create one hidden/test Shopify listing through `/catalog add`.
-7. Verify vendor ownership, price + shipping + markup, and stock.
-8. Send a Shopify paid-order test webhook/order.
-9. Confirm the private vendor ticket contains only that vendor's line items.
-10. Test `/payout paid` and `/order shipped` with a non-customer test order before enabling the workflow for live orders.
+7. Verify vendor ownership, price + shipping + markup, stock, and `shipping_included` metadata.
+8. Verify the vendor shipping profile/checkout rule does not double-charge shipping.
+9. Send a Shopify paid-order test webhook/order.
+10. Confirm the private vendor ticket contains only that vendor's line items.
+11. Test `/payout paid` and `/order shipped` with a non-customer test order before enabling the workflow for live orders.

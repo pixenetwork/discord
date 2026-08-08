@@ -124,6 +124,10 @@ export function createCollectionService({ shopify, store }) {
       if (!vendor || vendor.active === false) throw new Error(`Active vendor "${vendorId}" was not found`);
       const collection = await resolve(collectionReference);
 
+      if (vendor.catalogCollectionId && vendor.catalogCollectionId !== collection.id) {
+        throw new Error(`${vendor.displayName} is already assigned to "${vendor.catalogCollectionTitle ?? vendor.catalogCollectionId}". Use an explicit catalog-move workflow before reassigning.`);
+      }
+
       const vendors = await store.listVendors();
       const conflicting = vendors.find((candidate) =>
         candidate.id !== vendor.id &&

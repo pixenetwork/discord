@@ -43,6 +43,10 @@ export function loadConfig(env = process.env) {
       webhookSecret: clean(env.SHOPIFY_WEBHOOK_SECRET),
       locationId: clean(env.SHOPIFY_LOCATION_ID),
     }),
+    openai: Object.freeze({
+      apiKey: clean(env.OPENAI_API_KEY),
+      model: clean(env.OPENAI_MODEL) || 'gpt-5',
+    }),
     jarvis: Object.freeze({
       researchEndpoint: clean(env.JARVIS_RESEARCH_ENDPOINT),
       apiKey: clean(env.JARVIS_RESEARCH_API_KEY),

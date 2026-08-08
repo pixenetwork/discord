@@ -7,7 +7,6 @@ const CORE_LAYOUT = [
       ['👋・welcome', 'Welcome to Aquaphoria. Start here for store, community, and support information.'],
       ['📢・announcements', 'Aquaphoria announcements, launches, imports, and important updates.'],
       ['🛒・shop', 'Aquaphoria storefront links, featured collections, and shopping information.'],
-      ['🧬・aquapedia', 'Aquapedia strain, breeder, shrimp, and aquarium research hub.'],
     ],
   },
   {
@@ -31,17 +30,18 @@ const CORE_LAYOUT = [
   },
   {
     category: '🔬・AQUAPEDIA RESEARCH',
+    vendorOnly: true,
     channels: [
-      ['🔎・research', 'Run /research strain or /research breeder to send evidence-backed work to Aquapedia.'],
-      ['🧬・research-results', 'Completed Aquapedia research summaries and source-backed additions.'],
-      ['📝・research-queue', 'Research requests waiting for verification or additional evidence.'],
+      ['🔎・research', 'Private /research and /gpt research workspace for approved vendors and Aquaphoria management.'],
+      ['🧬・research-results', 'Private completed Aquapedia research summaries and source-backed additions.'],
+      ['📝・research-queue', 'Private research requests waiting for verification or additional evidence.'],
     ],
   },
   {
     category: '🛡️・AQUAPHORIA STAFF',
     staffOnly: true,
     channels: [
-      ['🧾・audit-log', 'Product, vendor, order, permission, and research audit events.'],
+      ['🧾・audit-log', 'Product, vendor, order, permission, GPT, collection, and research audit events.'],
       ['🚨・order-issues', 'Fulfillment, stock, DOA, and shipping exceptions requiring staff attention.'],
       ['💳・payout-log', 'Internal vendor payout ledger and payment confirmations.'],
       ['🤖・bot-log', 'Aquaphoria Discord worker health and integration errors.'],

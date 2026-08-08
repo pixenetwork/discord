@@ -189,6 +189,39 @@ export function createStore({ dataDir }) {
         state.researchJobs[String(job.id)] = { ...state.researchJobs[String(job.id)], ...job, updatedAt: new Date().toISOString() };
         return state.researchJobs[String(job.id)];
       });
+
+    async claimWebhook(webhookId) {
+      if (!webhookId) throw new Error('Webhook ID is required');
+      return mutate((state) => {
+        const key = String(webhookId);
+        const existing = state.processedWebhooks[key];
+        if (existing) return { claimed: false, existing };
+        const record = {
+          id: key,
+          claimedAt: new Date().toISOString(),
+        };
+        state.processedWebhooks[key] = record;
+        return { claimed: true, record };
+      });
+    },
+
+    async getWebhookRecord(webhookId) {
+      const state = await load();
+      return state.processedWebhooks[String(webhookId)] ?? null;
+    },
+
+    async setLayoutRoles(roles) {
+      if (!roles?.staffRoleId || !roles?.vendorRoleId) throw new Error('Staff and vendor role IDs are required');
+      return mutate((state) => {
+        state.layoutRoles = { staffRoleId: String(roles.staffRoleId), vendorRoleId: String(roles.vendorRoleId), memberRoleId: roles.memberRoleId ? String(roles.memberRoleId) : null };
+        return state.layoutRoles;
+      });
+    },
+
+    async getLayoutRoles() {
+      const state = await load();
+      return state.layoutRoles ?? null;
+    },
     },
   });
 }

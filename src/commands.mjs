@@ -229,7 +229,7 @@ async function handleVendor(interaction, deps) {
   }
 
   await interaction.deferReply({ ephemeral: true });
-  const layout = await provisionAquaphoriaLayout(interaction.guild, { ownerUserId: deps.config.discord.ownerUserId });
+  const layout = await provisionAquaphoriaLayout(interaction.guild, { ownerUserId: deps.config.discord.ownerUserId, store: deps.store });
   let saved = await deps.store.upsertVendor({ id, discordUserId: user.id, displayName, catalogSlug, active: true });
   const workspace = await ensureVendorWorkspace(interaction.guild, {
     vendor: saved,

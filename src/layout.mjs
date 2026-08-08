@@ -115,6 +115,10 @@ export async function provisionAquaphoriaLayout(guild, { ownerUserId }) {
     }
   }
 
+  if (store) {
+    await store.setLayoutRoles({ staffRoleId: staffRole.id, vendorRoleId: vendorRole.id, memberRoleId: memberRole.id });
+  }
+
   return {
     roles: { staffRoleId: staffRole.id, vendorRoleId: vendorRole.id, memberRoleId: memberRole.id },
     channels: created,

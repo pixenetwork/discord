@@ -85,7 +85,21 @@ const server = createServer(async (request, response) => {
         return response.end(JSON.stringify({ ok: false, error: 'invalid_hmac' }));
       }
 
-      const order = JSON.parse(rawBody.toString('utf8'));
+      let order;
+      try {
+        order = JSON.parse(rawBody.toString('utf8'));
+      } catch (error) {
+        response.writeHead(400, { 'Content-Type': 'application/json' });
+        return response.end(JSON.stringify({ ok: false, error: 'invalid_json' }));
+      }
+
+      const webhookId = `shopify:orders-paid:${order.id}`;
+      const claim = await store.claimWebhook(webhookId);
+      if (!claim.claimed) {
+        response.writeHead(200, { 'Content-Type': 'application/json' });
+        return response.end(JSON.stringify({ ok: true, duplicate: true }));
+      }
+
       response.writeHead(200, { 'Content-Type': 'application/json' });
       response.end(JSON.stringify({ ok: true }));
 

@@ -40,6 +40,8 @@ The customer-facing product price is clean, while the worker retains the vendor 
 
 The submitted shipping amount is a **per-unit listing shipping amount**. If a customer buys quantity 2, the payout calculation includes that shipping amount twice. Vendors should therefore submit the amount they need per sellable unit/package configuration.
 
+Vendor-managed Shopify products receive the `aquaphoria.shipping_included=true` metafield. Because vendor shipping is already built into the Aquaphoria retail price, Shopify must not add a second normal shipping charge for these products at checkout. Production should place vendor-managed products in an appropriate free/included-shipping profile or equivalent checkout rule before live sales are enabled.
+
 A later shipping-profile phase can support per-order, combined-shipping and destination-based rates without changing product ownership or payout history.
 
 ## Product submission template
@@ -89,6 +91,8 @@ Unknown lineage/history should be marked unknown rather than guessed. Aquapedia 
 
 A Discord role is not sufficient authorization by itself. Product changes are checked against the vendor ownership metadata stored on the Shopify product. A vendor cannot edit another vendor's product by guessing its Shopify product ID.
 
+New `/catalog add` requests also refuse to claim a pre-existing Shopify handle that does not already belong to that vendor. This prevents a vendor command from silently taking over an unrelated/manual product with a colliding handle.
+
 `/catalog remove` archives instead of hard-deleting products. This preserves historical order references and auditability.
 
 ## Paid order flow
@@ -105,4 +109,6 @@ A Discord role is not sufficient authorization by itself. Product changes are ch
 
 ## Product model limitation in v1
 
-Vendor-managed products are intentionally treated as a single sellable Shopify variant in this first release. Complex size/color/pack variants should be added only after the variant-aware command flow is implemented, so catalog sync never risks changing unrelated variants.
+Vendor-managed products are intentionally treated as a single sellable Shopify variant in this first release. The worker checks this before variant mutations and refuses multi-variant products rather than risk Shopify `productSet` removing variants that were not included in a synchronization request.
+
+Complex size/color/pack variants should be added only after the variant-aware command flow is implemented.

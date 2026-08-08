@@ -8,7 +8,7 @@
   },
   "scripts": {
     "start": "node src/index.mjs",
-    "check": "node --check src/index.mjs && node --check src/config.mjs && node --check src/store.mjs && node --check src/pricing.mjs && node --check src/shopify.mjs && node --check src/research.mjs && node --check src/layout.mjs && node --check src/commands.mjs",
+    "check": "node --check src/index.mjs && node --check src/config.mjs && node --check src/store.mjs && node --check src/pricing.mjs && node --check src/shopify.mjs && node --check src/catalog.mjs && node --check src/research.mjs && node --check src/layout.mjs && node --check src/orders.mjs && node --check src/commands.mjs",
     "test": "node --test"
   },
   "dependencies": {

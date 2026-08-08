@@ -61,19 +61,20 @@ function commandDefinitions() {
     .setDescription('Manage approved Aquaphoria vendors')
     .addSubcommand((sub) => sub
       .setName('add')
-      .setDescription('Approve a breeder/vendor and create their private workspace')
+      .setDescription('Approve a breeder/vendor and assign the catalog they control')
       .addUserOption((option) => option.setName('user').setDescription('Discord user').setRequired(true))
       .addStringOption((option) => option.setName('name').setDescription('Breeder/vendor display name').setRequired(true).setMaxLength(80))
-      .addStringOption((option) => option.setName('slug').setDescription('Catalog slug, e.g. toa').setRequired(false).setMaxLength(64)))
-    .addSubcommand((sub) => sub.setName('list').setDescription('List configured Aquaphoria vendors'))
+      .addStringOption((option) => option.setName('catalog').setDescription('Catalog they may control, e.g. toa, mimu, shrimp-supply').setRequired(true).setMaxLength(64))
+      .addStringOption((option) => option.setName('vendor_id').setDescription('Optional internal vendor ID; defaults to breeder/vendor name').setRequired(false).setMaxLength(64)))
+    .addSubcommand((sub) => sub.setName('list').setDescription('List configured Aquaphoria vendors and their assigned catalogs'))
     .addSubcommand((sub) => sub
       .setName('disable')
       .setDescription('Disable a vendor without deleting order history')
-      .addStringOption((option) => option.setName('vendor').setDescription('Vendor ID/slug').setRequired(true)));
+      .addStringOption((option) => option.setName('vendor').setDescription('Vendor ID').setRequired(true)));
 
   const catalog = new SlashCommandBuilder()
     .setName('catalog')
-    .setDescription('Manage your Aquaphoria vendor catalog')
+    .setDescription('Manage your assigned Aquaphoria vendor catalog')
     .addSubcommand((sub) => {
       sub.setName('add').setDescription('Add or update one of your storefront products')
         .addStringOption((option) => option.setName('name').setDescription('Product or strain name').setRequired(true).setMaxLength(100))
@@ -151,7 +152,7 @@ function commandDefinitions() {
     .addSubcommand((sub) => sub
       .setName('paid')
       .setDescription('Owner: mark a vendor order payout as sent')
-      .addStringOption((option) => option.setName('vendor').setDescription('Vendor ID/slug').setRequired(true))
+      .addStringOption((option) => option.setName('vendor').setDescription('Vendor ID').setRequired(true))
       .addStringOption((option) => option.setName('order').setDescription('Shopify order name, e.g. #1001').setRequired(true)));
 
   const ticket = new SlashCommandBuilder()
@@ -198,7 +199,7 @@ async function handleVendor(interaction, deps) {
   if (sub === 'list') {
     const vendors = await deps.store.listVendors();
     const body = vendors.length
-      ? vendors.map((vendor) => `• **${vendor.displayName}** — \`${vendor.id}\` — <@${vendor.discordUserId}> — ${vendor.active ? 'active' : 'disabled'}`).join('\n')
+      ? vendors.map((vendor) => `• **${vendor.displayName}** — vendor \`${vendor.id}\` — catalog \`${vendor.catalogSlug}\` — <@${vendor.discordUserId}> — ${vendor.active ? 'active' : 'disabled'}`).join('\n')
       : 'No vendors configured yet.';
     return interaction.reply({ content: body, ephemeral: true });
   }
@@ -214,12 +215,22 @@ async function handleVendor(interaction, deps) {
 
   const user = interaction.options.getUser('user', true);
   const displayName = interaction.options.getString('name', true).trim();
-  const id = slugify(interaction.options.getString('slug') || displayName);
-  if (!id) return interaction.reply({ content: 'Could not create a valid vendor slug.', ephemeral: true });
+  const id = slugify(interaction.options.getString('vendor_id') || displayName);
+  const catalogSlug = slugify(interaction.options.getString('catalog', true));
+  if (!id || !catalogSlug) return interaction.reply({ content: 'Could not create a valid vendor ID/catalog name.', ephemeral: true });
+
+  const vendors = await deps.store.listVendors();
+  const catalogOwner = vendors.find((entry) => entry.active !== false && entry.catalogSlug === catalogSlug && entry.discordUserId !== user.id);
+  if (catalogOwner) {
+    return interaction.reply({
+      content: `Catalog \`${catalogSlug}\` is already assigned to **${catalogOwner.displayName}**. Disable/reassign that vendor first rather than sharing storefront write access.`,
+      ephemeral: true,
+    });
+  }
 
   await interaction.deferReply({ ephemeral: true });
   const layout = await provisionAquaphoriaLayout(interaction.guild, { ownerUserId: deps.config.discord.ownerUserId });
-  let saved = await deps.store.upsertVendor({ id, discordUserId: user.id, displayName, catalogSlug: id, active: true });
+  let saved = await deps.store.upsertVendor({ id, discordUserId: user.id, displayName, catalogSlug, active: true });
   const workspace = await ensureVendorWorkspace(interaction.guild, {
     vendor: saved,
     ownerUserId: deps.config.discord.ownerUserId,
@@ -233,8 +244,8 @@ async function handleVendor(interaction, deps) {
     await member.roles.add(workspace.vendorRoleId).catch(() => undefined);
   }
 
-  await audit(interaction.guild, `🐟 Approved vendor **${displayName}** (\`${id}\`) for <@${user.id}>.`);
-  await interaction.editReply(`✅ **${displayName}** is now an Aquaphoria vendor with a private catalog/order workspace. Vendor ID: \`${id}\`.`);
+  await audit(interaction.guild, `🐟 Approved vendor **${displayName}** (\`${id}\`) for <@${user.id}> with catalog \`${catalogSlug}\`.`);
+  await interaction.editReply(`✅ **${displayName}** is now an Aquaphoria vendor.\nVendor ID: \`${id}\`\nAssigned catalog: \`${catalogSlug}\`\nThey can manage only products owned by this vendor/catalog through the vendor portal.`);
 }
 
 async function handleCatalog(interaction, deps) {
@@ -257,14 +268,14 @@ async function handleCatalog(interaction, deps) {
       visible: true,
     });
     await audit(interaction.guild, `🛍️ **${vendor.displayName}** added/updated **${result.product.title}** • vendor $${centsToMoney(result.pricing.vendorPriceCents)} + shipping $${centsToMoney(result.pricing.vendorShippingCents)} + ${result.pricing.markupPercent}% = retail **$${centsToMoney(result.pricing.retailTotalCents)}** • \`${result.product.id}\``);
-    return interaction.editReply(`✅ **${result.product.title}** synced to your Aquaphoria catalog.\nYour price: **$${centsToMoney(result.pricing.vendorPriceCents)}**\nYour shipping: **$${centsToMoney(result.pricing.vendorShippingCents)}**\nAquaphoria markup: **${result.pricing.markupPercent}%**\nCustomer retail: **$${centsToMoney(result.pricing.retailTotalCents)}**\nProduct ID: \`${result.product.id}\``);
+    return interaction.editReply(`✅ **${result.product.title}** synced to catalog \`${vendor.catalogSlug}\`.\nYour price: **$${centsToMoney(result.pricing.vendorPriceCents)}**\nYour shipping: **$${centsToMoney(result.pricing.vendorShippingCents)}**\nAquaphoria markup: **${result.pricing.markupPercent}%**\nCustomer retail: **$${centsToMoney(result.pricing.retailTotalCents)}**\nProduct ID: \`${result.product.id}\``);
   }
 
   if (sub === 'list') {
     const products = await deps.catalog.list(vendor);
     const text = products.length
-      ? products.map((product) => `• **${product.title}** — ${product.status} — $${product.retailPrice ?? '?'} — stock ${product.inventoryQuantity ?? '?'} — \`${product.id}\``).join('\n')
-      : 'Your vendor catalog is empty.';
+      ? `Catalog: \`${vendor.catalogSlug}\`\n${products.map((product) => `• **${product.title}** — ${product.status} — $${product.retailPrice ?? '?'} — stock ${product.inventoryQuantity ?? '?'} — \`${product.id}\``).join('\n')}`
+      : `Catalog \`${vendor.catalogSlug}\` is empty.`;
     return interaction.editReply(text.slice(0, 1900));
   }
 
@@ -330,111 +341,114 @@ async function handleOrder(interaction, deps) {
     return interaction.reply({ content: `**${ticket.orderName}** • ${ticket.status} • payout $${centsToMoney(ticket.payoutCents ?? 0)} • <#${ticket.channelId}>${ticket.trackingNumber ? ` • tracking ${ticket.trackingNumber}` : ''}`, ephemeral: true });
   }
 
-  await interaction.deferReply({ ephemeral: true });
-  if (sub === 'shipped') {
-    const updated = await deps.orders.markShipped(interaction.guild, {
-      vendorId: vendor.id,
-      orderName,
-      trackingNumber: interaction.options.getString('tracking', true),
-      trackingCompany: interaction.options.getString('carrier') || null,
-    });
-    return interaction.editReply(`✅ **${updated.orderName}** marked shipped. Shopify/customer tracking notification was requested.`);
+  if (sub === 'issue') {
+    const ticket = await deps.store.findVendorTicketByOrderName(vendor.id, orderName);
+    if (!ticket) return interaction.reply({ content: `No ${orderName} ticket belongs to your vendor account.`, ephemeral: true });
+    const details = interaction.options.getString('details', true);
+    await deps.store.updateTicket(ticket.key, { status: 'issue', issue: details });
+    const issueChannel = findTextChannel(interaction.guild, '🚨・order-issues');
+    if (issueChannel) await issueChannel.send(`🚨 **${vendor.displayName}** flagged **${orderName}**\n${details}\nVendor ticket: <#${ticket.channelId}>`);
+    await audit(interaction.guild, `🚨 **${vendor.displayName}** flagged order **${orderName}**: ${details}`);
+    return interaction.reply({ content: '✅ Aquaphoria staff has been alerted.', ephemeral: true });
   }
 
-  await deps.orders.reportIssue(interaction.guild, {
-    vendorId: vendor.id,
+  await interaction.deferReply({ ephemeral: true });
+  const ticket = await deps.orders.markShipped({
+    guild: interaction.guild,
+    vendor,
     orderName,
-    issue: interaction.options.getString('details', true),
+    trackingNumber: interaction.options.getString('tracking', true),
+    carrier: interaction.options.getString('carrier') || null,
   });
-  return interaction.editReply(`🚨 Issue flagged for **${orderName}**. Aquaphoria staff has been notified.`);
+  await audit(interaction.guild, `🚚 **${vendor.displayName}** shipped **${orderName}** • ${ticket.trackingNumber}${ticket.carrier ? ` • ${ticket.carrier}` : ''}.`);
+  await interaction.editReply(`✅ **${orderName}** marked shipped and tracking sent to Shopify/customer. Tracking: **${ticket.trackingNumber}**.`);
 }
 
 async function handlePayout(interaction, deps) {
   const sub = interaction.options.getSubcommand();
-  if (sub === 'status') {
-    const vendor = await requireVendor(interaction, deps.store);
-    if (!vendor) return;
-    const summary = await deps.store.payoutSummary(vendor.id);
-    return interaction.reply({
-      content: `💰 **${vendor.displayName} payout status**\nOwed: **$${centsToMoney(summary.owedCents)}**\nPaid: **$${centsToMoney(summary.paidCents)}**\nCurrent balance: **$${centsToMoney(summary.balanceCents)}**`,
-      ephemeral: true,
+  if (sub === 'paid') {
+    if (!isOwner(interaction, deps.config)) return interaction.reply({ content: 'Only the Aquaphoria owner can mark vendor payouts paid.', ephemeral: true });
+    const vendorId = interaction.options.getString('vendor', true);
+    const orderName = interaction.options.getString('order', true);
+    const ticket = await deps.store.findVendorTicketByOrderName(vendorId, orderName);
+    if (!ticket) return interaction.reply({ content: `No ${orderName} ticket belongs to vendor \`${vendorId}\`.`, ephemeral: true });
+    const entry = await deps.store.appendPayout({
+      id: `paid:${ticket.key}`,
+      vendorId,
+      orderId: ticket.shopifyOrderId,
+      orderName,
+      amountCents: ticket.payoutCents,
+      type: 'paid',
+      note: `Owner marked ${orderName} paid`,
     });
+    const payoutChannel = findTextChannel(interaction.guild, '💳・payout-log');
+    if (payoutChannel) await payoutChannel.send(`💳 Vendor \`${vendorId}\` paid **$${centsToMoney(entry.amountCents)}** for **${orderName}** by <@${interaction.user.id}>.`);
+    await deps.store.updateTicket(ticket.key, { payoutStatus: 'paid', payoutPaidAt: new Date().toISOString() });
+    return interaction.reply({ content: `✅ Marked **$${centsToMoney(entry.amountCents)}** paid to vendor \`${vendorId}\` for **${orderName}**.`, ephemeral: true });
   }
 
-  if (!isOwner(interaction, deps.config)) return interaction.reply({ content: 'Only the Aquaphoria owner can mark payouts paid.', ephemeral: true });
-  const vendorId = interaction.options.getString('vendor', true);
-  const orderName = interaction.options.getString('order', true);
-  const vendor = await deps.store.getVendor(vendorId);
-  if (!vendor) return interaction.reply({ content: `Vendor \`${vendorId}\` not found.`, ephemeral: true });
-  const ticket = await deps.store.findVendorTicketByOrderName(vendorId, orderName);
-  if (!ticket) return interaction.reply({ content: `No ${orderName} ticket belongs to ${vendor.displayName}.`, ephemeral: true });
-
-  await deps.store.appendPayout({
-    id: `paid:${ticket.orderId}:${vendorId}`,
-    vendorId,
-    orderId: ticket.orderId,
-    amountCents: ticket.payoutCents ?? 0,
-    type: 'paid',
-    note: `Payout sent for ${ticket.orderName}`,
+  const vendor = await requireVendor(interaction, deps.store);
+  if (!vendor) return;
+  const summary = await deps.store.payoutSummary(vendor.id);
+  return interaction.reply({
+    content: `💰 **${vendor.displayName} payout status**\nOwed: **$${centsToMoney(summary.owedCents)}**\nPaid: **$${centsToMoney(summary.paidCents)}**\nBalance: **$${centsToMoney(summary.balanceCents)}**`,
+    ephemeral: true,
   });
-  await deps.store.recordTicket({ ...ticket, payoutStatus: 'paid', payoutPaidAt: new Date().toISOString() });
-  const ticketChannel = interaction.guild.channels.cache.get(ticket.channelId);
-  if (ticketChannel?.isTextBased()) await ticketChannel.send(`💰 Aquaphoria marked the vendor payout of **$${centsToMoney(ticket.payoutCents ?? 0)}** as sent.`);
-  const payoutLog = findTextChannel(interaction.guild, '💳・payout-log');
-  if (payoutLog) await payoutLog.send(`💰 Paid **${vendor.displayName}** $${centsToMoney(ticket.payoutCents ?? 0)} for **${ticket.orderName}**.`);
-  return interaction.reply({ content: `✅ Marked **${ticket.orderName}** payout to **${vendor.displayName}** as paid.`, ephemeral: true });
 }
 
-async function handleSupportTicket(interaction, deps) {
+async function handleTicket(interaction, deps) {
   const type = interaction.options.getString('type', true);
   const details = interaction.options.getString('details', true);
-  const layout = await provisionAquaphoriaLayout(interaction.guild, { ownerUserId: deps.config.discord.ownerUserId });
-  const supportCategory = interaction.guild.channels.cache.find((channel) => channel.type === ChannelType.GuildCategory && channel.name === '🎫・CUSTOMER SUPPORT');
-  if (!supportCategory) throw new Error('Customer support category is missing');
+  const staffRole = interaction.guild.roles.cache.find((role) => role.name === 'Aquaphoria Staff');
+  if (!staffRole) return interaction.reply({ content: 'Aquaphoria support is not configured yet.', ephemeral: true });
 
+  const supportCategory = interaction.guild.channels.cache.find((channel) => channel.type === ChannelType.GuildCategory && channel.name === '🎫・CUSTOMER SUPPORT');
+  if (!supportCategory) return interaction.reply({ content: 'Customer support category is not configured yet.', ephemeral: true });
+
+  await interaction.deferReply({ ephemeral: true });
   const channel = await interaction.guild.channels.create({
-    name: `ticket-${type}-${slugify(interaction.user.username).slice(0, 25)}`,
+    name: `ticket-${type}-${interaction.user.username}`.toLowerCase().replace(/[^a-z0-9-]/g, '').slice(0, 90),
     type: ChannelType.GuildText,
     parent: supportCategory.id,
     permissionOverwrites: [
       { id: interaction.guild.roles.everyone.id, deny: [PermissionFlagsBits.ViewChannel] },
-      { id: interaction.user.id, allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages, PermissionFlagsBits.ReadMessageHistory] },
       { id: deps.config.discord.ownerUserId, allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages, PermissionFlagsBits.ReadMessageHistory] },
-      { id: layout.roles.staffRoleId, allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages, PermissionFlagsBits.ReadMessageHistory] },
+      { id: staffRole.id, allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages, PermissionFlagsBits.ReadMessageHistory] },
+      { id: interaction.user.id, allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages, PermissionFlagsBits.ReadMessageHistory] },
     ],
-    topic: `Aquaphoria customer support • ${type} • opened by ${interaction.user.id}`,
-    reason: 'Aquaphoria customer support ticket',
+    reason: `Aquaphoria ${type} support ticket for ${interaction.user.id}`,
   });
+
   const embed = new EmbedBuilder()
-    .setTitle(`🎫 ${type.toUpperCase()} Support Ticket`)
+    .setTitle(`🎫 Aquaphoria ${type.toUpperCase()} Support`)
     .setDescription(details)
     .addFields({ name: 'Customer', value: `<@${interaction.user.id}>` })
     .setTimestamp();
-  await channel.send({ content: `<@${interaction.user.id}> Aquaphoria staff will help you here.`, embeds: [embed] });
-  await audit(interaction.guild, `🎫 Customer ticket opened by <@${interaction.user.id}> • type **${type}** • <#${channel.id}>`);
-  return interaction.reply({ content: `✅ Your private Aquaphoria ticket is ready: <#${channel.id}>`, ephemeral: true });
+  await channel.send({ content: `<@${interaction.user.id}> <@&${staffRole.id}>`, embeds: [embed] });
+  await audit(interaction.guild, `🎫 Customer <@${interaction.user.id}> opened ${type} support ticket <#${channel.id}>.`);
+  return interaction.editReply(`✅ Your private support ticket is ready: <#${channel.id}>`);
 }
 
-export async function registerGuildCommands(guild) {
-  return guild.commands.set(commandDefinitions().map((command) => command.toJSON()));
-}
+export function createCommandRouter(deps) {
+  return Object.freeze({
+    definitions: commandDefinitions().map((command) => command.toJSON()),
 
-export async function handleInteraction(interaction, deps) {
-  if (!interaction.isChatInputCommand() || !interaction.inGuild()) return;
-  try {
-    if (interaction.commandName === 'aquaphoria') return await handleSetup(interaction, deps);
-    if (interaction.commandName === 'vendor') return await handleVendor(interaction, deps);
-    if (interaction.commandName === 'catalog') return await handleCatalog(interaction, deps);
-    if (interaction.commandName === 'research') return await handleResearch(interaction, deps);
-    if (interaction.commandName === 'order') return await handleOrder(interaction, deps);
-    if (interaction.commandName === 'payout') return await handlePayout(interaction, deps);
-    if (interaction.commandName === 'ticket') return await handleSupportTicket(interaction, deps);
-  } catch (error) {
-    console.error('Command failed', interaction.commandName, error);
-    const content = `❌ ${error.message ?? 'Command failed'}`.slice(0, 1900);
-    if (interaction.deferred || interaction.replied) await interaction.editReply({ content }).catch(() => undefined);
-    else await interaction.reply({ content, ephemeral: true }).catch(() => undefined);
-  }
+    async handle(interaction) {
+      if (!interaction.isChatInputCommand()) return;
+      try {
+        if (interaction.commandName === 'aquaphoria') return handleSetup(interaction, deps);
+        if (interaction.commandName === 'vendor') return handleVendor(interaction, deps);
+        if (interaction.commandName === 'catalog') return handleCatalog(interaction, deps);
+        if (interaction.commandName === 'research') return handleResearch(interaction, deps);
+        if (interaction.commandName === 'order') return handleOrder(interaction, deps);
+        if (interaction.commandName === 'payout') return handlePayout(interaction, deps);
+        if (interaction.commandName === 'ticket') return handleTicket(interaction, deps);
+      } catch (error) {
+        const message = `❌ ${error?.message ?? 'Something went wrong.'}`.slice(0, 1900);
+        if (interaction.deferred || interaction.replied) await interaction.editReply(message).catch(() => undefined);
+        else await interaction.reply({ content: message, ephemeral: true }).catch(() => undefined);
+        await audit(interaction.guild, `🤖 Command error from <@${interaction.user.id}>: ${error?.stack ?? error}`);
+      }
+    },
+  });
 }
-
-export { commandDefinitions };

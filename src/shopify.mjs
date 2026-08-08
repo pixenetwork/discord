@@ -67,14 +67,30 @@ export function createShopifyClient(config) {
     return data.metafieldsSet.metafields;
   }
 
+  async function createFulfillment(fulfillment) {
+    const data = await graphql(
+      `mutation CreateAquaphoriaFulfillment($fulfillment: FulfillmentInput!) {
+        fulfillmentCreate(fulfillment: $fulfillment) {
+          fulfillment {
+            id
+            status
+            trackingInfo(first: 10) { company number url }
+          }
+          userErrors { field message }
+        }
+      }`,
+      { fulfillment },
+    );
+    throwUserErrors('Shopify fulfillment failed', data.fulfillmentCreate.userErrors);
+    return data.fulfillmentCreate.fulfillment;
+  }
+
   return Object.freeze({
     graphql,
 
     async upsertVendorProduct({ vendor, product, pricing, locationId = null }) {
       const handle = product.handle || `${slugify(vendor.catalogSlug)}-${slugify(product.name)}`;
-      const variant = {
-        price: Number(centsToMoney(pricing.retailTotalCents)),
-      };
+      const variant = { price: Number(centsToMoney(pricing.retailTotalCents)) };
       if (locationId && Number.isInteger(product.stock)) {
         variant.inventoryQuantities = [{ locationId, name: 'available', quantity: product.stock }];
       }
@@ -139,6 +155,7 @@ export function createShopifyClient(config) {
             title
             handle
             status
+            variants(first: 1) { nodes { id price inventoryQuantity } }
             vendorId: metafield(namespace: "aquaphoria", key: "vendor_id") { value }
             vendorPrice: metafield(namespace: "aquaphoria", key: "vendor_price_cents") { value }
             vendorShipping: metafield(namespace: "aquaphoria", key: "vendor_shipping_cents") { value }
@@ -150,11 +167,15 @@ export function createShopifyClient(config) {
       );
       const product = data.product;
       if (!product) return null;
+      const variant = product.variants?.nodes?.[0] ?? null;
       return {
         id: product.id,
         title: product.title,
         handle: product.handle,
         status: product.status,
+        variantId: variant?.id ?? null,
+        retailPrice: variant?.price ?? null,
+        inventoryQuantity: variant?.inventoryQuantity ?? null,
         vendorId: product.vendorId?.value ?? null,
         vendorPriceCents: Number.parseInt(product.vendorPrice?.value ?? '0', 10),
         vendorShippingCents: Number.parseInt(product.vendorShipping?.value ?? '0', 10),
@@ -226,6 +247,63 @@ export function createShopifyClient(config) {
       return data.productSet.product;
     },
 
+    async fulfillVendorItems({ orderId, productIds, trackingNumber, trackingCompany = null }) {
+      if (!orderId || !productIds?.length || !trackingNumber) throw new Error('Order id, product ids, and tracking number are required');
+      const allowedProducts = new Set(productIds.map(String));
+      const data = await graphql(
+        `query AquaphoriaOrderFulfillmentItems($id: ID!) {
+          order(id: $id) {
+            id
+            name
+            fulfillmentOrders(first: 50) {
+              nodes {
+                id
+                status
+                assignedLocation { location { id } }
+                lineItems(first: 100) {
+                  nodes {
+                    id
+                    remainingQuantity
+                    lineItem { id product { id } }
+                  }
+                }
+              }
+            }
+          }
+        }`,
+        { id: orderId },
+      );
+      const order = data.order;
+      if (!order) throw new Error('Shopify order not found');
+
+      const byLocation = new Map();
+      for (const fulfillmentOrder of order.fulfillmentOrders?.nodes ?? []) {
+        const selected = (fulfillmentOrder.lineItems?.nodes ?? [])
+          .filter((item) => item.remainingQuantity > 0 && item.lineItem?.product?.id && allowedProducts.has(item.lineItem.product.id))
+          .map((item) => ({ id: item.id, quantity: item.remainingQuantity }));
+        if (!selected.length) continue;
+        const locationId = fulfillmentOrder.assignedLocation?.location?.id ?? 'unknown';
+        const list = byLocation.get(locationId) ?? [];
+        list.push({ fulfillmentOrderId: fulfillmentOrder.id, fulfillmentOrderLineItems: selected });
+        byLocation.set(locationId, list);
+      }
+
+      if (!byLocation.size) throw new Error('No unfulfilled Shopify line items matched this vendor ticket');
+
+      const fulfillments = [];
+      for (const lineItemsByFulfillmentOrder of byLocation.values()) {
+        fulfillments.push(await createFulfillment({
+          lineItemsByFulfillmentOrder,
+          notifyCustomer: true,
+          trackingInfo: {
+            number: trackingNumber,
+            ...(trackingCompany ? { company: trackingCompany } : {}),
+          },
+        }));
+      }
+      return fulfillments;
+    },
+
     verifyWebhook(rawBody, providedHmac) {
       if (!config.webhookSecret) throw new Error('SHOPIFY_WEBHOOK_SECRET is not configured');
       if (!providedHmac) return false;
@@ -237,6 +315,10 @@ export function createShopifyClient(config) {
 
     gidForNumericProductId(productId) {
       return `gid://shopify/Product/${String(productId)}`;
+    },
+
+    gidForNumericOrderId(orderId) {
+      return `gid://shopify/Order/${String(orderId)}`;
     },
   });
 }

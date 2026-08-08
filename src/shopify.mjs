@@ -67,6 +67,37 @@ export function createShopifyClient(config) {
     return data.metafieldsSet.metafields;
   }
 
+  async function setPrimaryVariant({ productId, variantId, priceCents, locationId = null, stock = null }) {
+    if (!variantId) throw new Error('Shopify product has no primary variant');
+    const variant = {
+      id: variantId,
+      price: centsToMoney(priceCents),
+    };
+    if (locationId && Number.isInteger(stock)) {
+      variant.inventoryQuantities = [{ locationId, name: 'available', quantity: stock }];
+    }
+
+    const data = await graphql(
+      `mutation SyncAquaphoriaPrimaryVariant($input: ProductSetInput!, $identifier: ProductSetIdentifiers!, $synchronous: Boolean!) {
+        productSet(input: $input, identifier: $identifier, synchronous: $synchronous) {
+          product {
+            id
+            title
+            variants(first: 5) { nodes { id price inventoryQuantity } }
+          }
+          userErrors { field message code }
+        }
+      }`,
+      {
+        input: { variants: [variant] },
+        identifier: { id: productId },
+        synchronous: true,
+      },
+    );
+    throwUserErrors('Shopify variant sync failed', data.productSet.userErrors);
+    return data.productSet.product;
+  }
+
   async function createFulfillment(fulfillment) {
     const data = await graphql(
       `mutation CreateAquaphoriaFulfillment($fulfillment: FulfillmentInput!) {
@@ -90,11 +121,6 @@ export function createShopifyClient(config) {
 
     async upsertVendorProduct({ vendor, product, pricing, locationId = null }) {
       const handle = product.handle || `${slugify(vendor.catalogSlug)}-${slugify(product.name)}`;
-      const variant = { price: Number(centsToMoney(pricing.retailTotalCents)) };
-      if (locationId && Number.isInteger(product.stock)) {
-        variant.inventoryQuantities = [{ locationId, name: 'available', quantity: product.stock }];
-      }
-
       const input = {
         title: product.name,
         handle,
@@ -102,7 +128,6 @@ export function createShopifyClient(config) {
         productType: product.category,
         vendor: vendor.displayName,
         status: product.visible === false ? 'DRAFT' : 'ACTIVE',
-        variants: [variant],
       };
 
       if (product.imageUrl) {
@@ -123,7 +148,7 @@ export function createShopifyClient(config) {
               handle
               status
               onlineStoreUrl
-              variants(first: 5) { nodes { id price inventoryQuantity } }
+              variants(first: 1) { nodes { id price inventoryQuantity } }
             }
             userErrors { field message code }
           }
@@ -132,8 +157,18 @@ export function createShopifyClient(config) {
       );
 
       throwUserErrors('Shopify product sync failed', data.productSet.userErrors);
-      const synced = data.productSet.product;
+      let synced = data.productSet.product;
       if (!synced?.id) throw new Error('Shopify product sync returned no product id');
+      const variantId = synced.variants?.nodes?.[0]?.id;
+      if (!variantId) throw new Error('Shopify product sync returned no primary variant');
+
+      synced = await setPrimaryVariant({
+        productId: synced.id,
+        variantId,
+        priceCents: pricing.retailTotalCents,
+        locationId,
+        stock: product.stock,
+      });
 
       await setAquaphoriaMetafields(synced.id, {
         vendorId: vendor.id,
@@ -144,7 +179,7 @@ export function createShopifyClient(config) {
         category: product.category,
       });
 
-      return synced;
+      return { ...data.productSet.product, variants: synced.variants };
     },
 
     async getVendorMetadata(productId) {
@@ -200,21 +235,7 @@ export function createShopifyClient(config) {
     },
 
     async setProductPrice(productId, variantId, retailTotalCents) {
-      const data = await graphql(
-        `mutation SetAquaphoriaProductPrice($input: ProductSetInput!, $identifier: ProductSetIdentifiers!, $synchronous: Boolean!) {
-          productSet(input: $input, identifier: $identifier, synchronous: $synchronous) {
-            product { id title variants(first: 5) { nodes { id price } } }
-            userErrors { field message code }
-          }
-        }`,
-        {
-          input: { variants: [{ id: variantId, price: Number(centsToMoney(retailTotalCents)) }] },
-          identifier: { id: productId },
-          synchronous: true,
-        },
-      );
-      throwUserErrors('Shopify price update failed', data.productSet.userErrors);
-      return data.productSet.product;
+      return setPrimaryVariant({ productId, variantId, priceCents: retailTotalCents });
     },
 
     async setProductStock(productId, quantity, locationId) {
@@ -223,28 +244,22 @@ export function createShopifyClient(config) {
 
       const productData = await graphql(
         `query AquaphoriaPrimaryVariant($id: ID!) {
-          product(id: $id) { variants(first: 1) { nodes { id } } }
+          product(id: $id) { variants(first: 1) { nodes { id price } } }
         }`,
         { id: productId },
       );
-      const variantId = productData.product?.variants?.nodes?.[0]?.id;
-      if (!variantId) throw new Error('Product has no variant to update');
+      const variant = productData.product?.variants?.nodes?.[0];
+      if (!variant?.id) throw new Error('Product has no variant to update');
+      const currentPriceCents = Math.round(Number(variant.price) * 100);
+      if (!Number.isSafeInteger(currentPriceCents) || currentPriceCents < 0) throw new Error('Shopify returned an invalid current price');
 
-      const data = await graphql(
-        `mutation SetAquaphoriaProductStock($input: ProductSetInput!, $identifier: ProductSetIdentifiers!, $synchronous: Boolean!) {
-          productSet(input: $input, identifier: $identifier, synchronous: $synchronous) {
-            product { id variants(first: 1) { nodes { id inventoryQuantity } } }
-            userErrors { field message code }
-          }
-        }`,
-        {
-          input: { variants: [{ id: variantId, inventoryQuantities: [{ locationId, name: 'available', quantity }] }] },
-          identifier: { id: productId },
-          synchronous: true,
-        },
-      );
-      throwUserErrors('Shopify inventory update failed', data.productSet.userErrors);
-      return data.productSet.product;
+      return setPrimaryVariant({
+        productId,
+        variantId: variant.id,
+        priceCents: currentPriceCents,
+        locationId,
+        stock: quantity,
+      });
     },
 
     async fulfillVendorItems({ orderId, productIds, trackingNumber, trackingCompany = null }) {

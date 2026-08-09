@@ -73,7 +73,9 @@ export function getTenantProfile(key) {
 
 export function assertTenantModuleEnabled(tenantKey, moduleKey) {
   const tenant = getTenantProfile(tenantKey);
-  if (!tenant.modules[moduleKey]) throw new Error(`Module ${moduleKey} is disabled for tenant ${tenantKey}`);
+  const key = String(moduleKey ?? '');
+  if (!key || !Object.hasOwn(tenant.modules, key)) throw new Error(`Unknown Discord module: ${moduleKey}`);
+  if (!tenant.modules[key]) throw new Error(`Module ${key} is disabled for tenant ${tenantKey}`);
   return true;
 }
 

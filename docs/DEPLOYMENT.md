@@ -15,6 +15,8 @@ npm test
 npm start
 ```
 
+On the Windows dedicated host, use the repository's persistent supervisor instead of leaving `npm start` in an interactive console. See `docs/WINDOWS_PERSISTENT_WORKER.md` and run `tools/install-aquaphoria-worker-task.ps1` from an elevated PowerShell after `.env` is configured.
+
 ## Discord app
 
 Set:
@@ -139,3 +141,6 @@ If Jarvis research is not configured, `/research` and `/gpt` research requests c
 10. Send a Shopify paid-order test webhook/order.
 11. Confirm the private vendor ticket contains only that vendor's line items.
 12. Test payout status and `/order shipped` with a non-customer test order before enabling the workflow for live orders.
+13. On Windows, run `tools/verify-aquaphoria-worker.ps1` and confirm `workerReady: true` and `gptConfigured: true`.
+
+FXServer does not need to be restarted for this deployment.

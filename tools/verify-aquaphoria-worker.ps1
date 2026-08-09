@@ -1,6 +1,6 @@
 param(
   [string]$TaskName = 'Aquaphoria Discord Worker',
-  [string]$HealthUrl = 'http://127.0.0.1:8787/health'
+  [string]$HealthUrl = 'http://127.0.0.1:8790/health'
 )
 
 $ErrorActionPreference = 'Stop'

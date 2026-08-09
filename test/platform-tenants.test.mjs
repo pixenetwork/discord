@@ -41,3 +41,8 @@ test('customer support profile enables product support but not FiveM admin contr
   assert.equal(assertTenantModuleEnabled('customer_support', 'customer_script_support'), true);
   assert.throws(() => assertTenantModuleEnabled('customer_support', 'restart_control'), /disabled/);
 });
+
+test('unknown module keys fail closed instead of looking merely disabled', () => {
+  assert.throws(() => assertTenantModuleEnabled('beverly_hills_rp', 'not-a-module'), /Unknown Discord module/);
+  assert.throws(() => assertTenantModuleEnabled('beverly_hills_rp', null), /Unknown Discord module/);
+});

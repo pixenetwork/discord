@@ -161,18 +161,6 @@ export function createOrderService({ config, store, shopify }) {
       .map((item) => `${item.quantity}× ${item.title} — vendor payout $${centsToMoney(item.vendorUnitPayoutCents)} each`)
       .join('\n');
 
-    const embed = new EmbedBuilder()
-      .setTitle(`📦 New Aquaphoria Order ${order.name ?? ''}`.trim())
-      .setDescription(`Private fulfillment ticket for **${group.vendor.displayName}**.`)
-      .addFields(
-        { name: 'Items to ship', value: itemText.slice(0, 1024) || 'No items', inline: false },
-        { name: 'Ship to', value: shippingAddress(order).slice(0, 1024), inline: false },
-        { name: 'Vendor payout', value: `$${centsToMoney(group.payoutCents)}`, inline: true },
-        { name: 'Status', value: 'Awaiting fulfillment', inline: true },
-      )
-      .setFooter({ text: `${ticketMarker(key)} • Payout includes vendor product price and submitted shipping.` })
-      .setTimestamp();
-
     const saved = await store.recordTicketWithPayout({
       key,
       vendorId: group.vendor.id,
@@ -190,8 +178,24 @@ export function createOrderService({ config, store, shopify }) {
       amountCents: group.payoutCents,
       type: 'owed',
       note: `Vendor fulfillment payout for ${String(order.name ?? order.order_number ?? order.id)}`,
-    });
+    }, { preserveExistingLifecycle: true });
     const ticket = saved.ticket;
+    const lifecycleLabel = ticket.status === 'shipped'
+      ? 'Shipped'
+      : ticket.status === 'issue'
+        ? 'Issue reported'
+        : 'Awaiting fulfillment';
+    const embed = new EmbedBuilder()
+      .setTitle(`📦 New Aquaphoria Order ${order.name ?? ''}`.trim())
+      .setDescription(`Private fulfillment ticket for **${group.vendor.displayName}**.`)
+      .addFields(
+        { name: 'Items to ship', value: itemText.slice(0, 1024) || 'No items', inline: false },
+        { name: 'Ship to', value: shippingAddress(order).slice(0, 1024), inline: false },
+        { name: 'Vendor payout', value: `$${centsToMoney(group.payoutCents)}`, inline: true },
+        { name: 'Status', value: lifecycleLabel, inline: true },
+      )
+      .setFooter({ text: `${ticketMarker(key)} • Payout includes vendor product price and submitted shipping.` })
+      .setTimestamp();
 
     if (!(await hasTicketNotice(channel, key))) {
       await channel.send({

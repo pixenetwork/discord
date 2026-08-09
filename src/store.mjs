@@ -205,9 +205,26 @@ export function createStore({ dataDir }) {
       return mutate((state) => saveTicket(state, ticket));
     },
 
-    async recordTicketWithPayout(ticket, payout) {
+    async recordTicketWithPayout(ticket, payout, { preserveExistingLifecycle = false } = {}) {
       return mutate((state) => {
-        const savedTicket = saveTicket(state, ticket);
+        let ticketToSave = ticket;
+        const existingTicket = ticket?.key ? state.tickets[String(ticket.key)] : null;
+        if (preserveExistingLifecycle && existingTicket) {
+          ticketToSave = { ...ticket };
+          for (const field of [
+            'status',
+            'trackingNumber',
+            'trackingCompany',
+            'fulfillmentIds',
+            'shippedAt',
+            'issue',
+            'issueAt',
+          ]) {
+            if (Object.hasOwn(existingTicket, field)) ticketToSave[field] = existingTicket[field];
+            else delete ticketToSave[field];
+          }
+        }
+        const savedTicket = saveTicket(state, ticketToSave);
         const normalizedPayout = normalizePayout(payout);
         if (normalizedPayout.vendorId !== savedTicket.vendorId) {
           throw new Error('Ticket and payout vendor IDs must match');

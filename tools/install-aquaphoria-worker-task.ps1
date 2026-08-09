@@ -1,7 +1,7 @@
 param(
   [string]$WorkerDir = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path,
   [string]$TaskName = 'Aquaphoria Discord Worker',
-  [string]$HealthUrl = 'http://127.0.0.1:8787/health'
+  [string]$HealthUrl = 'http://127.0.0.1:8790/health'
 )
 
 $ErrorActionPreference = 'Stop'

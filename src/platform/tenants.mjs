@@ -63,6 +63,7 @@ export const TENANT_PROFILES = Object.freeze({
         customer_script_support: true,
         license_entitlements: true,
         github_handoff: true,
+        resolution_sync: true,
       },
     },
   ),

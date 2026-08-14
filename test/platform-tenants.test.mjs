@@ -39,6 +39,7 @@ test('former staff access is limited to Pixel Network Office profile', () => {
 
 test('customer support profile enables product support but not FiveM admin control', () => {
   assert.equal(assertTenantModuleEnabled('customer_support', 'customer_script_support'), true);
+  assert.equal(assertTenantModuleEnabled('customer_support', 'resolution_sync'), true);
   assert.throws(() => assertTenantModuleEnabled('customer_support', 'restart_control'), /disabled/);
 });
 

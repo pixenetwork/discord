@@ -1,0 +1,213 @@
+import crypto from 'node:crypto';
+import { assertTenantModuleEnabled, getTenantProfile } from './tenants.mjs';
+
+function iso(value = Date.now()) {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) throw new Error('A valid timestamp is required');
+  return date.toISOString();
+}
+
+function clone(value) {
+  return JSON.parse(JSON.stringify(value));
+}
+
+function actor(input) {
+  if (!input?.userId || !input?.tenantId) throw new Error('Commerce actor userId and tenantId are required');
+  getTenantProfile(String(input.tenantId));
+  return {
+    userId: String(input.userId),
+    tenantId: String(input.tenantId),
+    roleIds: [...new Set((input.roleIds ?? []).map(String).filter(Boolean))],
+  };
+}
+
+function digest(value) {
+  const text = typeof value === 'string' ? value : JSON.stringify(value ?? null);
+  return crypto.createHash('sha256').update(text).digest('hex');
+}
+
+function ensureMoney(cents) {
+  if (!Number.isSafeInteger(cents) || cents < 0) throw new Error('amountCents must be a non-negative safe integer');
+  return cents;
+}
+
+function authorize(authorization, who, aliases = ['staff', 'integration']) {
+  const canonical = authorization?.[who.tenantId]?.canonicalRoleIds;
+  if (!canonical) throw new Error(`Missing canonical role configuration for tenant ${who.tenantId}`);
+  const allowed = aliases.map((alias) => canonical[alias]).filter(Boolean).map(String);
+  if (!allowed.length) throw new Error(`Missing canonical commerce role IDs for tenant ${who.tenantId}`);
+  if (!allowed.some((roleId) => who.roleIds.includes(roleId))) throw new Error(`Authorization denied for commerce operation in tenant ${who.tenantId}`);
+}
+
+function key(tenantId, id) {
+  return `${tenantId}:${id}`;
+}
+
+export class CommerceEngine {
+  constructor(options = {}) {
+    this.authorization = options.authorization ?? {};
+    this.transactions = new Map();
+    this.entitlements = new Map();
+    this.flags = new Map();
+    this.flagCounter = 1;
+  }
+
+  recordTebexVerification(input) {
+    const who = actor(input?.actor);
+    assertTenantModuleEnabled(who.tenantId, 'tebex_verification');
+    authorize(this.authorization, who);
+    const transactionId = String(input?.transactionId ?? '').trim();
+    const subjectId = String(input?.subjectId ?? '').trim();
+    if (!transactionId) throw new Error('transactionId is required');
+    if (!subjectId) throw new Error('subjectId is required');
+    const status = String(input?.status ?? 'verified').toLowerCase();
+    if (!['verified', 'invalid', 'refunded', 'chargeback'].includes(status)) throw new Error(`Unsupported Tebex verification status: ${status}`);
+    const productIds = [...new Set((input?.productIds ?? []).map(String).map((id) => id.trim()).filter(Boolean))];
+    const record = {
+      transactionId,
+      tenantId: who.tenantId,
+      subjectId,
+      status,
+      productIds,
+      amountCents: ensureMoney(input?.amountCents ?? 0),
+      currency: String(input?.currency ?? 'USD').toUpperCase(),
+      sourceDigest: digest(input?.sourceEvidence ?? { transactionId, subjectId, productIds, status }),
+      verifiedBy: who.userId,
+      verifiedAt: iso(input?.now),
+    };
+    const storageKey = key(who.tenantId, transactionId);
+    const existing = this.transactions.get(storageKey);
+    if (existing) {
+      if (existing.sourceDigest !== record.sourceDigest || existing.subjectId !== subjectId) {
+        throw new Error(`Transaction ${transactionId} already exists with different verification evidence`);
+      }
+      return clone(existing);
+    }
+    this.transactions.set(storageKey, record);
+    if (status === 'verified') {
+      for (const productId of productIds) this.#grantEntitlement(who.tenantId, subjectId, productId, transactionId, input?.now);
+    }
+    if (['refunded', 'chargeback'].includes(status)) {
+      for (const productId of productIds) this.#revokeEntitlement(who.tenantId, subjectId, productId, status, input?.now);
+    }
+    return clone(record);
+  }
+
+  transaction(tenantId, transactionId) {
+    getTenantProfile(String(tenantId));
+    const record = this.transactions.get(key(String(tenantId), String(transactionId)));
+    if (!record) throw new Error(`Unknown transaction ${transactionId} in tenant ${tenantId}`);
+    return clone(record);
+  }
+
+  entitlement(tenantId, subjectId, productId) {
+    assertTenantModuleEnabled(tenantId, 'license_entitlements');
+    const record = this.entitlements.get(key(String(tenantId), `${subjectId}:${productId}`));
+    return record ? clone(record) : null;
+  }
+
+  hasEntitlement(tenantId, subjectId, productId) {
+    const record = this.entitlement(tenantId, subjectId, productId);
+    return Boolean(record?.active);
+  }
+
+  supportAccess(input) {
+    const tenantId = String(input?.tenantId);
+    assertTenantModuleEnabled(tenantId, 'customer_script_support');
+    assertTenantModuleEnabled(tenantId, 'license_entitlements');
+    const subjectId = String(input?.subjectId ?? '').trim();
+    const productId = String(input?.productId ?? '').trim();
+    if (!subjectId || !productId) throw new Error('subjectId and productId are required');
+    const entitlement = this.entitlement(tenantId, subjectId, productId);
+    return Object.freeze({
+      tenantId,
+      subjectId,
+      productId,
+      allowed: Boolean(entitlement?.active),
+      reason: entitlement?.active ? 'verified_entitlement' : 'entitlement_required',
+      transactionId: entitlement?.transactionId ?? null,
+    });
+  }
+
+  createFraudFlag(input) {
+    const who = actor(input?.actor);
+    assertTenantModuleEnabled(who.tenantId, 'tebex_fraud_flags');
+    authorize(this.authorization, who, ['staff']);
+    const transactionId = String(input?.transactionId ?? '').trim();
+    const transaction = this.transactions.get(key(who.tenantId, transactionId));
+    if (!transaction) throw new Error(`Unknown transaction ${transactionId} in tenant ${who.tenantId}`);
+    const reason = String(input?.reason ?? '').trim();
+    if (!reason) throw new Error('Fraud review reason is required');
+    const flag = {
+      id: `fraud_${this.flagCounter++}`,
+      tenantId: who.tenantId,
+      transactionId,
+      reason,
+      severity: ['low', 'medium', 'high'].includes(input?.severity) ? input.severity : 'medium',
+      status: 'open',
+      createdBy: who.userId,
+      createdAt: iso(input?.now),
+      resolvedBy: null,
+      resolvedAt: null,
+      resolution: null,
+    };
+    this.flags.set(key(who.tenantId, flag.id), flag);
+    return clone(flag);
+  }
+
+  resolveFraudFlag(input) {
+    const who = actor(input?.actor);
+    assertTenantModuleEnabled(who.tenantId, 'tebex_fraud_flags');
+    authorize(this.authorization, who, ['staff']);
+    const flag = this.flags.get(key(who.tenantId, String(input?.flagId)));
+    if (!flag) throw new Error(`Unknown fraud flag ${input?.flagId} in tenant ${who.tenantId}`);
+    if (flag.status === 'resolved') return clone(flag);
+    flag.status = 'resolved';
+    flag.resolvedBy = who.userId;
+    flag.resolvedAt = iso(input?.now);
+    flag.resolution = String(input?.resolution ?? '').trim() || 'reviewed';
+    return clone(flag);
+  }
+
+  openFraudFlags(tenantId) {
+    assertTenantModuleEnabled(tenantId, 'tebex_fraud_flags');
+    return [...this.flags.values()].filter((flag) => flag.tenantId === String(tenantId) && flag.status === 'open').map(clone);
+  }
+
+  #grantEntitlement(tenantId, subjectId, productId, transactionId, now) {
+    assertTenantModuleEnabled(tenantId, 'license_entitlements');
+    const storageKey = key(tenantId, `${subjectId}:${productId}`);
+    const previous = this.entitlements.get(storageKey);
+    this.entitlements.set(storageKey, {
+      tenantId,
+      subjectId,
+      productId,
+      active: true,
+      transactionId,
+      grantedAt: previous?.grantedAt ?? iso(now),
+      updatedAt: iso(now),
+      revokedAt: null,
+      revokeReason: null,
+    });
+  }
+
+  #revokeEntitlement(tenantId, subjectId, productId, reason, now) {
+    assertTenantModuleEnabled(tenantId, 'license_entitlements');
+    const storageKey = key(tenantId, `${subjectId}:${productId}`);
+    const previous = this.entitlements.get(storageKey);
+    if (!previous) return;
+    this.entitlements.set(storageKey, {
+      ...previous,
+      active: false,
+      updatedAt: iso(now),
+      revokedAt: iso(now),
+      revokeReason: reason,
+    });
+  }
+}
+
+export function createCommerceEngine(options) {
+  return new CommerceEngine(options);
+}
+
+export { digest };

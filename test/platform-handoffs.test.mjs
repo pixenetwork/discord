@@ -1,13 +1,15 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createHandoffEngine } from '../src/platform/handoffs.mjs';
+import { bindActor, createTestIdentityAdapter } from './helpers/discord-identity-fixtures.mjs';
 
 const authorization = {
   customer_support: { canonicalRoleIds: { staff: 'support-staff', developer: 'support-dev', owner: 'support-owner' } },
   beverly_hills_rp: { canonicalRoleIds: { staff: 'bh-staff', developer: 'bh-dev', owner: 'bh-owner' } },
 };
 
-const supportStaff = { userId: 'staff', tenantId: 'customer_support', roleIds: ['support-staff'] };
+const identity = createTestIdentityAdapter();
+const supportStaff = bindActor(identity, 'customer_support', 'staff', ['support-staff']);
 
 test('approved GitHub issue link is tenant scoped and idempotent', () => {
   const engine = createHandoffEngine({ authorization, allowedRepositories: ['pixenetwork/discord'] });
@@ -33,6 +35,13 @@ test('resolution updates record state only and require canonical authorization',
   assert.equal(updated.status, 'resolved');
   assert.equal(updated.resolutionSummary, 'Fixed in reviewed change');
 
-  const lookalike = { userId: 'fake', tenantId: 'customer_support', roleIds: ['Pixel Staff'] };
+  const lookalike = bindActor(identity, 'customer_support', 'fake', ['Pixel Staff']);
   assert.throws(() => engine.linkGitHubIssue({ actor: lookalike, sourceType: 'ticket', sourceId: '4', repository: 'pixenetwork/discord', issueNumber: 5 }), /Authorization denied/);
+  assert.throws(() => engine.linkGitHubIssue({
+    actor: { userId: 'spoof', tenantId: 'customer_support', roleIds: ['support-staff'] },
+    sourceType: 'ticket',
+    sourceId: '5',
+    repository: 'pixenetwork/discord',
+    issueNumber: 6,
+  }), /Unverified Discord identity/);
 });

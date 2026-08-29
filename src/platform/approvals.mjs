@@ -1,4 +1,5 @@
 import crypto from 'node:crypto';
+import { requireVerifiedActor } from './discord-identity.mjs';
 import { MODULE_BY_KEY } from './modules.mjs';
 import { assertTenantModuleEnabled, getTenantProfile } from './tenants.mjs';
 
@@ -8,16 +9,6 @@ function iso(value = Date.now()) {
   return date.toISOString();
 }
 
-function actor(input) {
-  if (!input?.userId || !input?.tenantId) throw new Error('Approval actor userId and tenantId are required');
-  getTenantProfile(String(input.tenantId));
-  return {
-    userId: String(input.userId),
-    tenantId: String(input.tenantId),
-    roleIds: [...new Set((input.roleIds ?? []).map(String).filter(Boolean))],
-  };
-}
-
 function digestPayload(payload) {
   const text = typeof payload === 'string' ? payload : JSON.stringify(payload ?? null);
   return crypto.createHash('sha256').update(text).digest('hex');
@@ -25,6 +16,10 @@ function digestPayload(payload) {
 
 function clone(value) {
   return JSON.parse(JSON.stringify(value));
+}
+
+function actor(input) {
+  return requireVerifiedActor(input, 'approval actor');
 }
 
 export class ApprovalEngine {
@@ -38,6 +33,7 @@ export class ApprovalEngine {
 
   request(input) {
     const who = actor(input?.actor);
+    this.#authorize(who, 'approval request', input?.moduleKey);
     const moduleKey = String(input?.moduleKey ?? '').trim();
     const module = MODULE_BY_KEY[moduleKey];
     if (!module) throw new Error(`Unknown Discord module: ${moduleKey}`);
@@ -81,6 +77,7 @@ export class ApprovalEngine {
     const who = actor(input?.actor);
     const record = this.#record(input?.approvalId);
     this.#sameTenant(who, record);
+    this.#authorize(who, 'approval consume', record.moduleKey);
     this.#expireIfNeeded(record, input?.now);
     if (record.status !== 'approved') throw new Error(`Approval ${record.id} is not approved`);
     if (record.consumedAt) throw new Error(`Approval ${record.id} was already consumed`);
@@ -119,7 +116,7 @@ export class ApprovalEngine {
     this.#sameTenant(who, record);
     this.#expireIfNeeded(record, input?.now);
     if (record.status !== 'pending') throw new Error(`Approval ${record.id} is already ${record.status}`);
-    this.#authorizeApprover(who);
+    this.#authorize(who, 'approval decision', record.moduleKey);
     if (this.requireSecondPerson && status === 'approved' && who.userId === record.requestedBy) {
       throw new Error('Approval requires a second person; requester cannot self-approve');
     }
@@ -130,16 +127,33 @@ export class ApprovalEngine {
     return clone(record);
   }
 
-  #authorizeApprover(who) {
+  #authorize(who, purpose, moduleKey = null) {
     const config = this.authorization?.[who.tenantId];
-    const aliases = config?.approvalRoleAliases ?? ['owner', 'admin'];
     const canonical = config?.canonicalRoleIds;
-    if (!canonical) throw new Error(`Missing canonical role configuration for tenant ${who.tenantId}`);
-    const allowed = aliases.map((alias) => canonical[alias]).filter(Boolean).map(String);
-    if (!allowed.length) throw new Error(`Missing canonical approval role IDs for tenant ${who.tenantId}`);
-    if (!allowed.some((roleId) => who.roleIds.includes(roleId))) {
-      throw new Error(`Authorization denied for approval decision in tenant ${who.tenantId}`);
+    if (!canonical || typeof canonical !== 'object') {
+      throw new Error(`Missing canonical role configuration for tenant ${who.tenantId}`);
     }
+    if (!Array.isArray(who.roleIds) || who.roleIds.length === 0) {
+      throw new Error(`Authorization denied for ${purpose} in tenant ${who.tenantId}`);
+    }
+    const aliases = this.#aliasesFor(purpose, config, moduleKey);
+    const allowed = aliases.map((alias) => canonical[alias]).filter(Boolean).map(String);
+    if (!allowed.length) throw new Error(`Missing canonical ${purpose} role IDs for tenant ${who.tenantId}`);
+    if (!allowed.some((roleId) => who.roleIds.includes(roleId))) {
+      throw new Error(`Authorization denied for ${purpose} in tenant ${who.tenantId}`);
+    }
+  }
+
+  #aliasesFor(purpose, config, moduleKey) {
+    if (purpose === 'approval decision') return config?.approvalRoleAliases ?? ['owner', 'admin'];
+    if (purpose === 'approval consume') return config?.consumeRoleAliases ?? ['staff', 'admin', 'owner'];
+    if (purpose === 'approval request') {
+      if (['restart_control', 'mass_unban', 'backups'].includes(String(moduleKey))) {
+        return config?.highImpactRequestRoleAliases ?? config?.requestRoleAliases ?? ['staff', 'admin', 'owner'];
+      }
+      return config?.requestRoleAliases ?? ['staff', 'admin', 'owner'];
+    }
+    return ['owner', 'admin'];
   }
 
   #record(id) {

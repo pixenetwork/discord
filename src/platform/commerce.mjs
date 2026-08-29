@@ -1,4 +1,5 @@
 import crypto from 'node:crypto';
+import { requireVerifiedActor } from './discord-identity.mjs';
 import { assertTenantModuleEnabled, getTenantProfile } from './tenants.mjs';
 
 function iso(value = Date.now()) {
@@ -12,18 +13,7 @@ function clone(value) {
 }
 
 function actor(input) {
-  if (!input?.userId || !input?.tenantId) throw new Error('Commerce actor userId and tenantId are required');
-  getTenantProfile(String(input.tenantId));
-  return {
-    userId: String(input.userId),
-    tenantId: String(input.tenantId),
-    roleIds: [...new Set((input.roleIds ?? []).map(String).filter(Boolean))],
-  };
-}
-
-function digest(value) {
-  const text = typeof value === 'string' ? value : JSON.stringify(value ?? null);
-  return crypto.createHash('sha256').update(text).digest('hex');
+  return requireVerifiedActor(input, 'commerce actor');
 }
 
 function ensureMoney(cents) {
@@ -34,6 +24,9 @@ function ensureMoney(cents) {
 function authorize(authorization, who, aliases = ['staff', 'integration']) {
   const canonical = authorization?.[who.tenantId]?.canonicalRoleIds;
   if (!canonical) throw new Error(`Missing canonical role configuration for tenant ${who.tenantId}`);
+  if (!Array.isArray(who.roleIds) || who.roleIds.length === 0) {
+    throw new Error(`Authorization denied for commerce operation in tenant ${who.tenantId}`);
+  }
   const allowed = aliases.map((alias) => canonical[alias]).filter(Boolean).map(String);
   if (!allowed.length) throw new Error(`Missing canonical commerce role IDs for tenant ${who.tenantId}`);
   if (!allowed.some((roleId) => who.roleIds.includes(roleId))) throw new Error(`Authorization denied for commerce operation in tenant ${who.tenantId}`);
@@ -43,42 +36,59 @@ function key(tenantId, id) {
   return `${tenantId}:${id}`;
 }
 
+function timingSafeEqualString(left, right) {
+  const a = Buffer.from(String(left));
+  const b = Buffer.from(String(right));
+  return a.length === b.length && crypto.timingSafeEqual(a, b);
+}
+
 export class CommerceEngine {
   constructor(options = {}) {
     this.authorization = options.authorization ?? {};
+    this.hmacSecret = options.hmacSecret != null ? String(options.hmacSecret) : null;
     this.transactions = new Map();
     this.entitlements = new Map();
     this.flags = new Map();
     this.flagCounter = 1;
   }
 
+  /**
+   * Record Tebex verification from an HMAC-verified webhook payload.
+   * Entitlements are granted only when the verified payload status is `verified`.
+   * Caller-supplied status without a valid HMAC cannot grant entitlements.
+   */
   recordTebexVerification(input) {
     const who = actor(input?.actor);
     assertTenantModuleEnabled(who.tenantId, 'tebex_verification');
     authorize(this.authorization, who);
-    const transactionId = String(input?.transactionId ?? '').trim();
-    const subjectId = String(input?.subjectId ?? '').trim();
+    const payload = this.#verifiedWebhookPayload(input);
+    const transactionId = String(payload.transactionId ?? '').trim();
+    const subjectId = String(payload.subjectId ?? '').trim();
     if (!transactionId) throw new Error('transactionId is required');
     if (!subjectId) throw new Error('subjectId is required');
-    const status = String(input?.status ?? 'verified').toLowerCase();
+    const status = String(payload.status ?? '').toLowerCase();
     if (!['verified', 'invalid', 'refunded', 'chargeback'].includes(status)) throw new Error(`Unsupported Tebex verification status: ${status}`);
-    const productIds = [...new Set((input?.productIds ?? []).map(String).map((id) => id.trim()).filter(Boolean))];
+    const productIds = [...new Set((payload.productIds ?? []).map(String).map((id) => id.trim()).filter(Boolean))];
     const record = {
       transactionId,
       tenantId: who.tenantId,
       subjectId,
       status,
       productIds,
-      amountCents: ensureMoney(input?.amountCents ?? 0),
-      currency: String(input?.currency ?? 'USD').toUpperCase(),
-      sourceDigest: digest(input?.sourceEvidence ?? { transactionId, subjectId, productIds, status }),
+      amountCents: ensureMoney(payload.amountCents ?? 0),
+      currency: String(payload.currency ?? 'USD').toUpperCase(),
+      hmacVerified: true,
       verifiedBy: who.userId,
       verifiedAt: iso(input?.now),
     };
     const storageKey = key(who.tenantId, transactionId);
     const existing = this.transactions.get(storageKey);
     if (existing) {
-      if (existing.sourceDigest !== record.sourceDigest || existing.subjectId !== subjectId) {
+      if (
+        existing.status !== record.status
+        || existing.subjectId !== subjectId
+        || existing.productIds.join(',') !== productIds.join(',')
+      ) {
         throw new Error(`Transaction ${transactionId} already exists with different verification evidence`);
       }
       return clone(existing);
@@ -174,6 +184,36 @@ export class CommerceEngine {
     return [...this.flags.values()].filter((flag) => flag.tenantId === String(tenantId) && flag.status === 'open').map(clone);
   }
 
+  signWebhookPayload(payload) {
+    if (!this.hmacSecret) throw new Error('Tebex HMAC secret is not configured');
+    const rawBody = typeof payload === 'string' ? payload : JSON.stringify(payload ?? null);
+    return {
+      rawBody,
+      hmacSignature: crypto.createHmac('sha256', this.hmacSecret).update(rawBody).digest('hex'),
+    };
+  }
+
+  #verifiedWebhookPayload(input) {
+    if (!this.hmacSecret) throw new Error('Tebex HMAC secret is not configured');
+    const rawBody = input?.rawBody;
+    const provided = input?.hmacSignature ?? input?.signature;
+    if (rawBody == null || provided == null) {
+      throw new Error('Tebex HMAC verification failed: rawBody and hmacSignature are required');
+    }
+    const expectedHex = crypto.createHmac('sha256', this.hmacSecret).update(String(rawBody)).digest('hex');
+    const expectedBase64 = crypto.createHmac('sha256', this.hmacSecret).update(String(rawBody)).digest('base64');
+    const valid = timingSafeEqualString(expectedHex, provided) || timingSafeEqualString(expectedBase64, provided);
+    if (!valid) throw new Error('Invalid Tebex HMAC signature');
+    let parsed;
+    try {
+      parsed = typeof rawBody === 'string' ? JSON.parse(rawBody) : rawBody;
+    } catch {
+      throw new Error('Tebex webhook payload must be valid JSON after HMAC verification');
+    }
+    if (!parsed || typeof parsed !== 'object') throw new Error('Tebex webhook payload must be an object');
+    return parsed;
+  }
+
   #grantEntitlement(tenantId, subjectId, productId, transactionId, now) {
     assertTenantModuleEnabled(tenantId, 'license_entitlements');
     const storageKey = key(tenantId, `${subjectId}:${productId}`);
@@ -209,5 +249,3 @@ export class CommerceEngine {
 export function createCommerceEngine(options) {
   return new CommerceEngine(options);
 }
-
-export { digest };

@@ -1,6 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createCommunityUtilitiesEngine } from '../src/platform/community-utilities.mjs';
+import { clearTenantModuleOverrides, enableTenantModule } from '../src/platform/tenants.mjs';
+import { bindActor, createTestIdentityAdapter } from './helpers/discord-identity-fixtures.mjs';
 
 const authorization = {
   beverly_hills_rp: {
@@ -19,8 +21,10 @@ const authorization = {
   },
 };
 
+const identity = createTestIdentityAdapter();
+
 function actor(tenantId, userId, roleIds = []) {
-  return { tenantId, userId, roleIds };
+  return bindActor(identity, tenantId, userId, roleIds);
 }
 
 test('sticky/keyword/welcome/booster/polls/translation states are tenant-scoped and auditable', () => {
@@ -131,25 +135,37 @@ test('staff feedback and status-blacklist review records preserve reviewer histo
 });
 
 test('mass-unban remains approval-gated planning only with execution disabled', () => {
-  const engine = createCommunityUtilitiesEngine({ authorization });
-  const owner = actor('beverly_hills_rp', 'bh-owner-1', ['bh-owner']);
-
-  const plan = engine.planMassUnban({
-    actor: owner,
+  clearTenantModuleOverrides();
+  assert.throws(() => createCommunityUtilitiesEngine({ authorization }).planMassUnban({
+    actor: actor('beverly_hills_rp', 'bh-owner-1', ['bh-owner']),
     scope: 'legacy-false-positives',
     reason: 'manual review complete',
-  });
-  assert.equal(plan.approvalStatus, 'pending');
-  assert.equal(plan.executionDisabled, true);
+  }), /disabled/);
 
-  const approved = engine.reviewMassUnbanPlan({
-    actor: owner,
-    planId: plan.id,
-    decision: 'approved',
-    reason: 'owner sign-off',
-  });
-  assert.equal(approved.approvalStatus, 'approved');
-  assert.equal(approved.executionDisabled, true);
+  enableTenantModule('beverly_hills_rp', 'mass_unban');
+  try {
+    const engine = createCommunityUtilitiesEngine({ authorization });
+    const owner = actor('beverly_hills_rp', 'bh-owner-1', ['bh-owner']);
+
+    const plan = engine.planMassUnban({
+      actor: owner,
+      scope: 'legacy-false-positives',
+      reason: 'manual review complete',
+    });
+    assert.equal(plan.approvalStatus, 'pending');
+    assert.equal(plan.executionDisabled, true);
+
+    const approved = engine.reviewMassUnbanPlan({
+      actor: owner,
+      planId: plan.id,
+      decision: 'approved',
+      reason: 'owner sign-off',
+    });
+    assert.equal(approved.approvalStatus, 'approved');
+    assert.equal(approved.executionDisabled, true);
+  } finally {
+    clearTenantModuleOverrides();
+  }
 });
 
 test('canonical-role authorization fails closed for privileged actions', () => {

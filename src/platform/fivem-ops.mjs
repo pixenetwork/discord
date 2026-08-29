@@ -1,3 +1,4 @@
+import { requireVerifiedActor } from './discord-identity.mjs';
 import { assertTenantModuleEnabled, getTenantProfile } from './tenants.mjs';
 
 function iso(value = Date.now()) {
@@ -11,15 +12,10 @@ function clone(value) {
 }
 
 function actor(input) {
-  if (!input?.userId || !input?.tenantId) throw new Error('FiveM actor userId and tenantId are required');
-  const tenantId = String(input.tenantId);
-  const profile = getTenantProfile(tenantId);
-  if (profile.scope !== 'fivem-server') throw new Error(`Tenant ${tenantId} is not a FiveM server profile`);
-  return {
-    userId: String(input.userId),
-    tenantId,
-    roleIds: [...new Set((input.roleIds ?? []).map(String).filter(Boolean))],
-  };
+  const who = requireVerifiedActor(input, 'FiveM actor');
+  const profile = getTenantProfile(who.tenantId);
+  if (profile.scope !== 'fivem-server') throw new Error(`Tenant ${who.tenantId} is not a FiveM server profile`);
+  return who;
 }
 
 function authorize(authorization, who, aliases = ['staff']) {

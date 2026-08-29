@@ -1,3 +1,4 @@
+import { requireVerifiedActor } from './discord-identity.mjs';
 import { assertTenantBoundary, assertTenantModuleEnabled, getTenantProfile } from './tenants.mjs';
 
 const DEFAULT_ACTION_ROLES = Object.freeze({
@@ -17,13 +18,7 @@ function clone(value) {
 }
 
 function actor(input) {
-  if (!input?.userId || !input?.tenantId) throw new Error('Gang actor userId and tenantId are required');
-  getTenantProfile(String(input.tenantId));
-  return {
-    userId: String(input.userId),
-    tenantId: String(input.tenantId),
-    roleIds: [...new Set((input.roleIds ?? []).map(String).filter(Boolean))],
-  };
+  return requireVerifiedActor(input, 'gang actor');
 }
 
 function rolePolicy(authorization, tenantId, action) {

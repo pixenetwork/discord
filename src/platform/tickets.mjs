@@ -1,3 +1,4 @@
+import { requireVerifiedActor } from './discord-identity.mjs';
 import { assertTenantBoundary, assertTenantModuleEnabled, getTenantProfile } from './tenants.mjs';
 
 const DEFAULT_TICKET_TYPES = Object.freeze({
@@ -48,13 +49,7 @@ function cloneRecord(record) {
 }
 
 function ensureActor(actor) {
-  if (!actor?.userId) throw new Error('Ticket actor.userId is required');
-  if (!actor?.tenantId) throw new Error('Ticket actor.tenantId is required');
-  return {
-    userId: String(actor.userId),
-    tenantId: String(actor.tenantId),
-    roleIds: [...new Set((actor.roleIds ?? []).map((roleId) => String(roleId)).filter(Boolean))],
-  };
+  return requireVerifiedActor(actor, 'ticket actor');
 }
 
 function ensureTenant(tenantId) {
@@ -127,13 +122,9 @@ export class TicketEngine {
   }
 
   createTicket(input) {
-    const tenantId = ensureTenant(input?.tenantId);
+    const actor = ensureActor(input?.actor);
+    const tenantId = ensureTenant(actor.tenantId);
     const type = ensureTypeEnabled(this.ticketTypes, input?.typeKey ?? 'standard');
-    const actor = ensureActor({
-      userId: input?.createdBy,
-      tenantId,
-      roleIds: input?.actorRoleIds,
-    });
 
     assertTenantModuleEnabled(tenantId, 'tickets');
     assertTenantModuleEnabled(tenantId, type.moduleKey);

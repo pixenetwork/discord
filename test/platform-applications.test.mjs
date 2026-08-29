@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createApplicationsEngine } from '../src/platform/applications.mjs';
+import { bindActor, createTestIdentityAdapter } from './helpers/discord-identity-fixtures.mjs';
 
 const authorization = {
   beverly_hills_rp: {
@@ -19,17 +20,23 @@ const authorization = {
   },
 };
 
-const staff = (tenantId) => ({
-  userId: `${tenantId}_staff`,
-  tenantId,
-  roleIds: [tenantId === 'beverly_hills_rp' ? 'bhrp_staff' : 'bdrp_staff'],
-});
+const identity = createTestIdentityAdapter();
 
-const admin = (tenantId) => ({
-  userId: `${tenantId}_admin`,
+const staff = (tenantId) => bindActor(
+  identity,
   tenantId,
-  roleIds: [tenantId === 'beverly_hills_rp' ? 'bhrp_admin' : 'bdrp_admin'],
-});
+  `${tenantId}_staff`,
+  [tenantId === 'beverly_hills_rp' ? 'bhrp_staff' : 'bdrp_staff'],
+);
+
+const admin = (tenantId) => bindActor(
+  identity,
+  tenantId,
+  `${tenantId}_admin`,
+  [tenantId === 'beverly_hills_rp' ? 'bhrp_admin' : 'bdrp_admin'],
+);
+
+const applicant = (tenantId, userId) => bindActor(identity, tenantId, userId, []);
 
 test('tenant-scoped default and custom application definitions are configurable', () => {
   const engine = createApplicationsEngine({ authorization });
@@ -51,7 +58,7 @@ test('tenant-scoped default and custom application definitions are configurable'
 test('submissions, reviewer decisions, reasons, and history remain tenant-scoped', () => {
   const engine = createApplicationsEngine({ authorization });
   const submission = engine.submitApplication({
-    actor: { userId: 'applicant_1', tenantId: 'beverly_hills_rp', roleIds: [] },
+    actor: applicant('beverly_hills_rp', 'applicant_1'),
     typeKey: 'staff',
     answers: { 'Why should we accept this application?': 'I can support late nights.' },
   });
@@ -94,7 +101,7 @@ test('verification panels are tenant-scoped and include sticky/auto role policy 
 test('role assignment plans are approval-aware and do not mutate roles directly', () => {
   const engine = createApplicationsEngine({ authorization, requireRoleAssignmentApproval: true });
   const submission = engine.submitApplication({
-    actor: { userId: 'applicant_2', tenantId: 'beverly_hills_rp', roleIds: [] },
+    actor: applicant('beverly_hills_rp', 'applicant_2'),
     typeKey: 'pd',
     answers: { 'Why should we accept this application?': 'I have prior LEO RP experience.' },
   });
@@ -135,7 +142,7 @@ test('canonical-role authorization fails closed', () => {
   });
 
   assert.throws(() => engine.upsertApplicationDefinition({
-    actor: { userId: 'staff_user', tenantId: 'beverly_hills_rp', roleIds: ['bhrp_staff'] },
+    actor: bindActor(identity, 'beverly_hills_rp', 'staff_user', ['bhrp_staff']),
     typeKey: 'staff',
     questions: ['Availability?'],
   }), /Missing canonical role IDs/);

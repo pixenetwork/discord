@@ -1,15 +1,18 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createFiveMOpsEngine } from '../src/platform/fivem-ops.mjs';
+import { clearTenantModuleOverrides, enableTenantModule } from '../src/platform/tenants.mjs';
+import { bindActor, createTestIdentityAdapter } from './helpers/discord-identity-fixtures.mjs';
 
 const authorization = {
   beverly_hills_rp: { canonicalRoleIds: { staff: 'bh-staff', integration: 'bh-integration', owner: 'bh-owner' } },
   blood_diamond_rp: { canonicalRoleIds: { staff: 'bd-staff', integration: 'bd-integration', owner: 'bd-owner' } },
 };
 
-const bhStaff = { userId: 'bh-admin', tenantId: 'beverly_hills_rp', roleIds: ['bh-staff'] };
-const bdStaff = { userId: 'bd-admin', tenantId: 'blood_diamond_rp', roleIds: ['bd-staff'] };
-const bhIntegration = { userId: 'relay', tenantId: 'beverly_hills_rp', roleIds: ['bh-integration'] };
+const identity = createTestIdentityAdapter();
+const bhStaff = bindActor(identity, 'beverly_hills_rp', 'bh-admin', ['bh-staff']);
+const bdStaff = bindActor(identity, 'blood_diamond_rp', 'bd-admin', ['bd-staff']);
+const bhIntegration = bindActor(identity, 'beverly_hills_rp', 'relay', ['bh-integration']);
 
 test('server status stays isolated per FiveM tenant', () => {
   const engine = createFiveMOpsEngine({ authorization });
@@ -48,16 +51,28 @@ test('staff sits, duty, and incidents are tenant scoped', () => {
   assert.equal(engine.listTenantIncidents('blood_diamond_rp').length, 1);
 });
 
-test('production restart control remains planning-only even when module is enabled', () => {
+test('production restart control remains planning-only and off until explicitly enabled', () => {
+  clearTenantModuleOverrides();
   const engine = createFiveMOpsEngine({ authorization });
-  const plan = engine.planProductionRestart({ actor: bhStaff, reason: 'maintenance', approvalId: 'approval-123' });
-  assert.equal(plan.executionDisabled, true);
-  assert.equal(plan.status, 'planned_only');
-  assert.equal(typeof engine.executeRestart, 'undefined');
+  assert.throws(() => engine.planProductionRestart({ actor: bhStaff, reason: 'maintenance', approvalId: 'approval-123' }), /disabled/);
+
+  enableTenantModule('beverly_hills_rp', 'restart_control');
+  try {
+    const plan = engine.planProductionRestart({ actor: bhStaff, reason: 'maintenance', approvalId: 'approval-123' });
+    assert.equal(plan.executionDisabled, true);
+    assert.equal(plan.status, 'planned_only');
+    assert.equal(typeof engine.executeRestart, 'undefined');
+  } finally {
+    clearTenantModuleOverrides();
+  }
 });
 
-test('role-name lookalikes fail closed', () => {
+test('role-name lookalikes and unverified actors fail closed', () => {
   const engine = createFiveMOpsEngine({ authorization });
-  const fake = { userId: 'fake', tenantId: 'beverly_hills_rp', roleIds: ['Pixel Staff'] };
+  const fake = bindActor(identity, 'beverly_hills_rp', 'fake', ['Pixel Staff']);
   assert.throws(() => engine.createIncident({ actor: fake, title: 'fake' }), /Authorization denied/);
+  assert.throws(() => engine.createIncident({
+    actor: { userId: 'spoof', tenantId: 'beverly_hills_rp', roleIds: ['bh-staff'] },
+    title: 'spoof',
+  }), /Unverified Discord identity/);
 });

@@ -1,3 +1,4 @@
+import { requireVerifiedActor } from './discord-identity.mjs';
 import { assertTenantModuleEnabled, getTenantProfile } from './tenants.mjs';
 
 function iso(value = Date.now()) {
@@ -11,13 +12,7 @@ function clone(value) {
 }
 
 function actor(input) {
-  if (!input?.userId || !input?.tenantId) throw new Error('Handoff actor userId and tenantId are required');
-  getTenantProfile(String(input.tenantId));
-  return {
-    userId: String(input.userId),
-    tenantId: String(input.tenantId),
-    roleIds: [...new Set((input.roleIds ?? []).map(String).filter(Boolean))],
-  };
+  return requireVerifiedActor(input, 'handoff actor');
 }
 
 function authorize(authorization, who) {

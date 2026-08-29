@@ -1,3 +1,4 @@
+import { requireVerifiedActor, requireVerifiedToolConfirmation } from './discord-identity.mjs';
 import { assertTenantModuleEnabled, getTenantProfile } from './tenants.mjs';
 
 const ISSUE_CLASSES = Object.freeze(['player_issue', 'script_bug', 'configuration_issue']);
@@ -14,13 +15,7 @@ function clone(value) {
 }
 
 function actor(input) {
-  if (!input?.userId || !input?.tenantId) throw new Error('AI ticket agent actor userId and tenantId are required');
-  getTenantProfile(String(input.tenantId));
-  return {
-    userId: String(input.userId),
-    tenantId: String(input.tenantId),
-    roleIds: [...new Set((input.roleIds ?? []).map(String).filter(Boolean))],
-  };
+  return requireVerifiedActor(input, 'AI ticket agent actor');
 }
 
 function authorize(authorization, who) {
@@ -303,7 +298,6 @@ export class AiTicketAgentEngine {
     if (!suggestion) throw new Error('suggestion is required');
     this.#consumeBudget(who.tenantId, input?.costUnits ?? 1, input?.now);
 
-    const toolConfirmation = this.#normalizeToolConfirmation(input?.toolConfirmation);
     const record = this.#case(who.tenantId, ticketId);
     record.likelyFix = {
       tenantId: who.tenantId,
@@ -311,24 +305,24 @@ export class AiTicketAgentEngine {
       suggestion,
       confidence: ensureConfidence(input?.confidence ?? 0),
       evidence: Object.freeze(normalizeEvidence(input?.evidence ?? [])),
-      // Never claim a fix was applied unless an explicit tool confirmation is present.
-      fixApplied: Boolean(toolConfirmation),
-      toolConfirmation,
+      // Suggestions never claim a fix was applied — ignore any caller toolConfirmation.
+      fixApplied: false,
+      toolConfirmation: null,
       suggestedBy: who.userId,
       suggestedAt: iso(input?.now),
     };
     record.updatedAt = record.likelyFix.suggestedAt;
     this.#audit(who, 'ai_ticket_fix_suggested', record.id, input?.now, {
       ticketId,
-      fixApplied: record.likelyFix.fixApplied,
+      fixApplied: false,
       confidence: record.likelyFix.confidence,
     });
     return clone(record.likelyFix);
   }
 
   /**
-   * Record that an external tool confirmed a remediation action.
-   * Without this confirmation, fixApplied remains false on suggestions.
+   * Record that an adapter-confirmed tool result applied a remediation.
+   * Only verified tool confirmations may set fixApplied.
    */
   confirmToolAction(input) {
     const who = actor(input?.actor);
@@ -336,8 +330,13 @@ export class AiTicketAgentEngine {
     authorize(this.authorization, who);
     const ticketId = String(input?.ticketId ?? '').trim();
     if (!ticketId) throw new Error('ticketId is required');
-    const toolConfirmation = this.#normalizeToolConfirmation(input?.toolConfirmation ?? input);
-    if (!toolConfirmation) throw new Error('toolConfirmation with toolName and confirmationId is required');
+    const sealed = requireVerifiedToolConfirmation(input?.toolConfirmation);
+    const toolConfirmation = Object.freeze({
+      toolName: sealed.toolName,
+      confirmationId: sealed.confirmationId,
+      result: sealed.result ?? null,
+      confirmedAt: sealed.confirmedAt ?? iso(input?.now),
+    });
 
     const record = this.#case(who.tenantId, ticketId);
     if (!record.likelyFix) throw new Error(`No likely fix suggestion exists for ticket ${ticketId}`);
@@ -383,18 +382,9 @@ export class AiTicketAgentEngine {
 
   #consumeBudget(tenantId, costUnits, now) {
     const cost = ensureUnits(costUnits ?? 1, 'costUnits');
+    const budget = this.budgets.get(tenantId);
+    if (!budget) throw new Error(`AI budget not configured for tenant ${tenantId}`);
     if (cost === 0) return;
-    let budget = this.budgets.get(tenantId);
-    if (!budget) {
-      budget = {
-        tenantId,
-        limitUnits: Number.MAX_SAFE_INTEGER,
-        usedUnits: 0,
-        updatedBy: 'system',
-        updatedAt: iso(now),
-      };
-      this.budgets.set(tenantId, budget);
-    }
     if (budget.usedUnits + cost > budget.limitUnits) {
       throw new Error(`AI budget exhausted for tenant ${tenantId}`);
     }
@@ -428,20 +418,6 @@ export class AiTicketAgentEngine {
       this.cases.set(key, record);
     }
     return record;
-  }
-
-  #normalizeToolConfirmation(value) {
-    if (value == null) return null;
-    if (typeof value !== 'object') throw new Error('toolConfirmation must be an object');
-    const toolName = String(value.toolName ?? '').trim();
-    const confirmationId = String(value.confirmationId ?? '').trim();
-    if (!toolName || !confirmationId) return null;
-    return Object.freeze({
-      toolName,
-      confirmationId,
-      result: String(value.result ?? '').trim() || null,
-      confirmedAt: value.confirmedAt ? iso(value.confirmedAt) : null,
-    });
   }
 
   #audit(who, action, entityId, now, details = {}) {

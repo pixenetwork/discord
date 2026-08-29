@@ -80,13 +80,18 @@ export const MODULES = Object.freeze([
 export const MODULE_BY_KEY = Object.freeze(Object.fromEntries(MODULES.map((module) => [module.key, module])));
 export const ALL_MODULE_KEYS = Object.freeze(MODULES.map((module) => module.key));
 
+/** High-impact modules stay off until explicitly enabled (and remain approval-gated). */
+const DEFAULT_OFF_MODULE_KEYS = Object.freeze(['restart_control', 'mass_unban']);
+
 export function defaultModuleState() {
   return Object.fromEntries(ALL_MODULE_KEYS.map((key) => [key, ['audit', 'health', 'module_admin', 'rbac'].includes(key)]));
 }
 
 export function fullSuiteModuleState() {
-  return Object.fromEntries(ALL_MODULE_KEYS.map((key) => [key, true]));
+  return Object.fromEntries(ALL_MODULE_KEYS.map((key) => [key, !DEFAULT_OFF_MODULE_KEYS.includes(key)]));
 }
+
+export { DEFAULT_OFF_MODULE_KEYS };
 
 export function validateModuleState(input) {
   const state = { ...defaultModuleState(), ...(input ?? {}) };

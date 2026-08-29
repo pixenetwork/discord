@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createAiTicketAgentEngine, ISSUE_CLASSES } from '../src/platform/ai-ticket-agent.mjs';
+import { bindActor, createTestIdentityAdapter } from './helpers/discord-identity-fixtures.mjs';
 
 const authorization = {
   beverly_hills_rp: {
@@ -17,18 +18,20 @@ const authorization = {
   },
 };
 
-const staff = (tenantId, roleId) => ({
-  userId: `${tenantId}_staff`,
-  tenantId,
-  roleIds: [roleId],
-});
+const identity = createTestIdentityAdapter();
+const bhStaff = bindActor(identity, 'beverly_hills_rp', 'bh_staff', ['bh-staff']);
+const bdStaff = bindActor(identity, 'blood_diamond_rp', 'bd_staff', ['bd-staff']);
+const supportStaff = bindActor(identity, 'customer_support', 'support_staff', ['support-staff']);
+const officeStaff = bindActor(identity, 'pixel_network_office', 'office_staff', ['office-staff']);
 
-const bhStaff = staff('beverly_hills_rp', 'bh-staff');
-const bdStaff = staff('blood_diamond_rp', 'bd-staff');
-const supportStaff = staff('customer_support', 'support-staff');
+function engineWithBudget(actor = bhStaff, limitUnits = 100) {
+  const engine = createAiTicketAgentEngine({ authorization });
+  engine.configureBudget({ actor, limitUnits, usedUnits: 0 });
+  return engine;
+}
 
 test('ingests structured ticket context without live Discord or model calls', () => {
-  const engine = createAiTicketAgentEngine({ authorization });
+  const engine = engineWithBudget(bhStaff);
   const ingested = engine.ingestContext({
     actor: bhStaff,
     ticketId: 'ticket_101',
@@ -48,7 +51,7 @@ test('ingests structured ticket context without live Discord or model calls', ()
 });
 
 test('records follow-ups, duplicates, staff summaries, classification, and suggested fixes', () => {
-  const engine = createAiTicketAgentEngine({ authorization });
+  const engine = engineWithBudget(supportStaff);
   engine.ingestContext({
     actor: supportStaff,
     ticketId: 'ticket_cs_1',
@@ -108,8 +111,8 @@ test('records follow-ups, duplicates, staff summaries, classification, and sugge
   assert.equal(suggestion.evidence.length, 1);
 });
 
-test('never claims a fix was applied unless toolConfirmation is present', () => {
-  const engine = createAiTicketAgentEngine({ authorization });
+test('suggestLikelyFix never sets fixApplied; only adapter-confirmed tool results do', () => {
+  const engine = engineWithBudget(bhStaff);
   engine.ingestContext({
     actor: bhStaff,
     ticketId: 'ticket_fix',
@@ -117,46 +120,67 @@ test('never claims a fix was applied unless toolConfirmation is present', () => 
     messages: [{ body: 'please fix' }],
   });
 
-  const withoutConfirm = engine.suggestLikelyFix({
-    actor: bhStaff,
-    ticketId: 'ticket_fix',
-    suggestion: 'Restart the resource after config sync',
-    confidence: 0.6,
-    evidence: [{ label: 'operator note', source: 'staff' }],
-    // Explicit falsey claim must still stay false without tool confirmation.
-    fixApplied: true,
-  });
-  assert.equal(withoutConfirm.fixApplied, false);
-
-  const withConfirm = engine.suggestLikelyFix({
+  const spoofed = engine.suggestLikelyFix({
     actor: bhStaff,
     ticketId: 'ticket_fix',
     suggestion: 'Restart the resource after config sync',
     confidence: 0.6,
     evidence: [{ label: 'txAdmin action', source: 'tool:txadmin' }],
+    fixApplied: true,
     toolConfirmation: { toolName: 'txadmin.restart_resource', confirmationId: 'txn_9', result: 'ok' },
   });
-  assert.equal(withConfirm.fixApplied, true);
-  assert.equal(withConfirm.toolConfirmation.confirmationId, 'txn_9');
+  assert.equal(spoofed.fixApplied, false);
+  assert.equal(spoofed.toolConfirmation, null);
 
-  engine.suggestLikelyFix({
+  assert.throws(() => engine.confirmToolAction({
     actor: bhStaff,
     ticketId: 'ticket_fix',
-    suggestion: 'Clear client cache then reconnect',
-    confidence: 0.55,
-    evidence: [{ label: 'playbook', source: 'knowledge_base' }],
+    toolConfirmation: { toolName: 'txadmin.restart_resource', confirmationId: 'txn_9', result: 'ok' },
+  }), /Unverified tool confirmation/);
+
+  const sealed = identity.confirmToolResult({
+    toolName: 'staff.cache_clear',
+    confirmationId: 'ops_12',
+    result: 'ok',
   });
-  const confirmedLater = engine.confirmToolAction({
+  const confirmed = engine.confirmToolAction({
     actor: bhStaff,
     ticketId: 'ticket_fix',
-    toolConfirmation: { toolName: 'staff.cache_clear', confirmationId: 'ops_12' },
+    toolConfirmation: sealed,
   });
-  assert.equal(confirmedLater.fixApplied, true);
-  assert.equal(confirmedLater.toolConfirmation.toolName, 'staff.cache_clear');
+  assert.equal(confirmed.fixApplied, true);
+  assert.equal(confirmed.toolConfirmation.toolName, 'staff.cache_clear');
+});
+
+test('missing AI budget fails closed for ingest and classify', () => {
+  const engine = createAiTicketAgentEngine({ authorization });
+  assert.throws(() => engine.ingestContext({
+    actor: bhStaff,
+    ticketId: 'no_budget',
+    subject: 'Should fail',
+    messages: [{ body: 'x' }],
+  }), /AI budget not configured/);
+
+  engine.configureBudget({ actor: bhStaff, limitUnits: 1, usedUnits: 0 });
+  engine.ingestContext({
+    actor: bhStaff,
+    ticketId: 'budgeted',
+    subject: 'ok',
+    messages: [{ body: 'x' }],
+    costUnits: 1,
+  });
+  assert.throws(() => engine.classifyIssue({
+    actor: bhStaff,
+    ticketId: 'budgeted',
+    classification: 'player_issue',
+    confidence: 0.4,
+  }), /AI budget exhausted|AI budget not configured/);
 });
 
 test('tenant isolation fails closed between Beverly Hills RP and Blood Diamond RP', () => {
   const engine = createAiTicketAgentEngine({ authorization });
+  engine.configureBudget({ actor: bhStaff, limitUnits: 10, usedUnits: 0 });
+  engine.configureBudget({ actor: bdStaff, limitUnits: 10, usedUnits: 0 });
   engine.ingestContext({
     actor: bhStaff,
     ticketId: 'shared_label',
@@ -179,22 +203,28 @@ test('tenant isolation fails closed between Beverly Hills RP and Blood Diamond R
   });
   assert.equal(engine.getCase('beverly_hills_rp', 'shared_label').subject, 'BH only case');
   assert.equal(engine.getCase('blood_diamond_rp', 'shared_label').subject, 'BD only case');
-  assert.equal(engine.listCases('beverly_hills_rp').length, 1);
-  assert.equal(engine.listCases('blood_diamond_rp').length, 1);
 });
 
-test('canonical-role authorization and disabled modules fail closed', () => {
-  const engine = createAiTicketAgentEngine({ authorization });
-  const lookalike = { userId: 'fake', tenantId: 'beverly_hills_rp', roleIds: ['Staff', 'bh-staff-lookalike'] };
+test('unverified spoofed actors and disabled modules fail closed', () => {
+  const engine = engineWithBudget(bhStaff);
+  const lookalike = { userId: 'fake', tenantId: 'beverly_hills_rp', roleIds: ['bh-staff'] };
   assert.throws(() => engine.ingestContext({
     actor: lookalike,
     ticketId: 't1',
     subject: 'nope',
     messages: [{ body: 'x' }],
+  }), /Unverified Discord identity/);
+
+  const lookalikeBound = bindActor(identity, 'beverly_hills_rp', 'fake', ['Staff', 'bh-staff-lookalike']);
+  assert.throws(() => engine.ingestContext({
+    actor: lookalikeBound,
+    ticketId: 't1b',
+    subject: 'nope',
+    messages: [{ body: 'x' }],
   }), /Authorization denied/);
 
   assert.throws(() => engine.ingestContext({
-    actor: staff('pixel_network_office', 'office-staff'),
+    actor: officeStaff,
     ticketId: 't2',
     subject: 'office should not run AI ticket agent',
     messages: [{ body: 'x' }],

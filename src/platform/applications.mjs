@@ -1,3 +1,4 @@
+import { requireVerifiedActor } from './discord-identity.mjs';
 import { assertTenantBoundary, assertTenantModuleEnabled, getTenantProfile } from './tenants.mjs';
 
 const DEFAULT_APPLICATION_TYPES = Object.freeze({
@@ -27,13 +28,7 @@ function clone(value) {
 }
 
 function actor(input) {
-  if (!input?.userId || !input?.tenantId) throw new Error('Application actor userId and tenantId are required');
-  getTenantProfile(String(input.tenantId));
-  return {
-    userId: String(input.userId),
-    tenantId: String(input.tenantId),
-    roleIds: [...new Set((input.roleIds ?? []).map(String).filter(Boolean))],
-  };
+  return requireVerifiedActor(input, 'application actor');
 }
 
 function rolePolicy(authorization, tenantId, action) {

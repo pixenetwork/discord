@@ -5,6 +5,8 @@ import {
   assertTenantBoundary,
   assertTenantModuleEnabled,
   canFormerStaffAccess,
+  clearTenantModuleOverrides,
+  enableTenantModule,
 } from '../src/platform/tenants.mjs';
 
 test('Beverly Hills RP and Blood Diamond RP have the full suite enabled independently', () => {
@@ -12,6 +14,10 @@ test('Beverly Hills RP and Blood Diamond RP have the full suite enabled independ
   assert.equal(TENANT_PROFILES.blood_diamond_rp.modules.ai_ticket_agent, true);
   assert.equal(TENANT_PROFILES.beverly_hills_rp.modules.gang_manager, true);
   assert.equal(TENANT_PROFILES.blood_diamond_rp.modules.gang_manager, true);
+  assert.equal(TENANT_PROFILES.beverly_hills_rp.modules.restart_control, false);
+  assert.equal(TENANT_PROFILES.beverly_hills_rp.modules.mass_unban, false);
+  assert.equal(TENANT_PROFILES.blood_diamond_rp.modules.restart_control, false);
+  assert.equal(TENANT_PROFILES.blood_diamond_rp.modules.mass_unban, false);
 });
 
 test('cross-server access fails closed for non-owner actors', () => {
@@ -41,6 +47,16 @@ test('customer support profile enables product support but not FiveM admin contr
   assert.equal(assertTenantModuleEnabled('customer_support', 'customer_script_support'), true);
   assert.equal(assertTenantModuleEnabled('customer_support', 'resolution_sync'), true);
   assert.throws(() => assertTenantModuleEnabled('customer_support', 'restart_control'), /disabled/);
+});
+
+test('high-impact modules stay disabled until explicitly enabled', () => {
+  clearTenantModuleOverrides();
+  assert.throws(() => assertTenantModuleEnabled('beverly_hills_rp', 'restart_control'), /disabled/);
+  assert.throws(() => assertTenantModuleEnabled('beverly_hills_rp', 'mass_unban'), /disabled/);
+  enableTenantModule('beverly_hills_rp', 'restart_control');
+  assert.equal(assertTenantModuleEnabled('beverly_hills_rp', 'restart_control'), true);
+  clearTenantModuleOverrides();
+  assert.throws(() => assertTenantModuleEnabled('beverly_hills_rp', 'restart_control'), /disabled/);
 });
 
 test('unknown module keys fail closed instead of looking merely disabled', () => {

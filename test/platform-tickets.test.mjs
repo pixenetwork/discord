@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createTicketEngine } from '../src/platform/tickets.mjs';
+import { bindActor, createTestIdentityAdapter } from './helpers/discord-identity-fixtures.mjs';
 
 const authorization = {
   beverly_hills_rp: {
@@ -11,12 +12,19 @@ const authorization = {
   },
 };
 
+const identity = createTestIdentityAdapter();
+
 function staffActor(tenantId) {
-  return {
-    userId: `${tenantId}_staff_user`,
+  return bindActor(
+    identity,
     tenantId,
-    roleIds: [tenantId === 'beverly_hills_rp' ? 'bhrp_staff' : 'bdrp_staff'],
-  };
+    `${tenantId}_staff_user`,
+    [tenantId === 'beverly_hills_rp' ? 'bhrp_staff' : 'bdrp_staff'],
+  );
+}
+
+function playerActor(tenantId, userId) {
+  return bindActor(identity, tenantId, userId, []);
 }
 
 test('ticket types are configurable while preserving the default type set', () => {
@@ -29,26 +37,24 @@ test('ticket types are configurable while preserving the default type set', () =
   });
 
   const enquiry = engine.createTicket({
-    tenantId: 'beverly_hills_rp',
+    actor: playerActor('beverly_hills_rp', 'player_1'),
     typeKey: 'enquiry',
-    createdBy: 'player_1',
     subject: 'How do I appeal a warning?',
   });
   assert.equal(enquiry.typeKey, 'enquiry');
 
   assert.throws(() => engine.createTicket({
-    tenantId: 'beverly_hills_rp',
+    actor: playerActor('beverly_hills_rp', 'player_2'),
     typeKey: 'tebex',
-    createdBy: 'player_2',
   }), /Unsupported ticket type/);
 });
 
 test('claim/unclaim, close request, close, and reopen preserve tenant-scoped state', () => {
   const engine = createTicketEngine({ authorization });
+  const player = playerActor('beverly_hills_rp', 'player_3');
   const ticket = engine.createTicket({
-    tenantId: 'beverly_hills_rp',
+    actor: player,
     typeKey: 'standard',
-    createdBy: 'player_3',
     participantIds: ['player_4'],
   });
 
@@ -62,7 +68,7 @@ test('claim/unclaim, close request, close, and reopen preserve tenant-scoped sta
 
   const requested = engine.requestClose({
     ticketId: ticket.id,
-    actor: { userId: 'player_3', tenantId: 'beverly_hills_rp', roleIds: [] },
+    actor: player,
     reason: 'resolved',
   });
   assert.equal(requested.status, 'close_requested');
@@ -80,9 +86,8 @@ test('claim/unclaim, close request, close, and reopen preserve tenant-scoped sta
 test('participant add/remove is role-gated and keeps creator attached', () => {
   const engine = createTicketEngine({ authorization });
   const ticket = engine.createTicket({
-    tenantId: 'beverly_hills_rp',
+    actor: playerActor('beverly_hills_rp', 'reporter_1'),
     typeKey: 'bug',
-    createdBy: 'reporter_1',
   });
 
   const staff = staffActor('beverly_hills_rp');
@@ -102,9 +107,8 @@ test('participant add/remove is role-gated and keeps creator attached', () => {
 test('reminders and transcript metadata include tenant IDs and traceability', () => {
   const engine = createTicketEngine({ authorization });
   const ticket = engine.createTicket({
-    tenantId: 'beverly_hills_rp',
+    actor: playerActor('beverly_hills_rp', 'citizen_88'),
     typeKey: 'staff_report',
-    createdBy: 'citizen_88',
   });
 
   const staff = staffActor('beverly_hills_rp');
@@ -154,29 +158,32 @@ test('canonical-role authorization fails closed and tenant boundaries stay isola
   });
 
   const ticket = engine.createTicket({
-    tenantId: 'beverly_hills_rp',
+    actor: playerActor('beverly_hills_rp', 'player_6'),
     typeKey: 'ban_appeal',
-    createdBy: 'player_6',
   });
 
   assert.throws(() => engine.claimTicket({
     ticketId: ticket.id,
-    actor: { userId: 'outsider', tenantId: 'blood_diamond_rp', roleIds: ['bdrp_staff'] },
+    actor: bindActor(identity, 'blood_diamond_rp', 'outsider', ['bdrp_staff']),
   }), /Cross-tenant access denied/);
 
   assert.throws(() => engine.claimTicket({
     ticketId: ticket.id,
-    actor: { userId: 'helper', tenantId: 'beverly_hills_rp', roleIds: ['random_role'] },
+    actor: bindActor(identity, 'beverly_hills_rp', 'helper', ['random_role']),
   }), /Authorization denied/);
 
+  assert.throws(() => engine.claimTicket({
+    ticketId: ticket.id,
+    actor: { userId: 'spoof', tenantId: 'beverly_hills_rp', roleIds: ['bhrp_staff'] },
+  }), /Unverified Discord identity/);
+
   const bdrpTicket = engine.createTicket({
-    tenantId: 'blood_diamond_rp',
+    actor: playerActor('blood_diamond_rp', 'player_7'),
     typeKey: 'standard',
-    createdBy: 'player_7',
   });
 
   assert.throws(() => engine.claimTicket({
     ticketId: bdrpTicket.id,
-    actor: { userId: 'bdrp_helper', tenantId: 'blood_diamond_rp', roleIds: ['bdrp_staff'] },
+    actor: bindActor(identity, 'blood_diamond_rp', 'bdrp_helper', ['bdrp_staff']),
   }), /Missing canonical role IDs/);
 });

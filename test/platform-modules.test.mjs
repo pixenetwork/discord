@@ -11,11 +11,17 @@ import {
   validateModuleState,
 } from '../src/platform/modules.mjs';
 
-test('full suite contains every registered module and validates dependencies', () => {
+test('full suite enables every registered module except mandatory high-impact defaults', () => {
   const state = validateModuleState(fullSuiteModuleState());
   assert.equal(Object.keys(state).length, ALL_MODULE_KEYS.length);
   assert.ok(ALL_MODULE_KEYS.length > 40);
-  for (const key of ALL_MODULE_KEYS) assert.equal(state[key], true);
+  for (const key of ALL_MODULE_KEYS) {
+    if (key === 'restart_control' || key === 'mass_unban') {
+      assert.equal(state[key], false, `${key} must stay off in full suite`);
+    } else {
+      assert.equal(state[key], true);
+    }
+  }
 });
 
 test('enabling a module enables its dependencies recursively', () => {
@@ -33,13 +39,21 @@ test('disabling a required dependency fails closed', () => {
   assert.throws(() => disableModule(state, 'tickets'), /depend on it/);
 });
 
-test('high-impact controls stay marked approval-gated even in the full suite', () => {
-  const gated = approvalGatedModules(fullSuiteModuleState());
+test('high-impact controls stay off by default and remain approval-gated when enabled', () => {
+  assert.equal(defaultModuleState().restart_control, false);
+  assert.equal(defaultModuleState().mass_unban, false);
+  assert.equal(fullSuiteModuleState().restart_control, false);
+  assert.equal(fullSuiteModuleState().mass_unban, false);
+  assert.equal(MODULE_BY_KEY.mass_unban.risk, 'high');
+  assert.equal(MODULE_BY_KEY.restart_control.risk, 'high');
+  assert.equal(MODULE_BY_KEY.mass_unban.approvalRequired, true);
+  assert.equal(MODULE_BY_KEY.restart_control.approvalRequired, true);
+
+  const enabled = enableModule(enableModule(fullSuiteModuleState(), 'mass_unban'), 'restart_control');
+  const gated = approvalGatedModules(enabled);
   assert.ok(gated.includes('mass_unban'));
   assert.ok(gated.includes('restart_control'));
   assert.ok(gated.includes('backups'));
-  assert.equal(MODULE_BY_KEY.mass_unban.risk, 'high');
-  assert.equal(MODULE_BY_KEY.restart_control.risk, 'high');
 });
 
 test('unknown module settings are rejected', () => {

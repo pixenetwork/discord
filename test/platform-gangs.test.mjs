@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createGangEngine } from '../src/platform/gangs.mjs';
+import { bindActor, createTestIdentityAdapter } from './helpers/discord-identity-fixtures.mjs';
 
 const authorization = {
   beverly_hills_rp: {
@@ -11,12 +12,15 @@ const authorization = {
   },
 };
 
+const identity = createTestIdentityAdapter();
+
 function staff(tenantId) {
-  return {
-    userId: `${tenantId}-admin`,
+  return bindActor(
+    identity,
     tenantId,
-    roleIds: [tenantId === 'beverly_hills_rp' ? 'bh-staff' : 'bd-staff'],
-  };
+    `${tenantId}-admin`,
+    [tenantId === 'beverly_hills_rp' ? 'bh-staff' : 'bd-staff'],
+  );
 }
 
 test('gang membership respects purchased slots and ownership transfer rules', () => {
@@ -45,12 +49,13 @@ test('gang records fail closed across Beverly Hills and Blood Diamond tenants', 
 
 test('canonical role IDs are required and role-name lookalikes do not authorize', () => {
   const engine = createGangEngine({ authorization });
-  const fake = {
-    userId: 'fake-staff',
-    tenantId: 'beverly_hills_rp',
-    roleIds: ['Aquaphoria Staff', 'Pixel Staff'],
-  };
+  const fake = bindActor(identity, 'beverly_hills_rp', 'fake-staff', ['Aquaphoria Staff', 'Pixel Staff']);
   assert.throws(() => engine.createGang({ actor: fake, gangId: 'fake', ownerId: 'x' }), /Authorization denied/);
+  assert.throws(() => engine.createGang({
+    actor: { userId: 'spoof', tenantId: 'beverly_hills_rp', roleIds: ['bh-staff'] },
+    gangId: 'spoof',
+    ownerId: 'x',
+  }), /Unverified Discord identity/);
 });
 
 test('priority changes produce a tenant-scoped role sync plan without mutating Discord roles', () => {

@@ -4,7 +4,7 @@ import { createApprovalEngine } from '../src/platform/approvals.mjs';
 import {
   clearTenantModuleOverrides,
   enableTenantModule,
-} from '../src/platform/tenants.mjs';
+} from './helpers/tenant-module-overrides.mjs';
 import { bindActor, createTestIdentityAdapter } from './helpers/discord-identity-fixtures.mjs';
 
 const authorization = {

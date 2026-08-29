@@ -1,4 +1,5 @@
 import { defaultModuleState, enableModule, fullSuiteModuleState, validateModuleState } from './modules.mjs';
+import { peekTenantModuleOverride } from './tenant-module-overrides.mjs';
 
 const profile = (key, name, scope, options = {}) => Object.freeze({
   key,
@@ -8,9 +9,6 @@ const profile = (key, name, scope, options = {}) => Object.freeze({
   allowFormerStaff: Boolean(options.allowFormerStaff),
   modules: validateModuleState(options.modules ?? defaultModuleState()),
 });
-
-/** Explicit runtime module enables (fail-closed defaults stay in TENANT_PROFILES). */
-const tenantModuleOverrides = new Map();
 
 export const TENANT_PROFILES = Object.freeze({
   beverly_hills_rp: profile(
@@ -80,7 +78,7 @@ export function getTenantProfile(key) {
 
 export function getTenantModules(tenantKey) {
   const tenant = getTenantProfile(tenantKey);
-  return tenantModuleOverrides.get(tenant.key) ?? tenant.modules;
+  return peekTenantModuleOverride(tenant.key) ?? tenant.modules;
 }
 
 export function assertTenantModuleEnabled(tenantKey, moduleKey) {
@@ -90,26 +88,6 @@ export function assertTenantModuleEnabled(tenantKey, moduleKey) {
   if (!key || !Object.hasOwn(modules, key)) throw new Error(`Unknown Discord module: ${moduleKey}`);
   if (!modules[key]) throw new Error(`Module ${key} is disabled for tenant ${tenantKey}`);
   return true;
-}
-
-/**
- * Explicitly enable a module (and dependencies) for a tenant. High-impact modules
- * such as restart_control / mass_unban stay off until this is called.
- */
-export function enableTenantModule(tenantKey, moduleKey) {
-  const tenant = getTenantProfile(tenantKey);
-  const current = { ...getTenantModules(tenant.key) };
-  const next = enableModule(current, moduleKey);
-  tenantModuleOverrides.set(tenant.key, next);
-  return next;
-}
-
-export function clearTenantModuleOverrides(tenantKey) {
-  if (tenantKey == null) {
-    tenantModuleOverrides.clear();
-    return;
-  }
-  tenantModuleOverrides.delete(getTenantProfile(tenantKey).key);
 }
 
 export function assertTenantBoundary({ actorTenant, targetTenant, actorIsOwner = false }) {
@@ -123,3 +101,6 @@ export function assertTenantBoundary({ actorTenant, targetTenant, actorIsOwner =
 export function canFormerStaffAccess(tenantKey) {
   return getTenantProfile(tenantKey).allowFormerStaff;
 }
+
+// enableModule kept available for test helpers that compose validated states.
+export { enableModule };

@@ -53,7 +53,7 @@ test('forged status=verified without valid HMAC does not grant entitlement', () 
     subjectId: 'user-forged',
     productIds: ['product-x'],
     status: 'verified',
-  }), /HMAC verification failed|rawBody and hmacSignature/);
+  }), /rawBody must be a string|HMAC verification failed|rawBody and hmacSignature/);
   assert.equal(engine.hasEntitlement('customer_support', 'user-forged', 'product-x'), false);
 });
 
@@ -122,6 +122,25 @@ test('caller-supplied status cannot bypass HMAC even with matching sha256 digest
     status: 'verified',
     sourceEvidence: evidence,
     sourceDigest: digest,
-  }), /HMAC verification failed|rawBody and hmacSignature/);
+  }), /rawBody must be a string|HMAC verification failed|rawBody and hmacSignature/);
   assert.equal(engine.hasEntitlement('customer_support', 'user-digest', 'product-digest'), false);
+});
+
+test('object rawBody fails closed even when hmacSignature is present', () => {
+  const engine = createCommerceEngine({ authorization, hmacSecret: HMAC_SECRET });
+  const payload = {
+    transactionId: 't-obj',
+    subjectId: 'user-obj',
+    productIds: ['product-obj'],
+    amountCents: 1000,
+    status: 'verified',
+  };
+  const rawAsString = JSON.stringify(payload);
+  const hmacSignature = crypto.createHmac('sha256', HMAC_SECRET).update(rawAsString).digest('hex');
+  assert.throws(() => engine.recordTebexVerification({
+    actor: integration,
+    rawBody: payload,
+    hmacSignature,
+  }), /rawBody must be a string/);
+  assert.equal(engine.hasEntitlement('customer_support', 'user-obj', 'product-obj'), false);
 });

@@ -197,16 +197,19 @@ export class CommerceEngine {
     if (!this.hmacSecret) throw new Error('Tebex HMAC secret is not configured');
     const rawBody = input?.rawBody;
     const provided = input?.hmacSignature ?? input?.signature;
-    if (rawBody == null || provided == null) {
+    if (typeof rawBody !== 'string') {
+      throw new Error('Tebex rawBody must be a string');
+    }
+    if (provided == null) {
       throw new Error('Tebex HMAC verification failed: rawBody and hmacSignature are required');
     }
-    const expectedHex = crypto.createHmac('sha256', this.hmacSecret).update(String(rawBody)).digest('hex');
-    const expectedBase64 = crypto.createHmac('sha256', this.hmacSecret).update(String(rawBody)).digest('base64');
+    const expectedHex = crypto.createHmac('sha256', this.hmacSecret).update(rawBody).digest('hex');
+    const expectedBase64 = crypto.createHmac('sha256', this.hmacSecret).update(rawBody).digest('base64');
     const valid = timingSafeEqualString(expectedHex, provided) || timingSafeEqualString(expectedBase64, provided);
     if (!valid) throw new Error('Invalid Tebex HMAC signature');
     let parsed;
     try {
-      parsed = typeof rawBody === 'string' ? JSON.parse(rawBody) : rawBody;
+      parsed = JSON.parse(rawBody);
     } catch {
       throw new Error('Tebex webhook payload must be valid JSON after HMAC verification');
     }

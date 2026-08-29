@@ -111,13 +111,26 @@ test('records follow-ups, duplicates, staff summaries, classification, and sugge
   assert.equal(suggestion.evidence.length, 1);
 });
 
-test('suggestLikelyFix never sets fixApplied; caller confirmationId strings are not evidence', () => {
+test('suggestLikelyFix never sets fixApplied; sealed tool confirms bind ticket and single-use nonce', () => {
   const engine = engineWithBudget(bhStaff);
   engine.ingestContext({
     actor: bhStaff,
     ticketId: 'ticket_fix',
     subject: 'Needs remediation',
     messages: [{ body: 'please fix' }],
+  });
+  engine.ingestContext({
+    actor: bhStaff,
+    ticketId: 'ticket_other',
+    subject: 'Other case',
+    messages: [{ body: 'other' }],
+  });
+  engine.suggestLikelyFix({
+    actor: bhStaff,
+    ticketId: 'ticket_other',
+    suggestion: 'Different remediation',
+    confidence: 0.4,
+    evidence: [{ label: 'note', source: 'staff' }],
   });
 
   const spoofedSuggest = engine.suggestLikelyFix({
@@ -138,18 +151,39 @@ test('suggestLikelyFix never sets fixApplied; caller confirmationId strings are 
     toolConfirmation: { toolName: 'txadmin.restart_resource', confirmationId: 'txn_9', result: 'ok' },
   }), /Unverified tool confirmation/);
 
-  const sealed = identity.confirmToolResult({
+  const sealedForA = identity.confirmToolResult({
     toolName: 'staff.cache_clear',
     confirmationId: 'ops_12',
+    ticketId: 'ticket_fix',
+    nonce: 'nonce-a-1',
     result: 'ok',
   });
+  assert.throws(() => engine.confirmToolAction({
+    actor: bhStaff,
+    ticketId: 'ticket_other',
+    toolConfirmation: sealedForA,
+  }), /ticket bind mismatch/);
+
+  assert.throws(() => engine.confirmToolAction({
+    actor: bhStaff,
+    ticketId: 'ticket_fix',
+    toolConfirmation: sealedForA,
+    nonce: 'wrong-nonce',
+  }), /nonce does not match/);
+
   const confirmed = engine.confirmToolAction({
     actor: bhStaff,
     ticketId: 'ticket_fix',
-    toolConfirmation: sealed,
+    toolConfirmation: sealedForA,
   });
   assert.equal(confirmed.fixApplied, true);
-  assert.equal(confirmed.toolConfirmation.toolName, 'staff.cache_clear');
+  assert.equal(confirmed.toolConfirmation.nonce, 'nonce-a-1');
+
+  assert.throws(() => engine.confirmToolAction({
+    actor: bhStaff,
+    ticketId: 'ticket_fix',
+    toolConfirmation: sealedForA,
+  }), /nonce already consumed/);
 });
 
 test('missing AI budget fails closed; getBudget stays 0 and does not unlock spend', () => {

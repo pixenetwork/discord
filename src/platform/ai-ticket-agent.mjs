@@ -104,6 +104,7 @@ export class AiTicketAgentEngine {
     this.cases = new Map();
     this.budgets = new Map();
     this.auditByTenant = new Map();
+    this.usedToolNonces = new Set();
     this.counters = { case: 1, followUp: 1, duplicate: 1, audit: 1 };
   }
 
@@ -326,7 +327,7 @@ export class AiTicketAgentEngine {
 
   /**
    * Record that an adapter-confirmed tool result applied a remediation.
-   * Only verified tool confirmations may set fixApplied.
+   * Only sealed tool confirmations (ticket-bound, single-use nonce) may set fixApplied.
    */
   confirmToolAction(input) {
     const who = actor(input?.actor);
@@ -335,15 +336,32 @@ export class AiTicketAgentEngine {
     const ticketId = String(input?.ticketId ?? '').trim();
     if (!ticketId) throw new Error('ticketId is required');
     const sealed = requireVerifiedToolConfirmation(input?.toolConfirmation);
+    if (!sealed.ticketId) throw new Error('Verified tool confirmation is missing ticketId bind');
+    if (String(sealed.ticketId) !== ticketId) {
+      throw new Error(`Tool confirmation ticket bind mismatch: ${sealed.ticketId} != ${ticketId}`);
+    }
+    const nonce = String(sealed.nonce ?? '').trim();
+    if (!nonce) throw new Error('Verified tool confirmation is missing nonce');
+    if (input?.nonce != null && String(input.nonce) !== nonce) {
+      throw new Error('Tool confirmation nonce does not match the sealed confirmation');
+    }
+    if (this.usedToolNonces.has(nonce)) {
+      throw new Error(`Tool confirmation nonce already consumed: ${nonce}`);
+    }
+    if (!sealed.createdAt) throw new Error('Verified tool confirmation is missing createdAt');
+
     const toolConfirmation = Object.freeze({
       toolName: sealed.toolName,
       confirmationId: sealed.confirmationId,
+      ticketId: sealed.ticketId,
+      nonce,
+      createdAt: sealed.createdAt,
       result: sealed.result ?? null,
-      confirmedAt: sealed.confirmedAt ?? iso(input?.now),
     });
 
     const record = this.#case(who.tenantId, ticketId);
     if (!record.likelyFix) throw new Error(`No likely fix suggestion exists for ticket ${ticketId}`);
+    this.usedToolNonces.add(nonce);
     record.likelyFix.toolConfirmation = toolConfirmation;
     record.likelyFix.fixApplied = true;
     record.likelyFix.confirmedBy = who.userId;
@@ -353,6 +371,7 @@ export class AiTicketAgentEngine {
       ticketId,
       toolName: toolConfirmation.toolName,
       confirmationId: toolConfirmation.confirmationId,
+      nonce,
     });
     return clone(record.likelyFix);
   }

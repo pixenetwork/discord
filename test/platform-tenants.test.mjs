@@ -5,9 +5,11 @@ import {
   assertTenantBoundary,
   assertTenantModuleEnabled,
   canFormerStaffAccess,
+} from '../src/platform/tenants.mjs';
+import {
   clearTenantModuleOverrides,
   enableTenantModule,
-} from '../src/platform/tenants.mjs';
+} from './helpers/tenant-module-overrides.mjs';
 
 test('Beverly Hills RP and Blood Diamond RP have the full suite enabled independently', () => {
   assert.equal(TENANT_PROFILES.beverly_hills_rp.modules.ai_ticket_agent, true);

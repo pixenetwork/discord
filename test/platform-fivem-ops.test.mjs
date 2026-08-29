@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createFiveMOpsEngine } from '../src/platform/fivem-ops.mjs';
-import { clearTenantModuleOverrides, enableTenantModule } from '../src/platform/tenants.mjs';
+import { clearTenantModuleOverrides, enableTenantModule } from './helpers/tenant-module-overrides.mjs';
 import { bindActor, createTestIdentityAdapter } from './helpers/discord-identity-fixtures.mjs';
 
 const authorization = {

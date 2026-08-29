@@ -103,34 +103,41 @@ export class CommerceEngine {
     return clone(record);
   }
 
-  transaction(tenantId, transactionId) {
-    getTenantProfile(String(tenantId));
-    const record = this.transactions.get(key(String(tenantId), String(transactionId)));
-    if (!record) throw new Error(`Unknown transaction ${transactionId} in tenant ${tenantId}`);
+  transaction(input) {
+    const who = actor(input?.actor);
+    authorize(this.authorization, who);
+    const transactionId = String(input?.transactionId ?? '');
+    const record = this.transactions.get(key(who.tenantId, transactionId));
+    if (!record) throw new Error(`Unknown transaction ${transactionId} in tenant ${who.tenantId}`);
     return clone(record);
   }
 
-  entitlement(tenantId, subjectId, productId) {
-    assertTenantModuleEnabled(tenantId, 'license_entitlements');
-    const record = this.entitlements.get(key(String(tenantId), `${subjectId}:${productId}`));
+  entitlement(input) {
+    const who = actor(input?.actor);
+    authorize(this.authorization, who);
+    assertTenantModuleEnabled(who.tenantId, 'license_entitlements');
+    const subjectId = String(input?.subjectId ?? '');
+    const productId = String(input?.productId ?? '');
+    const record = this.entitlements.get(key(who.tenantId, `${subjectId}:${productId}`));
     return record ? clone(record) : null;
   }
 
-  hasEntitlement(tenantId, subjectId, productId) {
-    const record = this.entitlement(tenantId, subjectId, productId);
+  hasEntitlement(input) {
+    const record = this.entitlement(input);
     return Boolean(record?.active);
   }
 
   supportAccess(input) {
-    const tenantId = String(input?.tenantId);
-    assertTenantModuleEnabled(tenantId, 'customer_script_support');
-    assertTenantModuleEnabled(tenantId, 'license_entitlements');
+    const who = actor(input?.actor);
+    authorize(this.authorization, who);
+    assertTenantModuleEnabled(who.tenantId, 'customer_script_support');
+    assertTenantModuleEnabled(who.tenantId, 'license_entitlements');
     const subjectId = String(input?.subjectId ?? '').trim();
     const productId = String(input?.productId ?? '').trim();
     if (!subjectId || !productId) throw new Error('subjectId and productId are required');
-    const entitlement = this.entitlement(tenantId, subjectId, productId);
+    const entitlement = this.entitlement({ actor: who, subjectId, productId });
     return Object.freeze({
-      tenantId,
+      tenantId: who.tenantId,
       subjectId,
       productId,
       allowed: Boolean(entitlement?.active),
@@ -179,9 +186,11 @@ export class CommerceEngine {
     return clone(flag);
   }
 
-  openFraudFlags(tenantId) {
-    assertTenantModuleEnabled(tenantId, 'tebex_fraud_flags');
-    return [...this.flags.values()].filter((flag) => flag.tenantId === String(tenantId) && flag.status === 'open').map(clone);
+  openFraudFlags(input) {
+    const who = actor(input?.actor);
+    authorize(this.authorization, who, ['staff']);
+    assertTenantModuleEnabled(who.tenantId, 'tebex_fraud_flags');
+    return [...this.flags.values()].filter((flag) => flag.tenantId === who.tenantId && flag.status === 'open').map(clone);
   }
 
   signWebhookPayload(payload) {

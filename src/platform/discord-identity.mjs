@@ -63,24 +63,31 @@ export function createDiscordIdentityAdapter(options = {}) {
 
     /**
      * Seal a tool result after an external adapter confirms the tool ran.
-     * Requires ticketId bind, single-use nonce, and createdAt.
+     * Requires tenantId, action, ticketId, single-use nonce, and createdAt.
      * Caller-supplied confirmation bags without this seal are rejected by engines.
      */
     confirmToolResult(input) {
       const toolName = String(input?.toolName ?? '').trim();
       const confirmationId = String(input?.confirmationId ?? '').trim();
       const ticketId = String(input?.ticketId ?? '').trim();
+      const tenantId = String(input?.tenantId ?? '').trim();
+      const action = String(input?.action ?? '').trim();
       const nonce = String(input?.nonce ?? crypto.randomUUID()).trim();
       if (!toolName || !confirmationId) {
         throw new Error('toolName and confirmationId are required for verified tool confirmation');
       }
+      if (!tenantId) throw new Error('tenantId is required to bind a verified tool confirmation');
+      if (!action) throw new Error('action is required to bind a verified tool confirmation');
       if (!ticketId) throw new Error('ticketId is required to bind a verified tool confirmation');
       if (!nonce) throw new Error('nonce is required for verified tool confirmation');
+      getTenantProfile(tenantId);
       const createdAt = iso(input?.createdAt ?? Date.now());
       return Object.freeze({
         [VERIFIED_TOOL]: true,
         toolName,
         confirmationId,
+        tenantId,
+        action,
         ticketId,
         nonce,
         createdAt,

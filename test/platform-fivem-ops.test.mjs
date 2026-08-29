@@ -16,8 +16,8 @@ const bhIntegration = bindActor(identity, 'beverly_hills_rp', 'relay', ['bh-inte
 test('server status stays isolated per FiveM tenant', () => {
   const engine = createFiveMOpsEngine({ authorization });
   engine.updateServerStatus({ actor: bhIntegration, status: 'online', players: 25, maxPlayers: 64, queue: 3 });
-  assert.equal(engine.getServerStatus('beverly_hills_rp').players, 25);
-  assert.equal(engine.getServerStatus('blood_diamond_rp').status, 'unknown');
+  assert.equal(engine.getServerStatus({ actor: bhStaff }).players, 25);
+  assert.equal(engine.getServerStatus({ actor: bdStaff }).status, 'unknown');
 });
 
 test('restart notices and statistic state are data-only integration outputs', () => {
@@ -46,8 +46,24 @@ test('staff sits, duty, and incidents are tenant scoped', () => {
   engine.addIncidentEvent({ actor: bdStaff, incidentId: incident.id, type: 'log_snapshot', summary: 'Captured startup errors' });
   const closed = engine.closeIncident({ actor: bdStaff, incidentId: incident.id, postmortem: 'Dependency restored after validation' });
   assert.equal(closed.status, 'closed');
-  assert.equal(engine.listTenantIncidents('beverly_hills_rp').length, 0);
-  assert.equal(engine.listTenantIncidents('blood_diamond_rp').length, 1);
+  assert.equal(engine.listTenantIncidents({ actor: bhStaff }).length, 0);
+  assert.equal(engine.listTenantIncidents({ actor: bdStaff }).length, 1);
+});
+
+test('privileged FiveM reads require verified actor and canonical roles', () => {
+  const engine = createFiveMOpsEngine({ authorization });
+  engine.updateServerStatus({ actor: bhIntegration, status: 'online', players: 10, maxPlayers: 64, queue: 0 });
+  engine.createIncident({ actor: bhStaff, title: 'Read gate', severity: 'low' });
+
+  const emptyRoles = bindActor(identity, 'beverly_hills_rp', 'empty', []);
+  const lookalike = bindActor(identity, 'beverly_hills_rp', 'lookalike', ['Staff', 'bh-staff-lookalike']);
+  for (const denied of [emptyRoles, lookalike]) {
+    assert.throws(() => engine.getServerStatus({ actor: denied }), /Authorization denied/);
+    assert.throws(() => engine.listTenantIncidents({ actor: denied }), /Authorization denied/);
+  }
+  assert.throws(() => engine.getServerStatus({
+    actor: { userId: 'spoof', tenantId: 'beverly_hills_rp', roleIds: ['bh-staff'] },
+  }), /Unverified Discord identity/);
 });
 
 test('production restart control stays off with no execute path', () => {

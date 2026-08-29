@@ -28,8 +28,8 @@ test('verified purchase grants entitlement only after valid Tebex HMAC', () => {
     status: 'verified',
   });
   engine.recordTebexVerification({ actor: integration, rawBody, hmacSignature });
-  assert.equal(engine.hasEntitlement('customer_support', 'user-1', 'product-a'), true);
-  assert.equal(engine.supportAccess({ tenantId: 'customer_support', subjectId: 'user-1', productId: 'product-a' }).allowed, true);
+  assert.equal(engine.hasEntitlement({ actor: staff, subjectId: 'user-1', productId: 'product-a' }), true);
+  assert.equal(engine.supportAccess({ actor: staff, subjectId: 'user-1', productId: 'product-a' }).allowed, true);
 });
 
 test('forged status=verified without valid HMAC does not grant entitlement', () => {
@@ -54,7 +54,7 @@ test('forged status=verified without valid HMAC does not grant entitlement', () 
     productIds: ['product-x'],
     status: 'verified',
   }), /rawBody must be a string|HMAC verification failed|rawBody and hmacSignature/);
-  assert.equal(engine.hasEntitlement('customer_support', 'user-forged', 'product-x'), false);
+  assert.equal(engine.hasEntitlement({ actor: staff, subjectId: 'user-forged', productId: 'product-x' }), false);
 });
 
 test('duplicate verification is idempotent only for matching verified payloads', () => {
@@ -85,14 +85,14 @@ test('manual review flags do not change entitlement automatically', () => {
   engine.recordTebexVerification({ actor: integration, rawBody, hmacSignature });
   const flag = engine.createFraudFlag({ actor: staff, transactionId: 't-3', reason: 'Needs duplicate-order review', severity: 'high' });
   assert.equal(flag.status, 'open');
-  assert.equal(engine.hasEntitlement('customer_support', 'user-3', 'product-c'), true);
+  assert.equal(engine.hasEntitlement({ actor: staff, subjectId: 'user-3', productId: 'product-c' }), true);
   engine.resolveFraudFlag({ actor: staff, flagId: flag.id, resolution: 'Reviewed and cleared' });
-  assert.equal(engine.openFraudFlags('customer_support').length, 0);
+  assert.equal(engine.openFraudFlags({ actor: staff }).length, 0);
 });
 
 test('missing entitlement denies gated support', () => {
   const engine = createCommerceEngine({ authorization, hmacSecret: HMAC_SECRET });
-  const access = engine.supportAccess({ tenantId: 'customer_support', subjectId: 'unknown', productId: 'product-z' });
+  const access = engine.supportAccess({ actor: staff, subjectId: 'unknown', productId: 'product-z' });
   assert.equal(access.allowed, false);
   assert.equal(access.reason, 'entitlement_required');
 });
@@ -107,7 +107,36 @@ test('transaction records remain tenant isolated', () => {
     status: 'verified',
   });
   engine.recordTebexVerification({ actor: integration, rawBody, hmacSignature });
-  assert.throws(() => engine.transaction('beverly_hills_rp', 't-4'), /Unknown transaction/);
+  const bhStaff = bindActor(identity, 'beverly_hills_rp', 'bh-staff-user', ['bh-staff']);
+  assert.throws(() => engine.transaction({ actor: bhStaff, transactionId: 't-4' }), /Unknown transaction/);
+  assert.equal(engine.transaction({ actor: staff, transactionId: 't-4' }).subjectId, 'user-4');
+});
+
+test('privileged commerce reads require verified actor and canonical roles', () => {
+  const engine = createCommerceEngine({ authorization, hmacSecret: HMAC_SECRET });
+  const { rawBody, hmacSignature } = signed(engine, {
+    transactionId: 't-read',
+    subjectId: 'user-read',
+    productIds: ['product-read'],
+    amountCents: 1000,
+    status: 'verified',
+  });
+  engine.recordTebexVerification({ actor: integration, rawBody, hmacSignature });
+  engine.createFraudFlag({ actor: staff, transactionId: 't-read', reason: 'review', severity: 'low' });
+
+  const emptyRoles = bindActor(identity, 'customer_support', 'empty', []);
+  const lookalike = bindActor(identity, 'customer_support', 'lookalike', ['Staff', 'support-staff-lookalike']);
+  for (const denied of [emptyRoles, lookalike]) {
+    assert.throws(() => engine.transaction({ actor: denied, transactionId: 't-read' }), /Authorization denied/);
+    assert.throws(() => engine.entitlement({ actor: denied, subjectId: 'user-read', productId: 'product-read' }), /Authorization denied/);
+    assert.throws(() => engine.hasEntitlement({ actor: denied, subjectId: 'user-read', productId: 'product-read' }), /Authorization denied/);
+    assert.throws(() => engine.supportAccess({ actor: denied, subjectId: 'user-read', productId: 'product-read' }), /Authorization denied/);
+    assert.throws(() => engine.openFraudFlags({ actor: denied }), /Authorization denied/);
+  }
+  assert.throws(() => engine.transaction({
+    actor: { userId: 'spoof', tenantId: 'customer_support', roleIds: ['support-staff'] },
+    transactionId: 't-read',
+  }), /Unverified Discord identity/);
 });
 
 test('caller-supplied status cannot bypass HMAC even with matching sha256 digest', () => {
@@ -123,7 +152,7 @@ test('caller-supplied status cannot bypass HMAC even with matching sha256 digest
     sourceEvidence: evidence,
     sourceDigest: digest,
   }), /rawBody must be a string|HMAC verification failed|rawBody and hmacSignature/);
-  assert.equal(engine.hasEntitlement('customer_support', 'user-digest', 'product-digest'), false);
+  assert.equal(engine.hasEntitlement({ actor: staff, subjectId: 'user-digest', productId: 'product-digest' }), false);
 });
 
 test('object rawBody fails closed even when hmacSignature is present', () => {
@@ -142,5 +171,5 @@ test('object rawBody fails closed even when hmacSignature is present', () => {
     rawBody: payload,
     hmacSignature,
   }), /rawBody must be a string/);
-  assert.equal(engine.hasEntitlement('customer_support', 'user-obj', 'product-obj'), false);
+  assert.equal(engine.hasEntitlement({ actor: staff, subjectId: 'user-obj', productId: 'product-obj' }), false);
 });

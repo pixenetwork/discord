@@ -66,9 +66,34 @@ test('pending approvals expire fail-closed', () => {
     payload: { backupId: 'safe-backup' },
     now: '2026-08-09T07:00:00Z',
   });
-  const expired = engine.get('beverly_hills_rp', request.id, '2026-08-09T07:01:01Z');
+  const expired = engine.get({ actor: bhStaff, approvalId: request.id, now: '2026-08-09T07:01:01Z' });
   assert.equal(expired.status, 'expired');
   assert.throws(() => engine.approve({ actor: bhOwner, approvalId: request.id, now: '2026-08-09T07:01:02Z' }), /already expired/);
+});
+
+test('privileged approval reads require verified actor and canonical roles', () => {
+  const engine = createApprovalEngine({ authorization });
+  const request = engine.request({
+    actor: bhStaff,
+    moduleKey: 'backups',
+    action: 'restore_state',
+    payload: { backupId: 'read-me' },
+  });
+  assert.equal(engine.pending({ actor: bhStaff }).length, 1);
+  assert.equal(engine.get({ actor: bhStaff, approvalId: request.id }).id, request.id);
+
+  const emptyRoles = bindActor(identity, 'beverly_hills_rp', 'empty-read', []);
+  const lookalike = bindActor(identity, 'beverly_hills_rp', 'lookalike-read', ['Owner', 'bh-owner-lookalike']);
+  for (const denied of [emptyRoles, lookalike]) {
+    assert.throws(() => engine.get({ actor: denied, approvalId: request.id }), /Authorization denied/);
+    assert.throws(() => engine.pending({ actor: denied }), /Authorization denied/);
+  }
+  assert.throws(() => engine.get({
+    actor: { userId: 'spoof', tenantId: 'beverly_hills_rp', roleIds: ['bh-staff'] },
+    approvalId: request.id,
+  }), /Unverified Discord identity/);
+  assert.throws(() => engine.get({ actor: bdOwner, approvalId: request.id }), /Cross-tenant access denied/);
+  assert.equal(engine.pending({ actor: bdOwner }).length, 0);
 });
 
 test('non approval-gated modules cannot create approval theater', () => {

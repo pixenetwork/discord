@@ -304,9 +304,11 @@ export class AiTicketAgentEngine {
     this.#consumeBudget(who.tenantId, input?.costUnits ?? 1, input?.now);
 
     const record = this.#case(who.tenantId, ticketId);
+    const action = String(input?.action ?? 'apply_likely_fix').trim() || 'apply_likely_fix';
     record.likelyFix = {
       tenantId: who.tenantId,
       ticketId,
+      action,
       suggestion,
       confidence: ensureConfidence(input?.confidence ?? 0),
       evidence: Object.freeze(normalizeEvidence(input?.evidence ?? [])),
@@ -319,6 +321,7 @@ export class AiTicketAgentEngine {
     record.updatedAt = record.likelyFix.suggestedAt;
     this.#audit(who, 'ai_ticket_fix_suggested', record.id, input?.now, {
       ticketId,
+      action,
       fixApplied: false,
       confidence: record.likelyFix.confidence,
     });
@@ -327,7 +330,7 @@ export class AiTicketAgentEngine {
 
   /**
    * Record that an adapter-confirmed tool result applied a remediation.
-   * Only sealed tool confirmations (ticket-bound, single-use nonce) may set fixApplied.
+   * Only sealed tool confirmations (tenant/action/ticket-bound, single-use nonce) may set fixApplied.
    */
   confirmToolAction(input) {
     const who = actor(input?.actor);
@@ -336,7 +339,12 @@ export class AiTicketAgentEngine {
     const ticketId = String(input?.ticketId ?? '').trim();
     if (!ticketId) throw new Error('ticketId is required');
     const sealed = requireVerifiedToolConfirmation(input?.toolConfirmation);
+    if (!sealed.tenantId) throw new Error('Verified tool confirmation is missing tenantId bind');
+    if (!sealed.action) throw new Error('Verified tool confirmation is missing action bind');
     if (!sealed.ticketId) throw new Error('Verified tool confirmation is missing ticketId bind');
+    if (String(sealed.tenantId) !== who.tenantId) {
+      throw new Error(`Tool confirmation tenant bind mismatch: ${sealed.tenantId} != ${who.tenantId}`);
+    }
     if (String(sealed.ticketId) !== ticketId) {
       throw new Error(`Tool confirmation ticket bind mismatch: ${sealed.ticketId} != ${ticketId}`);
     }
@@ -350,17 +358,28 @@ export class AiTicketAgentEngine {
     }
     if (!sealed.createdAt) throw new Error('Verified tool confirmation is missing createdAt');
 
+    const record = this.#case(who.tenantId, ticketId);
+    if (!record.likelyFix) throw new Error(`No likely fix suggestion exists for ticket ${ticketId}`);
+    const expectedAction = String(input?.action ?? record.likelyFix.action ?? '').trim();
+    if (!expectedAction) throw new Error('action is required to confirm a likely fix');
+    if (String(sealed.action) !== expectedAction) {
+      throw new Error(`Tool confirmation action bind mismatch: ${sealed.action} != ${expectedAction}`);
+    }
+    if (record.likelyFix.action && String(record.likelyFix.action) !== expectedAction) {
+      throw new Error(`Likely fix action mismatch: ${record.likelyFix.action} != ${expectedAction}`);
+    }
+
     const toolConfirmation = Object.freeze({
       toolName: sealed.toolName,
       confirmationId: sealed.confirmationId,
+      tenantId: sealed.tenantId,
+      action: sealed.action,
       ticketId: sealed.ticketId,
       nonce,
       createdAt: sealed.createdAt,
       result: sealed.result ?? null,
     });
 
-    const record = this.#case(who.tenantId, ticketId);
-    if (!record.likelyFix) throw new Error(`No likely fix suggestion exists for ticket ${ticketId}`);
     this.usedToolNonces.add(nonce);
     record.likelyFix.toolConfirmation = toolConfirmation;
     record.likelyFix.fixApplied = true;
@@ -369,6 +388,7 @@ export class AiTicketAgentEngine {
     record.updatedAt = record.likelyFix.confirmedAt;
     this.#audit(who, 'ai_ticket_fix_tool_confirmed', record.id, input?.now, {
       ticketId,
+      action: sealed.action,
       toolName: toolConfirmation.toolName,
       confirmationId: toolConfirmation.confirmationId,
       nonce,

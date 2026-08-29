@@ -17,8 +17,33 @@ test('approved GitHub issue link is tenant scoped and idempotent', () => {
   const first = engine.linkGitHubIssue(input);
   const duplicate = engine.linkGitHubIssue(input);
   assert.deepEqual(duplicate, first);
-  assert.equal(engine.get('customer_support', 'ticket', 'ticket-1').issueNumber, 2);
-  assert.throws(() => engine.get('beverly_hills_rp', 'ticket', 'ticket-1'), /No engineering handoff/);
+  assert.equal(engine.get({ actor: supportStaff, sourceType: 'ticket', sourceId: 'ticket-1' }).issueNumber, 2);
+  const bhStaff = bindActor(identity, 'beverly_hills_rp', 'bh-staff', ['bh-staff']);
+  assert.throws(() => engine.get({ actor: bhStaff, sourceType: 'ticket', sourceId: 'ticket-1' }), /No engineering handoff/);
+});
+
+test('privileged handoff reads require verified actor and canonical roles', () => {
+  const engine = createHandoffEngine({ authorization, allowedRepositories: ['pixenetwork/discord'] });
+  engine.linkGitHubIssue({
+    actor: supportStaff,
+    sourceType: 'ticket',
+    sourceId: 'ticket-read',
+    repository: 'pixenetwork/discord',
+    issueNumber: 9,
+  });
+  assert.equal(engine.listTenant({ actor: supportStaff }).length, 1);
+
+  const emptyRoles = bindActor(identity, 'customer_support', 'empty', []);
+  const lookalike = bindActor(identity, 'customer_support', 'lookalike', ['Staff', 'support-staff-lookalike']);
+  for (const denied of [emptyRoles, lookalike]) {
+    assert.throws(() => engine.get({ actor: denied, sourceType: 'ticket', sourceId: 'ticket-read' }), /Authorization denied/);
+    assert.throws(() => engine.listTenant({ actor: denied }), /Authorization denied/);
+  }
+  assert.throws(() => engine.get({
+    actor: { userId: 'spoof', tenantId: 'customer_support', roleIds: ['support-staff'] },
+    sourceType: 'ticket',
+    sourceId: 'ticket-read',
+  }), /Unverified Discord identity/);
 });
 
 test('unapproved repositories and conflicting relinks fail closed', () => {

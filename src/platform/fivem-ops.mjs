@@ -68,11 +68,11 @@ export class FiveMOpsEngine {
     return clone(record);
   }
 
-  getServerStatus(tenantId) {
-    const profile = getTenantProfile(String(tenantId));
-    if (profile.scope !== 'fivem-server') throw new Error(`Tenant ${tenantId} is not a FiveM server profile`);
-    assertTenantModuleEnabled(tenantId, 'fivem_status');
-    return clone(this.status.get(String(tenantId)) ?? { tenantId: String(tenantId), status: 'unknown', players: 0, maxPlayers: 0, queue: 0, observedAt: null });
+  getServerStatus(input) {
+    const who = actor(input?.actor);
+    authorize(this.authorization, who, ['staff', 'integration']);
+    assertTenantModuleEnabled(who.tenantId, 'fivem_status');
+    return clone(this.status.get(who.tenantId) ?? { tenantId: who.tenantId, status: 'unknown', players: 0, maxPlayers: 0, queue: 0, observedAt: null });
   }
 
   recordRestartNotice(input) {
@@ -267,9 +267,11 @@ export class FiveMOpsEngine {
     return clone(record);
   }
 
-  listTenantIncidents(tenantId) {
-    getTenantProfile(String(tenantId));
-    return [...this.incidents.values()].filter((record) => record.tenantId === String(tenantId)).map(clone);
+  listTenantIncidents(input) {
+    const who = actor(input?.actor);
+    authorize(this.authorization, who);
+    assertTenantModuleEnabled(who.tenantId, 'incident_command');
+    return [...this.incidents.values()].filter((record) => record.tenantId === who.tenantId).map(clone);
   }
 }
 

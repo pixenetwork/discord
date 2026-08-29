@@ -102,16 +102,20 @@ export class HandoffEngine {
     return clone(record);
   }
 
-  get(tenantId, sourceType, sourceId) {
-    getTenantProfile(String(tenantId));
-    const record = this.links.get(sourceKey(String(tenantId), String(sourceType), String(sourceId)));
-    if (!record) throw new Error(`No engineering handoff exists for ${sourceType}:${sourceId} in tenant ${tenantId}`);
+  get(input) {
+    const who = actor(input?.actor);
+    authorize(this.authorization, who);
+    const sourceType = String(input?.sourceType ?? '');
+    const sourceId = String(input?.sourceId ?? '');
+    const record = this.links.get(sourceKey(who.tenantId, sourceType, sourceId));
+    if (!record) throw new Error(`No engineering handoff exists for ${sourceType}:${sourceId} in tenant ${who.tenantId}`);
     return clone(record);
   }
 
-  listTenant(tenantId) {
-    getTenantProfile(String(tenantId));
-    return [...this.links.values()].filter((record) => record.tenantId === String(tenantId)).map(clone);
+  listTenant(input) {
+    const who = actor(input?.actor);
+    authorize(this.authorization, who);
+    return [...this.links.values()].filter((record) => record.tenantId === who.tenantId).map(clone);
   }
 }
 

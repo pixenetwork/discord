@@ -111,7 +111,7 @@ test('records follow-ups, duplicates, staff summaries, classification, and sugge
   assert.equal(suggestion.evidence.length, 1);
 });
 
-test('suggestLikelyFix never sets fixApplied; sealed tool confirms bind ticket and single-use nonce', () => {
+test('suggestLikelyFix never sets fixApplied; sealed tool confirms bind tenant, action, ticket, and single-use nonce', () => {
   const engine = engineWithBudget(bhStaff);
   engine.ingestContext({
     actor: bhStaff,
@@ -143,6 +143,7 @@ test('suggestLikelyFix never sets fixApplied; sealed tool confirms bind ticket a
     toolConfirmation: { toolName: 'txadmin.restart_resource', confirmationId: 'txn_9', result: 'ok' },
   });
   assert.equal(spoofedSuggest.fixApplied, false);
+  assert.equal(spoofedSuggest.action, 'apply_likely_fix');
   assert.equal(spoofedSuggest.toolConfirmation, null);
 
   assert.throws(() => engine.confirmToolAction({
@@ -151,9 +152,47 @@ test('suggestLikelyFix never sets fixApplied; sealed tool confirms bind ticket a
     toolConfirmation: { toolName: 'txadmin.restart_resource', confirmationId: 'txn_9', result: 'ok' },
   }), /Unverified tool confirmation/);
 
+  const sealedWrongTenant = identity.confirmToolResult({
+    toolName: 'staff.cache_clear',
+    confirmationId: 'ops_tenant',
+    tenantId: 'blood_diamond_rp',
+    action: 'apply_likely_fix',
+    ticketId: 'ticket_fix',
+    nonce: 'nonce-wrong-tenant',
+    result: 'ok',
+  });
+  assert.throws(() => engine.confirmToolAction({
+    actor: bhStaff,
+    ticketId: 'ticket_fix',
+    toolConfirmation: sealedWrongTenant,
+  }), /tenant bind mismatch/);
+
+  const sealedWrongAction = identity.confirmToolResult({
+    toolName: 'staff.cache_clear',
+    confirmationId: 'ops_action',
+    tenantId: 'beverly_hills_rp',
+    action: 'restart_resource',
+    ticketId: 'ticket_fix',
+    nonce: 'nonce-wrong-action',
+    result: 'ok',
+  });
+  assert.throws(() => engine.confirmToolAction({
+    actor: bhStaff,
+    ticketId: 'ticket_fix',
+    toolConfirmation: sealedWrongAction,
+  }), /action bind mismatch/);
+  assert.throws(() => engine.confirmToolAction({
+    actor: bhStaff,
+    ticketId: 'ticket_fix',
+    action: 'restart_resource',
+    toolConfirmation: sealedWrongAction,
+  }), /Likely fix action mismatch/);
+
   const sealedForA = identity.confirmToolResult({
     toolName: 'staff.cache_clear',
     confirmationId: 'ops_12',
+    tenantId: 'beverly_hills_rp',
+    action: 'apply_likely_fix',
     ticketId: 'ticket_fix',
     nonce: 'nonce-a-1',
     result: 'ok',
@@ -178,6 +217,8 @@ test('suggestLikelyFix never sets fixApplied; sealed tool confirms bind ticket a
   });
   assert.equal(confirmed.fixApplied, true);
   assert.equal(confirmed.toolConfirmation.nonce, 'nonce-a-1');
+  assert.equal(confirmed.toolConfirmation.tenantId, 'beverly_hills_rp');
+  assert.equal(confirmed.toolConfirmation.action, 'apply_likely_fix');
 
   assert.throws(() => engine.confirmToolAction({
     actor: bhStaff,

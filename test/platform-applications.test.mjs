@@ -40,7 +40,7 @@ const applicant = (tenantId, userId) => bindActor(identity, tenantId, userId, []
 
 test('tenant-scoped default and custom application definitions are configurable', () => {
   const engine = createApplicationsEngine({ authorization });
-  const defaults = engine.applicationDefinitions('beverly_hills_rp');
+  const defaults = engine.applicationDefinitions({ actor: staff('beverly_hills_rp') });
   assert.deepEqual(defaults.map((entry) => entry.typeKey).sort(), ['custom', 'ems', 'mechanic', 'pd', 'staff']);
 
   const custom = engine.upsertApplicationDefinition({
@@ -52,7 +52,7 @@ test('tenant-scoped default and custom application definitions are configurable'
   assert.equal(custom.tenantId, 'beverly_hills_rp');
   assert.equal(custom.typeKey, 'custom:judge');
 
-  assert.equal(engine.applicationDefinitions('blood_diamond_rp').some((entry) => entry.typeKey === 'custom:judge'), false);
+  assert.equal(engine.applicationDefinitions({ actor: staff('blood_diamond_rp') }).some((entry) => entry.typeKey === 'custom:judge'), false);
 });
 
 test('submissions, reviewer decisions, reasons, and history remain tenant-scoped', () => {
@@ -95,7 +95,7 @@ test('verification panels are tenant-scoped and include sticky/auto role policy 
   assert.equal(panel.tenantId, 'beverly_hills_rp');
   assert.deepEqual(panel.stickyRoleIds, ['role_whitelisted']);
   assert.deepEqual(panel.autoRoleIds, ['role_member']);
-  assert.equal(engine.snapshot('blood_diamond_rp').verificationPanels.length, 0);
+  assert.equal(engine.snapshot({ actor: staff('blood_diamond_rp') }).verificationPanels.length, 0);
 });
 
 test('role assignment plans are approval-aware and do not mutate roles directly', () => {
@@ -129,9 +129,31 @@ test('role assignment plans are approval-aware and do not mutate roles directly'
   });
   assert.equal(reviewed.status, 'approved');
 
-  const storedSubmission = engine.snapshot('beverly_hills_rp').submissions.find((entry) => entry.id === submission.id);
+  const storedSubmission = engine.snapshot({ actor: staff('beverly_hills_rp') }).submissions.find((entry) => entry.id === submission.id);
   assert.equal(storedSubmission.roleAssignmentPlanId, plan.id);
   assert.equal(storedSubmission.history.at(-1).type, 'role_assignment_reviewed');
+});
+
+test('privileged application reads require verified actor and canonical roles', () => {
+  const engine = createApplicationsEngine({ authorization });
+  engine.upsertApplicationDefinition({
+    actor: staff('beverly_hills_rp'),
+    typeKey: 'staff',
+    questions: ['Why apply?'],
+  });
+
+  const emptyRoles = bindActor(identity, 'beverly_hills_rp', 'empty', []);
+  const lookalike = bindActor(identity, 'beverly_hills_rp', 'lookalike', ['Staff', 'bhrp_staff_lookalike']);
+  for (const denied of [emptyRoles, lookalike]) {
+    assert.throws(() => engine.applicationDefinitions({ actor: denied }), /Authorization denied/);
+    assert.throws(() => engine.snapshot({ actor: denied }), /Authorization denied/);
+  }
+  assert.throws(() => engine.applicationDefinitions({
+    actor: { userId: 'spoof', tenantId: 'beverly_hills_rp', roleIds: ['bhrp_staff'] },
+  }), /Unverified Discord identity/);
+  assert.throws(() => engine.snapshot({
+    actor: { userId: 'spoof', tenantId: 'beverly_hills_rp', roleIds: ['bhrp_staff'] },
+  }), /Unverified Discord identity/);
 });
 
 test('canonical-role authorization fails closed', () => {

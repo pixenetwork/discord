@@ -91,20 +91,22 @@ export class ApprovalEngine {
     return clone(record);
   }
 
-  get(tenantId, approvalId, now = Date.now()) {
-    getTenantProfile(String(tenantId));
-    const record = this.#record(approvalId);
-    if (record.tenantId !== String(tenantId)) throw new Error(`Approval ${approvalId} does not belong to tenant ${tenantId}`);
-    this.#expireIfNeeded(record, now);
+  get(input) {
+    const who = actor(input?.actor);
+    this.#authorize(who, 'approval request');
+    const record = this.#record(input?.approvalId);
+    if (record.tenantId !== who.tenantId) throw new Error(`Cross-tenant access denied: ${who.tenantId} -> ${record.tenantId}`);
+    this.#expireIfNeeded(record, input?.now ?? Date.now());
     return clone(record);
   }
 
-  pending(tenantId, now = Date.now()) {
-    getTenantProfile(String(tenantId));
+  pending(input) {
+    const who = actor(input?.actor);
+    this.#authorize(who, 'approval request');
     const result = [];
     for (const record of this.requests.values()) {
-      if (record.tenantId !== String(tenantId)) continue;
-      this.#expireIfNeeded(record, now);
+      if (record.tenantId !== who.tenantId) continue;
+      this.#expireIfNeeded(record, input?.now ?? Date.now());
       if (record.status === 'pending') result.push(clone(record));
     }
     return result;

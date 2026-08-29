@@ -91,9 +91,11 @@ export class ApplicationsEngine {
     return clone(record);
   }
 
-  applicationDefinitions(tenantId) {
-    const key = getTenantProfile(String(tenantId)).key;
-    return [...this.#tenant(key).definitions.values()].map(clone);
+  applicationDefinitions(input) {
+    const who = actor(input?.actor);
+    assertTenantModuleEnabled(who.tenantId, 'applications');
+    authorize(this.authorization, who, 'review_application');
+    return [...this.#tenant(who.tenantId).definitions.values()].map(clone);
   }
 
   submitApplication(input) {
@@ -220,11 +222,13 @@ export class ApplicationsEngine {
     return clone(plan);
   }
 
-  snapshot(tenantId) {
-    const key = getTenantProfile(String(tenantId)).key;
-    const tenant = this.#tenant(key);
+  snapshot(input) {
+    const who = actor(input?.actor);
+    assertTenantModuleEnabled(who.tenantId, 'applications');
+    authorize(this.authorization, who, 'review_application');
+    const tenant = this.#tenant(who.tenantId);
     return Object.freeze({
-      tenantId: key,
+      tenantId: who.tenantId,
       definitions: Object.freeze([...tenant.definitions.values()].map(clone)),
       submissions: Object.freeze([...tenant.submissions.values()].map(clone)),
       verificationPanels: Object.freeze([...tenant.verificationPanels.values()].map(clone)),

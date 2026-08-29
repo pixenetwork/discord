@@ -75,21 +75,36 @@ test('bindMember is fixture-only and rejects Symbol.for forged actor bags', () =
   assert.throws(() => requireVerifiedActor(forgedGlobal), /Unverified Discord identity/);
 });
 
-test('tool confirmations require ticket bind, nonce, and createdAt and reject forged seals', () => {
+test('tool confirmations require tenantId, action, ticket bind, nonce, and createdAt and reject forged seals', () => {
   const identity = createDiscordIdentityAdapter({
     guildTenantMap: { 'guild-bh': 'beverly_hills_rp' },
   });
   assert.throws(() => identity.confirmToolResult({
     toolName: 'x',
     confirmationId: 'y',
+  }), /tenantId is required/);
+  assert.throws(() => identity.confirmToolResult({
+    toolName: 'x',
+    confirmationId: 'y',
+    tenantId: 'beverly_hills_rp',
+  }), /action is required/);
+  assert.throws(() => identity.confirmToolResult({
+    toolName: 'x',
+    confirmationId: 'y',
+    tenantId: 'beverly_hills_rp',
+    action: 'apply_likely_fix',
   }), /ticketId is required/);
 
   const sealed = identity.confirmToolResult({
     toolName: 'staff.cache_clear',
     confirmationId: 'ops_1',
+    tenantId: 'beverly_hills_rp',
+    action: 'apply_likely_fix',
     ticketId: 'ticket_a',
     nonce: 'nonce-1',
   });
+  assert.equal(sealed.tenantId, 'beverly_hills_rp');
+  assert.equal(sealed.action, 'apply_likely_fix');
   assert.equal(sealed.ticketId, 'ticket_a');
   assert.equal(sealed.nonce, 'nonce-1');
   assert.ok(sealed.createdAt);
@@ -99,6 +114,8 @@ test('tool confirmations require ticket bind, nonce, and createdAt and reject fo
     [Symbol.for('pixenetwork.discord.verifiedToolConfirmation')]: true,
     toolName: 'x',
     confirmationId: 'y',
+    tenantId: 'beverly_hills_rp',
+    action: 'apply_likely_fix',
     ticketId: 'ticket_a',
     nonce: 'n',
     createdAt: new Date().toISOString(),

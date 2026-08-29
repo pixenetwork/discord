@@ -97,11 +97,12 @@ export class GangEngine {
     return clone(record);
   }
 
-  getGang(tenantId, gangId) {
-    getTenantProfile(String(tenantId));
-    const id = normalizeGangId(gangId);
-    const record = this.gangs.get(gangKey(String(tenantId), id));
-    if (!record) throw new Error(`Unknown gang ${id} in tenant ${tenantId}`);
+  getGang(input) {
+    const who = actor(input?.actor);
+    authorize(this.authorization, who, 'gang_manage');
+    const id = normalizeGangId(input?.gangId);
+    const record = this.gangs.get(gangKey(who.tenantId, id));
+    if (!record) throw new Error(`Unknown gang ${id} in tenant ${who.tenantId}`);
     return clone(record);
   }
 
@@ -204,9 +205,10 @@ export class GangEngine {
     return clone(strike);
   }
 
-  roleSyncPlan(tenantId, gangId) {
-    assertTenantModuleEnabled(tenantId, 'queue_priority');
-    const gang = this.getGang(tenantId, gangId);
+  roleSyncPlan(input) {
+    const who = actor(input?.actor);
+    assertTenantModuleEnabled(who.tenantId, 'queue_priority');
+    const gang = this.getGang(input);
     const tier = this.priorityTiers[gang.priorityTier];
     return Object.freeze({
       tenantId: gang.tenantId,

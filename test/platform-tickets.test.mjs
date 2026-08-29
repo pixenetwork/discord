@@ -122,7 +122,7 @@ test('reminders and transcript metadata include tenant IDs and traceability', ()
   assert.equal(reminder.tenantId, 'beverly_hills_rp');
 
   const due = engine.dueReminders({
-    tenantId: 'beverly_hills_rp',
+    actor: staff,
     now: '2026-08-09T09:00:00.000Z',
   });
   assert.equal(due.length, 1);
@@ -135,14 +135,49 @@ test('reminders and transcript metadata include tenant IDs and traceability', ()
   });
   assert.equal(resolved.resolvedBy, staff.userId);
 
+  const fetched = engine.getTicket({ actor: staff, ticketId: ticket.id });
+  assert.equal(fetched.id, ticket.id);
+
   const transcript = engine.transcriptMetadata({
-    tenantId: 'beverly_hills_rp',
+    actor: staff,
     ticketId: ticket.id,
   });
   assert.equal(transcript.tenantId, 'beverly_hills_rp');
   assert.equal(transcript.ticketId, ticket.id);
   assert.equal(transcript.reminderCount, 1);
   assert.ok(transcript.reminderIds.includes(reminder.id));
+});
+
+test('privileged ticket reads require verified actor and canonical roles', () => {
+  const engine = createTicketEngine({ authorization });
+  const staff = staffActor('beverly_hills_rp');
+  const ticket = engine.createTicket({
+    actor: playerActor('beverly_hills_rp', 'reader_1'),
+    typeKey: 'standard',
+  });
+  engine.scheduleReminder({
+    ticketId: ticket.id,
+    actor: staff,
+    dueAt: '2026-08-09T08:00:00.000Z',
+    message: 'ping',
+    now: '2026-08-09T07:00:00.000Z',
+  });
+
+  const emptyRoles = bindActor(identity, 'beverly_hills_rp', 'empty', []);
+  const lookalike = bindActor(identity, 'beverly_hills_rp', 'lookalike', ['Staff', 'bhrp_staff_lookalike']);
+  for (const denied of [emptyRoles, lookalike]) {
+    assert.throws(() => engine.getTicket({ actor: denied, ticketId: ticket.id }), /Authorization denied/);
+    assert.throws(() => engine.dueReminders({ actor: denied }), /Authorization denied/);
+    assert.throws(() => engine.transcriptMetadata({ actor: denied, ticketId: ticket.id }), /Authorization denied/);
+  }
+  assert.throws(() => engine.getTicket({
+    actor: { userId: 'spoof', tenantId: 'beverly_hills_rp', roleIds: ['bhrp_staff'] },
+    ticketId: ticket.id,
+  }), /Unverified Discord identity/);
+  assert.throws(() => engine.getTicket({
+    actor: staffActor('blood_diamond_rp'),
+    ticketId: ticket.id,
+  }), /Cross-tenant access denied/);
 });
 
 test('canonical-role authorization fails closed and tenant boundaries stay isolated', () => {

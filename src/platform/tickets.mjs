@@ -157,11 +157,13 @@ export class TicketEngine {
     return cloneRecord(ticket);
   }
 
-  getTicket(tenantId, ticketId) {
-    ensureTenant(tenantId);
-    const ticket = this.tickets.get(String(ticketId));
+  getTicket(input) {
+    const who = ensureActor(input?.actor);
+    authorize(this.authorization, who, 'claim_ticket');
+    const ticketId = String(input?.ticketId ?? '');
+    const ticket = this.tickets.get(ticketId);
     if (!ticket) throw new Error(`Unknown ticket: ${ticketId}`);
-    if (ticket.tenantId !== tenantId) throw new Error(`Ticket ${ticketId} does not belong to tenant ${tenantId}`);
+    if (ticket.tenantId !== who.tenantId) throw new Error(`Cross-tenant access denied: ${who.tenantId} -> ${ticket.tenantId}`);
     return cloneRecord(ticket);
   }
 
@@ -329,7 +331,9 @@ export class TicketEngine {
   }
 
   dueReminders(input = {}) {
-    const tenantId = ensureTenant(input?.tenantId);
+    const who = ensureActor(input?.actor);
+    authorize(this.authorization, who, 'schedule_reminder');
+    const tenantId = who.tenantId;
     const dueBefore = nowIso(input?.now);
     const reminders = [];
     for (const ticket of this.tickets.values()) {
@@ -343,10 +347,11 @@ export class TicketEngine {
   }
 
   transcriptMetadata(input) {
-    const tenantId = ensureTenant(input?.tenantId);
+    const who = ensureActor(input?.actor);
+    authorize(this.authorization, who, 'claim_ticket');
     const ticket = this.tickets.get(String(input?.ticketId));
     if (!ticket) throw new Error(`Unknown ticket: ${input?.ticketId}`);
-    if (ticket.tenantId !== tenantId) throw new Error(`Ticket ${ticket.id} does not belong to tenant ${tenantId}`);
+    if (ticket.tenantId !== who.tenantId) throw new Error(`Cross-tenant access denied: ${who.tenantId} -> ${ticket.tenantId}`);
     assertTenantModuleEnabled(ticket.tenantId, 'ticket_transcripts');
 
     const reminderCreatedAt = ticket.reminders.length

@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createCommunityUtilitiesEngine } from '../src/platform/community-utilities.mjs';
-import { clearTenantModuleOverrides, enableTenantModule } from './helpers/tenant-module-overrides.mjs';
+import { MODULE_BY_KEY } from '../src/platform/modules.mjs';
 import { bindActor, createTestIdentityAdapter } from './helpers/discord-identity-fixtures.mjs';
 
 const authorization = {
@@ -134,38 +134,13 @@ test('staff feedback and status-blacklist review records preserve reviewer histo
   assert.equal(resolved.decision, 'remove_status');
 });
 
-test('mass-unban remains approval-gated planning only with execution disabled', () => {
-  clearTenantModuleOverrides();
+test('mass-unban stays disabled and remains approval-gated in the registry', () => {
+  assert.equal(MODULE_BY_KEY.mass_unban.approvalRequired, true);
   assert.throws(() => createCommunityUtilitiesEngine({ authorization }).planMassUnban({
     actor: actor('beverly_hills_rp', 'bh-owner-1', ['bh-owner']),
     scope: 'legacy-false-positives',
     reason: 'manual review complete',
   }), /disabled/);
-
-  enableTenantModule('beverly_hills_rp', 'mass_unban');
-  try {
-    const engine = createCommunityUtilitiesEngine({ authorization });
-    const owner = actor('beverly_hills_rp', 'bh-owner-1', ['bh-owner']);
-
-    const plan = engine.planMassUnban({
-      actor: owner,
-      scope: 'legacy-false-positives',
-      reason: 'manual review complete',
-    });
-    assert.equal(plan.approvalStatus, 'pending');
-    assert.equal(plan.executionDisabled, true);
-
-    const approved = engine.reviewMassUnbanPlan({
-      actor: owner,
-      planId: plan.id,
-      decision: 'approved',
-      reason: 'owner sign-off',
-    });
-    assert.equal(approved.approvalStatus, 'approved');
-    assert.equal(approved.executionDisabled, true);
-  } finally {
-    clearTenantModuleOverrides();
-  }
 });
 
 test('canonical-role authorization fails closed for privileged actions', () => {

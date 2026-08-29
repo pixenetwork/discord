@@ -1,7 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createFiveMOpsEngine } from '../src/platform/fivem-ops.mjs';
-import { clearTenantModuleOverrides, enableTenantModule } from './helpers/tenant-module-overrides.mjs';
 import { bindActor, createTestIdentityAdapter } from './helpers/discord-identity-fixtures.mjs';
 
 const authorization = {
@@ -51,20 +50,10 @@ test('staff sits, duty, and incidents are tenant scoped', () => {
   assert.equal(engine.listTenantIncidents('blood_diamond_rp').length, 1);
 });
 
-test('production restart control remains planning-only and off until explicitly enabled', () => {
-  clearTenantModuleOverrides();
+test('production restart control stays off with no execute path', () => {
   const engine = createFiveMOpsEngine({ authorization });
   assert.throws(() => engine.planProductionRestart({ actor: bhStaff, reason: 'maintenance', approvalId: 'approval-123' }), /disabled/);
-
-  enableTenantModule('beverly_hills_rp', 'restart_control');
-  try {
-    const plan = engine.planProductionRestart({ actor: bhStaff, reason: 'maintenance', approvalId: 'approval-123' });
-    assert.equal(plan.executionDisabled, true);
-    assert.equal(plan.status, 'planned_only');
-    assert.equal(typeof engine.executeRestart, 'undefined');
-  } finally {
-    clearTenantModuleOverrides();
-  }
+  assert.equal(typeof engine.executeRestart, 'undefined');
 });
 
 test('role-name lookalikes and unverified actors fail closed', () => {

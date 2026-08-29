@@ -1,5 +1,4 @@
-import { defaultModuleState, enableModule, fullSuiteModuleState, validateModuleState } from './modules.mjs';
-import { peekTenantModuleOverride } from './tenant-module-overrides.mjs';
+import { defaultModuleState, fullSuiteModuleState, validateModuleState } from './modules.mjs';
 
 const profile = (key, name, scope, options = {}) => Object.freeze({
   key,
@@ -77,14 +76,13 @@ export function getTenantProfile(key) {
 }
 
 export function getTenantModules(tenantKey) {
-  const tenant = getTenantProfile(tenantKey);
-  return peekTenantModuleOverride(tenant.key) ?? tenant.modules;
+  return getTenantProfile(tenantKey).modules;
 }
 
 export function assertTenantModuleEnabled(tenantKey, moduleKey) {
   const tenant = getTenantProfile(tenantKey);
   const key = String(moduleKey ?? '');
-  const modules = getTenantModules(tenant.key);
+  const modules = tenant.modules;
   if (!key || !Object.hasOwn(modules, key)) throw new Error(`Unknown Discord module: ${moduleKey}`);
   if (!modules[key]) throw new Error(`Module ${key} is disabled for tenant ${tenantKey}`);
   return true;
@@ -101,6 +99,3 @@ export function assertTenantBoundary({ actorTenant, targetTenant, actorIsOwner =
 export function canFormerStaffAccess(tenantKey) {
   return getTenantProfile(tenantKey).allowFormerStaff;
 }
-
-// enableModule kept available for test helpers that compose validated states.
-export { enableModule };

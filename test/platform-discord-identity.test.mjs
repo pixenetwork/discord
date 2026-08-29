@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync, readdirSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import {
   createDiscordIdentityAdapter,
@@ -24,9 +24,12 @@ const FORBIDDEN_HTTP_PATTERNS = [
   [/clearTenantModuleOverrides/, 'must not call clearTenantModuleOverrides'],
   [/getTenantModules/, 'must not import getTenantModules'],
   [/setTenantModuleOverride/, 'must not import setTenantModuleOverride'],
+  [/peekTenantModuleOverride/, 'must not import peekTenantModuleOverride'],
 ];
 
 test('HTTP/Discord entrypoints do not import platform engines, identity seals, or module flips', () => {
+  assert.equal(existsSync('src/platform/tenant-module-overrides.mjs'), false, 'runtime tenant-module-overrides.mjs must not exist');
+
   for (const path of HTTP_ENTRYPOINTS) {
     const source = readFileSync(path, 'utf8');
     for (const [pattern, message] of FORBIDDEN_HTTP_PATTERNS) {
@@ -34,13 +37,13 @@ test('HTTP/Discord entrypoints do not import platform engines, identity seals, o
     }
   }
 
-  // Also scan other top-level src files (excluding platform/) for accidental wiring.
   for (const name of readdirSync('src')) {
     if (!name.endsWith('.mjs')) continue;
     const path = join('src', name);
     const source = readFileSync(path, 'utf8');
     assert.equal(/enableTenantModule/.test(source), false, `${path} must not reference enableTenantModule`);
     assert.equal(/from ['"]\.\/platform\/discord-identity/.test(source), false, `${path} must not import discord-identity`);
+    assert.equal(/tenant-module-overrides/.test(source), false, `${path} must not import tenant-module-overrides`);
   }
 });
 

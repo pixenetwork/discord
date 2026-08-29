@@ -5,11 +5,8 @@ import {
   assertTenantBoundary,
   assertTenantModuleEnabled,
   canFormerStaffAccess,
+  getTenantModules,
 } from '../src/platform/tenants.mjs';
-import {
-  clearTenantModuleOverrides,
-  enableTenantModule,
-} from './helpers/tenant-module-overrides.mjs';
 
 test('Beverly Hills RP and Blood Diamond RP have the full suite enabled independently', () => {
   assert.equal(TENANT_PROFILES.beverly_hills_rp.modules.ai_ticket_agent, true);
@@ -51,14 +48,12 @@ test('customer support profile enables product support but not FiveM admin contr
   assert.throws(() => assertTenantModuleEnabled('customer_support', 'restart_control'), /disabled/);
 });
 
-test('high-impact modules stay disabled until explicitly enabled', () => {
-  clearTenantModuleOverrides();
+test('high-impact modules stay disabled with no runtime override path', () => {
   assert.throws(() => assertTenantModuleEnabled('beverly_hills_rp', 'restart_control'), /disabled/);
   assert.throws(() => assertTenantModuleEnabled('beverly_hills_rp', 'mass_unban'), /disabled/);
-  enableTenantModule('beverly_hills_rp', 'restart_control');
-  assert.equal(assertTenantModuleEnabled('beverly_hills_rp', 'restart_control'), true);
-  clearTenantModuleOverrides();
-  assert.throws(() => assertTenantModuleEnabled('beverly_hills_rp', 'restart_control'), /disabled/);
+  assert.equal(getTenantModules('beverly_hills_rp').restart_control, false);
+  assert.equal(getTenantModules('beverly_hills_rp').mass_unban, false);
+  assert.equal(getTenantModules('beverly_hills_rp'), TENANT_PROFILES.beverly_hills_rp.modules);
 });
 
 test('unknown module keys fail closed instead of looking merely disabled', () => {

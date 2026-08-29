@@ -47,7 +47,7 @@ test('ingests structured ticket context without live Discord or model calls', ()
   assert.equal(ingested.attachments.length, 1);
   assert.equal(ingested.logs[0].source, 'server.log');
   assert.equal(ingested.likelyFix, null);
-  assert.equal(engine.getCase('beverly_hills_rp', 'ticket_101').subject, 'Inventory wipe on reconnect');
+  assert.equal(engine.getCase({ actor: bhStaff, ticketId: 'ticket_101' }).subject, 'Inventory wipe on reconnect');
 });
 
 test('records follow-ups, duplicates, staff summaries, classification, and suggested fixes', () => {
@@ -111,7 +111,7 @@ test('records follow-ups, duplicates, staff summaries, classification, and sugge
   assert.equal(suggestion.evidence.length, 1);
 });
 
-test('suggestLikelyFix never sets fixApplied; only adapter-confirmed tool results do', () => {
+test('suggestLikelyFix never sets fixApplied; caller confirmationId strings are not evidence', () => {
   const engine = engineWithBudget(bhStaff);
   engine.ingestContext({
     actor: bhStaff,
@@ -120,7 +120,7 @@ test('suggestLikelyFix never sets fixApplied; only adapter-confirmed tool result
     messages: [{ body: 'please fix' }],
   });
 
-  const spoofed = engine.suggestLikelyFix({
+  const spoofedSuggest = engine.suggestLikelyFix({
     actor: bhStaff,
     ticketId: 'ticket_fix',
     suggestion: 'Restart the resource after config sync',
@@ -129,8 +129,8 @@ test('suggestLikelyFix never sets fixApplied; only adapter-confirmed tool result
     fixApplied: true,
     toolConfirmation: { toolName: 'txadmin.restart_resource', confirmationId: 'txn_9', result: 'ok' },
   });
-  assert.equal(spoofed.fixApplied, false);
-  assert.equal(spoofed.toolConfirmation, null);
+  assert.equal(spoofedSuggest.fixApplied, false);
+  assert.equal(spoofedSuggest.toolConfirmation, null);
 
   assert.throws(() => engine.confirmToolAction({
     actor: bhStaff,
@@ -152,14 +152,24 @@ test('suggestLikelyFix never sets fixApplied; only adapter-confirmed tool result
   assert.equal(confirmed.toolConfirmation.toolName, 'staff.cache_clear');
 });
 
-test('missing AI budget fails closed for ingest and classify', () => {
+test('missing AI budget fails closed; getBudget stays 0 and does not unlock spend', () => {
   const engine = createAiTicketAgentEngine({ authorization });
+  const unconfigured = engine.getBudget({ actor: bhStaff });
+  assert.equal(unconfigured.limitUnits, 0);
+  assert.equal(unconfigured.usedUnits, 0);
+
   assert.throws(() => engine.ingestContext({
     actor: bhStaff,
     ticketId: 'no_budget',
     subject: 'Should fail',
     messages: [{ body: 'x' }],
   }), /AI budget not configured/);
+  assert.throws(() => engine.classifyIssue({
+    actor: bhStaff,
+    ticketId: 'no_budget',
+    classification: 'player_issue',
+    confidence: 0.4,
+  }), /AI budget not configured|Unknown AI ticket case/);
 
   engine.configureBudget({ actor: bhStaff, limitUnits: 1, usedUnits: 0 });
   engine.ingestContext({
@@ -174,7 +184,7 @@ test('missing AI budget fails closed for ingest and classify', () => {
     ticketId: 'budgeted',
     classification: 'player_issue',
     confidence: 0.4,
-  }), /AI budget exhausted|AI budget not configured/);
+  }), /AI budget exhausted/);
 });
 
 test('tenant isolation fails closed between Beverly Hills RP and Blood Diamond RP', () => {
@@ -188,7 +198,7 @@ test('tenant isolation fails closed between Beverly Hills RP and Blood Diamond R
     messages: [{ body: 'bh context' }],
   });
 
-  assert.throws(() => engine.getCase('blood_diamond_rp', 'shared_label'), /Unknown AI ticket case/);
+  assert.throws(() => engine.getCase({ actor: bdStaff, ticketId: 'shared_label' }), /Unknown AI ticket case/);
   assert.throws(() => engine.recordFollowUpQuestions({
     actor: bdStaff,
     ticketId: 'shared_label',
@@ -201,8 +211,35 @@ test('tenant isolation fails closed between Beverly Hills RP and Blood Diamond R
     subject: 'BD only case',
     messages: [{ body: 'bd context' }],
   });
-  assert.equal(engine.getCase('beverly_hills_rp', 'shared_label').subject, 'BH only case');
-  assert.equal(engine.getCase('blood_diamond_rp', 'shared_label').subject, 'BD only case');
+  assert.equal(engine.getCase({ actor: bhStaff, ticketId: 'shared_label' }).subject, 'BH only case');
+  assert.equal(engine.getCase({ actor: bdStaff, ticketId: 'shared_label' }).subject, 'BD only case');
+  assert.equal(engine.listCases({ actor: bhStaff }).length, 1);
+  assert.equal(engine.listCases({ actor: bdStaff }).length, 1);
+});
+
+test('reads require canonical-role auth; empty roleIds and lookalikes fail closed', () => {
+  const engine = engineWithBudget(bhStaff);
+  engine.ingestContext({
+    actor: bhStaff,
+    ticketId: 'read_ticket',
+    subject: 'authz reads',
+    messages: [{ body: 'x' }],
+  });
+
+  const emptyRoles = bindActor(identity, 'beverly_hills_rp', 'empty', []);
+  const lookalike = bindActor(identity, 'beverly_hills_rp', 'lookalike', ['Staff', 'bh-staff-lookalike']);
+
+  for (const denied of [emptyRoles, lookalike]) {
+    assert.throws(() => engine.getCase({ actor: denied, ticketId: 'read_ticket' }), /Authorization denied/);
+    assert.throws(() => engine.listCases({ actor: denied }), /Authorization denied/);
+    assert.throws(() => engine.getBudget({ actor: denied }), /Authorization denied/);
+    assert.throws(() => engine.auditEvents({ actor: denied }), /Authorization denied/);
+  }
+
+  assert.throws(() => engine.getCase({
+    actor: { userId: 'spoof', tenantId: 'beverly_hills_rp', roleIds: ['bh-staff'] },
+    ticketId: 'read_ticket',
+  }), /Unverified Discord identity/);
 });
 
 test('unverified spoofed actors and disabled modules fail closed', () => {
@@ -264,10 +301,10 @@ test('ai_budget is enforced and privileged actions emit tenant-scoped audit even
     costUnits: 1,
   }), /AI budget exhausted/);
 
-  const audits = engine.auditEvents('beverly_hills_rp');
+  const audits = engine.auditEvents({ actor: bhStaff });
   assert.ok(audits.some((event) => event.action === 'ai_budget_configured'));
   assert.ok(audits.some((event) => event.action === 'ai_ticket_context_ingested'));
   assert.ok(audits.some((event) => event.action === 'ai_ticket_classified'));
-  assert.equal(engine.auditEvents('blood_diamond_rp').length, 0);
-  assert.equal(engine.getBudget('beverly_hills_rp').usedUnits, 2);
+  assert.equal(engine.auditEvents({ actor: bdStaff }).length, 0);
+  assert.equal(engine.getBudget({ actor: bhStaff }).usedUnits, 2);
 });

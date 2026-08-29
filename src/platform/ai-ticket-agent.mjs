@@ -1,5 +1,5 @@
 import { requireVerifiedActor, requireVerifiedToolConfirmation } from './discord-identity.mjs';
-import { assertTenantModuleEnabled, getTenantProfile } from './tenants.mjs';
+import { assertTenantModuleEnabled } from './tenants.mjs';
 
 const ISSUE_CLASSES = Object.freeze(['player_issue', 'script_bug', 'configuration_issue']);
 const PRIVILEGED_ALIASES = Object.freeze(['staff', 'developer', 'owner']);
@@ -21,6 +21,9 @@ function actor(input) {
 function authorize(authorization, who) {
   const canonical = authorization?.[who.tenantId]?.canonicalRoleIds;
   if (!canonical) throw new Error(`Missing canonical role configuration for tenant ${who.tenantId}`);
+  if (!Array.isArray(who.roleIds) || who.roleIds.length === 0) {
+    throw new Error(`Authorization denied for AI ticket agent in tenant ${who.tenantId}`);
+  }
   const allowed = PRIVILEGED_ALIASES.map((alias) => canonical[alias]).filter(Boolean).map(String);
   if (!allowed.length) throw new Error(`Missing canonical AI ticket agent role IDs for tenant ${who.tenantId}`);
   if (!allowed.some((roleId) => who.roleIds.includes(roleId))) {
@@ -123,12 +126,13 @@ export class AiTicketAgentEngine {
     return clone(record);
   }
 
-  getBudget(tenantId) {
-    getTenantProfile(String(tenantId));
-    assertTenantModuleEnabled(tenantId, 'ai_budget');
-    const record = this.budgets.get(String(tenantId));
+  getBudget(input) {
+    const who = actor(input?.actor);
+    assertTenantModuleEnabled(who.tenantId, 'ai_budget');
+    authorize(this.authorization, who);
+    const record = this.budgets.get(who.tenantId);
     if (!record) {
-      return Object.freeze({ tenantId: String(tenantId), limitUnits: 0, usedUnits: 0, updatedBy: null, updatedAt: null });
+      return Object.freeze({ tenantId: who.tenantId, limitUnits: 0, usedUnits: 0, updatedBy: null, updatedAt: null });
     }
     return clone(record);
   }
@@ -353,24 +357,31 @@ export class AiTicketAgentEngine {
     return clone(record.likelyFix);
   }
 
-  getCase(tenantId, ticketId) {
-    getTenantProfile(String(tenantId));
-    const record = this.cases.get(caseKey(String(tenantId), String(ticketId)));
-    if (!record) throw new Error(`Unknown AI ticket case ${ticketId} in tenant ${tenantId}`);
+  getCase(input) {
+    const who = actor(input?.actor);
+    this.#requireModules(who.tenantId);
+    authorize(this.authorization, who);
+    const ticketId = String(input?.ticketId ?? '').trim();
+    if (!ticketId) throw new Error('ticketId is required');
+    const record = this.cases.get(caseKey(who.tenantId, ticketId));
+    if (!record) throw new Error(`Unknown AI ticket case ${ticketId} in tenant ${who.tenantId}`);
     return clone(record);
   }
 
-  listCases(tenantId) {
-    getTenantProfile(String(tenantId));
+  listCases(input) {
+    const who = actor(input?.actor);
+    this.#requireModules(who.tenantId);
+    authorize(this.authorization, who);
     return [...this.cases.values()]
-      .filter((record) => record.tenantId === String(tenantId))
+      .filter((record) => record.tenantId === who.tenantId)
       .map(clone);
   }
 
-  auditEvents(tenantId) {
-    getTenantProfile(String(tenantId));
-    assertTenantModuleEnabled(tenantId, 'audit');
-    return clone(this.auditByTenant.get(String(tenantId)) ?? []);
+  auditEvents(input) {
+    const who = actor(input?.actor);
+    assertTenantModuleEnabled(who.tenantId, 'audit');
+    authorize(this.authorization, who);
+    return clone(this.auditByTenant.get(who.tenantId) ?? []);
   }
 
   #requireModules(tenantId) {

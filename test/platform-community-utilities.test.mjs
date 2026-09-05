@@ -64,7 +64,7 @@ test('sticky/keyword/welcome/booster/polls/translation states are tenant-scoped 
   assert.equal(reviewed.status, 'completed');
   assert.equal(reviewed.translatedText, 'Hello');
 
-  const snapshot = engine.snapshot('beverly_hills_rp');
+  const snapshot = engine.snapshot({ actor: staff });
   assert.equal(snapshot.auditTrail.length >= 7, true);
   assert.equal(snapshot.translationRequests[0].tenantId, 'beverly_hills_rp');
 });
@@ -96,7 +96,7 @@ test('vanity/sticky/auto role policy mutations are approval-aware and tenant-sco
   });
   assert.equal(approved.status, 'approved');
 
-  const snapshot = engine.snapshot('beverly_hills_rp');
+  const snapshot = engine.snapshot({ actor: staff });
   assert.deepEqual(snapshot.rolePolicies.auto, ['auto-role-1', 'auto-role-2']);
 });
 
@@ -163,4 +163,28 @@ test('canonical-role authorization fails closed for privileged actions', () => {
     mutationId: 'role_mutation_1',
     decision: 'approved',
   }), /Missing canonical role IDs/);
+});
+
+test('privileged community snapshot reads require verified actor and canonical roles', () => {
+  const engine = createCommunityUtilitiesEngine({ authorization });
+  const staff = actor('beverly_hills_rp', 'bh-staff-1', ['bh-staff']);
+  engine.upsertStickyMessage({ actor: staff, channelId: 'chan-read', content: 'rules', now: '2026-08-09T12:00:00Z' });
+
+  const allowed = engine.snapshot({ actor: staff });
+  assert.equal(allowed.tenantId, 'beverly_hills_rp');
+  assert.equal(allowed.stickyMessages.length, 1);
+
+  const emptyRoles = actor('beverly_hills_rp', 'empty', []);
+  const lookalike = actor('beverly_hills_rp', 'lookalike', ['Staff', 'bh-staff-lookalike']);
+  for (const denied of [emptyRoles, lookalike]) {
+    assert.throws(() => engine.snapshot({ actor: denied }), /Authorization denied/);
+  }
+  assert.throws(() => engine.snapshot({
+    actor: { userId: 'spoof', tenantId: 'beverly_hills_rp', roleIds: ['bh-staff'] },
+  }), /Unverified Discord identity/);
+
+  const crossTenant = engine.snapshot({ actor: actor('blood_diamond_rp', 'bd-staff-1', ['bd-staff']) });
+  assert.equal(crossTenant.tenantId, 'blood_diamond_rp');
+  assert.equal(crossTenant.stickyMessages.length, 0);
+  assert.equal(crossTenant.auditTrail.length, 0);
 });

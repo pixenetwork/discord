@@ -372,11 +372,12 @@ export class CommunityUtilitiesEngine {
     return clone(plan);
   }
 
-  snapshot(tenantId) {
-    const tenantKey = getTenantProfile(String(tenantId)).key;
-    const tenant = this.#tenant(tenantKey);
+  snapshot(input) {
+    const who = actor(input?.actor);
+    authorize(this.authorization, who, 'manage_content');
+    const tenant = this.#tenant(who.tenantId);
     return Object.freeze({
-      tenantId: tenantKey,
+      tenantId: who.tenantId,
       stickyMessages: Object.freeze([...tenant.stickyMessages.values()].map(clone)),
       keywordResponses: Object.freeze([...tenant.keywordResponses.values()].map(clone)),
       welcomeResponder: tenant.welcomeResponder ? Object.freeze(clone(tenant.welcomeResponder)) : null,

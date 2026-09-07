@@ -34,7 +34,7 @@ const PRODUCT_SUBMISSION_TEMPLATES = Object.freeze({
     'Lineage / breeder attribution:',
     'Origin / source notes:',
     'Description / traits:',
-    'Shipping origin: city/state or country only',
+    'Shipping origin:',
     'Shipping notes:',
     'DOA policy:',
     'Needs Aquapedia research? yes/no:',
@@ -70,7 +70,7 @@ const PRODUCT_SUBMISSION_TEMPLATES = Object.freeze({
   ].join('\n'),
   other: [
     'Product name:', 'Product type:', 'Quantity available:', 'Vendor price:', 'Vendor shipping:',
-    'Description:', 'Shipping origin: city/state or country only', 'Shipping notes:', 'Extra notes:',
+    'Description:', 'Shipping origin:', 'Shipping notes:', 'Extra notes:',
   ].join('\n'),
 });
 
@@ -537,7 +537,11 @@ async function handleProduct(interaction, deps) {
       reviewedAt: new Date().toISOString(),
     });
     const ticketChannel = interaction.guild.channels.cache.find((channel) => channel.id === saved.ticketChannelId);
-    if (ticketChannel) await ticketChannel.send(`✅ **APPROVED** — **${synced.product.title}** synced to Shopify. Product ID: \`${synced.product.id}\`${synced.product.handle ? ` • handle \`${synced.product.handle}\`` : ''}`);
+    const approvalMessage = `✅ **APPROVED** — **${synced.product.title}** synced to Shopify. Product ID: \`${synced.product.id}\`${synced.product.handle ? ` • handle \`${synced.product.handle}\`` : ''}`;
+    if (ticketChannel) await ticketChannel.send(approvalMessage);
+    const vendorCategory = interaction.guild.channels.cache.find((channel) => channel.type === ChannelType.GuildCategory && channel.name === `🐟・${vendor.displayName.toUpperCase()} HQ`);
+    const vendorCatalogChannel = vendorCategory ? interaction.guild.channels.cache.find((channel) => channel.type === ChannelType.GuildText && channel.name === '🛍️・catalog' && channel.parentId === vendorCategory.id) : null;
+    if (vendorCatalogChannel) await vendorCatalogChannel.send(approvalMessage).catch(() => undefined);
     await audit(interaction.guild, `✅ Product submission \`${id}\` approved by <@${interaction.user.id}> and synced as \`${synced.product.id}\`.`);
     return interaction.editReply(`✅ Approved **${synced.product.title}** and synced it to Shopify as \`${synced.product.id}\`.`);
   }
@@ -571,7 +575,7 @@ async function handleProduct(interaction, deps) {
     id, vendorId: vendor.id, submitterDiscordId: interaction.user.id, type,
     status: 'draft', fields: {}, media: [], missing: initial.missing, ticketChannelId: channel.id,
   });
-  await channel.send({ content: `🛍️ **Aquaphoria Product Submission**\nSubmission ID: \`${id}\`\n\nCopy this format, fill it in, then run \`/product fill\` with the same submission ID and paste the completed format into **details**. You can attach an actual photo/video in **media**.\n\n\`\`\`text\n${template}\n\`\`\`` });
+  await channel.send({ content: `🛍️ **Aquaphoria Product Submission**\nSubmission ID: \`${id}\`\n\nCopy this format, fill it in, then run \`/product fill\` with the same submission ID and paste the completed format into **details**. You can attach an actual photo/video in **media**. For shipping origin, use city/state or country only—never a private street address.\n\n\`\`\`text\n${template}\n\`\`\`` });
   await audit(interaction.guild, `🛍️ **${vendor.displayName}** opened product submission \`${id}\` in <#${channel.id}>.`);
   return interaction.editReply(`✅ Your private product submission ticket is ready: <#${channel.id}>\nSubmission ID: \`${id}\``);
 }
@@ -723,7 +727,7 @@ export function createCommandRouter(deps) {
         if (interaction.commandName === 'aquaphoria') return handleSetup(interaction, deps);
         if (interaction.commandName === 'vendor') return handleVendor(interaction, deps);
         if (interaction.commandName === 'catalog') return handleCatalog(interaction, deps);
-        if (interaction.commandName === 'product') return handleProduct(interaction, deps);
+        if (interaction.commandName === 'product') return await handleProduct(interaction, deps);
         if (interaction.commandName === 'research') return handleResearch(interaction, deps);
         if (interaction.commandName === 'order') return handleOrder(interaction, deps);
         if (interaction.commandName === 'payout') return handlePayout(interaction, deps);

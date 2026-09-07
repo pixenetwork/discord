@@ -94,6 +94,7 @@ test('staff approval syncs a pending partner draft to Shopify exactly once', asy
   let catalogCalls = 0;
   let reply = null;
   const ticketMessages = [];
+  const vendorMessages = [];
   let submission = {
     id: 'product:123', vendorId: 'toa', submitterDiscordId: '100', type: 'livestock', status: 'pending',
     ticketChannelId: 'product-ticket-1', media: [{ url: 'https://example.com/shrimp.jpg' }], missing: [],
@@ -120,7 +121,9 @@ test('staff approval syncs a pending partner draft to Shopify exactly once', asy
     },
   };
   const ticket = { id: 'product-ticket-1', async send(message) { ticketMessages.push(message); } };
-  const guild = { channels: { cache: [ticket] } };
+  const vendorCategory = { id: 'vendor-hq', type: ChannelType.GuildCategory, name: '🐟・TOA HQ' };
+  const vendorCatalog = { id: 'vendor-catalog', type: ChannelType.GuildText, name: '🛍️・catalog', parentId: 'vendor-hq', async send(message) { vendorMessages.push(message); } };
+  const guild = { channels: { cache: [ticket, vendorCategory, vendorCatalog] } };
   const interaction = {
     id: 'review-1', user: { id: 'staff-user' }, member: { roles: { cache: new Set(['staff-role']) } }, guild,
     commandName: 'product', isChatInputCommand: () => true, deferred: false, replied: false,
@@ -141,6 +144,7 @@ test('staff approval syncs a pending partner draft to Shopify exactly once', asy
   assert.equal(submission.status, 'approved');
   assert.equal(submission.shopifyProductId, 'gid://shopify/Product/1');
   assert.match(String(ticketMessages[0] ?? ''), /APPROVED/);
+  assert.match(String(vendorMessages[0] ?? ''), /APPROVED|synced/i);
   assert.match(String(reply ?? ''), /already approved|approved/i);
 });
 
@@ -181,4 +185,38 @@ test('staff can request changes or reject without calling Shopify', async () => 
   assert.equal(submission.status, 'rejected');
   assert.match(String(messages.at(-1) ?? ''), /REJECTED/);
   assert.equal(catalogCalls, 0);
+});
+
+
+test('unverified member cannot start a partner product submission', async () => {
+  let created = 0;
+  let reply = null;
+  const store = { async getVendorByDiscordUser() { return null; } };
+  const interaction = {
+    user: { id: 'not-vendor' }, guild: { channels: { cache: [], async create() { created += 1; } } },
+    commandName: 'product', isChatInputCommand: () => true,
+    options: { getSubcommand: () => 'submit', getString: () => 'livestock' },
+    async reply(value) { reply = value?.content ?? value; },
+  };
+  await createCommandRouter({ config: { discord: { ownerUserId: 'owner' } }, store }).handle(interaction);
+  assert.equal(created, 0);
+  assert.match(String(reply ?? ''), /approved Aquaphoria vendor/i);
+});
+
+test('partner cannot fill a submission owned by another vendor', async () => {
+  let saved = false;
+  let reply = null;
+  const store = {
+    async getVendorByDiscordUser() { return { id: 'mimu', displayName: 'MIMU' }; },
+    async getProductSubmission() { return { id: 'product:toa', vendorId: 'toa', type: 'livestock', status: 'draft', media: [] }; },
+    async saveProductSubmission() { saved = true; },
+  };
+  const interaction = {
+    user: { id: '200' }, guild: { channels: { cache: [] } }, commandName: 'product', isChatInputCommand: () => true,
+    options: { getSubcommand: () => 'fill', getString: (name) => name === 'submission' ? 'product:toa' : 'details', getAttachment: () => null },
+    async reply(value) { reply = value?.content ?? value; }, async editReply(value) { reply = value; },
+  };
+  await createCommandRouter({ config: { discord: { ownerUserId: 'owner' }, marketplace: { defaultMarkupPercent: 5 } }, store }).handle(interaction);
+  assert.equal(saved, false);
+  assert.match(String(reply ?? ''), /belongs to another vendor/i);
 });

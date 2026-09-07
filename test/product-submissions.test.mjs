@@ -127,3 +127,9 @@ test('preview uses an image attachment for Shopify and does not mistake video fo
   ] }, 5);
   assert.equal(preview.product.imageUrl, 'https://cdn.example/photo.png');
 });
+
+test('untouched livestock template does not count the shipping-origin hint as data', () => {
+  const parsed = commandModule.parseProductSubmission('livestock', commandModule.productSubmissionTemplate('livestock'));
+  assert.equal(parsed.complete, false);
+  assert.ok(parsed.missing.includes('Shipping origin'));
+});

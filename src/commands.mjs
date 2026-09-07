@@ -4,7 +4,7 @@ import {
   PermissionFlagsBits,
   SlashCommandBuilder,
 } from 'discord.js';
-import { centsToMoney, moneyToCents } from './pricing.mjs';
+import { calculateRetailBreakdown, centsToMoney, moneyToCents } from './pricing.mjs';
 import { ensureVendorWorkspace, provisionAquaphoriaLayout } from './layout.mjs';
 import {
   getCanonicalStaffRole,
@@ -21,6 +21,117 @@ const PRODUCT_CATEGORIES = [
   ['Accessories', 'accessories'],
   ['Other', 'other'],
 ];
+const PRODUCT_SUBMISSION_TEMPLATES = Object.freeze({
+  livestock: [
+    'Product/strain name:',
+    'Species/genus:',
+    'Product format: individual / pair / trio / group / other',
+    'Quantity available:',
+    'Sex/ratio:',
+    'Size/age:',
+    'Vendor price:',
+    'Vendor shipping:',
+    'Lineage / breeder attribution:',
+    'Origin / source notes:',
+    'Description / traits:',
+    'Shipping origin: city/state or country only',
+    'Shipping notes:',
+    'DOA policy:',
+    'Needs Aquapedia research? yes/no:',
+    'Extra notes:',
+  ].join('\n'),
+  eggs: [
+    'Species/strain:', 'Egg count or pack size:', 'Quantity of packs available:',
+    'Vendor price:', 'Vendor shipping:', 'Breeder/lineage:',
+    'Collection/lay date or freshness notes:', 'Incubation/shipping notes:',
+    'DOA/hatch policy:', 'Needs Aquapedia research? yes/no:', 'Extra notes:',
+  ].join('\n'),
+  food: [
+    'Product name:', 'Brand/maker:', 'Size / weight / volume:', 'Quantity available:',
+    'Vendor price:', 'Vendor shipping:', 'Ingredients or active contents:',
+    'Storage instructions:', 'Batch / manufacture / expiry information:',
+    'Usage description:', 'Extra notes:',
+  ].join('\n'),
+  '3d_printed': [
+    'Product name:', 'Product type:', 'Material:', 'Dimensions:', 'Available options:',
+    'Quantity available:', 'Made to order? yes/no:', 'Vendor price:', 'Vendor shipping:',
+    'Description/specifications:', 'Extra notes:',
+  ].join('\n'),
+  bacteria_water_care: [
+    'Product name:', 'Brand/maker:', 'Size / weight / volume:', 'Quantity available:',
+    'Vendor price:', 'Vendor shipping:', 'Ingredients or active contents:',
+    'Storage instructions:', 'Batch / manufacture / expiry information:',
+    'Usage description:', 'Extra notes:',
+  ].join('\n'),
+  accessories: [
+    'Product name:', 'Product type:', 'Material:', 'Dimensions:', 'Available options:',
+    'Quantity available:', 'Vendor price:', 'Vendor shipping:',
+    'Description/specifications:', 'Extra notes:',
+  ].join('\n'),
+  other: [
+    'Product name:', 'Product type:', 'Quantity available:', 'Vendor price:', 'Vendor shipping:',
+    'Description:', 'Shipping origin: city/state or country only', 'Shipping notes:', 'Extra notes:',
+  ].join('\n'),
+});
+
+export function productSubmissionTemplate(type) {
+  const template = PRODUCT_SUBMISSION_TEMPLATES[String(type ?? '').trim().toLowerCase()];
+  if (!template) throw new Error('Unsupported product submission type');
+  return template;
+}
+
+const REQUIRED_PRODUCT_FIELDS = Object.freeze({
+  livestock: ['Product/strain name', 'Quantity available', 'Vendor price', 'Vendor shipping', 'Shipping origin', 'DOA policy'],
+  eggs: ['Species/strain', 'Egg count or pack size', 'Quantity of packs available', 'Vendor price', 'Vendor shipping', 'DOA/hatch policy'],
+  food: ['Product name', 'Size / weight / volume', 'Quantity available', 'Vendor price', 'Vendor shipping'],
+  bacteria_water_care: ['Product name', 'Size / weight / volume', 'Quantity available', 'Vendor price', 'Vendor shipping'],
+  '3d_printed': ['Product name', 'Product type', 'Material', 'Dimensions', 'Quantity available', 'Vendor price', 'Vendor shipping'],
+  accessories: ['Product name', 'Product type', 'Quantity available', 'Vendor price', 'Vendor shipping'],
+  other: ['Product name', 'Product type', 'Quantity available', 'Vendor price', 'Vendor shipping'],
+});
+
+export function parseProductSubmission(type, text) {
+  const normalizedType = String(type ?? '').trim().toLowerCase();
+  productSubmissionTemplate(normalizedType);
+  const fields = {};
+  for (const rawLine of String(text ?? '').split(/\r?\n/)) {
+    const separator = rawLine.indexOf(':');
+    if (separator < 1) continue;
+    const label = rawLine.slice(0, separator).trim().toLowerCase();
+    if (!label) continue;
+    fields[label] = rawLine.slice(separator + 1).trim();
+  }
+  const required = REQUIRED_PRODUCT_FIELDS[normalizedType] ?? [];
+  const missing = required.filter((label) => !fields[label.toLowerCase()]);
+  return Object.freeze({ type: normalizedType, fields: Object.freeze(fields), missing: Object.freeze(missing), complete: missing.length === 0 });
+}
+
+const PRODUCT_TYPE_TO_CATEGORY = Object.freeze({
+  livestock: 'live_fish', eggs: 'eggs', food: 'food', bacteria_water_care: 'bacteria_water_care',
+  '3d_printed': '3d_printed', accessories: 'accessories', other: 'other',
+});
+
+export function buildProductSubmissionPreview(submission, markupPercent) {
+  if (!submission?.complete) throw new Error(`Product submission is incomplete: ${(submission?.missing ?? []).join(', ')}`);
+  const fields = submission.fields ?? {};
+  const type = submission.type;
+  const nameKey = type === 'livestock' ? 'product/strain name' : type === 'eggs' ? 'species/strain' : 'product name';
+  const quantityKey = type === 'eggs' ? 'quantity of packs available' : 'quantity available';
+  const stock = Number(fields[quantityKey]);
+  if (!Number.isSafeInteger(stock) || stock < 0) throw new Error('Quantity available must be a non-negative integer');
+  const vendorPriceCents = moneyToCents(fields['vendor price']);
+  const vendorShippingCents = moneyToCents(fields['vendor shipping']);
+  const pricing = calculateRetailBreakdown({ vendorPriceCents, vendorShippingCents, markupPercent });
+  const description = fields['description / traits'] ?? fields['description/specifications'] ?? fields.description ?? fields['usage description'] ?? '';
+  const media = Array.isArray(submission.media) ? submission.media : [];
+  const imageMedia = media.find((entry) => String(entry?.contentType ?? '').toLowerCase().startsWith('image/') || /\.(?:png|jpe?g|webp|gif)(?:[?#]|$)/i.test(String(entry?.url ?? '')));
+  const research = String(fields['needs aquapedia research? yes/no'] ?? '').trim().toLowerCase();
+  return Object.freeze({
+    product: Object.freeze({ name: fields[nameKey], category: PRODUCT_TYPE_TO_CATEGORY[type], stock, description, imageUrl: imageMedia?.url ?? null }),
+    pricing,
+    needsAquapediaResearch: ['yes', 'y', 'true'].includes(research),
+  });
+}
 
 function slugify(value) {
   return String(value ?? '')
@@ -116,6 +227,26 @@ function commandDefinitions() {
       .addStringOption((option) => option.setName('product_id').setDescription('Shopify product ID').setRequired(true)))
     .addSubcommand((sub) => sub.setName('list').setDescription('List products assigned to your vendor catalog'));
 
+  const product = new SlashCommandBuilder()
+    .setName('product')
+    .setDescription('Submit and review Aquaphoria partner products')
+    .addSubcommand((sub) => sub.setName('submit').setDescription('Start a guided private product submission')
+      .addStringOption((option) => option.setName('type').setDescription('What are you listing?').setRequired(true).addChoices(
+        { name: 'Live fish / shrimp', value: 'livestock' }, { name: 'Eggs', value: 'eggs' },
+        { name: 'Food', value: 'food' }, { name: 'Bacteria / water care', value: 'bacteria_water_care' },
+        { name: '3D printed product', value: '3d_printed' }, { name: 'Accessory', value: 'accessories' },
+        { name: 'Other approved product', value: 'other' },
+      )))
+    .addSubcommand((sub) => sub.setName('fill').setDescription('Fill or update your pending product draft')
+      .addStringOption((option) => option.setName('submission').setDescription('Submission ID from the ticket').setRequired(true))
+      .addStringOption((option) => option.setName('details').setDescription('Paste the completed template').setRequired(true).setMaxLength(6000))
+      .addAttachmentOption((option) => option.setName('media').setDescription('Optional actual product photo/video').setRequired(false)))
+    .addSubcommand((sub) => sub.setName('review').setDescription('Staff: review a pending product draft')
+      .addStringOption((option) => option.setName('submission').setDescription('Submission ID').setRequired(true))
+      .addStringOption((option) => option.setName('action').setDescription('Decision').setRequired(true).addChoices(
+        { name: 'Approve & sync', value: 'approve' }, { name: 'Request changes', value: 'request_changes' }, { name: 'Reject', value: 'reject' },
+      ))
+      .addStringOption((option) => option.setName('notes').setDescription('Optional staff notes').setRequired(false).setMaxLength(1000)));
   const research = new SlashCommandBuilder()
     .setName('research')
     .setDescription('Research a strain or breeder and add verified work to Aquapedia')
@@ -174,7 +305,7 @@ function commandDefinitions() {
         ))
       .addStringOption((option) => option.setName('details').setDescription('Tell us what you need help with').setRequired(true).setMaxLength(1000)));
 
-  return [aquaphoria, vendor, catalog, research, order, payout, ticket];
+  return [aquaphoria, vendor, catalog, product, research, order, payout, ticket];
 }
 
 async function requireVendor(interaction, store) {
@@ -310,6 +441,141 @@ async function handleCatalog(interaction, deps) {
   return interaction.editReply(`✅ **${product.title}** is now **${status}**.`);
 }
 
+async function handleProduct(interaction, deps) {
+  const sub = interaction.options.getSubcommand();
+
+  if (sub === 'fill') {
+    const vendor = await requireVendor(interaction, deps.store);
+    if (!vendor) return;
+    const id = interaction.options.getString('submission', true);
+    const submission = await deps.store.getProductSubmission(id);
+    if (!submission) return interaction.reply({ content: `Product submission \`${id}\` was not found.`, ephemeral: true });
+    if (submission.vendorId !== vendor.id) throw new Error('This product submission belongs to another vendor');
+    if (['approved', 'rejected'].includes(submission.status)) throw new Error(`Product submission is already ${submission.status}`);
+
+    await interaction.deferReply({ ephemeral: true });
+    const parsed = parseProductSubmission(submission.type, interaction.options.getString('details', true));
+    const attachment = interaction.options.getAttachment('media');
+    const media = [...(submission.media ?? [])];
+    if (attachment?.url && !media.some((entry) => entry.url === attachment.url)) {
+      media.push({ url: attachment.url, name: attachment.name ?? null, contentType: attachment.contentType ?? null });
+    }
+    const status = parsed.complete ? 'pending' : 'draft';
+    let preview = null;
+    if (parsed.complete) preview = buildProductSubmissionPreview({ ...parsed, media }, deps.config.marketplace.defaultMarkupPercent);
+    const saved = await deps.store.saveProductSubmission({
+      ...submission, fields: parsed.fields, missing: parsed.missing, media, status,
+      pricing: preview?.pricing ?? null, needsAquapediaResearch: preview?.needsAquapediaResearch ?? false,
+    });
+    const ticketChannel = interaction.guild.channels.cache.find((channel) => channel.id === saved.ticketChannelId);
+    if (!parsed.complete) {
+      const missing = parsed.missing.join(', ');
+      if (ticketChannel) await ticketChannel.send(`📝 Draft saved. Still needed: **${missing}**.`);
+      return interaction.editReply(`📝 Saved. I still need: **${missing}**. Paste the updated format into \`/product fill\` when ready.`);
+    }
+    const text = `🧾 **Product Preview**\n**${preview.product.name}** • stock ${preview.product.stock}\nVendor product: **$${centsToMoney(preview.pricing.vendorPriceCents)}**\nVendor shipping: **$${centsToMoney(preview.pricing.vendorShippingCents)}**\nAquaphoria markup: **${preview.pricing.markupPercent}%**\nCustomer retail: **$${centsToMoney(preview.pricing.retailTotalCents)}**${preview.needsAquapediaResearch ? '\n🔬 Aquapedia research requested.' : ''}\n\nStatus: **PENDING REVIEW**`;
+    if (ticketChannel) await ticketChannel.send(text);
+    await audit(interaction.guild, `🧾 **${vendor.displayName}** completed product submission \`${id}\`; pending staff review.`);
+    return interaction.editReply('✅ Product details saved and the preview is **pending review** in your private ticket.');
+  }
+
+  if (sub === 'review') {
+    const staff = await isCanonicalStaff(interaction, deps.store);
+    if (!isOwner(interaction, deps.config) && !staff) {
+      return interaction.reply({ content: 'Only Aquaphoria staff can review product submissions.', ephemeral: true });
+    }
+    const id = interaction.options.getString('submission', true);
+    const action = interaction.options.getString('action', true);
+    const notes = interaction.options.getString('notes') || null;
+    const submission = await deps.store.getProductSubmission(id);
+    if (!submission) return interaction.reply({ content: `Product submission \`${id}\` was not found.`, ephemeral: true });
+    if (['request_changes', 'reject'].includes(action)) {
+      await interaction.deferReply({ ephemeral: true });
+      const status = action === 'request_changes' ? 'changes_requested' : 'rejected';
+      const saved = await deps.store.saveProductSubmission({
+        ...submission,
+        status,
+        reviewNotes: notes,
+        reviewedBy: interaction.user.id,
+        reviewedAt: new Date().toISOString(),
+      });
+      const ticketChannel = interaction.guild.channels.cache.find((channel) => channel.id === saved.ticketChannelId);
+      const label = status === 'changes_requested' ? '📝 **CHANGES REQUESTED**' : '❌ **REJECTED**';
+      if (ticketChannel) await ticketChannel.send(`${label}${notes ? `\n${notes}` : ''}`);
+      await audit(interaction.guild, `${label} for product submission \`${id}\` by <@${interaction.user.id}>.`);
+      return interaction.editReply(status === 'changes_requested'
+        ? `📝 Changes requested for \`${id}\`. The partner can update it with \`/product fill\`.`
+        : `❌ Product submission \`${id}\` rejected.`);
+    }
+    if (action !== 'approve') throw new Error('Unsupported product review action');
+    if (submission.status === 'approved' && submission.shopifyProductId) {
+      return interaction.reply({ content: `ℹ️ Product submission \`${id}\` is already approved as \`${submission.shopifyProductId}\`.`, ephemeral: true });
+    }
+    if (submission.status !== 'pending') throw new Error('Only pending product submissions can be approved');
+
+    await interaction.deferReply({ ephemeral: true });
+    const canonicalText = Object.entries(submission.fields ?? {}).map(([label, value]) => `${label}: ${value}`).join('\n');
+    const parsed = parseProductSubmission(submission.type, canonicalText);
+    const preview = buildProductSubmissionPreview({ ...parsed, media: submission.media ?? [] }, deps.config.marketplace.defaultMarkupPercent);
+    const vendor = await deps.store.getVendor(submission.vendorId);
+    if (!vendor || vendor.active === false) throw new Error('Submission vendor is missing or disabled');
+    const synced = await deps.catalog.add(vendor, {
+      ...preview.product,
+      vendorPriceCents: preview.pricing.vendorPriceCents,
+      vendorShippingCents: preview.pricing.vendorShippingCents,
+      visible: true,
+    });
+    const saved = await deps.store.saveProductSubmission({
+      ...submission,
+      status: 'approved',
+      shopifyProductId: synced.product.id,
+      shopifyHandle: synced.product.handle ?? null,
+      pricing: synced.pricing,
+      needsAquapediaResearch: preview.needsAquapediaResearch,
+      reviewNotes: notes,
+      reviewedBy: interaction.user.id,
+      reviewedAt: new Date().toISOString(),
+    });
+    const ticketChannel = interaction.guild.channels.cache.find((channel) => channel.id === saved.ticketChannelId);
+    if (ticketChannel) await ticketChannel.send(`✅ **APPROVED** — **${synced.product.title}** synced to Shopify. Product ID: \`${synced.product.id}\`${synced.product.handle ? ` • handle \`${synced.product.handle}\`` : ''}`);
+    await audit(interaction.guild, `✅ Product submission \`${id}\` approved by <@${interaction.user.id}> and synced as \`${synced.product.id}\`.`);
+    return interaction.editReply(`✅ Approved **${synced.product.title}** and synced it to Shopify as \`${synced.product.id}\`.`);
+  }
+
+  if (sub !== 'submit') throw new Error('Product submission action is not implemented yet');
+  const vendor = await requireVendor(interaction, deps.store);
+  if (!vendor) return;
+  const type = interaction.options.getString('type', true);
+  const template = productSubmissionTemplate(type);
+  const staffRole = await getCanonicalStaffRole(interaction.guild, deps.store);
+  if (!staffRole) return interaction.reply({ content: 'Aquaphoria partner submissions are not configured yet.', ephemeral: true });
+  const supportCategory = interaction.guild.channels.cache.find((channel) => channel.type === ChannelType.GuildCategory && channel.name === '🎫・CUSTOMER SUPPORT');
+  if (!supportCategory) return interaction.reply({ content: 'Aquaphoria product submission tickets are not configured yet.', ephemeral: true });
+
+  await interaction.deferReply({ ephemeral: true });
+  const channel = await interaction.guild.channels.create({
+    name: `product-${vendor.id}-${String(interaction.id).slice(-6)}`.toLowerCase().replace(/[^a-z0-9-]/g, '').slice(0, 90),
+    type: ChannelType.GuildText,
+    parent: supportCategory.id,
+    permissionOverwrites: [
+      { id: interaction.guild.roles.everyone.id, deny: [PermissionFlagsBits.ViewChannel] },
+      { id: deps.config.discord.ownerUserId, allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages, PermissionFlagsBits.ReadMessageHistory] },
+      { id: staffRole.id, allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages, PermissionFlagsBits.ReadMessageHistory] },
+      { id: interaction.user.id, allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages, PermissionFlagsBits.ReadMessageHistory] },
+    ],
+    reason: `Aquaphoria product submission for vendor ${vendor.id}`,
+  });
+  const id = `product:${interaction.id}`;
+  const initial = parseProductSubmission(type, '');
+  await deps.store.saveProductSubmission({
+    id, vendorId: vendor.id, submitterDiscordId: interaction.user.id, type,
+    status: 'draft', fields: {}, media: [], missing: initial.missing, ticketChannelId: channel.id,
+  });
+  await channel.send({ content: `🛍️ **Aquaphoria Product Submission**\nSubmission ID: \`${id}\`\n\nCopy this format, fill it in, then run \`/product fill\` with the same submission ID and paste the completed format into **details**. You can attach an actual photo/video in **media**.\n\n\`\`\`text\n${template}\n\`\`\`` });
+  await audit(interaction.guild, `🛍️ **${vendor.displayName}** opened product submission \`${id}\` in <#${channel.id}>.`);
+  return interaction.editReply(`✅ Your private product submission ticket is ready: <#${channel.id}>\nSubmission ID: \`${id}\``);
+}
+
 async function handleResearch(interaction, deps) {
   const vendor = await deps.store.getVendorByDiscordUser(interaction.user.id);
   const staff = await isCanonicalStaff(interaction, deps.store);
@@ -439,6 +705,14 @@ async function handleTicket(interaction, deps) {
   return interaction.editReply(`✅ Your private support ticket is ready: <#${channel.id}>`);
 }
 
+export async function registerGuildCommands(guild) {
+  return guild.commands.set(commandDefinitions().map((command) => command.toJSON()));
+}
+
+export async function handleInteraction(interaction, deps) {
+  return createCommandRouter(deps).handle(interaction);
+}
+
 export function createCommandRouter(deps) {
   return Object.freeze({
     definitions: commandDefinitions().map((command) => command.toJSON()),
@@ -449,6 +723,7 @@ export function createCommandRouter(deps) {
         if (interaction.commandName === 'aquaphoria') return handleSetup(interaction, deps);
         if (interaction.commandName === 'vendor') return handleVendor(interaction, deps);
         if (interaction.commandName === 'catalog') return handleCatalog(interaction, deps);
+        if (interaction.commandName === 'product') return handleProduct(interaction, deps);
         if (interaction.commandName === 'research') return handleResearch(interaction, deps);
         if (interaction.commandName === 'order') return handleOrder(interaction, deps);
         if (interaction.commandName === 'payout') return handlePayout(interaction, deps);

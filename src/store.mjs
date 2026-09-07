@@ -8,6 +8,7 @@ const EMPTY_STATE = Object.freeze({
   tickets: {},
   payoutLedger: [],
   researchJobs: {},
+  productSubmissions: {},
   webhookEvents: {},
   layoutRoles: null,
 });
@@ -32,6 +33,7 @@ function migrateState(parsed) {
     tickets: parsed.tickets ?? {},
     payoutLedger: parsed.payoutLedger ?? [],
     researchJobs: parsed.researchJobs ?? {},
+    productSubmissions: parsed.productSubmissions ?? {},
     webhookEvents: parsed.webhookEvents ?? {},
     layoutRoles: parsed.layoutRoles ?? null,
   };
@@ -318,6 +320,35 @@ export function createStore({ dataDir }) {
       const owed = entries.filter((entry) => entry.type === 'owed').reduce((sum, entry) => sum + entry.amountCents, 0);
       const paid = entries.filter((entry) => entry.type === 'paid').reduce((sum, entry) => sum + entry.amountCents, 0);
       return { owedCents: owed, paidCents: paid, balanceCents: owed - paid, entries };
+    },
+
+    async saveProductSubmission(submission) {
+      if (!submission?.id || !submission?.vendorId || !submission?.submitterDiscordId || !submission?.type) {
+        throw new Error('Product submission id, vendor id, submitter Discord id, and type are required');
+      }
+      return mutate((state) => {
+        const key = String(submission.id);
+        const previous = state.productSubmissions[key] ?? {};
+        if (previous.vendorId && previous.vendorId !== String(submission.vendorId)) {
+          throw new Error('This product submission belongs to another vendor');
+        }
+        state.productSubmissions[key] = {
+          ...previous, ...submission, id: key, vendorId: String(submission.vendorId),
+          submitterDiscordId: String(submission.submitterDiscordId),
+          createdAt: previous.createdAt ?? new Date().toISOString(), updatedAt: new Date().toISOString(),
+        };
+        return state.productSubmissions[key];
+      });
+    },
+
+    async getProductSubmission(id) {
+      const state = await load();
+      return state.productSubmissions[String(id)] ?? null;
+    },
+
+    async listProductSubmissions({ vendorId = null } = {}) {
+      const state = await load();
+      return Object.values(state.productSubmissions).filter((entry) => !vendorId || entry.vendorId === String(vendorId));
     },
 
     async recordResearchJob(job) {

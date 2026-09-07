@@ -7,6 +7,7 @@ test('verified partner starts a private guided product submission ticket', async
   const created = [];
   const sent = [];
   let saved = null;
+  let saveOptions = null;
   let reply = null;
   const support = { id: 'support-cat', type: ChannelType.GuildCategory, name: '🎫・CUSTOMER SUPPORT' };
   const guild = {
@@ -22,7 +23,7 @@ test('verified partner starts a private guided product submission ticket', async
   const store = {
     async getVendorByDiscordUser() { return { id: 'toa', displayName: 'TOA', catalogSlug: 'toa' }; },
     async getLayoutRoles() { return { staffRoleId: 'staff-role' }; },
-    async saveProductSubmission(value) { saved = value; return value; },
+    async saveProductSubmission(value, options) { saved = value; saveOptions = options; return value; },
   };
   const interaction = {
     id: '123456789012345678', user: { id: '100', username: 'breeder' }, guild,
@@ -50,6 +51,7 @@ test('verified partner starts a private guided product submission ticket', async
 
 test('verified partner fills a draft and receives a pending-review preview', async () => {
   let saved = null;
+  let saveOptions = null;
   let reply = null;
   const ticketMessages = [];
   const ticket = { id: 'product-ticket-1', async send(message) { ticketMessages.push(message); } };
@@ -59,7 +61,7 @@ test('verified partner fills a draft and receives a pending-review preview', asy
   const store = {
     async getVendorByDiscordUser() { return { id: 'toa', displayName: 'TOA', catalogSlug: 'toa' }; },
     async getProductSubmission() { return { id: 'product:123', vendorId: 'toa', submitterDiscordId: '100', type: 'livestock', status: 'draft', fields: {}, media: [], ticketChannelId: 'product-ticket-1' }; },
-    async saveProductSubmission(value) { saved = value; return value; },
+    async saveProductSubmission(value, options) { saved = value; saveOptions = options; return value; },
   };
   const details = [
     'Product/strain name: Blue Dream Neocaridina', 'Quantity available: 10',
@@ -83,6 +85,7 @@ test('verified partner fills a draft and receives a pending-review preview', asy
   await router.handle(interaction);
 
   assert.equal(saved.status, 'pending');
+  assert.deepEqual(saveOptions?.expectedStatuses, ['draft']);
   assert.equal(saved.media.length, 1);
   assert.equal(saved.fields['product/strain name'], 'Blue Dream Neocaridina');
   assert.match(String(ticketMessages[0] ?? ''), /Product Preview/);
@@ -110,6 +113,10 @@ test('staff approval syncs a pending partner draft to Shopify exactly once', asy
     async getProductSubmission() { return submission; },
     async getVendor() { return { id: 'toa', displayName: 'TOA', catalogSlug: 'toa', active: true }; },
     async saveProductSubmission(value) { submission = value; return value; },
+    async claimProductApproval() { submission = { ...submission, status: 'approval_processing', approvalAttempt: 1 }; return { claimed: true, record: submission }; },
+    async markProductApprovalPublishing() { submission = { ...submission, approvalPhase: 'publishing' }; return submission; },
+    async completeProductApproval(id, patch) { submission = { ...submission, ...patch, status: 'approved' }; return submission; },
+    async failProductApproval(id, error) { submission = { ...submission, status: 'pending', approvalLastError: String(error?.message ?? error) }; return submission; },
   };
   const catalog = {
     async add(vendor, product) {
@@ -151,11 +158,12 @@ test('staff approval syncs a pending partner draft to Shopify exactly once', asy
 test('staff can request changes or reject without calling Shopify', async () => {
   let submission = { id: 'product:456', vendorId: 'toa', type: 'livestock', status: 'pending', ticketChannelId: 'ticket-456', fields: {}, media: [] };
   let catalogCalls = 0;
+  let reviewSaveOptions = null;
   const messages = [];
   const store = {
     async getLayoutRoles() { return { staffRoleId: 'staff-role' }; },
     async getProductSubmission() { return submission; },
-    async saveProductSubmission(value) { submission = value; return value; },
+    async saveProductSubmission(value, options) { submission = value; reviewSaveOptions = options; return value; },
   };
   const deps = {
     config: { discord: { ownerUserId: 'owner' }, marketplace: { defaultMarkupPercent: 5 } },
@@ -177,6 +185,7 @@ test('staff can request changes or reject without calling Shopify', async () => 
 
   await router.handle(interaction);
   assert.equal(submission.status, 'changes_requested');
+  assert.deepEqual(reviewSaveOptions?.expectedStatuses, ['pending']);
   assert.match(String(messages.at(-1) ?? ''), /CHANGES REQUESTED/);
 
   submission = { ...submission, status: 'pending' };
@@ -219,4 +228,155 @@ test('partner cannot fill a submission owned by another vendor', async () => {
   await createCommandRouter({ config: { discord: { ownerUserId: 'owner' }, marketplace: { defaultMarkupPercent: 5 } }, store }).handle(interaction);
   assert.equal(saved, false);
   assert.match(String(reply ?? ''), /belongs to another vendor/i);
+});
+
+test('incremental product fill preserves fields already saved on the draft', async () => {
+  let submission = { id: 'product:inc', vendorId: 'toa', submitterDiscordId: '100', type: 'livestock', status: 'draft', ticketChannelId: 'ticket-inc', media: [], fields: { 'product/strain name': 'Blue Dream', 'vendor price': '12.00' } };
+  const store = {
+    async getVendorByDiscordUser() { return { id: 'toa', displayName: 'TOA', catalogSlug: 'toa' }; },
+    async getProductSubmission() { return submission; },
+    async saveProductSubmission(value) { submission = value; return value; },
+  };
+  const interaction = {
+    user: { id: '100' }, guild: { channels: { cache: [{ id: 'ticket-inc', async send() {} }] } },
+    commandName: 'product', isChatInputCommand: () => true, deferred: false, replied: false,
+    options: {
+      getSubcommand: () => 'fill',
+      getString: (name) => name === 'submission' ? 'product:inc' : name === 'details' ? 'Quantity available: 10\nVendor shipping: 15.00' : null,
+      getAttachment: () => null,
+    },
+    async deferReply() { this.deferred = true; }, async editReply() {}, async reply() { this.replied = true; },
+  };
+  const router = createCommandRouter({ config: { marketplace: { defaultMarkupPercent: 5 } }, store });
+  await router.handle(interaction);
+  assert.equal(submission.fields['product/strain name'], 'Blue Dream');
+  assert.equal(submission.fields['vendor price'], '12.00');
+  assert.equal(submission.fields['quantity available'], '10');
+  assert.equal(submission.fields['vendor shipping'], '15.00');
+});
+
+test('staff cannot request changes or reject an already approved submission', async () => {
+  let savedCalls = 0;
+  const submission = { id: 'product:done', vendorId: 'toa', submitterDiscordId: '100', type: 'livestock', status: 'approved', shopifyProductId: 'gid://shopify/Product/1', fields: {}, media: [] };
+  const store = {
+    async getLayoutRoles() { return { staffRoleId: 'staff-role' }; },
+    async getProductSubmission() { return submission; },
+    async saveProductSubmission() { savedCalls += 1; throw new Error('should not mutate approved'); },
+  };
+  let reply = null;
+  const interaction = {
+    user: { id: 'staff' }, member: { roles: { cache: new Set(['staff-role']) } }, guild: { channels: { cache: [] } },
+    commandName: 'product', isChatInputCommand: () => true, deferred: false, replied: false,
+    options: { getSubcommand: () => 'review', getString: (name) => name === 'submission' ? 'product:done' : name === 'action' ? 'reject' : null },
+    async deferReply() { this.deferred = true; }, async editReply(value) { reply = value?.content ?? value; }, async reply(value) { this.replied = true; reply = value?.content ?? value; },
+  };
+  const router = createCommandRouter({ config: { discord: { ownerUserId: 'owner' } }, store });
+  await router.handle(interaction);
+  assert.equal(savedCalls, 0);
+  assert.match(String(reply), /pending|already approved/i);
+});
+
+test('concurrent staff approval is blocked by the durable approval lease', async () => {
+  let catalogCalls = 0;
+  let reply = null;
+  const submission = { id: 'product:race', vendorId: 'toa', submitterDiscordId: '100', type: 'livestock', status: 'pending', fields: {} };
+  const store = {
+    async getLayoutRoles() { return { staffRoleId: 'staff-role' }; },
+    async getProductSubmission() { return submission; },
+    async claimProductApproval() { return { claimed: false, reason: 'processing', existing: { ...submission, status: 'approval_processing' } }; },
+  };
+  const interaction = {
+    user: { id: 'staff-user' }, member: { roles: { cache: new Set(['staff-role']) } }, guild: { channels: { cache: [] } },
+    commandName: 'product', isChatInputCommand: () => true, deferred: false, replied: false,
+    options: { getSubcommand: () => 'review', getString: (name) => name === 'submission' ? 'product:race' : name === 'action' ? 'approve' : null },
+    async reply(value) { this.replied = true; reply = value?.content ?? value; }, async deferReply() { this.deferred = true; }, async editReply(value) { reply = value; },
+  };
+  const router = createCommandRouter({ config: { discord: { ownerUserId: 'owner' }, marketplace: { defaultMarkupPercent: 5 } }, store, catalog: { async add() { catalogCalls += 1; } } });
+  await router.handle(interaction);
+  assert.equal(catalogCalls, 0);
+  assert.match(String(reply ?? ''), /already being approved|in progress/i);
+});
+
+test('Shopify approval failure releases the durable approval claim', async () => {
+  let failed = 0;
+  let reply = null;
+  const submission = { id: 'product:fail', vendorId: 'toa', submitterDiscordId: '100', type: 'livestock', status: 'pending', media: [], fields: {
+    'product/strain name': 'Blue Dream', 'quantity available': '4', 'vendor price': '12.00', 'vendor shipping': '15.00', 'shipping origin': 'Houston, TX', 'doa policy': '2-hour claim',
+  } };
+  const store = {
+    async getLayoutRoles() { return { staffRoleId: 'staff-role' }; },
+    async getProductSubmission() { return submission; },
+    async claimProductApproval() { return { claimed: true, record: { ...submission, status: 'approval_processing', approvalAttempt: 1 } }; },
+    async markProductApprovalPublishing() { return { ...submission, status: 'approval_processing', approvalAttempt: 1, approvalPhase: 'publishing' }; },
+    async getVendor() { return { id: 'toa', displayName: 'TOA', catalogSlug: 'toa', active: true }; },
+    async failProductApproval() { failed += 1; return { ...submission, status: 'pending' }; },
+  };
+  const interaction = {
+    user: { id: 'staff-user' }, member: { roles: { cache: new Set(['staff-role']) } }, guild: { channels: { cache: [] } },
+    commandName: 'product', isChatInputCommand: () => true, deferred: false, replied: false,
+    options: { getSubcommand: () => 'review', getString: (name) => name === 'submission' ? 'product:fail' : name === 'action' ? 'approve' : null },
+    async reply(value) { this.replied = true; reply = value?.content ?? value; }, async deferReply() { this.deferred = true; }, async editReply(value) { reply = value; },
+  };
+  const router = createCommandRouter({ config: { discord: { ownerUserId: 'owner' }, marketplace: { defaultMarkupPercent: 5 } }, store, catalog: { async add() { throw new Error('Shopify unavailable'); } } });
+  await router.handle(interaction);
+  assert.equal(failed, 1);
+  assert.match(String(reply ?? ''), /Shopify unavailable/);
+});
+
+test('partner cannot edit a submission while approval is processing', async () => {
+  let saved = 0;
+  let reply = null;
+  const store = {
+    async getVendorByDiscordUser() { return { id: 'toa', displayName: 'TOA', catalogSlug: 'toa' }; },
+    async getProductSubmission() { return { id: 'product:locked', vendorId: 'toa', submitterDiscordId: '100', type: 'livestock', status: 'approval_processing', fields: {}, media: [] }; },
+    async saveProductSubmission() { saved += 1; },
+  };
+  const interaction = {
+    user: { id: '100' }, guild: { channels: { cache: [] } }, commandName: 'product', isChatInputCommand: () => true,
+    options: { getSubcommand: () => 'fill', getString: (name) => name === 'submission' ? 'product:locked' : 'Product/strain name: X', getAttachment: () => null },
+    async reply(value) { this.replied = true; reply = value?.content ?? value; }, async editReply(value) { reply = value; },
+  };
+  await createCommandRouter({ config: { discord: { ownerUserId: 'owner' }, marketplace: { defaultMarkupPercent: 5 } }, store }).handle(interaction);
+  assert.equal(saved, 0);
+  assert.match(String(reply ?? ''), /approval_processing|approval/i);
+});
+
+test('approval does not claim a durable lease when Discord defer fails', async () => {
+  let claims = 0;
+  const submission = { id: 'product:defer-fail', vendorId: 'toa', submitterDiscordId: '100', type: 'livestock', status: 'pending', fields: {} };
+  const store = {
+    async getLayoutRoles() { return { staffRoleId: 'staff-role' }; },
+    async getProductSubmission() { return submission; },
+    async claimProductApproval() { claims += 1; throw new Error('should not claim'); },
+  };
+  const interaction = {
+    user: { id: 'staff-user' }, member: { roles: { cache: new Set(['staff-role']) } }, guild: { channels: { cache: [] } },
+    commandName: 'product', isChatInputCommand: () => true, deferred: false, replied: false,
+    options: { getSubcommand: () => 'review', getString: (name) => name === 'submission' ? 'product:defer-fail' : name === 'action' ? 'approve' : null },
+    async deferReply() { throw new Error('Discord defer failed'); }, async reply() {}, async editReply() {},
+  };
+  await createCommandRouter({ config: { discord: { ownerUserId: 'owner' } }, store }).handle(interaction);
+  assert.equal(claims, 0);
+});
+
+test('Shopify success followed by local completion failure stays reconciliation-required', async () => {
+  let failed = 0;
+  let marked = 0;
+  let catalogCalls = 0;
+  const submission = { id: 'product:complete-fail', vendorId: 'toa', submitterDiscordId: '100', type: 'livestock', status: 'pending', media: [], fields: {
+    'product/strain name': 'Blue Dream', 'quantity available': '4', 'vendor price': '12.00', 'vendor shipping': '15.00', 'shipping origin': 'Houston, TX', 'doa policy': '2-hour claim',
+  } };
+  const store = {
+    async getLayoutRoles() { return { staffRoleId: 'staff-role' }; }, async getProductSubmission() { return submission; },
+    async claimProductApproval() { return { claimed: true, record: { ...submission, status: 'approval_processing', approvalAttempt: 7 } }; },
+    async markProductApprovalPublishing() { marked += 1; return { ...submission, status: 'approval_processing', approvalAttempt: 7, approvalPhase: 'publishing' }; },
+    async getVendor() { return { id: 'toa', displayName: 'TOA', catalogSlug: 'toa', active: true }; },
+    async completeProductApproval() { throw new Error('local completion failed'); }, async failProductApproval() { failed += 1; },
+  };
+  const interaction = { user: { id: 'staff-user' }, member: { roles: { cache: new Set(['staff-role']) } }, guild: { channels: { cache: [] } }, commandName: 'product', isChatInputCommand: () => true, deferred: false, replied: false,
+    options: { getSubcommand: () => 'review', getString: (name) => name === 'submission' ? 'product:complete-fail' : name === 'action' ? 'approve' : null },
+    async deferReply() { this.deferred = true; }, async reply() {}, async editReply() {}, };
+  const catalog = { async add() { catalogCalls += 1; return { product: { id: 'gid://shopify/Product/99', title: 'Blue Dream', handle: 'toa-blue-dream' }, pricing: {} }; } };
+  await createCommandRouter({ config: { discord: { ownerUserId: 'owner' }, marketplace: { defaultMarkupPercent: 5 } }, store, catalog }).handle(interaction);
+  assert.equal(marked, 1); assert.equal(catalogCalls, 1); assert.equal(failed, 0);
 });

@@ -133,3 +133,33 @@ test('untouched livestock template does not count the shipping-origin hint as da
   assert.equal(parsed.complete, false);
   assert.ok(parsed.missing.includes('Shipping origin'));
 });
+
+test('preview rejects non-decimal stock spellings', () => {
+  const parsed = commandModule.parseProductSubmission('other', [
+    'Product name: Cave', 'Product type: accessory', 'Quantity available: 1e2',
+    'Vendor price: 10.00', 'Vendor shipping: 5.00',
+  ].join('\n'));
+  assert.throws(() => commandModule.buildProductSubmissionPreview(parsed, 5), /non-negative integer/);
+});
+
+test('declared video MIME cannot become Shopify image from a misleading URL suffix', () => {
+  const parsed = commandModule.parseProductSubmission('other', [
+    'Product name: Cave', 'Product type: accessory', 'Quantity available: 4',
+    'Vendor price: 10.00', 'Vendor shipping: 5.00',
+  ].join('\n'));
+  const preview = commandModule.buildProductSubmissionPreview({ ...parsed, media: [
+    { url: 'https://cdn.example/video.jpg', contentType: 'video/mp4' },
+  ] }, 5);
+  assert.equal(preview.product.imageUrl, null);
+});
+
+test('3D preview preserves made-to-order separately from numeric stock', () => {
+  const parsed = commandModule.parseProductSubmission('3d_printed', [
+    'Product name: Shrimp rack', 'Product type: rack', 'Material: PETG', 'Dimensions: 4x4',
+    'Quantity available: 3', 'Made to order? yes/no: yes', 'Vendor price: 20.00', 'Vendor shipping: 6.00',
+  ].join('\n'));
+  const preview = commandModule.buildProductSubmissionPreview(parsed, 5);
+  assert.equal(preview.product.stock, 3);
+  assert.equal(preview.product.madeToOrder, true);
+  assert.match(preview.product.description, /Made to order: Yes/);
+});

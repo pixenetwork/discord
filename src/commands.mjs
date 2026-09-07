@@ -85,7 +85,7 @@ const REQUIRED_PRODUCT_FIELDS = Object.freeze({
   eggs: ['Species/strain', 'Egg count or pack size', 'Quantity of packs available', 'Vendor price', 'Vendor shipping', 'DOA/hatch policy'],
   food: ['Product name', 'Size / weight / volume', 'Quantity available', 'Vendor price', 'Vendor shipping'],
   bacteria_water_care: ['Product name', 'Size / weight / volume', 'Quantity available', 'Vendor price', 'Vendor shipping'],
-  '3d_printed': ['Product name', 'Product type', 'Material', 'Dimensions', 'Quantity available', 'Vendor price', 'Vendor shipping'],
+  '3d_printed': ['Product name', 'Product type', 'Material', 'Dimensions', 'Quantity available', 'Made to order? yes/no', 'Vendor price', 'Vendor shipping'],
   accessories: ['Product name', 'Product type', 'Quantity available', 'Vendor price', 'Vendor shipping'],
   other: ['Product name', 'Product type', 'Quantity available', 'Vendor price', 'Vendor shipping'],
 });
@@ -117,17 +117,26 @@ export function buildProductSubmissionPreview(submission, markupPercent) {
   const type = submission.type;
   const nameKey = type === 'livestock' ? 'product/strain name' : type === 'eggs' ? 'species/strain' : 'product name';
   const quantityKey = type === 'eggs' ? 'quantity of packs available' : 'quantity available';
-  const stock = Number(fields[quantityKey]);
-  if (!Number.isSafeInteger(stock) || stock < 0) throw new Error('Quantity available must be a non-negative integer');
+  const stockText = String(fields[quantityKey] ?? '').trim();
+  if (!/^\d+$/.test(stockText)) throw new Error('Quantity available must be a non-negative integer');
+  const stock = Number.parseInt(stockText, 10);
+  if (!Number.isSafeInteger(stock)) throw new Error('Quantity available must be a non-negative integer');
   const vendorPriceCents = moneyToCents(fields['vendor price']);
   const vendorShippingCents = moneyToCents(fields['vendor shipping']);
   const pricing = calculateRetailBreakdown({ vendorPriceCents, vendorShippingCents, markupPercent });
-  const description = fields['description / traits'] ?? fields['description/specifications'] ?? fields.description ?? fields['usage description'] ?? '';
+  let description = fields['description / traits'] ?? fields['description/specifications'] ?? fields.description ?? fields['usage description'] ?? '';
+  const madeToOrderText = String(fields['made to order? yes/no'] ?? '').trim().toLowerCase();
+  const madeToOrder = type === '3d_printed' && ['yes', 'y', 'true'].includes(madeToOrderText);
+  if (type === '3d_printed') description = `${description}${description ? '\n\n' : ''}Made to order: ${madeToOrder ? 'Yes' : 'No'}`;
   const media = Array.isArray(submission.media) ? submission.media : [];
-  const imageMedia = media.find((entry) => String(entry?.contentType ?? '').toLowerCase().startsWith('image/') || /\.(?:png|jpe?g|webp|gif)(?:[?#]|$)/i.test(String(entry?.url ?? '')));
+  const imageMedia = media.find((entry) => {
+    const contentType = String(entry?.contentType ?? '').trim().toLowerCase();
+    if (contentType) return contentType.startsWith('image/');
+    return /\.(?:png|jpe?g|webp|gif)(?:[?#]|$)/i.test(String(entry?.url ?? ''));
+  });
   const research = String(fields['needs aquapedia research? yes/no'] ?? '').trim().toLowerCase();
   return Object.freeze({
-    product: Object.freeze({ name: fields[nameKey], category: PRODUCT_TYPE_TO_CATEGORY[type], stock, description, imageUrl: imageMedia?.url ?? null }),
+    product: Object.freeze({ name: fields[nameKey], category: PRODUCT_TYPE_TO_CATEGORY[type], stock, madeToOrder, description, imageUrl: imageMedia?.url ?? null }),
     pricing,
     needsAquapediaResearch: ['yes', 'y', 'true'].includes(research),
   });
@@ -451,10 +460,12 @@ async function handleProduct(interaction, deps) {
     const submission = await deps.store.getProductSubmission(id);
     if (!submission) return interaction.reply({ content: `Product submission \`${id}\` was not found.`, ephemeral: true });
     if (submission.vendorId !== vendor.id) throw new Error('This product submission belongs to another vendor');
-    if (['approved', 'rejected'].includes(submission.status)) throw new Error(`Product submission is already ${submission.status}`);
+    if (['approved', 'rejected', 'approval_processing'].includes(submission.status)) throw new Error(`Product submission is already ${submission.status}`);
 
     await interaction.deferReply({ ephemeral: true });
-    const parsed = parseProductSubmission(submission.type, interaction.options.getString('details', true));
+    const update = parseProductSubmission(submission.type, interaction.options.getString('details', true));
+    const mergedFields = { ...(submission.fields ?? {}), ...update.fields };
+    const parsed = parseProductSubmission(submission.type, Object.entries(mergedFields).map(([label, value]) => `${label}: ${value}`).join('\n'));
     const attachment = interaction.options.getAttachment('media');
     const media = [...(submission.media ?? [])];
     if (attachment?.url && !media.some((entry) => entry.url === attachment.url)) {
@@ -466,7 +477,7 @@ async function handleProduct(interaction, deps) {
     const saved = await deps.store.saveProductSubmission({
       ...submission, fields: parsed.fields, missing: parsed.missing, media, status,
       pricing: preview?.pricing ?? null, needsAquapediaResearch: preview?.needsAquapediaResearch ?? false,
-    });
+    }, { expectedStatuses: [submission.status] });
     const ticketChannel = interaction.guild.channels.cache.find((channel) => channel.id === saved.ticketChannelId);
     if (!parsed.complete) {
       const missing = parsed.missing.join(', ');
@@ -489,16 +500,22 @@ async function handleProduct(interaction, deps) {
     const notes = interaction.options.getString('notes') || null;
     const submission = await deps.store.getProductSubmission(id);
     if (!submission) return interaction.reply({ content: `Product submission \`${id}\` was not found.`, ephemeral: true });
+    if (submission.status === 'approved') {
+      if (action === 'approve') {
+        return interaction.reply({ content: submission.shopifyProductId
+          ? `ℹ️ Product submission \`${id}\` is already approved as \`${submission.shopifyProductId}\`.`
+          : `ℹ️ Product submission \`${id}\` is already approved.`, ephemeral: true });
+      }
+      throw new Error('Product submission is already approved and cannot be reviewed again');
+    }
     if (['request_changes', 'reject'].includes(action)) {
+      if (submission.status !== 'pending') throw new Error('Only pending product submissions can be reviewed');
       await interaction.deferReply({ ephemeral: true });
       const status = action === 'request_changes' ? 'changes_requested' : 'rejected';
       const saved = await deps.store.saveProductSubmission({
-        ...submission,
-        status,
-        reviewNotes: notes,
-        reviewedBy: interaction.user.id,
-        reviewedAt: new Date().toISOString(),
-      });
+        ...submission, status, reviewNotes: notes,
+        reviewedBy: interaction.user.id, reviewedAt: new Date().toISOString(),
+      }, { expectedStatuses: ['pending'] });
       const ticketChannel = interaction.guild.channels.cache.find((channel) => channel.id === saved.ticketChannelId);
       const label = status === 'changes_requested' ? '📝 **CHANGES REQUESTED**' : '❌ **REJECTED**';
       if (ticketChannel) await ticketChannel.send(`${label}${notes ? `\n${notes}` : ''}`);
@@ -508,34 +525,51 @@ async function handleProduct(interaction, deps) {
         : `❌ Product submission \`${id}\` rejected.`);
     }
     if (action !== 'approve') throw new Error('Unsupported product review action');
-    if (submission.status === 'approved' && submission.shopifyProductId) {
-      return interaction.reply({ content: `ℹ️ Product submission \`${id}\` is already approved as \`${submission.shopifyProductId}\`.`, ephemeral: true });
-    }
-    if (submission.status !== 'pending') throw new Error('Only pending product submissions can be approved');
 
     await interaction.deferReply({ ephemeral: true });
-    const canonicalText = Object.entries(submission.fields ?? {}).map(([label, value]) => `${label}: ${value}`).join('\n');
-    const parsed = parseProductSubmission(submission.type, canonicalText);
-    const preview = buildProductSubmissionPreview({ ...parsed, media: submission.media ?? [] }, deps.config.marketplace.defaultMarkupPercent);
-    const vendor = await deps.store.getVendor(submission.vendorId);
-    if (!vendor || vendor.active === false) throw new Error('Submission vendor is missing or disabled');
-    const synced = await deps.catalog.add(vendor, {
-      ...preview.product,
-      vendorPriceCents: preview.pricing.vendorPriceCents,
-      vendorShippingCents: preview.pricing.vendorShippingCents,
-      visible: true,
-    });
-    const saved = await deps.store.saveProductSubmission({
-      ...submission,
-      status: 'approved',
-      shopifyProductId: synced.product.id,
-      shopifyHandle: synced.product.handle ?? null,
-      pricing: synced.pricing,
-      needsAquapediaResearch: preview.needsAquapediaResearch,
-      reviewNotes: notes,
-      reviewedBy: interaction.user.id,
-      reviewedAt: new Date().toISOString(),
-    });
+    const claim = await deps.store.claimProductApproval(id);
+    if (!claim.claimed) {
+      if (claim.reason === 'approved') {
+        const productId = claim.existing?.shopifyProductId;
+        return interaction.editReply(productId
+          ? `ℹ️ Product submission \`${id}\` is already approved as \`${productId}\`.`
+          : `ℹ️ Product submission \`${id}\` is already approved.`);
+      }
+      if (claim.reason === 'processing') return interaction.editReply(`⏳ Product submission \`${id}\` is already being approved. Try again after the current approval finishes.`);
+      if (claim.reason === 'reconciliation_required') return interaction.editReply(`⚠️ Product submission \`${id}\` needs Shopify reconciliation before approval can be retried.`);
+      throw new Error('Only pending product submissions can be approved');
+    }
+    const claimedSubmission = claim.record;
+    let preview;
+    let vendor;
+    try {
+      const canonicalText = Object.entries(claimedSubmission.fields ?? {}).map(([label, value]) => `${label}: ${value}`).join('\n');
+      const parsed = parseProductSubmission(claimedSubmission.type, canonicalText);
+      preview = buildProductSubmissionPreview({ ...parsed, media: claimedSubmission.media ?? [] }, deps.config.marketplace.defaultMarkupPercent);
+      vendor = await deps.store.getVendor(claimedSubmission.vendorId);
+      if (!vendor || vendor.active === false) throw new Error('Submission vendor is missing or disabled');
+      await deps.store.markProductApprovalPublishing(id, { approvalAttempt: claimedSubmission.approvalAttempt });
+    } catch (error) {
+      await deps.store.failProductApproval(id, error, { approvalAttempt: claimedSubmission.approvalAttempt }).catch(() => undefined);
+      throw error;
+    }
+    let synced;
+    try {
+      synced = await deps.catalog.add(vendor, { ...preview.product, vendorPriceCents: preview.pricing.vendorPriceCents, vendorShippingCents: preview.pricing.vendorShippingCents, visible: true });
+    } catch (error) {
+      await deps.store.failProductApproval(id, error, { approvalAttempt: claimedSubmission.approvalAttempt }).catch(() => undefined);
+      throw error;
+    }
+    let saved;
+    try {
+      saved = await deps.store.completeProductApproval(id, {
+        shopifyProductId: synced.product.id, shopifyHandle: synced.product.handle ?? null,
+        pricing: synced.pricing, needsAquapediaResearch: preview.needsAquapediaResearch,
+        reviewNotes: notes, reviewedBy: interaction.user.id, reviewedAt: new Date().toISOString(),
+      }, { approvalAttempt: claimedSubmission.approvalAttempt });
+    } catch (error) {
+      throw new Error(`Shopify synced product ${synced.product.id} but local approval completion failed; reconciliation required: ${error?.message ?? error}`);
+    }
     const ticketChannel = interaction.guild.channels.cache.find((channel) => channel.id === saved.ticketChannelId);
     const approvalMessage = `✅ **APPROVED** — **${synced.product.title}** synced to Shopify. Product ID: \`${synced.product.id}\`${synced.product.handle ? ` • handle \`${synced.product.handle}\`` : ''}`;
     if (ticketChannel) await ticketChannel.send(approvalMessage);
@@ -724,14 +758,14 @@ export function createCommandRouter(deps) {
     async handle(interaction) {
       if (!interaction.isChatInputCommand()) return;
       try {
-        if (interaction.commandName === 'aquaphoria') return handleSetup(interaction, deps);
-        if (interaction.commandName === 'vendor') return handleVendor(interaction, deps);
-        if (interaction.commandName === 'catalog') return handleCatalog(interaction, deps);
+        if (interaction.commandName === 'aquaphoria') return await handleSetup(interaction, deps);
+        if (interaction.commandName === 'vendor') return await handleVendor(interaction, deps);
+        if (interaction.commandName === 'catalog') return await handleCatalog(interaction, deps);
         if (interaction.commandName === 'product') return await handleProduct(interaction, deps);
-        if (interaction.commandName === 'research') return handleResearch(interaction, deps);
-        if (interaction.commandName === 'order') return handleOrder(interaction, deps);
-        if (interaction.commandName === 'payout') return handlePayout(interaction, deps);
-        if (interaction.commandName === 'ticket') return handleTicket(interaction, deps);
+        if (interaction.commandName === 'research') return await handleResearch(interaction, deps);
+        if (interaction.commandName === 'order') return await handleOrder(interaction, deps);
+        if (interaction.commandName === 'payout') return await handlePayout(interaction, deps);
+        if (interaction.commandName === 'ticket') return await handleTicket(interaction, deps);
       } catch (error) {
         const message = `❌ ${error?.message ?? 'Something went wrong.'}`.slice(0, 1900);
         if (interaction.deferred || interaction.replied) await interaction.editReply(message).catch(() => undefined);

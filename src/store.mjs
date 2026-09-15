@@ -8,6 +8,7 @@ const EMPTY_STATE = Object.freeze({
   tickets: {},
   payoutLedger: [],
   researchJobs: {},
+  productSubmissions: {},
   webhookEvents: {},
   layoutRoles: null,
 });
@@ -32,6 +33,7 @@ function migrateState(parsed) {
     tickets: parsed.tickets ?? {},
     payoutLedger: parsed.payoutLedger ?? [],
     researchJobs: parsed.researchJobs ?? {},
+    productSubmissions: parsed.productSubmissions ?? {},
     webhookEvents: parsed.webhookEvents ?? {},
     layoutRoles: parsed.layoutRoles ?? null,
   };
@@ -318,6 +320,127 @@ export function createStore({ dataDir }) {
       const owed = entries.filter((entry) => entry.type === 'owed').reduce((sum, entry) => sum + entry.amountCents, 0);
       const paid = entries.filter((entry) => entry.type === 'paid').reduce((sum, entry) => sum + entry.amountCents, 0);
       return { owedCents: owed, paidCents: paid, balanceCents: owed - paid, entries };
+    },
+
+    async saveProductSubmission(submission, { expectedStatus = null, expectedStatuses = null } = {}) {
+      if (!submission?.id || !submission?.vendorId || !submission?.submitterDiscordId || !submission?.type) {
+        throw new Error('Product submission id, vendor id, submitter Discord id, and type are required');
+      }
+      return mutate((state) => {
+        const key = String(submission.id);
+        const exists = Object.prototype.hasOwnProperty.call(state.productSubmissions, key);
+        const previous = state.productSubmissions[key] ?? {};
+        if (exists && (!previous.vendorId || previous.vendorId !== String(submission.vendorId))) {
+          throw new Error('Existing product submission has missing or conflicting vendor ownership');
+        }
+        const allowedStatuses = expectedStatuses ?? (expectedStatus == null ? null : [expectedStatus]);
+        if (exists && allowedStatuses == null) {
+          throw new Error('Existing product submission updates require an expected status');
+        }
+        if (allowedStatuses != null && !allowedStatuses.includes(previous.status)) {
+          throw new Error('Product submission state changed to ' + (previous.status ?? 'missing') + '; expected ' + allowedStatuses.join(', '));
+        }
+        state.productSubmissions[key] = {
+          ...previous, ...submission, id: key, vendorId: String(submission.vendorId),
+          submitterDiscordId: String(submission.submitterDiscordId),
+          createdAt: previous.createdAt ?? new Date().toISOString(), updatedAt: new Date().toISOString(),
+        };
+        return state.productSubmissions[key];
+      });
+    },
+
+    async getProductSubmission(id) {
+      const state = await load();
+      return state.productSubmissions[String(id)] ?? null;
+    },
+
+    async listProductSubmissions({ vendorId = null } = {}) {
+      const state = await load();
+      return Object.values(state.productSubmissions).filter((entry) => !vendorId || entry.vendorId === String(vendorId));
+    },
+
+    async claimProductApproval(id, { now = new Date(), leaseMs = 5 * 60 * 1000 } = {}) {
+      if (!id) throw new Error('Product submission ID is required');
+      if (!Number.isSafeInteger(leaseMs) || leaseMs < 1) throw new Error('Product approval lease must be a positive integer');
+      const timestamp = isoTimestamp(now);
+      const currentTime = new Date(timestamp).getTime();
+      return mutate((state) => {
+        const key = String(id);
+        const existing = state.productSubmissions[key];
+        if (!existing) throw new Error(`Product submission ${key} was not found`);
+        if (existing.status === 'approved') return { claimed: false, reason: 'approved', existing };
+        if (existing.status === 'approval_processing') {
+          const claimedTime = Date.parse(existing.approvalClaimedAt ?? existing.updatedAt ?? '');
+          if (Number.isFinite(claimedTime) && currentTime - claimedTime < leaseMs) {
+            return { claimed: false, reason: 'processing', existing };
+          }
+          if (existing.approvalPhase === 'publishing') {
+            return { claimed: false, reason: 'reconciliation_required', existing };
+          }
+        } else if (existing.status !== 'pending') {
+          return { claimed: false, reason: 'not_pending', existing };
+        }
+        const record = {
+          ...existing, status: 'approval_processing', approvalPhase: 'claimed',
+          approvalAttempt: (existing.approvalAttempt ?? 0) + 1,
+          approvalClaimedAt: timestamp, approvalLastError: null,
+          updatedAt: timestamp,
+        };
+        state.productSubmissions[key] = record;
+        return { claimed: true, record };
+      });
+    },
+
+    async markProductApprovalPublishing(id, { now = new Date(), approvalAttempt = null } = {}) {
+      if (!id || !Number.isSafeInteger(approvalAttempt)) throw new Error('Product approval attempt is required');
+      return mutate((state) => {
+        const key = String(id);
+        const existing = state.productSubmissions[key];
+        if (!existing || existing.status !== 'approval_processing') throw new Error('Product approval was not claimed');
+        if (existing.approvalAttempt !== approvalAttempt) throw new Error('Product approval claim is stale or does not match the active attempt');
+        const timestamp = isoTimestamp(now);
+        state.productSubmissions[key] = { ...existing, approvalPhase: 'publishing', approvalPublishingAt: timestamp, updatedAt: timestamp };
+        return state.productSubmissions[key];
+      });
+    },
+
+    async completeProductApproval(id, patch = {}, { now = new Date(), approvalAttempt = null } = {}) {
+      if (!id) throw new Error('Product submission ID is required');
+      return mutate((state) => {
+        const key = String(id);
+        const existing = state.productSubmissions[key];
+        if (!existing) throw new Error(`Product submission ${key} was not found`);
+        if (existing.status === 'approved') return existing;
+        if (existing.status !== 'approval_processing') throw new Error('Product approval was not claimed');
+        if (!Number.isSafeInteger(approvalAttempt) || approvalAttempt !== existing.approvalAttempt) throw new Error('Product approval claim is stale or does not match the active attempt');
+        const timestamp = isoTimestamp(now);
+        state.productSubmissions[key] = {
+          ...existing, ...patch, id: key, vendorId: existing.vendorId,
+          submitterDiscordId: existing.submitterDiscordId, type: existing.type,
+          status: 'approved', approvalPhase: 'completed', approvedAt: timestamp, updatedAt: timestamp,
+          approvalLastError: null,
+        };
+        return state.productSubmissions[key];
+      });
+    },
+
+    async failProductApproval(id, error, { now = new Date(), approvalAttempt = null } = {}) {
+      if (!id) throw new Error('Product submission ID is required');
+      return mutate((state) => {
+        const key = String(id);
+        const existing = state.productSubmissions[key];
+        if (!existing) throw new Error(`Product submission ${key} was not found`);
+        if (existing.status === 'approved') return existing;
+        if (existing.status !== 'approval_processing') throw new Error('Product approval was not claimed');
+        if (!Number.isSafeInteger(approvalAttempt) || approvalAttempt !== existing.approvalAttempt) throw new Error('Product approval claim is stale or does not match the active attempt');
+        const timestamp = isoTimestamp(now);
+        state.productSubmissions[key] = {
+          ...existing, status: 'pending', approvalPhase: null, approvalClaimedAt: null,
+          approvalFailedAt: timestamp, updatedAt: timestamp,
+          approvalLastError: String(error?.message ?? error ?? 'unknown error').slice(0, 1000),
+        };
+        return state.productSubmissions[key];
+      });
     },
 
     async recordResearchJob(job) {

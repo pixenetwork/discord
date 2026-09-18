@@ -153,6 +153,7 @@ test('suggestLikelyFix never sets fixApplied; sealed tool confirms bind tenant, 
   }), /Unverified tool confirmation/);
 
   const sealedWrongTenant = identity.confirmToolResult({
+    actor: bdStaff,
     toolName: 'staff.cache_clear',
     confirmationId: 'ops_tenant',
     tenantId: 'blood_diamond_rp',
@@ -168,6 +169,7 @@ test('suggestLikelyFix never sets fixApplied; sealed tool confirms bind tenant, 
   }), /tenant bind mismatch/);
 
   const sealedWrongAction = identity.confirmToolResult({
+    actor: bhStaff,
     toolName: 'staff.cache_clear',
     confirmationId: 'ops_action',
     tenantId: 'beverly_hills_rp',
@@ -189,6 +191,7 @@ test('suggestLikelyFix never sets fixApplied; sealed tool confirms bind tenant, 
   }), /Likely fix action mismatch/);
 
   const sealedForA = identity.confirmToolResult({
+    actor: bhStaff,
     toolName: 'staff.cache_clear',
     confirmationId: 'ops_12',
     tenantId: 'beverly_hills_rp',
@@ -260,6 +263,114 @@ test('missing AI budget fails closed; getBudget stays 0 and does not unlock spen
     classification: 'player_issue',
     confidence: 0.4,
   }), /AI budget exhausted/);
+
+  // Zero-cost and non-positive costs must not fail open past an exhausted / configured budget.
+  assert.throws(() => engine.ingestContext({
+    actor: bhStaff,
+    ticketId: 'zero_cost_bypass',
+    subject: 'should not bypass',
+    messages: [{ body: 'x' }],
+    costUnits: 0,
+  }), /costUnits must be a positive safe integer/);
+  assert.throws(() => engine.writeStaffSummary({
+    actor: bhStaff,
+    ticketId: 'budgeted',
+    summary: 'still exhausted',
+    costUnits: 0,
+  }), /costUnits must be a positive safe integer/);
+  assert.equal(engine.getBudget({ actor: bhStaff }).usedUnits, 1);
+});
+
+test('failed AI ticket validations do not drain budget (fail closed after validate)', () => {
+  const engine = engineWithBudget(bhStaff, 5);
+  assert.throws(() => engine.recordFollowUpQuestions({
+    actor: bhStaff,
+    ticketId: 'missing_case',
+    questions: ['Still open?'],
+    costUnits: 2,
+  }), /Unknown AI ticket case/);
+  assert.equal(engine.getBudget({ actor: bhStaff }).usedUnits, 0);
+
+  assert.throws(() => engine.ingestContext({
+    actor: bhStaff,
+    ticketId: 'bad_attach',
+    subject: 'invalid attachment',
+    messages: [{ body: 'x' }],
+    attachments: [{ kind: 'image' }],
+    costUnits: 1,
+  }), /attachments\[0\]\.name is required/);
+  assert.equal(engine.getBudget({ actor: bhStaff }).usedUnits, 0);
+
+  engine.ingestContext({
+    actor: bhStaff,
+    ticketId: 'ok_case',
+    subject: 'valid',
+    messages: [{ body: 'x' }],
+    costUnits: 1,
+  });
+  assert.throws(() => engine.classifyIssue({
+    actor: bhStaff,
+    ticketId: 'ok_case',
+    classification: 'not_a_real_class',
+    confidence: 0.5,
+    costUnits: 1,
+  }), /classification must be one of/);
+  assert.equal(engine.getBudget({ actor: bhStaff }).usedUnits, 1);
+});
+
+test('confirmations and approvals require authenticated authorized actors', () => {
+  const engine = engineWithBudget(bhStaff);
+  engine.ingestContext({
+    actor: bhStaff,
+    ticketId: 'auth_confirm',
+    subject: 'needs auth',
+    messages: [{ body: 'x' }],
+  });
+  engine.suggestLikelyFix({
+    actor: bhStaff,
+    ticketId: 'auth_confirm',
+    suggestion: 'Restart resource',
+    confidence: 0.5,
+    evidence: [{ label: 'note', source: 'staff' }],
+  });
+
+  assert.throws(() => identity.confirmToolResult({
+    toolName: 'staff.cache_clear',
+    confirmationId: 'unauth',
+    tenantId: 'beverly_hills_rp',
+    action: 'apply_likely_fix',
+    ticketId: 'auth_confirm',
+    nonce: 'nonce-unauth',
+  }), /Unverified Discord identity/);
+
+  const emptyRoles = bindActor(identity, 'beverly_hills_rp', 'empty-confirm', []);
+  assert.throws(() => engine.confirmToolAction({
+    actor: emptyRoles,
+    ticketId: 'auth_confirm',
+    toolConfirmation: identity.confirmToolResult({
+      actor: bhStaff,
+      toolName: 'staff.cache_clear',
+      confirmationId: 'ops_empty',
+      tenantId: 'beverly_hills_rp',
+      action: 'apply_likely_fix',
+      ticketId: 'auth_confirm',
+      nonce: 'nonce-empty-roles',
+    }),
+  }), /Authorization denied/);
+
+  assert.throws(() => engine.confirmToolAction({
+    actor: { userId: 'spoof', tenantId: 'beverly_hills_rp', roleIds: ['bh-staff'] },
+    ticketId: 'auth_confirm',
+    toolConfirmation: identity.confirmToolResult({
+      actor: bhStaff,
+      toolName: 'staff.cache_clear',
+      confirmationId: 'ops_spoof',
+      tenantId: 'beverly_hills_rp',
+      action: 'apply_likely_fix',
+      ticketId: 'auth_confirm',
+      nonce: 'nonce-spoof',
+    }),
+  }), /Unverified Discord identity/);
 });
 
 test('tenant isolation fails closed between Beverly Hills RP and Blood Diamond RP', () => {

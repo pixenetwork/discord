@@ -94,6 +94,12 @@ function ensureUnits(value, label) {
   return units;
 }
 
+function ensurePositiveUnits(value, label) {
+  const units = Number(value);
+  if (!Number.isSafeInteger(units) || units < 1) throw new Error(`${label} must be a positive safe integer`);
+  return units;
+}
+
 /**
  * Domain-state engine for Jarvis AI ticket triage.
  * Accepts structured ticket context only — no Discord fetches and no live LLM/network calls.
@@ -150,20 +156,24 @@ export class AiTicketAgentEngine {
     if (!ticketId) throw new Error('ticketId is required');
     const subject = String(input?.subject ?? '').trim();
     if (!subject) throw new Error('subject is required');
-    this.#consumeBudget(who.tenantId, input?.costUnits ?? 1, input?.now);
-
-    const record = this.#case(who.tenantId, ticketId, true);
-    record.subject = subject;
-    record.messages = Object.freeze(
+    const messages = Object.freeze(
       (Array.isArray(input?.messages) ? input.messages : []).map((entry) => Object.freeze({
         authorId: String(entry?.authorId ?? '').trim() || null,
         body: String(entry?.body ?? entry?.content ?? '').trim(),
         createdAt: entry?.createdAt ? iso(entry.createdAt) : null,
       })).filter((entry) => entry.body),
     );
-    record.attachments = Object.freeze(normalizeAttachments(input?.attachments ?? []));
-    record.logs = Object.freeze(normalizeLogs(input?.logs ?? []));
-    record.contextIngestedAt = iso(input?.now);
+    const attachments = Object.freeze(normalizeAttachments(input?.attachments ?? []));
+    const logs = Object.freeze(normalizeLogs(input?.logs ?? []));
+    const contextIngestedAt = iso(input?.now);
+    this.#consumeBudget(who.tenantId, input?.costUnits ?? 1, input?.now);
+
+    const record = this.#case(who.tenantId, ticketId, true);
+    record.subject = subject;
+    record.messages = messages;
+    record.attachments = attachments;
+    record.logs = logs;
+    record.contextIngestedAt = contextIngestedAt;
     record.contextIngestedBy = who.userId;
     record.updatedAt = record.contextIngestedAt;
     this.#audit(who, 'ai_ticket_context_ingested', record.id, input?.now, {
@@ -182,8 +192,6 @@ export class AiTicketAgentEngine {
     const questions = Array.isArray(input?.questions) ? input.questions : null;
     if (!ticketId) throw new Error('ticketId is required');
     if (!questions?.length) throw new Error('questions must be a non-empty array');
-    this.#consumeBudget(who.tenantId, input?.costUnits ?? 1, input?.now);
-
     const record = this.#case(who.tenantId, ticketId);
     const createdAt = iso(input?.now);
     const entries = questions.map((question) => {
@@ -201,6 +209,7 @@ export class AiTicketAgentEngine {
         answer: null,
       });
     });
+    this.#consumeBudget(who.tenantId, input?.costUnits ?? 1, input?.now);
     record.followUps.push(...entries);
     record.updatedAt = createdAt;
     this.#audit(who, 'ai_ticket_followups_recorded', record.id, input?.now, {
@@ -218,8 +227,6 @@ export class AiTicketAgentEngine {
     const matchedTicketId = String(input?.matchedTicketId ?? '').trim();
     if (!ticketId || !matchedTicketId) throw new Error('ticketId and matchedTicketId are required');
     if (ticketId === matchedTicketId) throw new Error('matchedTicketId must differ from ticketId');
-    this.#consumeBudget(who.tenantId, input?.costUnits ?? 1, input?.now);
-
     const record = this.#case(who.tenantId, ticketId);
     const detection = {
       id: `dup_${this.counters.duplicate++}`,
@@ -232,6 +239,7 @@ export class AiTicketAgentEngine {
       createdBy: who.userId,
       createdAt: iso(input?.now),
     };
+    this.#consumeBudget(who.tenantId, input?.costUnits ?? 1, input?.now);
     record.duplicateDetections.push(detection);
     record.updatedAt = detection.createdAt;
     this.#audit(who, 'ai_ticket_duplicate_detected', record.id, input?.now, {
@@ -250,10 +258,8 @@ export class AiTicketAgentEngine {
     const summary = String(input?.summary ?? '').trim();
     if (!ticketId) throw new Error('ticketId is required');
     if (!summary) throw new Error('summary is required');
-    this.#consumeBudget(who.tenantId, input?.costUnits ?? 1, input?.now);
-
     const record = this.#case(who.tenantId, ticketId);
-    record.staffSummary = {
+    const staffSummary = {
       tenantId: who.tenantId,
       ticketId,
       summary,
@@ -261,6 +267,8 @@ export class AiTicketAgentEngine {
       writtenBy: who.userId,
       writtenAt: iso(input?.now),
     };
+    this.#consumeBudget(who.tenantId, input?.costUnits ?? 1, input?.now);
+    record.staffSummary = staffSummary;
     record.updatedAt = record.staffSummary.writtenAt;
     this.#audit(who, 'ai_ticket_staff_summary_written', record.id, input?.now, { ticketId });
     return clone(record.staffSummary);
@@ -276,10 +284,8 @@ export class AiTicketAgentEngine {
     if (!ISSUE_CLASSES.includes(classification)) {
       throw new Error(`classification must be one of: ${ISSUE_CLASSES.join(', ')}`);
     }
-    this.#consumeBudget(who.tenantId, input?.costUnits ?? 1, input?.now);
-
     const record = this.#case(who.tenantId, ticketId);
-    record.classification = {
+    const classified = {
       tenantId: who.tenantId,
       ticketId,
       classification,
@@ -288,6 +294,8 @@ export class AiTicketAgentEngine {
       classifiedBy: who.userId,
       classifiedAt: iso(input?.now),
     };
+    this.#consumeBudget(who.tenantId, input?.costUnits ?? 1, input?.now);
+    record.classification = classified;
     record.updatedAt = record.classification.classifiedAt;
     this.#audit(who, 'ai_ticket_classified', record.id, input?.now, { ticketId, classification });
     return clone(record.classification);
@@ -301,11 +309,9 @@ export class AiTicketAgentEngine {
     const suggestion = String(input?.suggestion ?? input?.likelyFix ?? '').trim();
     if (!ticketId) throw new Error('ticketId is required');
     if (!suggestion) throw new Error('suggestion is required');
-    this.#consumeBudget(who.tenantId, input?.costUnits ?? 1, input?.now);
-
     const record = this.#case(who.tenantId, ticketId);
     const action = String(input?.action ?? 'apply_likely_fix').trim() || 'apply_likely_fix';
-    record.likelyFix = {
+    const likelyFix = {
       tenantId: who.tenantId,
       ticketId,
       action,
@@ -318,6 +324,8 @@ export class AiTicketAgentEngine {
       suggestedBy: who.userId,
       suggestedAt: iso(input?.now),
     };
+    this.#consumeBudget(who.tenantId, input?.costUnits ?? 1, input?.now);
+    record.likelyFix = likelyFix;
     record.updatedAt = record.likelyFix.suggestedAt;
     this.#audit(who, 'ai_ticket_fix_suggested', record.id, input?.now, {
       ticketId,
@@ -377,6 +385,7 @@ export class AiTicketAgentEngine {
       ticketId: sealed.ticketId,
       nonce,
       createdAt: sealed.createdAt,
+      confirmedBy: sealed.confirmedBy ?? null,
       result: sealed.result ?? null,
     });
 
@@ -431,10 +440,9 @@ export class AiTicketAgentEngine {
   }
 
   #consumeBudget(tenantId, costUnits, now) {
-    const cost = ensureUnits(costUnits ?? 1, 'costUnits');
+    const cost = ensurePositiveUnits(costUnits ?? 1, 'costUnits');
     const budget = this.budgets.get(tenantId);
     if (!budget) throw new Error(`AI budget not configured for tenant ${tenantId}`);
-    if (cost === 0) return;
     if (budget.usedUnits + cost > budget.limitUnits) {
       throw new Error(`AI budget exhausted for tenant ${tenantId}`);
     }

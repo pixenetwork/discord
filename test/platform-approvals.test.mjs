@@ -179,3 +179,29 @@ test('unverified actor bags are rejected', () => {
     payload: {},
   }), /Unverified Discord identity/);
 });
+
+test('approval decisions require authenticated authorized actors', () => {
+  const engine = createApprovalEngine({ authorization });
+  const request = engine.request({
+    actor: bhStaff,
+    moduleKey: 'backups',
+    action: 'restore_state',
+    payload: { backupId: 'auth-gate' },
+  });
+
+  assert.throws(() => engine.approve({
+    actor: { userId: 'spoof-owner', tenantId: 'beverly_hills_rp', roleIds: ['bh-owner'] },
+    approvalId: request.id,
+  }), /Unverified Discord identity/);
+
+  const emptyRoles = bindActor(identity, 'beverly_hills_rp', 'empty-approver', []);
+  const lookalike = bindActor(identity, 'beverly_hills_rp', 'lookalike-approver', ['Owner', 'bh-owner-lookalike']);
+  for (const denied of [emptyRoles, lookalike]) {
+    assert.throws(() => engine.approve({ actor: denied, approvalId: request.id }), /Authorization denied/);
+    assert.throws(() => engine.reject({ actor: denied, approvalId: request.id }), /Authorization denied/);
+  }
+
+  const approved = engine.approve({ actor: bhOwner, approvalId: request.id, reason: 'authorized' });
+  assert.equal(approved.status, 'approved');
+  assert.equal(approved.decidedBy, 'owner-user');
+});

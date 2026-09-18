@@ -380,3 +380,94 @@ test('Shopify success followed by local completion failure stays reconciliation-
   await createCommandRouter({ config: { discord: { ownerUserId: 'owner' }, marketplace: { defaultMarkupPercent: 5 } }, store, catalog }).handle(interaction);
   assert.equal(marked, 1); assert.equal(catalogCalls, 1); assert.equal(failed, 0);
 });
+function approvalReviewFixtures({ researchAnswer = 'yes', research = undefined } = {}) {
+  const ticketMessages = [];
+  let submission = {
+    id: 'product:research', vendorId: 'toa', submitterDiscordId: '100', type: 'livestock', status: 'pending',
+    ticketChannelId: 'product-ticket-1', media: [{ url: 'https://example.com/shrimp.jpg' }], missing: [],
+    fields: {
+      'product/strain name': 'Galaxy Fishbone Betta', 'quantity available': '10',
+      'vendor price': '12.00', 'vendor shipping': '15.00', 'shipping origin': 'Houston, TX',
+      'doa policy': '2-hour photo/video claim', 'description / traits': 'Deep blue line',
+      'needs aquapedia research? yes/no': researchAnswer,
+    },
+  };
+  const saves = [];
+  const store = {
+    async getLayoutRoles() { return { staffRoleId: 'staff-role' }; },
+    async getProductSubmission() { return submission; },
+    async getVendor() { return { id: 'toa', displayName: 'TOA', catalogSlug: 'toa', active: true }; },
+    async saveProductSubmission(value, options) { saves.push({ value, options }); submission = value; return value; },
+    async claimProductApproval() { submission = { ...submission, status: 'approval_processing', approvalAttempt: 1 }; return { claimed: true, record: submission }; },
+    async markProductApprovalPublishing() { submission = { ...submission, approvalPhase: 'publishing' }; return submission; },
+    async completeProductApproval(id, patch) { submission = { ...submission, ...patch, status: 'approved' }; return submission; },
+    async failProductApproval(id, error) { submission = { ...submission, status: 'pending', approvalLastError: String(error?.message ?? error) }; return submission; },
+  };
+  const catalog = {
+    async add(vendor, product) {
+      return { product: { id: 'gid://shopify/Product/1', title: product.name, handle: 'toa-galaxy' }, pricing: { vendorPriceCents: 1200, vendorShippingCents: 1500, markupPercent: 5, retailTotalCents: 2835 } };
+    },
+  };
+  const ticket = { id: 'product-ticket-1', async send(message) { ticketMessages.push(message); } };
+  const guild = { channels: { cache: [ticket] } };
+  let reply = null;
+  const interaction = {
+    id: 'review-research', user: { id: 'staff-user' }, member: { roles: { cache: new Set(['staff-role']) } }, guild,
+    commandName: 'product', isChatInputCommand: () => true, deferred: false, replied: false,
+    options: {
+      getSubcommand: () => 'review',
+      getString: (name) => name === 'submission' ? 'product:research' : name === 'action' ? 'approve' : null,
+    },
+    async deferReply() { this.deferred = true; }, async editReply(value) { reply = value; },
+    async reply(value) { this.replied = true; reply = value?.content ?? value; },
+  };
+  const deps = { config: { discord: { ownerUserId: 'owner' }, marketplace: { defaultMarkupPercent: 5 } }, store, catalog, research };
+  return { deps, interaction, ticketMessages, saves, getSubmission: () => submission, getReply: () => reply };
+}
+
+test('approval auto-queues Aquapedia research when the partner requested it', async () => {
+  const researchCalls = [];
+  const research = { async research(args) { researchCalls.push(args); return { status: 'queued', jobId: 'job-123' }; } };
+  const fx = approvalReviewFixtures({ researchAnswer: 'yes', research });
+  await createCommandRouter(fx.deps).handle(fx.interaction);
+
+  assert.equal(researchCalls.length, 1);
+  assert.equal(researchCalls[0].entityType, 'strain');
+  assert.equal(researchCalls[0].name, 'Galaxy Fishbone Betta');
+  assert.equal(researchCalls[0].requestedBy, '100');
+  assert.equal(fx.getSubmission().status, 'approved');
+  assert.match(String(fx.ticketMessages.at(-1) ?? ''), /Aquapedia research queued/i);
+  assert.match(String(fx.getReply() ?? ''), /Aquapedia research queued/i);
+  const researchSave = fx.saves.find((entry) => entry.value?.aquapediaResearchJobId === 'job-123');
+  assert.ok(researchSave, 'expected research job id persisted on the approved submission');
+  assert.deepEqual(researchSave.options?.expectedStatuses, ['approved']);
+});
+
+test('approval never hard-fails when the Aquapedia research service throws', async () => {
+  const research = { async research() { throw new Error('research endpoint down'); } };
+  const fx = approvalReviewFixtures({ researchAnswer: 'yes', research });
+  await createCommandRouter(fx.deps).handle(fx.interaction);
+
+  assert.equal(fx.getSubmission().status, 'approved');
+  assert.match(String(fx.ticketMessages.at(-1) ?? ''), /could not be queued/i);
+  assert.match(String(fx.getReply() ?? ''), /approved/i);
+});
+
+test('approval does not request research when the partner declined it', async () => {
+  let researchCalls = 0;
+  const research = { async research() { researchCalls += 1; return { status: 'queued', jobId: 'x' }; } };
+  const fx = approvalReviewFixtures({ researchAnswer: 'no', research });
+  await createCommandRouter(fx.deps).handle(fx.interaction);
+
+  assert.equal(researchCalls, 0);
+  assert.equal(fx.getSubmission().status, 'approved');
+  assert.doesNotMatch(String(fx.getReply() ?? ''), /Aquapedia research/i);
+});
+
+test('approval survives a missing research service and tells staff to run /research', async () => {
+  const fx = approvalReviewFixtures({ researchAnswer: 'yes', research: undefined });
+  await createCommandRouter(fx.deps).handle(fx.interaction);
+
+  assert.equal(fx.getSubmission().status, 'approved');
+  assert.match(String(fx.getReply() ?? ''), /research service is not configured/i);
+});

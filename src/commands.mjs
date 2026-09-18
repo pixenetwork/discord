@@ -24,6 +24,7 @@ const PRODUCT_CATEGORIES = [
 const PRODUCT_SUBMISSION_TEMPLATES = Object.freeze({
   livestock: [
     'Product/strain name:',
+    'Japanese/common name:',
     'Species/genus:',
     'Product format: individual / pair / trio / group / other',
     'Quantity available:',
@@ -140,6 +141,54 @@ export function buildProductSubmissionPreview(submission, markupPercent) {
     pricing,
     needsAquapediaResearch: ['yes', 'y', 'true'].includes(research),
   });
+}
+
+async function queueApprovedSubmissionResearch(interaction, deps, { submission, preview, submitterDiscordId, ticketChannel }) {
+  if (!preview?.needsAquapediaResearch) return '';
+  if (typeof deps?.research?.research !== 'function') {
+    if (ticketChannel) {
+      await ticketChannel
+        .send('🔬 The partner requested Aquapedia research, but the research service is not configured. Run `/research` manually; the storefront listing is unaffected.')
+        .catch(() => undefined);
+    }
+    return '\n🔬 Aquapedia research was requested but the research service is not configured; run `/research` manually.';
+  }
+  const researchName = String(preview.product?.name ?? '').trim();
+  if (!researchName) return '';
+  try {
+    const result = await deps.research.research({
+      entityType: 'strain',
+      name: researchName,
+      requestedBy: submitterDiscordId,
+    });
+    const completed = result?.status === 'completed';
+    const jobSuffix = result?.jobId ? ` (job \`${result.jobId}\`)` : '';
+    if (ticketChannel) {
+      await ticketChannel
+        .send(`🔬 Aquapedia research ${completed ? 'completed' : 'queued'} for **${researchName}**${jobSuffix}. Verified research will not overwrite the storefront listing.`)
+        .catch(() => undefined);
+    }
+    await deps.store
+      .saveProductSubmission(
+        { ...submission, aquapediaResearchJobId: result?.jobId ?? null, aquapediaResearchStatus: result?.status ?? 'queued' },
+        { expectedStatuses: ['approved'] },
+      )
+      .catch(() => undefined);
+    await audit(
+      interaction.guild,
+      `🔬 Aquapedia research ${completed ? 'completed' : 'queued'} for approved submission \`${submission.id}\` (${researchName})${jobSuffix}.`,
+    ).catch(() => undefined);
+    return `\n🔬 Aquapedia research ${completed ? 'completed' : 'queued'} for **${researchName}**${jobSuffix}.`;
+  } catch (error) {
+    const reason = String(error?.message ?? error).slice(0, 200);
+    if (ticketChannel) {
+      await ticketChannel
+        .send(`⚠️ Aquapedia research could not be queued automatically (${reason}). The storefront listing is unaffected; run \`/research\` manually.`)
+        .catch(() => undefined);
+    }
+    await audit(interaction.guild, `⚠️ Aquapedia research auto-queue failed for \`${submission.id}\`: ${reason}`).catch(() => undefined);
+    return '\n⚠️ Aquapedia research could not be queued automatically; run `/research` manually.';
+  }
 }
 
 function slugify(value) {
@@ -577,7 +626,13 @@ async function handleProduct(interaction, deps) {
     const vendorCatalogChannel = vendorCategory ? interaction.guild.channels.cache.find((channel) => channel.type === ChannelType.GuildText && channel.name === '🛍️・catalog' && channel.parentId === vendorCategory.id) : null;
     if (vendorCatalogChannel) await vendorCatalogChannel.send(approvalMessage).catch(() => undefined);
     await audit(interaction.guild, `✅ Product submission \`${id}\` approved by <@${interaction.user.id}> and synced as \`${synced.product.id}\`.`);
-    return interaction.editReply(`✅ Approved **${synced.product.title}** and synced it to Shopify as \`${synced.product.id}\`.`);
+    const researchNote = await queueApprovedSubmissionResearch(interaction, deps, {
+      submission: saved,
+      preview,
+      submitterDiscordId: claimedSubmission.submitterDiscordId,
+      ticketChannel,
+    });
+    return interaction.editReply(`✅ Approved **${synced.product.title}** and synced it to Shopify as \`${synced.product.id}\`.${researchNote}`);
   }
 
   if (sub !== 'submit') throw new Error('Product submission action is not implemented yet');

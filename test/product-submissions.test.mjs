@@ -24,6 +24,7 @@ test('guided livestock template asks only for the relevant partner fields', () =
   assert.match(template, /Vendor shipping:/);
   assert.match(template, /DOA policy:/);
   assert.match(template, /Needs Aquapedia research\? yes\/no:/);
+  assert.match(template, /Japanese\/common name:/);
   assert.doesNotMatch(template, /Ingredients:/);
 });
 

@@ -72,6 +72,22 @@ For manual onboarding or when staff needs to help a vendor, use:
 
 Unknown lineage/history should be marked unknown rather than guessed. Aquapedia research is separate from the live sales listing and cannot silently overwrite verified storefront facts.
 
+## Guided partner product submission
+
+Verified partners can self-serve new listings through one canonical submission model that backs both the ticket path and the command shortcut:
+
+1. `/product submit type:<...>` opens a private product-submission ticket and posts the exact copy/paste template for the chosen type (Live fish/shrimp, Eggs, Food, Bacteria/water care, 3D printed, Accessory, Other). Only fields relevant to that type are requested.
+2. The partner completes the template and runs `/product fill submission:<id> details:<...>` with optional `media`. Fills are incremental — already-saved fields are preserved and the bot reports only the missing/invalid required fields without discarding the draft.
+3. Once every required field is present, the bot renders a **Product Preview** showing the vendor payout basis (vendor price + vendor shipping) and the calculated Aquaphoria retail price, then moves the draft to `pending` review.
+4. Staff use `/product review` to **approve & sync**, **request changes**, or **reject**. Approvals are protected by a durable, idempotent approval lease so a duplicate/retried interaction cannot create a duplicate Shopify product.
+5. On approval the same canonical draft syncs to Shopify through the vendor-owned `/catalog add` path (server-authoritative vendor ownership + markup), and the resulting product ID/handle is posted back into the ticket and the vendor's private catalog channel.
+
+Partners submit only their vendor price and vendor shipping; the public Aquaphoria markup stays owner-controlled and cannot be overridden by partner input. Partners can never choose another vendor ID. Handle collisions and foreign-product ownership fail closed.
+
+### Aquapedia research on approval
+
+When a partner marks **Needs Aquapedia research? yes** on a livestock/egg submission, an approval automatically queues an evidence-backed Aquapedia strain research request (the same pipeline as `/research`). This step is fail-soft: if the research service is unavailable it never blocks or reverses the storefront listing, and staff are told to run `/research` manually. Queued research only produces evidence-backed Aquapedia records and never silently overwrites verified storefront fields.
+
 ## Vendor commands
 
 - `/catalog add` — add or sync a product to the vendor's Aquaphoria catalog.

@@ -67,9 +67,15 @@ Owner, staff, and vendor access are scoped differently. Vendors can only mutate 
 - `/vendor disable`
 - `/payout paid`
 
+### Owner / staff
+
+- `/product review` — approve & sync, request changes, or reject a pending partner product submission.
+
 ### Approved vendors
 
 - `/gpt`
+- `/product submit`
+- `/product fill`
 - `/catalog add`
 - `/catalog price`
 - `/catalog stock`

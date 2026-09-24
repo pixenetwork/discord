@@ -10,6 +10,7 @@ import { createOrderService } from './orders.mjs';
 import { createGptController } from './gpt.mjs';
 import { createPaidOrderWebhookHandler } from './webhook-handler.mjs';
 import { handleInteraction, registerGuildCommands } from './commands.mjs';
+import { provisionTranslatedPublicationsForum } from './layout.mjs';
 
 const config = loadConfig();
 assertDiscordConfig(config);
@@ -48,6 +49,7 @@ const handlePaidOrderWebhook = createPaidOrderWebhookHandler({
 client.once(Events.ClientReady, async (readyClient) => {
   try {
     const guild = await aquaphoriaGuild();
+    await provisionTranslatedPublicationsForum(guild, { ownerUserId: config.discord.ownerUserId, store });
     await registerGuildCommands(guild);
     await gpt.register(guild);
     console.log(`Aquaphoria Discord worker ready as ${readyClient.user.tag} in ${guild.name}`);

@@ -1,5 +1,23 @@
 import { ChannelType, PermissionFlagsBits } from 'discord.js';
 
+const PUBLICATION_TAGS = [
+  'Japanese',
+  'Chinese',
+  'Official JMA',
+  'Magazine',
+  'Newsletter',
+  'Show Book',
+  'Breeder',
+  'Strain',
+  'Genetics',
+  'Lineage',
+  'Husbandry',
+  'Kagami',
+  'Ryurin',
+  'Dragon Scale',
+  'Shrimp',
+].map((name) => ({ name, moderated: false }));
+
 const CORE_LAYOUT = [
   {
     category: '🌊・AQUAPHORIA',
@@ -35,6 +53,13 @@ const CORE_LAYOUT = [
       ['🔎・research', 'Private /research and /gpt research workspace for approved vendors and Aquaphoria management.'],
       ['🧬・research-results', 'Private completed Aquapedia research summaries and source-backed additions.'],
       ['📝・research-queue', 'Private research requests waiting for verification or additional evidence.'],
+    ],
+    forums: [
+      {
+        name: '📚・translated-publications',
+        topic: 'Private English research companions and authorized translations of medaka and shrimp publications, with source, issue, year, and provenance on every post.',
+        tags: PUBLICATION_TAGS,
+      },
     ],
   },
   {
@@ -76,6 +101,26 @@ async function ensureCategory(guild, name, permissionOverwrites = undefined) {
     return existing;
   }
   return guild.channels.create({ name, type: ChannelType.GuildCategory, permissionOverwrites, reason: 'Aquaphoria Discord layout provisioning' });
+}
+
+async function ensureForumChannel(guild, parent, { name, topic, tags }, permissionOverwrites = undefined) {
+  const existing = guild.channels.cache.find(
+    (channel) => channel.type === ChannelType.GuildForum && channel.name === name && channel.parentId === parent.id,
+  );
+  if (existing) {
+    await existing.edit({ topic, availableTags: tags }, 'Sync Aquaphoria translated-publications forum');
+    await syncPrivateOverwrites(existing, permissionOverwrites);
+    return existing;
+  }
+  return guild.channels.create({
+    name,
+    type: ChannelType.GuildForum,
+    parent: parent.id,
+    topic,
+    availableTags: tags,
+    permissionOverwrites,
+    reason: 'Aquaphoria translated-publications provisioning',
+  });
 }
 
 async function ensureTextChannel(guild, parent, name, topic, permissionOverwrites = undefined) {
@@ -121,7 +166,11 @@ export async function provisionAquaphoriaLayout(guild, { ownerUserId, store = nu
     const category = await ensureCategory(guild, section.category, permissionOverwrites);
     for (const [name, topic] of section.channels) {
       const channel = await ensureTextChannel(guild, category, name, topic, permissionOverwrites);
-      created.push({ category: category.name, channel: channel.name, id: channel.id });
+      created.push({ category: category.name, channel: channel.name, id: channel.id, type: 'text' });
+    }
+    for (const forumSpec of section.forums ?? []) {
+      const channel = await ensureForumChannel(guild, category, forumSpec, permissionOverwrites);
+      created.push({ category: category.name, channel: channel.name, id: channel.id, type: 'forum' });
     }
   }
 
@@ -133,6 +182,23 @@ export async function provisionAquaphoriaLayout(guild, { ownerUserId, store = nu
     roles: { staffRoleId: staffRole.id, vendorRoleId: vendorRole.id, memberRoleId: memberRole.id },
     channels: created,
   };
+}
+
+export async function provisionTranslatedPublicationsForum(guild, { ownerUserId, store = null }) {
+  const previousRoles = store ? await store.getLayoutRoles() : null;
+  const staffRole = await ensureRole(guild, 'Aquaphoria Staff', previousRoles?.staffRoleId);
+  const vendorRole = await ensureRole(guild, 'Verified Aquaphoria Vendor', previousRoles?.vendorRoleId);
+  const overwrites = privateOverwrites(guild, {
+    ownerUserId,
+    staffRoleId: staffRole.id,
+    vendorRoleId: vendorRole.id,
+  });
+  const section = CORE_LAYOUT.find((entry) => entry.category === '🔬・AQUAPEDIA RESEARCH');
+  const forumSpec = section?.forums?.find((entry) => entry.name === '📚・translated-publications');
+  if (!forumSpec) throw new Error('Translated publications forum definition is missing');
+  const category = await ensureCategory(guild, section.category, overwrites);
+  const channel = await ensureForumChannel(guild, category, forumSpec, overwrites);
+  return { categoryId: category.id, channelId: channel.id, channelName: channel.name };
 }
 
 export async function ensureVendorWorkspace(guild, { vendor, ownerUserId, staffRoleId }) {
@@ -160,4 +226,8 @@ export async function ensureVendorWorkspace(guild, { vendor, ownerUserId, staffR
 
 export function layoutDefinition() {
   return structuredClone(CORE_LAYOUT);
+}
+
+export function publicationTagDefinitions() {
+  return structuredClone(PUBLICATION_TAGS);
 }

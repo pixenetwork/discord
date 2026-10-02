@@ -42,6 +42,11 @@ function mockGuild() {
               return messages;
             },
           },
+          async edit({ topic, availableTags } = {}) {
+            if (topic !== undefined) channel.topic = topic;
+            if (availableTags !== undefined) channel.availableTags = availableTags;
+            return channel;
+          },
           async setTopic(topic) {
             channel.topic = topic;
             return channel;

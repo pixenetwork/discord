@@ -108,7 +108,12 @@ async function ensureForumChannel(guild, parent, { name, topic, tags }, permissi
     (channel) => channel.type === ChannelType.GuildForum && channel.name === name && channel.parentId === parent.id,
   );
   if (existing) {
-    await existing.edit({ topic, availableTags: tags }, 'Sync Aquaphoria translated-publications forum');
+    const existingTagIds = new Map((existing.availableTags ?? []).map((tag) => [tag.name, tag.id]));
+    const availableTags = tags.map((tag) => ({
+      ...tag,
+      ...(existingTagIds.has(tag.name) ? { id: existingTagIds.get(tag.name) } : {}),
+    }));
+    await existing.edit({ topic, availableTags }, 'Sync Aquaphoria translated-publications forum');
     await syncPrivateOverwrites(existing, permissionOverwrites);
     return existing;
   }

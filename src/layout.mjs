@@ -195,7 +195,7 @@ export async function provisionTranslatedPublicationsForum(guild, { ownerUserId,
   });
   const section = CORE_LAYOUT.find((entry) => entry.category === '🔬・AQUAPEDIA RESEARCH');
   const forumSpec = section?.forums?.find((entry) => entry.name === '📚・translated-publications');
-  if (!forumSpec) throw new Error('Translated publications forum definition is missing');
+  if (!section || !forumSpec) throw new Error('Translated publications forum definition is missing');
   const category = await ensureCategory(guild, section.category, overwrites);
   const channel = await ensureForumChannel(guild, category, forumSpec, overwrites);
   return { categoryId: category.id, channelId: channel.id, channelName: channel.name };

@@ -11,6 +11,7 @@ import { createGptController } from './gpt.mjs';
 import { createPaidOrderWebhookHandler } from './webhook-handler.mjs';
 import { handleInteraction, registerGuildCommands } from './commands.mjs';
 import { provisionTranslatedPublicationsForum } from './layout.mjs';
+import { startupPolicy } from './startup-policy.mjs';
 
 const config = loadConfig();
 assertDiscordConfig(config);
@@ -49,10 +50,13 @@ const handlePaidOrderWebhook = createPaidOrderWebhookHandler({
 client.once(Events.ClientReady, async (readyClient) => {
   try {
     const guild = await aquaphoriaGuild();
-    await provisionTranslatedPublicationsForum(guild, { ownerUserId: config.discord.ownerUserId, store });
-    await registerGuildCommands(guild);
-    await gpt.register(guild);
-    console.log(`Aquaphoria Discord worker ready as ${readyClient.user.tag} in ${guild.name}`);
+    const policy = startupPolicy({ prelaunch: config.runtime.prelaunch });
+    if (policy.provisionTranslatedForum) {
+      await provisionTranslatedPublicationsForum(guild, { ownerUserId: config.discord.ownerUserId, store });
+    }
+    if (policy.registerGuildCommands) await registerGuildCommands(guild);
+    if (policy.registerGpt) await gpt.register(guild);
+    console.log(`Aquaphoria Discord worker ready as ${readyClient.user.tag} in ${guild.name}${config.runtime.prelaunch ? ' (prelaunch)' : ''}`);
   } catch (error) {
     await logBotError(`Discord startup failed: ${error.stack ?? error.message}`);
   }

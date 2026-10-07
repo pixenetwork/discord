@@ -10,6 +10,14 @@ function asNumber(value, fallback) {
   return Number.isFinite(parsed) ? parsed : fallback;
 }
 
+function asBoolean(value, fallback = false) {
+  const normalized = String(value ?? '').trim().toLowerCase();
+  if (!normalized) return fallback;
+  if (['1', 'true', 'yes', 'on'].includes(normalized)) return true;
+  if (['0', 'false', 'no', 'off'].includes(normalized)) return false;
+  return fallback;
+}
+
 function clean(value) {
   return typeof value === 'string' ? value.trim() : '';
 }
@@ -32,6 +40,7 @@ export function loadConfig(env = process.env) {
     runtime: Object.freeze({
       port: asInt(env.PORT, 8787),
       dataDir: clean(env.DATA_DIR) || './data',
+      prelaunch: asBoolean(env.AQUAPHORIA_PRELAUNCH, false),
     }),
     marketplace: Object.freeze({
       defaultMarkupPercent: markupPercent,

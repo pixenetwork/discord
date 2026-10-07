@@ -20,19 +20,64 @@ const PUBLICATION_TAGS = [
 
 const CORE_LAYOUT = [
   {
-    category: '🌊・AQUAPHORIA',
+    category: '🫧・AQUAPHORIA — START HERE',
     channels: [
       ['👋・welcome', 'Welcome to Aquaphoria. Start here for store, community, and support information.'],
+      ['📜・rules', 'Aquaphoria community rules and customer policies.'],
+      ['🧾・how-to-order', 'How to order livestock, preorders, and dry goods from Aquaphoria.'],
       ['📢・announcements', 'Aquaphoria announcements, launches, imports, and important updates.'],
-      ['🛒・shop', 'Aquaphoria storefront links, featured collections, and shopping information.'],
+      ['🌐・website', 'Official Aquaphoria website and storefront links.'],
     ],
   },
   {
-    category: '🎫・CUSTOMER SUPPORT',
+    category: '🛒・SHOP AQUAPHORIA',
     channels: [
-      ['🎟️・open-a-ticket', 'Open a customer support, order, shipping, or DOA ticket here.'],
-      ['📦・order-help', 'Order status, shipping, tracking, and fulfillment help.'],
-      ['❓・faq', 'Frequently asked questions and Aquaphoria policies.'],
+      ['🆕・new-arrivals', 'Newest Aquaphoria livestock and product arrivals.'],
+      ['✅・available-now', 'Livestock and products currently available to purchase.'],
+      ['🛒・preorders', 'Current Aquaphoria preorder listings and import opportunities.'],
+      ['🔁・sold-out-coming-back', 'Sold-out livestock and products expected to return.'],
+      ['📦・shipping-updates', 'Shipping, import, and fulfillment updates.'],
+    ],
+  },
+  {
+    category: '🐟・MEDAKA & FISH',
+    channels: [
+      ['🐟・medaka-available', 'Medaka and freshwater fish currently available.'],
+      ['🥚・medaka-preorders', 'Upcoming and active Medaka and freshwater fish preorders.'],
+      ['💬・medaka-discussion', 'Medaka and freshwater fish discussion, care, breeding, and questions.'],
+      ['📸・medaka-showcase', 'Showcase your Medaka and freshwater fish.'],
+    ],
+  },
+  {
+    category: '🦐・SHRIMP',
+    channels: [
+      ['🦐・shrimp-available', 'Freshwater shrimp currently available.'],
+      ['🦐・shrimp-preorders', 'Upcoming and active freshwater shrimp preorders.'],
+      ['💬・shrimp-discussion', 'Freshwater shrimp discussion, care, grading, breeding, and questions.'],
+      ['📸・shrimp-showcase', 'Showcase your freshwater shrimp and colonies.'],
+    ],
+  },
+  {
+    category: '🔎・REQUEST DESK',
+    channels: [
+      ['🎟️・open-a-ticket', 'Open a private Aquaphoria ticket for strain requests, order help, fish or shrimp questions, or general support.'],
+    ],
+  },
+  {
+    category: '📚・AQUAPEDIA',
+    channels: [
+      ['📚・aquapedia', 'Aquaphoria knowledge base highlights and Aquapedia updates.'],
+      ['🐟・medaka-guides', 'Medaka strain, care, breeding, and identification guides.'],
+      ['🦐・shrimp-guides', 'Freshwater shrimp care, grading, breeding, and identification guides.'],
+      ['🩺・care-help', 'General freshwater aquarium husbandry and care help.'],
+    ],
+  },
+  {
+    category: '🌿・COMMUNITY',
+    channels: [
+      ['💬・general', 'General Aquaphoria community conversation.'],
+      ['🪴・show-your-tanks', 'Show your aquariums, ponds, setups, and aquascapes.'],
+      ['🧬・breeding-projects', 'Share breeding projects, fry, juveniles, and line-development progress.'],
     ],
   },
   {
@@ -66,10 +111,19 @@ const CORE_LAYOUT = [
     category: '🛡️・AQUAPHORIA STAFF',
     staffOnly: true,
     channels: [
-      ['🧾・audit-log', 'Product, vendor, order, permission, GPT, collection, and research audit events.'],
-      ['🚨・order-issues', 'Fulfillment, stock, DOA, and shipping exceptions requiring staff attention.'],
-      ['💳・payout-log', 'Internal vendor payout ledger and payment confirmations.'],
+      ['💬・staff-chat', 'Private Aquaphoria staff coordination.'],
+      ['🧾・orders', 'Private order operations and fulfillment coordination.'],
+      ['🔎・strain-requests', 'Private queue for customer strain sourcing requests.'],
+      ['🌏・sourcing', 'Private sourcing, breeder, import, and availability coordination.'],
       ['🤖・bot-log', 'Aquaphoria Discord worker health and integration errors.'],
+      ['🎫・ticket-log', 'Aquaphoria support and strain-request ticket lifecycle log.'],
+    ],
+  },
+  {
+    category: '📚・AQUAPHORIA LIBRARY',
+    libraryOnly: true,
+    channels: [
+      ['📚・library', 'Read-only home for preserved legacy Duy-era material and useful historical reference.'],
     ],
   },
 ];

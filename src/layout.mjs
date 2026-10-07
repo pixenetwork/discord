@@ -200,11 +200,16 @@ async function ensureTextChannel(guild, parent, name, topic, permissionOverwrite
 }
 
 function privateOverwrites(guild, { ownerUserId, staffRoleId, vendorRoleId = null }) {
+  const owner = guild.members?.cache?.get?.(String(ownerUserId))?.user
+    ?? guild.client?.users?.cache?.get?.(String(ownerUserId));
+  if (!owner) {
+    throw new Error(`Aquaphoria owner ${ownerUserId} is not cached in the configured guild; refusing to provision private channels`);
+  }
   return [
-    { id: guild.roles.everyone.id, deny: [PermissionFlagsBits.ViewChannel] },
-    { id: ownerUserId, allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages, PermissionFlagsBits.ReadMessageHistory] },
-    { id: staffRoleId, allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages, PermissionFlagsBits.ReadMessageHistory] },
-    ...(vendorRoleId ? [{ id: vendorRoleId, allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages, PermissionFlagsBits.ReadMessageHistory] }] : []),
+    { id: guild.roles.everyone, deny: [PermissionFlagsBits.ViewChannel] },
+    { id: owner, allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages, PermissionFlagsBits.ReadMessageHistory] },
+    { id: guild.roles.cache.get(String(staffRoleId)), allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages, PermissionFlagsBits.ReadMessageHistory] },
+    ...(vendorRoleId ? [{ id: guild.roles.cache.get(String(vendorRoleId)), allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages, PermissionFlagsBits.ReadMessageHistory] }] : []),
   ];
 }
 

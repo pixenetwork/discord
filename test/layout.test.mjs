@@ -66,3 +66,25 @@ test('forum provisioning reuses existing tag IDs by name', async () => {
   assert.equal(editOptions.availableTags.find((tag) => tag.name === 'Japanese').id, 'japanese-tag-id');
   assert.equal(editOptions.availableTags.find((tag) => tag.name === 'Chinese').id, undefined);
 });
+
+
+test('Aquaphoria customer layout exposes the streamlined storefront and library sections', () => {
+  const layout = layoutDefinition();
+  const byCategory = new Map(layout.map((section) => [section.category, section]));
+  for (const category of [
+    '🫧・AQUAPHORIA — START HERE',
+    '🛒・SHOP AQUAPHORIA',
+    '🐟・MEDAKA & FISH',
+    '🦐・SHRIMP',
+    '🔎・REQUEST DESK',
+    '📚・AQUAPEDIA',
+    '🌿・COMMUNITY',
+    '🛡️・AQUAPHORIA STAFF',
+    '📚・AQUAPHORIA LIBRARY',
+  ]) assert.ok(byCategory.has(category), `missing ${category}`);
+
+  assert.ok(byCategory.get('🦐・SHRIMP').channels.some(([name]) => name === '🦐・shrimp-preorders'));
+  assert.ok(byCategory.get('🔎・REQUEST DESK').channels.some(([name]) => name === '🎟️・open-a-ticket'));
+  assert.equal(byCategory.get('📚・AQUAPHORIA LIBRARY').libraryOnly, true);
+  assert.equal(byCategory.has('🎫・CUSTOMER SUPPORT'), false);
+});

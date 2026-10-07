@@ -654,10 +654,10 @@ async function handleProduct(interaction, deps) {
     type: ChannelType.GuildText,
     parent: supportCategory.id,
     permissionOverwrites: [
-      { id: interaction.guild.roles.everyone.id, deny: [PermissionFlagsBits.ViewChannel] },
-      { id: deps.config.discord.ownerUserId, allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages, PermissionFlagsBits.ReadMessageHistory] },
-      { id: staffRole.id, allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages, PermissionFlagsBits.ReadMessageHistory] },
-      { id: interaction.user.id, allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages, PermissionFlagsBits.ReadMessageHistory] },
+      { id: interaction.guild.roles.everyone, deny: [PermissionFlagsBits.ViewChannel] },
+      { id: ownerUser, allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages, PermissionFlagsBits.ReadMessageHistory] },
+      { id: staffRole, allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages, PermissionFlagsBits.ReadMessageHistory] },
+      { id: interaction.user, allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages, PermissionFlagsBits.ReadMessageHistory] },
     ],
     reason: `Aquaphoria product submission for vendor ${vendor.id}`,
   });
@@ -777,6 +777,10 @@ async function handleTicket(interaction, deps) {
   const supportCategory = interaction.guild.channels.cache.find((channel) => channel.type === ChannelType.GuildCategory && channel.name === '🔎・REQUEST DESK');
   if (!supportCategory) return interaction.reply({ content: 'Aquaphoria Request Desk is not configured yet.', ephemeral: true });
 
+  const ownerUser = interaction.guild.members?.cache?.get?.(String(deps.config.discord.ownerUserId))?.user
+    ?? interaction.guild.client?.users?.cache?.get?.(String(deps.config.discord.ownerUserId));
+  if (!ownerUser) return interaction.reply({ content: 'Aquaphoria owner identity is not available in this server; ticket creation is paused.', ephemeral: true });
+
   await interaction.deferReply({ ephemeral: true });
   const channel = await interaction.guild.channels.create({
     name: `ticket-${type}-${interaction.user.username}`.replace(/_/g, '-').toLowerCase().replace(/[^a-z0-9-]/g, '').slice(0, 90),
@@ -798,6 +802,24 @@ async function handleTicket(interaction, deps) {
     .addFields({ name: 'Customer', value: `<@${interaction.user.id}>` })
     .setTimestamp();
   await channel.send({ content: `<@${interaction.user.id}> <@&${staffRole.id}>`, embeds: [embed] });
+
+  if (type === 'strain_request') {
+    const strainQueue = interaction.guild.channels.cache.find((candidate) =>
+      candidate.type === ChannelType.GuildText && candidate.name === '🔎・strain-requests');
+    if (strainQueue) {
+      const requestEmbed = new EmbedBuilder()
+        .setTitle('🔎 New Aquaphoria Strain Request')
+        .setDescription(details)
+        .addFields(
+          { name: 'Customer', value: `<@${interaction.user.id}>`, inline: true },
+          { name: 'Private ticket', value: `<#${channel.id}>`, inline: true },
+          { name: 'Research state', value: 'New → Researching → Sourcing → Quote / Preorder Available → Closed' },
+        )
+        .setTimestamp();
+      await strainQueue.send({ embeds: [requestEmbed] });
+    }
+  }
+
   await audit(interaction.guild, `🎫 Customer <@${interaction.user.id}> opened ${type} support ticket <#${channel.id}>.`);
   return interaction.editReply(`✅ Your private support ticket is ready: <#${channel.id}>`);
 }

@@ -23,8 +23,12 @@ test('strain request tickets are created privately under Request Desk', async ()
   const sent = [];
   let reply = null;
   const requestDesk = { id: 'request-desk', type: ChannelType.GuildCategory, name: '🔎・REQUEST DESK' };
+  const strainQueueMessages = [];
+  const strainQueue = { id: 'strain-queue', type: ChannelType.GuildText, name: '🔎・strain-requests', async send(message) { strainQueueMessages.push(message); } };
   const staffRole = { id: 'staff-role', name: 'Aquaphoria Staff' };
+  const ownerUser = { id: 'owner' };
   const guild = {
+    members: { cache: new Map([['owner', { user: ownerUser }]]) },
     roles: {
       everyone: { id: 'everyone' },
       cache: {
@@ -36,7 +40,7 @@ test('strain request tickets are created privately under Request Desk', async ()
       },
     },
     channels: {
-      cache: { find: (predicate) => [requestDesk].find(predicate) },
+      cache: { find: (predicate) => [requestDesk, strainQueue].find(predicate) },
       async create(options) {
         created.push(options);
         return { id: 'strain-ticket-1', async send(message) { sent.push(message); } };
@@ -67,7 +71,14 @@ test('strain request tickets are created privately under Request Desk', async ()
 
   assert.equal(created.length, 1);
   assert.equal(created[0].parent, 'request-desk');
+  assert.equal(created[0].permissionOverwrites[0].id, guild.roles.everyone);
+  assert.equal(created[0].permissionOverwrites[1].id, ownerUser);
+  assert.equal(created[0].permissionOverwrites[2].id, staffRole);
+  assert.equal(created[0].permissionOverwrites[3].id, interaction.user);
   assert.match(created[0].name, /^ticket-strain-request-/);
   assert.match(String(sent[0]?.embeds?.[0]?.data?.title ?? ''), /STRAIN REQUEST/);
   assert.match(String(reply ?? ''), /strain-ticket-1/);
+  assert.equal(strainQueueMessages.length, 1);
+  assert.match(String(strainQueueMessages[0]?.embeds?.[0]?.data?.title ?? ''), /Strain Request/i);
+  assert.match(String(strainQueueMessages[0]?.embeds?.[0]?.data?.description ?? ''), /Ryurin medaka/);
 });

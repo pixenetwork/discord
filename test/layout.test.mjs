@@ -47,7 +47,9 @@ test('forum provisioning reuses existing tag IDs by name', async () => {
     edit: async (options) => { editOptions = options; },
     permissionOverwrites: { set: async () => {} },
   };
+  const ownerUser = { id: 'owner-id' };
   const guild = {
+    members: { cache: new Map([['owner-id', { user: ownerUser }]]) },
     roles: {
       everyone: { id: 'everyone-id' },
       cache: {

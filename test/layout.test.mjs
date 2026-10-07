@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { ChannelType } from 'discord.js';
 
-import { layoutDefinition, publicationTagDefinitions, provisionAquaphoriaLayout, provisionTranslatedPublicationsForum } from '../src/layout.mjs';
+import { layoutDefinition, publicationTagDefinitions, provisionTranslatedPublicationsForum } from '../src/layout.mjs';
 
 test('Aquapedia layout includes translated-publications forum', () => {
   const layout = layoutDefinition();
@@ -90,11 +90,10 @@ test('Aquaphoria customer layout exposes the streamlined storefront and library 
 });
 
 
-test('private layout provisioning requires cached owner and role objects', async () => {
+test('private forum provisioning requires the configured owner to resolve to a cached Discord user', async () => {
   const roles = new Map([
     ['staff-id', { id: 'staff-id', name: 'Aquaphoria Staff' }],
     ['vendor-id', { id: 'vendor-id', name: 'Verified Aquaphoria Vendor' }],
-    ['member-id', { id: 'member-id', name: 'Aquaphoria Member' }],
   ]);
   const guild = {
     roles: {
@@ -115,7 +114,7 @@ test('private layout provisioning requires cached owner and role objects', async
   };
 
   await assert.rejects(
-    () => provisionAquaphoriaLayout(guild, { ownerUserId: 'owner-id' }),
+    () => provisionTranslatedPublicationsForum(guild, { ownerUserId: 'owner-id' }),
     /owner .* is not cached/i,
   );
 });

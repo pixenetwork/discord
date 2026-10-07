@@ -356,10 +356,13 @@ function commandDefinitions() {
         .setDescription('Support topic')
         .setRequired(true)
         .addChoices(
-          { name: 'Order', value: 'order' },
+          { name: 'Request a Strain', value: 'strain_request' },
+          { name: 'Order Help', value: 'order' },
+          { name: 'Fish / Medaka Question', value: 'fish_medaka' },
+          { name: 'Shrimp Question', value: 'shrimp' },
           { name: 'Shipping', value: 'shipping' },
           { name: 'DOA / livestock issue', value: 'doa' },
-          { name: 'General', value: 'general' },
+          { name: 'General Support', value: 'general' },
         ))
       .addStringOption((option) => option.setName('details').setDescription('Tell us what you need help with').setRequired(true).setMaxLength(1000)));
 
@@ -771,12 +774,12 @@ async function handleTicket(interaction, deps) {
   const staffRole = await getCanonicalStaffRole(interaction.guild, deps.store);
   if (!staffRole) return interaction.reply({ content: 'Aquaphoria support is not configured yet.', ephemeral: true });
 
-  const supportCategory = interaction.guild.channels.cache.find((channel) => channel.type === ChannelType.GuildCategory && channel.name === '🎫・CUSTOMER SUPPORT');
-  if (!supportCategory) return interaction.reply({ content: 'Customer support category is not configured yet.', ephemeral: true });
+  const supportCategory = interaction.guild.channels.cache.find((channel) => channel.type === ChannelType.GuildCategory && channel.name === '🔎・REQUEST DESK');
+  if (!supportCategory) return interaction.reply({ content: 'Aquaphoria Request Desk is not configured yet.', ephemeral: true });
 
   await interaction.deferReply({ ephemeral: true });
   const channel = await interaction.guild.channels.create({
-    name: `ticket-${type}-${interaction.user.username}`.toLowerCase().replace(/[^a-z0-9-]/g, '').slice(0, 90),
+    name: `ticket-${type}-${interaction.user.username}`.replace(/_/g, '-').toLowerCase().replace(/[^a-z0-9-]/g, '').slice(0, 90),
     type: ChannelType.GuildText,
     parent: supportCategory.id,
     permissionOverwrites: [
@@ -788,8 +791,9 @@ async function handleTicket(interaction, deps) {
     reason: `Aquaphoria ${type} support ticket for ${interaction.user.id}`,
   });
 
+  const ticketLabel = type.replace(/_/g, ' ').toUpperCase();
   const embed = new EmbedBuilder()
-    .setTitle(`🎫 Aquaphoria ${type.toUpperCase()} Support`)
+    .setTitle(`🎫 Aquaphoria ${ticketLabel} Support`)
     .setDescription(details)
     .addFields({ name: 'Customer', value: `<@${interaction.user.id}>` })
     .setTimestamp();

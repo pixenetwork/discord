@@ -13,6 +13,7 @@ function mockGuild() {
   let messageSequence = 0;
   const roleCache = new Collection();
   const channelCache = new Collection();
+  const memberCache = new Collection([['owner-user', { user: { id: 'owner-user' } }]]);
 
   const guild = {
     roles: {
@@ -68,6 +69,7 @@ function mockGuild() {
       },
     },
     members: {
+      cache: memberCache,
       async fetch() {
         return {
           roles: {

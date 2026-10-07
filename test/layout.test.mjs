@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { ChannelType } from 'discord.js';
 
-import { layoutDefinition, publicationTagDefinitions, provisionTranslatedPublicationsForum } from '../src/layout.mjs';
+import { layoutDefinition, publicationTagDefinitions, provisionAquaphoriaLayout, provisionTranslatedPublicationsForum } from '../src/layout.mjs';
 
 test('Aquapedia layout includes translated-publications forum', () => {
   const layout = layoutDefinition();
@@ -87,4 +87,35 @@ test('Aquaphoria customer layout exposes the streamlined storefront and library 
   assert.ok(byCategory.get('🔎・REQUEST DESK').channels.some(([name]) => name === '🎟️・open-a-ticket'));
   assert.equal(byCategory.get('📚・AQUAPHORIA LIBRARY').libraryOnly, true);
   assert.equal(byCategory.has('🎫・CUSTOMER SUPPORT'), false);
+});
+
+
+test('private layout provisioning requires cached owner and role objects', async () => {
+  const roles = new Map([
+    ['staff-id', { id: 'staff-id', name: 'Aquaphoria Staff' }],
+    ['vendor-id', { id: 'vendor-id', name: 'Verified Aquaphoria Vendor' }],
+    ['member-id', { id: 'member-id', name: 'Aquaphoria Member' }],
+  ]);
+  const guild = {
+    roles: {
+      everyone: { id: 'everyone-id' },
+      cache: {
+        get: (id) => roles.get(id),
+        filter: (predicate) => {
+          const matches = [...roles.values()].filter(predicate);
+          return { size: matches.length, first: () => matches[0] };
+        },
+      },
+    },
+    channels: {
+      cache: { find: () => undefined },
+      async create() { throw new Error('channel creation should not run before owner validation'); },
+    },
+    members: { cache: new Map() },
+  };
+
+  await assert.rejects(
+    () => provisionAquaphoriaLayout(guild, { ownerUserId: 'owner-id' }),
+    /owner .* is not cached/i,
+  );
 });

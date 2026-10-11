@@ -47,7 +47,9 @@ test('forum provisioning reuses existing tag IDs by name', async () => {
     edit: async (options) => { editOptions = options; },
     permissionOverwrites: { set: async () => {} },
   };
+  const ownerUser = { id: 'owner-id' };
   const guild = {
+    members: { cache: new Map([['owner-id', { user: ownerUser }]]) },
     roles: {
       everyone: { id: 'everyone-id' },
       cache: {
@@ -65,4 +67,56 @@ test('forum provisioning reuses existing tag IDs by name', async () => {
 
   assert.equal(editOptions.availableTags.find((tag) => tag.name === 'Japanese').id, 'japanese-tag-id');
   assert.equal(editOptions.availableTags.find((tag) => tag.name === 'Chinese').id, undefined);
+});
+
+
+test('Aquaphoria customer layout exposes the streamlined storefront and library sections', () => {
+  const layout = layoutDefinition();
+  const byCategory = new Map(layout.map((section) => [section.category, section]));
+  for (const category of [
+    '🫧・AQUAPHORIA — START HERE',
+    '🛒・SHOP AQUAPHORIA',
+    '🐟・MEDAKA & FISH',
+    '🦐・SHRIMP',
+    '🔎・REQUEST DESK',
+    '📚・AQUAPEDIA',
+    '🌿・COMMUNITY',
+    '🛡️・AQUAPHORIA STAFF',
+    '📚・AQUAPHORIA LIBRARY',
+  ]) assert.ok(byCategory.has(category), `missing ${category}`);
+
+  assert.ok(byCategory.get('🦐・SHRIMP').channels.some(([name]) => name === '🦐・shrimp-preorders'));
+  assert.ok(byCategory.get('🔎・REQUEST DESK').channels.some(([name]) => name === '🎟️・open-a-ticket'));
+  assert.equal(byCategory.get('📚・AQUAPHORIA LIBRARY').libraryOnly, true);
+  assert.equal(byCategory.has('🎫・CUSTOMER SUPPORT'), false);
+});
+
+
+test('private forum provisioning requires the configured owner to resolve to a cached Discord user', async () => {
+  const roles = new Map([
+    ['staff-id', { id: 'staff-id', name: 'Aquaphoria Staff' }],
+    ['vendor-id', { id: 'vendor-id', name: 'Verified Aquaphoria Vendor' }],
+  ]);
+  const guild = {
+    roles: {
+      everyone: { id: 'everyone-id' },
+      cache: {
+        get: (id) => roles.get(id),
+        filter: (predicate) => {
+          const matches = [...roles.values()].filter(predicate);
+          return { size: matches.length, first: () => matches[0] };
+        },
+      },
+    },
+    channels: {
+      cache: { find: () => undefined },
+      async create() { throw new Error('channel creation should not run before owner validation'); },
+    },
+    members: { cache: new Map() },
+  };
+
+  await assert.rejects(
+    () => provisionTranslatedPublicationsForum(guild, { ownerUserId: 'owner-id' }),
+    /owner .* is not cached/i,
+  );
 });

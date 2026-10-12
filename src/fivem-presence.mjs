@@ -40,10 +40,10 @@ export function snapshotFiveMPlayers(guild, {
   }
   for (const presence of members.values()) {
     examined++;
-    const activity = matchesFiveMActivity(presence, matchTerms);
-    if (!activity) continue;
+    const id = String(presence.userId ?? '');
+    if (!/^\d{17,20}$/.test(id)) continue;
     if (optOutRoleId) {
-      const id = String(presence.userId ?? '');
+      // Check member privacy before inspecting their game activities.
       const member = guild?.members?.cache?.get?.(id) ?? presence?.member;
       if (!member || !member.roles?.cache?.has) {
         excludedUnknown++;
@@ -51,8 +51,8 @@ export function snapshotFiveMPlayers(guild, {
       }
       if (member.roles.cache.has(optOutRoleId)) continue;
     }
-    const id = String(presence.userId ?? '');
-    if (!/^\d{17,20}$/.test(id)) continue;
+    const activity = matchesFiveMActivity(presence, matchTerms);
+    if (!activity) continue;
     observed++;
     if (list.length < maxDisplayed) {
       list.push({ userId: id, game: escapeMarkdown(activity.name) });

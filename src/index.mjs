@@ -32,6 +32,10 @@ if (config.moderation.enabled) gatewayIntents.push(GatewayIntentBits.GuildMessag
 if (config.fivem.enabled) gatewayIntents.push(GatewayIntentBits.GuildPresences);
 const client = new Client({ intents: gatewayIntents });
 
+// The supervisor monitors gateway liveness; full bootstrap readiness is checked separately.
+let bootstrapComplete = false;
+let bootstrapFailed = false;
+
 const memberLifecycle = createMemberLifecycle({ config, store, logError: (message) => console.error(message) });
 const marketplaceModeration = createMarketplaceModeration({ config, logError: (message) => console.error(message) });
 
@@ -59,11 +63,16 @@ client.once(Events.ClientReady, async (readyClient) => {
   try {
     if (config.activity.name) readyClient.user.setActivity(config.activity.name, { type: ActivityType.Playing });
     const guild = await aquaphoriaGuild();
+    // Resolve the configured member via Discord before creating private permission overwrites.
+    // A valid member may be absent from the Gateway's cold-start cache.
+    await guild.members.fetch(config.discord.ownerUserId);
     await provisionTranslatedPublicationsForum(guild, { ownerUserId: config.discord.ownerUserId, store });
     await registerGuildCommands(guild);
     await gpt.register(guild);
+    bootstrapComplete = true;
     console.log(`Aquaphoria Discord worker ready as ${readyClient.user.tag} in ${guild.name}`);
   } catch (error) {
+    bootstrapFailed = true;
     await logBotError(`Discord startup failed: ${error.stack ?? error.message}`);
   }
 });
@@ -110,7 +119,13 @@ const server = createServer(async (request, response) => {
     const url = new URL(request.url ?? '/', `http://${request.headers.host ?? 'localhost'}`);
     if (request.method === 'GET' && url.pathname === '/health') {
       response.writeHead(client.isReady() ? 200 : 503, { 'Content-Type': 'application/json' });
-      return response.end(JSON.stringify({ ok: client.isReady(), service: 'aquaphoria-discord', gptConfigured: Boolean(config.openai.apiKey) }));
+      return response.end(JSON.stringify({ ok: client.isReady(), initialized: bootstrapComplete, startupFailed: bootstrapFailed, service: 'aquaphoria-discord', gptConfigured: Boolean(config.openai.apiKey) }));
+    }
+
+    if (request.method === 'GET' && url.pathname === '/ready') {
+      const ready = client.isReady() && bootstrapComplete;
+      response.writeHead(ready ? 200 : 503, { 'Content-Type': 'application/json' });
+      return response.end(JSON.stringify({ ok: ready, initialized: bootstrapComplete, startupFailed: bootstrapFailed, service: 'aquaphoria-discord' }));
     }
 
     if (request.method === 'POST' && url.pathname === '/webhooks/shopify/orders-paid') {

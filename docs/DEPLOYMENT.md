@@ -130,7 +130,7 @@ If Jarvis research is not configured, `/research` and `/gpt` research requests c
 ## Go-live order
 
 1. Deploy worker with Discord, Shopify and OpenAI secrets configured.
-2. Confirm `GET /health` reports ready and `gptConfigured: true`.
+2. Confirm `GET /health` reports Discord gateway liveness; use `GET /ready` for completed channel/command provisioning. For GPT workflows, separately confirm `gptConfigured: true`.
 3. Invite/connect the Discord app to the Aquaphoria guild.
 4. Run `/aquaphoria setup` and verify Aquapedia + Breeder Marketplace are hidden from normal members.
 5. Create a test collection with `/collection create` or `/gpt`.
@@ -141,6 +141,6 @@ If Jarvis research is not configured, `/research` and `/gpt` research requests c
 10. Send a Shopify paid-order test webhook/order.
 11. Confirm the private vendor ticket contains only that vendor's line items.
 12. Test payout status and `/order shipped` with a non-customer test order before enabling the workflow for live orders.
-13. On Windows, run `tools/verify-aquaphoria-worker.ps1` and confirm `workerReady: true` and `gptConfigured: true`.
+13. On Windows, run `tools/verify-aquaphoria-worker.ps1` and confirm `workerReady: true` (derived from `/ready`, not `/health`). Confirm `gptConfigured: true` when GPT workflows are required.
 
 FXServer does not need to be restarted for this deployment.

@@ -11,6 +11,7 @@ import {
   isCanonicalStaff,
   revokeVendorAccess,
 } from './authorization.mjs';
+import { formatFiveMPlayers, snapshotFiveMPlayers } from './fivem-presence.mjs';
 
 const PRODUCT_CATEGORIES = [
   ['Live fish', 'live_fish'],
@@ -366,7 +367,13 @@ function commandDefinitions() {
         ))
       .addStringOption((option) => option.setName('details').setDescription('Tell us what you need help with').setRequired(true).setMaxLength(1000)));
 
-  return [aquaphoria, vendor, catalog, product, research, order, payout, ticket];
+  const fivem = new SlashCommandBuilder()
+    .setName('fivem')
+    .setDescription('FiveM activity visible to the Discord bot')
+    .addSubcommand((sub) => sub.setName('online').setDescription('Count visible FiveM activity without revealing members'))
+    .addSubcommand((sub) => sub.setName('players').setDescription('Staff: show members with visible FiveM game activity'));
+
+  return [aquaphoria, vendor, catalog, product, research, order, payout, ticket, fivem];
 }
 
 async function requireVendor(interaction, store) {
@@ -824,6 +831,23 @@ async function handleTicket(interaction, deps) {
   return interaction.editReply(`✅ Your private support ticket is ready: <#${channel.id}>`);
 }
 
+async function handleFiveMPlayers(interaction, deps) {
+  if (interaction.guildId !== deps.config.discord.guildId) return;
+  const sub = interaction.options?.getSubcommand?.() ?? 'players';
+  const isOwner = interaction.user.id === deps.config.discord.ownerUserId;
+  if (sub !== 'online' && !isOwner && !interaction.memberPermissions?.has?.(PermissionFlagsBits.ManageGuild)) {
+    return interaction.reply({ content: 'Only server managers may view member activity details.', ephemeral: true });
+  }
+  if (!deps.config.fivem?.enabled) {
+    return interaction.reply({ content: 'FiveM activity monitoring is not enabled or approved for this bot.', ephemeral: true });
+  }
+  const result = snapshotFiveMPlayers(interaction.guild, { matchTerms: deps.config.fivem.matchTerms, maxDisplayed: sub === 'online' ? 0 : 15 });
+  const content = sub === 'online'
+    ? 'Discord members with visible FiveM game activity: **' + result.observed + '**. This is not the authoritative FiveM server player count; invisible members and missing presence events are excluded.'
+    : formatFiveMPlayers(result);
+  return interaction.reply({ content, ephemeral: sub !== 'online', allowedMentions: { parse: [] } });
+}
+
 export async function registerGuildCommands(guild) {
   return guild.commands.set(commandDefinitions().map((command) => command.toJSON()));
 }
@@ -839,6 +863,7 @@ export function createCommandRouter(deps) {
     async handle(interaction) {
       if (!interaction.isChatInputCommand()) return;
       try {
+        if (interaction.commandName === 'fivem') return await handleFiveMPlayers(interaction, deps);
         if (interaction.commandName === 'aquaphoria') return await handleSetup(interaction, deps);
         if (interaction.commandName === 'vendor') return await handleVendor(interaction, deps);
         if (interaction.commandName === 'catalog') return await handleCatalog(interaction, deps);

@@ -29,7 +29,7 @@ The installer creates the **Aquaphoria Discord Worker** Scheduled Task, starts i
 powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\verify-aquaphoria-worker.ps1
 ```
 
-A successful verification returns `workerReady: true` and `gptConfigured: true`.
+A successful verification returns `workerReady: true` from `/ready` (fully initialized, not only connected to Discord), and `gptConfigured: true` for the separately required GPT configuration. A healthy `/health` response alone does not mean startup provisioning succeeded.
 
 ## Logs
 
@@ -46,7 +46,7 @@ The runtime state remains in `DATA_DIR` (default `./data`) and should be backed 
 The system has two recovery layers:
 
 - Windows Scheduled Task starts the supervisor after boot and retries the supervisor after unexpected failure.
-- The supervisor owns the Node worker, detects process exits, polls `/health`, and restarts the worker after repeated unhealthy responses.
+- The supervisor owns the Node worker, detects process exits, polls `/health` for gateway liveness, and restarts the worker after repeated unhealthy responses. The operator deployment verifier uses `/ready` to require successful provisioning and registration.
 
 Only one supervisor instance can own the worker at a time through a global mutex. This avoids duplicate Discord sessions and duplicate webhook workers.
 

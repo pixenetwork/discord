@@ -71,6 +71,7 @@ export function loadConfig(env = process.env) {
     fivem: Object.freeze({
       enabled: enabled(env.AQUAPHORIA_FIVEM_ACTIVITY_ENABLED),
       matchTerms: csv(env.AQUAPHORIA_FIVEM_ACTIVITY_MATCHES || 'fivem'),
+      optOutRoleId: clean(env.AQUAPHORIA_FIVEM_OPT_OUT_ROLE_ID),
     }),
     shopify: Object.freeze({
       storeDomain,
@@ -116,6 +117,9 @@ export function assertDiscordConfig(config) {
     throw new Error('Marketplace moderation channel IDs must be Discord IDs');
   }
   if (config.activity.name.length > 128) throw new Error('Bot activity name exceeds 128 characters');
+  if (config.fivem.enabled && !validId(config.fivem.optOutRoleId)) {
+    throw new Error('FiveM activity requires a configured opt-out Discord role ID');
+  }
   if (config.fivem.enabled && (!config.fivem.matchTerms.length || config.fivem.matchTerms.some((s) => s.length < 3 || s.length > 64))) {
     throw new Error('FiveM presence match terms must each be between 3 and 64 characters');
   }

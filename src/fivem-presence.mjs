@@ -18,35 +18,57 @@ export function matchesFiveMActivity(presence, matchTerms = ['fivem']) {
   return null;
 }
 
-export function snapshotFiveMPlayers(guild, { matchTerms = ['fivem'], maxDisplayed = 15 } = {}) {
+export function presenceExcludedByRole(guild, presence, optOutRoleId) {
+  if (!optOutRoleId) return false;
+  const id = String(presence?.userId ?? '');
+  // Fail closed when Discord hasn't provided the member's roles yet.
+  const member = guild?.members?.cache?.get?.(id) ?? presence?.member;
+  if (!member || !member.roles?.cache?.has) return true;
+  return member.roles.cache.has(optOutRoleId);
+}
+
+export function snapshotFiveMPlayers(guild, {
+  matchTerms = ['fivem'], maxDisplayed = 15, optOutRoleId = '',
+} = {}) {
   const list = [];
   let observed = 0;
+  let examined = 0;
+  let excludedUnknown = 0;
   const members = guild?.presences?.cache;
   if (!members || typeof members.values !== 'function') {
-    return { observed: 0, players: [], available: false, examined: 0 };
+    return { observed: 0, players: [], available: false, examined: 0, excludedUnknown: 0 };
   }
-  let examined = 0;
   for (const presence of members.values()) {
     examined++;
     const activity = matchesFiveMActivity(presence, matchTerms);
     if (!activity) continue;
-    observed++;
+    if (optOutRoleId) {
+      const id = String(presence.userId ?? '');
+      const member = guild?.members?.cache?.get?.(id) ?? presence?.member;
+      if (!member || !member.roles?.cache?.has) {
+        excludedUnknown++;
+        continue;
+      }
+      if (member.roles.cache.has(optOutRoleId)) continue;
+    }
     const id = String(presence.userId ?? '');
-    if (/^\d{17,20}$/.test(id) && list.length < maxDisplayed) {
+    if (!/^\d{17,20}$/.test(id)) continue;
+    observed++;
+    if (list.length < maxDisplayed) {
       list.push({ userId: id, game: escapeMarkdown(activity.name) });
     }
   }
-  return { observed, players: list, available: true, examined };
+  return { observed, players: list, available: true, examined, excludedUnknown };
 }
 
 export function formatFiveMPlayers(snapshot) {
   const header = 'FiveM activity currently visible to this Discord bot: **' + snapshot.observed + '**';
-  const lines = snapshot.players.map((row) => '<@' + row.userId + '> — ' + row.game);
+  const lines = snapshot.players.map((row) => '<@' + row.userId + '> - ' + row.game);
   return [
     header,
     ...lines,
-    ...(snapshot.observed > snapshot.players.length ? ['…and ' + (snapshot.observed - snapshot.players.length) + ' more.'] : []),
+    ...(snapshot.observed > snapshot.players.length ? ['...and ' + (snapshot.observed - snapshot.players.length) + ' more.'] : []),
     '',
-    '_Only Discord members with visible matching Playing activity are included. This is not the authoritative FiveM server player count, and the initial Discord presence cache may be incomplete._',
+    '_Only visible Discord Playing activity is included, excluding opted-out members. Missing member-role data is excluded for privacy. This is not the actual FiveM server player count._',
   ].join('\n').slice(0, 1900);
 }

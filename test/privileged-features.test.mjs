@@ -27,9 +27,9 @@ test('FiveM activity snapshot lists current visible members only and notes limit
     [id, presence(id, 'FiveM')], [secondId, presence(secondId, 'Roblox')], ['xxx', presence('xxx', 'FiveM')],
   ]) } };
   const result = snapshotFiveMPlayers(guild);
-  assert.equal(result.observed, 2);
+  assert.equal(result.observed, 1);
   assert.equal(result.players.length, 1);
-  assert.match(formatFiveMPlayers(result), /not the authoritative FiveM/);
+  assert.match(formatFiveMPlayers(result), /not the actual FiveM/);
   assert.match(formatFiveMPlayers(result), new RegExp(id));
 });
 

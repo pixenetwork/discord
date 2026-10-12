@@ -371,7 +371,9 @@ function commandDefinitions() {
     .setName('fivem')
     .setDescription('FiveM activity visible to the Discord bot')
     .addSubcommand((sub) => sub.setName('online').setDescription('Count visible FiveM activity without revealing members'))
-    .addSubcommand((sub) => sub.setName('players').setDescription('Staff: show members with visible FiveM game activity'));
+    .addSubcommand((sub) => sub.setName('players').setDescription('Staff: show members with visible FiveM game activity'))
+    .addSubcommand((sub) => sub.setName('hide').setDescription('Hide your Discord game activity from this bot'))
+    .addSubcommand((sub) => sub.setName('show').setDescription('Allow your Discord game activity to appear again'));
 
   return [aquaphoria, vendor, catalog, product, research, order, payout, ticket, fivem];
 }
@@ -834,6 +836,29 @@ async function handleTicket(interaction, deps) {
 async function handleFiveMPlayers(interaction, deps) {
   if (interaction.guildId !== deps.config.discord.guildId) return;
   const sub = interaction.options?.getSubcommand?.() ?? 'players';
+  if (sub === 'hide' || sub === 'show') {
+    const roleId = deps.config.fivem?.optOutRoleId;
+    if (!roleId) {
+      return interaction.reply({ content: 'FiveM activity privacy controls are not configured yet.', ephemeral: true });
+    }
+    const guild = interaction.guild;
+    const role = guild.roles.cache.get(roleId);
+    if (!role) {
+      return interaction.reply({ content: 'The FiveM privacy role is unavailable. Ask a server administrator.', ephemeral: true });
+    }
+    const member = await guild.members.fetch(interaction.user.id);
+    if (sub === 'hide') {
+      await member.roles.add(role, 'User chose to opt out of FiveM activity reporting');
+    } else {
+      await member.roles.remove(role, 'User chose to opt back in to FiveM activity reporting');
+    }
+    return interaction.reply({
+      content: sub === 'hide'
+        ? 'Your FiveM activity will be excluded from bot reports when this feature is enabled.'
+        : 'Your FiveM activity may appear when Discord shares it and monitoring is enabled.',
+      ephemeral: true,
+    });
+  }
   const isOwner = interaction.user.id === deps.config.discord.ownerUserId;
   if (sub !== 'online' && !isOwner && !interaction.memberPermissions?.has?.(PermissionFlagsBits.ManageGuild)) {
     return interaction.reply({ content: 'Only server managers may view member activity details.', ephemeral: true });
@@ -841,9 +866,9 @@ async function handleFiveMPlayers(interaction, deps) {
   if (!deps.config.fivem?.enabled) {
     return interaction.reply({ content: 'FiveM activity monitoring is not enabled or approved for this bot.', ephemeral: true });
   }
-  const result = snapshotFiveMPlayers(interaction.guild, { matchTerms: deps.config.fivem.matchTerms, maxDisplayed: sub === 'online' ? 0 : 15 });
+  const result = snapshotFiveMPlayers(interaction.guild, { matchTerms: deps.config.fivem.matchTerms, maxDisplayed: sub === 'online' ? 0 : 15, optOutRoleId: deps.config.fivem.optOutRoleId });
   const content = sub === 'online'
-    ? 'Discord members with visible FiveM game activity: **' + result.observed + '**. This is not the authoritative FiveM server player count; invisible members and missing presence events are excluded.'
+    ? 'Discord members with visible FiveM game activity: **' + result.observed + '**. Opted-out members are excluded. This is not the authoritative FiveM server player count; invisible members and unavailable activity data are excluded.'
     : formatFiveMPlayers(result);
   return interaction.reply({ content, ephemeral: sub !== 'online', allowedMentions: { parse: [] } });
 }

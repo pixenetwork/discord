@@ -10,7 +10,7 @@ import { createOrderService } from './orders.mjs';
 import { createGptController } from './gpt.mjs';
 import { createPaidOrderWebhookHandler } from './webhook-handler.mjs';
 import { handleInteraction, registerGuildCommands } from './commands.mjs';
-import { provisionTranslatedPublicationsForum, provisionBreederStrainsForum } from './layout.mjs';
+import { provisionTranslatedPublicationsForum } from './layout.mjs';
 
 const config = loadConfig();
 assertDiscordConfig(config);
@@ -56,7 +56,6 @@ client.once(Events.ClientReady, async (readyClient) => {
     // A valid member may be absent from the Gateway's cold-start cache.
     await guild.members.fetch(config.discord.ownerUserId);
     await provisionTranslatedPublicationsForum(guild, { ownerUserId: config.discord.ownerUserId, store });
-    await provisionBreederStrainsForum(guild, { ownerUserId: config.discord.ownerUserId, store });
     await registerGuildCommands(guild);
     await gpt.register(guild);
     bootstrapComplete = true;

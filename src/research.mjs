@@ -140,6 +140,8 @@ export function createResearchService({ jarvis, aquapedia, store }) {
         confidence: result.confidence ?? null,
         duplicateOf: result.duplicateOf ?? null,
         files: written,
+        discordPublicationApproved: result.discordPublicationApproved === true,
+        cards: Array.isArray(result.cards) ? result.cards.slice(0, 30) : [],
       };
     },
   });

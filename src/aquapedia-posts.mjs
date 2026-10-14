@@ -26,7 +26,7 @@ function photosAllowed(photos) {
 }
 
 function field(name, value, empty = 'Not established') {
-  return { name, value: safeText(value || empty, 950), inline: false };
+  return { name, value: safeText(value || empty, 430), inline: false };
 }
 
 // Stable, reviewable message payload; Discord renders every approved photo inline.
@@ -53,7 +53,7 @@ export function buildAquapediaPost(record) {
   ];
   const embed = {
     title: (record.entityType === 'breeder' ? 'BREEDER • ' : 'STRAIN • ') + title,
-    description: japanese ? `Japanese: ${japanese}\n${safeText(record.summary, 700)}` : safeText(record.summary || title, 700),
+    description: japanese ? `Japanese: ${japanese}\n${safeText(record.summary, 450)}` : safeText(record.summary || title, 450),
     fields,
     footer: { text: `Aquapedia • ${safeText(record.id || title, 70)} • ${images.length ? 'licensed imagery' : 'photos pending rights review'}` },
   };

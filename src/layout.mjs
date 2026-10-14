@@ -105,6 +105,11 @@ const CORE_LAYOUT = [
         topic: 'Private English research companions and authorized translations of medaka and shrimp publications, with source, issue, year, and provenance on every post.',
         tags: PUBLICATION_TAGS,
       },
+      {
+        name: '🧬・breeder-strains',
+        topic: 'Private Aquapedia breeder profiles with full strain dossiers, permission-cleared specimen images, lineage, evidence status, and source attribution. One forum thread per breeder.',
+        tags: PUBLICATION_TAGS,
+      },
     ],
   },
   {

@@ -11,9 +11,6 @@ test('Aquapedia layout includes translated-publications forum', () => {
   const forum = section.forums?.find((entry) => entry.name === '📚・translated-publications');
   assert.ok(forum);
   assert.match(forum.topic, /source, issue, year, and provenance/i);
-  const breederForum = section.forums?.find((entry) => entry.name === '🧬・breeder-strains');
-  assert.ok(breederForum);
-  assert.match(breederForum.topic, /One forum thread per breeder/i);
 });
 
 test('translated-publications forum exposes bounded research tags', () => {

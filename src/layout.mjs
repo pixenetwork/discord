@@ -270,6 +270,21 @@ export async function provisionTranslatedPublicationsForum(guild, { ownerUserId,
   return { categoryId: category.id, channelId: channel.id, channelName: channel.name };
 }
 
+export async function provisionBreederStrainsForum(guild, { ownerUserId, store = null }) {
+  const previousRoles = store ? await store.getLayoutRoles() : null;
+  const staffRole = await ensureRole(guild, 'Aquaphoria Staff', previousRoles?.staffRoleId);
+  const vendorRole = await ensureRole(guild, 'Verified Aquaphoria Vendor', previousRoles?.vendorRoleId);
+  const overwrites = privateOverwrites(guild, {
+    ownerUserId, staffRoleId: staffRole.id, vendorRoleId: vendorRole.id,
+  });
+  const section = CORE_LAYOUT.find((entry) => entry.category === '🔬・AQUAPEDIA RESEARCH');
+  const forumSpec = section?.forums?.find((entry) => entry.name === '🧬・breeder-strains');
+  if (!section || !forumSpec) throw new Error('Aquapedia breeder-strains forum definition is missing');
+  const category = await ensureCategory(guild, section.category, overwrites);
+  const channel = await ensureForumChannel(guild, category, forumSpec, overwrites);
+  return { categoryId: category.id, channelId: channel.id, channelName: channel.name };
+}
+
 export async function ensureVendorWorkspace(guild, { vendor, ownerUserId, staffRoleId }) {
   let vendorRole = vendor.discordRoleId ? guild.roles.cache.get(vendor.discordRoleId) : null;
   if (!vendorRole) vendorRole = await ensureRole(guild, `Vendor • ${vendor.displayName}`);

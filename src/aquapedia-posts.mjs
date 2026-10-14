@@ -88,9 +88,10 @@ export async function publishAquapediaCards(guild, result) {
   }
   const cards = Array.isArray(result.cards) ? result.cards.slice(0, MAX_RECORDS) : [];
   if (!cards.length) return { posted: 0, reason: 'no_structured_cards' };
-  const category = guild?.channels?.cache?.find?.((c) => c.type === 4 && c.name === CATEGORY_NAME);
+  const channels = [...(guild?.channels?.cache?.values?.() ?? [])];
+  const category = channels.find((c) => c.type === 4 && c.name === CATEGORY_NAME);
   if (!category) return { posted: 0, reason: 'existing_breeder_category_not_found' };
-  const forums = [...guild.channels.cache.values()].filter((c) => c.type === 15 && c.parentId === category.id);
+  const forums = channels.filter((c) => c.type === 15 && c.parentId === category.id);
   if (!forums.length) return { posted: 0, reason: 'existing_breeder_forums_not_found' };
   let posted = 0;
   let skipped = 0;

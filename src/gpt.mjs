@@ -1,4 +1,5 @@
 import { ChannelType, SlashCommandBuilder } from 'discord.js';
+import { publishAquapediaCards } from './aquapedia-posts.mjs';
 import { ensureVendorWorkspace, provisionAquaphoriaLayout } from './layout.mjs';
 import { centsToMoney, moneyToCents } from './pricing.mjs';
 import { isCanonicalStaff } from './authorization.mjs';
@@ -264,7 +265,10 @@ async function executeTool(interaction, deps, actor, name, args, attachmentUrl) 
   }
   if (name === 'research') {
     if (!actor.owner && !actor.staff && !actor.vendor) throw new Error('Research is limited to Aquaphoria management and approved vendors');
-    return { ok: true, result: await deps.research.research({ entityType: args.entity_type, name: args.name, requestedBy: interaction.user.id }) };
+    const result = await deps.research.research({ entityType: args.entity_type, name: args.name, requestedBy: interaction.user.id });
+    const publication = await publishAquapediaCards(interaction.guild, result).catch((error) => ({ posted: 0, reason: `publish_error:${error.message}` }));
+    const { cards: _cards, ...publicResult } = result;
+    return { ok: true, result: publicResult, discordPublication: publication };
   }
   if (name === 'catalog_add') {
     const vendor = await vendorFor(args.vendor_id);

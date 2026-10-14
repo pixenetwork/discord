@@ -105,11 +105,6 @@ const CORE_LAYOUT = [
         topic: 'Private English research companions and authorized translations of medaka and shrimp publications, with source, issue, year, and provenance on every post.',
         tags: PUBLICATION_TAGS,
       },
-      {
-        name: '🧬・breeder-strains',
-        topic: 'Private Aquapedia breeder profiles with full strain dossiers, permission-cleared specimen images, lineage, evidence status, and source attribution. One forum thread per breeder.',
-        tags: PUBLICATION_TAGS,
-      },
     ],
   },
   {
@@ -265,21 +260,6 @@ export async function provisionTranslatedPublicationsForum(guild, { ownerUserId,
   const section = CORE_LAYOUT.find((entry) => entry.category === '🔬・AQUAPEDIA RESEARCH');
   const forumSpec = section?.forums?.find((entry) => entry.name === '📚・translated-publications');
   if (!section || !forumSpec) throw new Error('Translated publications forum definition is missing');
-  const category = await ensureCategory(guild, section.category, overwrites);
-  const channel = await ensureForumChannel(guild, category, forumSpec, overwrites);
-  return { categoryId: category.id, channelId: channel.id, channelName: channel.name };
-}
-
-export async function provisionBreederStrainsForum(guild, { ownerUserId, store = null }) {
-  const previousRoles = store ? await store.getLayoutRoles() : null;
-  const staffRole = await ensureRole(guild, 'Aquaphoria Staff', previousRoles?.staffRoleId);
-  const vendorRole = await ensureRole(guild, 'Verified Aquaphoria Vendor', previousRoles?.vendorRoleId);
-  const overwrites = privateOverwrites(guild, {
-    ownerUserId, staffRoleId: staffRole.id, vendorRoleId: vendorRole.id,
-  });
-  const section = CORE_LAYOUT.find((entry) => entry.category === '🔬・AQUAPEDIA RESEARCH');
-  const forumSpec = section?.forums?.find((entry) => entry.name === '🧬・breeder-strains');
-  if (!section || !forumSpec) throw new Error('Aquapedia breeder-strains forum definition is missing');
   const category = await ensureCategory(guild, section.category, overwrites);
   const channel = await ensureForumChannel(guild, category, forumSpec, overwrites);
   return { categoryId: category.id, channelId: channel.id, channelName: channel.name };

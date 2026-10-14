@@ -1,5 +1,5 @@
-// Research-only Discord publisher. Never treats a public image URL as reuse permission.
-const FORUM_NAME = '🧬・breeder-strains';
+// Source-backed, permission-gated Aquapedia messages for *existing* breeder forums.
+const CATEGORY_NAME = '🔬・BREEDER RESEARCH';
 const ALLOWED_RIGHTS = new Set(['owner_owned', 'licensed', 'permission_granted', 'public_domain', 'cc0']);
 const MAX_RECORDS = 30;
 
@@ -7,15 +7,20 @@ function safeText(value, max = 1000) {
   return String(value ?? '').trim().replace(/@(everyone|here)/gi, '@\u200b$1').slice(0, max);
 }
 
+function forumSlug(value) {
+  return String(value ?? '').trim().normalize('NFKD').toLowerCase()
+    .replace(/[^a-z0-9-]+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '').slice(0, 90);
+}
+
 function httpsUrl(value) {
   try {
     const url = new URL(String(value ?? ''));
     if (url.protocol !== 'https:' || url.username || url.password) return null;
-    if (url.hostname === 'localhost' || url.hostname.endsWith('.local') || /^\\d+\\.\\d+\\.\\d+\\.\\d+$/.test(url.hostname)) return null;
+    const hostname = url.hostname.toLowerCase();
+    if (hostname === 'localhost' || hostname.endsWith('.local') || hostname.endsWith('.internal')
+      || /^\\d+\\.\\d+\\.\\d+\\.\\d+$/.test(hostname)) return null;
     return url.href;
-  } catch {
-    return null;
-  }
+  } catch { return null; }
 }
 
 function photosAllowed(photos) {
@@ -29,7 +34,6 @@ function field(name, value, empty = 'Not established') {
   return { name, value: safeText(value || empty, 430), inline: false };
 }
 
-// Stable, reviewable message payload; Discord renders every approved photo inline.
 export function buildAquapediaPost(record) {
   if (!record || !['breeder', 'strain'].includes(record.entityType) || !safeText(record.name)) {
     throw new Error('A breeder/strain name and valid entityType are required');
@@ -38,9 +42,8 @@ export function buildAquapediaPost(record) {
   const japanese = safeText(record.japaneseName, 100);
   const sources = (Array.isArray(record.sources) ? record.sources : [])
     .map((source) => httpsUrl(typeof source === 'string' ? source : source?.url))
-    .filter(Boolean)
-    .slice(0, 5);
-  const images = photosAllowed(record.photos);
+    .filter(Boolean).slice(0, 5);
+  const photos = photosAllowed(record.photos);
   const fields = [
     field('Breeder / creator', record.breederName ?? (record.entityType === 'breeder' ? record.name : null)),
     field('Description & identifying traits', record.description ?? record.phenotype),
@@ -55,55 +58,73 @@ export function buildAquapediaPost(record) {
     title: (record.entityType === 'breeder' ? 'BREEDER • ' : 'STRAIN • ') + title,
     description: japanese ? `Japanese: ${japanese}\n${safeText(record.summary, 450)}` : safeText(record.summary || title, 450),
     fields,
-    footer: { text: `Aquapedia • ${safeText(record.id || title, 70)} • ${images.length ? 'licensed imagery' : 'photos pending rights review'}` },
+    footer: { text: `Aquapedia • ${safeText(record.id || title, 70)} • ${photos.length ? 'licensed imagery' : 'photos pending rights review'}` },
   };
-  if (images.length) embed.image = { url: images[0].url };
-  const extras = images.slice(1).map((photo) => ({
+  if (photos.length) {
+    embed.image = { url: photos[0].url };
+    embed.fields.push(field('Photo credit', photos[0].credit + (photos[0].view ? ' • ' + photos[0].view : '')));
+  }
+  const extraEmbeds = photos.slice(1).map((photo) => ({
     image: { url: photo.url },
     footer: { text: `Photo: ${photo.credit}${photo.view ? ' • ' + photo.view : ''}` },
   }));
-  // Crediting the first image is equally important.
-  if (images.length) embed.fields.push(field('Photo credit', images[0].credit + (images[0].view ? ' • ' + images[0].view : '')));
-  return { content: `🧬 **${title}** — ${record.entityType === 'breeder' ? 'breeder profile' : 'strain dossier'}${images.length ? '' : '\n📷 Original specimen images pending documented reuse permission.'}`, embeds: [embed, ...extras], allowedMentions: { parse: [] } };
+  return {
+    content: `🧬 **${title}** — ${record.entityType === 'breeder' ? 'breeder profile' : 'strain dossier'}${photos.length ? '' : '\n📷 Original specimen images pending documented reuse permission.'}`,
+    embeds: [embed, ...extraEmbeds],
+    allowedMentions: { parse: [] },
+  };
 }
 
-function threadFor(threads, name) {
-  return [...(threads?.values?.() ?? [])].find((thread) => thread.name === name) ?? null;
+function matchingThread(threads, record) {
+  const name = record.entityType === 'breeder' ? `Breeder profile — ${safeText(record.name, 70)}` : safeText(record.name, 95);
+  return { name, existing: threads.find((thread) => thread.name === name) ?? null };
 }
 
-// Only approved evidence packets go to the private breeder forum.
-// Caller must not silently treat queueing or GitHub research saves as publication.
+// A breeder forum already exists under "🔬・BREEDER RESEARCH" in the live guild.
+// Do NOT create competing breeder forums or guess which farm founded a strain.
 export async function publishAquapediaCards(guild, result) {
-  if (!result || result.status !== 'completed' || result.discordPublicationApproved !== true) {
+  if (result?.status !== 'completed' || result.discordPublicationApproved !== true) {
     return { posted: 0, reason: 'review_or_completion_pending' };
   }
   const cards = Array.isArray(result.cards) ? result.cards.slice(0, MAX_RECORDS) : [];
   if (!cards.length) return { posted: 0, reason: 'no_structured_cards' };
-  const forum = guild?.channels?.cache?.find?.((channel) => channel.name === FORUM_NAME && channel.type === 15);
-  if (!forum) return { posted: 0, reason: 'breeder_forum_not_found' };
-
-  const active = await forum.threads.fetchActive();
-  const archived = await forum.threads.fetchArchived({ limit: 100 });
-  const known = [...active.threads.values(), ...archived.threads.values()];
+  const category = guild?.channels?.cache?.find?.((c) => c.type === 4 && c.name === CATEGORY_NAME);
+  if (!category) return { posted: 0, reason: 'existing_breeder_category_not_found' };
+  const forums = [...guild.channels.cache.values()].filter((c) => c.type === 15 && c.parentId === category.id);
+  if (!forums.length) return { posted: 0, reason: 'existing_breeder_forums_not_found' };
   let posted = 0;
+  let skipped = 0;
   const destinations = new Map();
-
-  // Breeder profile is posted first where supplied; each strain follows beneath its breeder thread.
   const ordered = [...cards].sort((a, b) => Number(b.entityType === 'breeder') - Number(a.entityType === 'breeder'));
   for (const card of ordered) {
-    const breederName = safeText(card.entityType === 'breeder' ? card.name : card.breederName, 100);
-    if (!breederName) continue; // No guesswork about who bred a line.
+    const desired = forumSlug(card.breederForumName);
+    const breeder = card.entityType === 'breeder' ? card.name : card.breederName;
+    // Name-derived routing works only with an EXACT matching forum slug.
+    // An unknown/contested breeder requires explicitly named "unknown-breeders".
+    const fallback = forumSlug(breeder);
+    const target = desired || fallback;
+    const forum = forums.find((c) => c.name === target);
+    if (!forum || (!breeder && target !== 'unknown-breeders')) { skipped += 1; continue; }
     const payload = buildAquapediaPost(card);
-    let thread = destinations.get(breederName) ?? threadFor(known, breederName);
-    if (!thread) {
-      thread = await forum.threads.create({ name: breederName, message: payload, reason: 'Approved Aquapedia breeder/strain dossier' });
-      known.push(thread);
-    } else {
-      if (thread.archived) await thread.setArchived(false, 'Append approved Aquapedia research');
+    const active = await forum.threads.fetchActive();
+    const archived = await forum.threads.fetchArchived({ limit: 100 });
+    const threads = [...active.threads.values(), ...archived.threads.values()];
+    const { name, existing } = matchingThread(threads, card);
+    let thread;
+    if (existing) {
+      thread = existing;
+      if (thread.archived) await thread.setArchived(false, 'Append approved Aquapedia evidence');
       await thread.send(payload);
+    } else {
+      thread = await forum.threads.create({ name, message: payload, reason: 'Approved Aquapedia breeder or strain dossier' });
     }
-    destinations.set(breederName, thread);
+    destinations.set(forum.name + ':' + name, thread.id);
     posted += 1;
   }
-  return { posted, reason: posted ? 'published' : 'missing_breeder_attribution', threadIds: [...destinations.values()].map((t) => t.id) };
+  return {
+    posted,
+    skipped,
+    reason: posted ? 'published_to_existing_breeder_forums' : 'no_matching_authorized_breeder_forum',
+    threadIds: [...destinations.values()],
+  };
 }

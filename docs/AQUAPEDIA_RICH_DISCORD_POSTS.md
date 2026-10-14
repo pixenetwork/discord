@@ -6,9 +6,9 @@ Discord is a **content destination, not a directory of links**. Approved researc
 
 ## Destination
 
-- `🔬・AQUAPEDIA RESEARCH / 🧬・breeder-strains` is an owner/staff/approved-vendor **private Discord forum**, under existing channel permissions.
-- One forum thread **per identified breeder**. The breeder profile leads the thread when available; each related strain is a separate substantial follow-up message.
-- A strain with unresolved breeder attribution must **not** be placed under a guessed breeder. Keep it in the research/verification queue until the appropriate forum destination is resolved. For unknown breeders, use a deliberately designated "Unknown breeder" editorial thread only after explicit editorial authorization; this implementation intentionally does not create it automatically.
+- Reuse the live `🔬・BREEDER RESEARCH` category and its **existing named breeder forums** (e.g., `tarumi-medaka`, `mugen-medaka`, `medaka-ya-savanna`) and existing `unknown-breeders` forum. Do not create a competing channel or category; preserve current access permissions.
+- One existing **forum per breeder**, with a separate thread for the breeder profile and **one thread per strain** underneath. Full research text and rights-cleared photos appear in each starter message. Subsequent evidence updates can be added to the matching thread.
+- A strain with unresolved breeder attribution must **not** be placed under a guessed breeder. The existing `unknown-breeders` forum may be used **only when the approved research card explicitly requests it**; otherwise hold the strain in research verification. A creator's name alone is not sufficient to create a new forum.
 - Preserve original Japanese spelling and distinguish originator, later selector, importer, retailer, and marketer.
 - `/research` and `/gpt` should use the same posting flow for source-verified, approved structured cards.
 
@@ -88,11 +88,11 @@ Example URLs are illustrative **only**. Do not put example photos into the live 
 ## Rollout / backfill safety checklist
 
 1. Do not merge/deploy to a production Discord until the prelaunch policy and the deployment owner allow it. Existing draft prelaunch changes in PR #13 must be accounted for.
-2. Confirm authorized bot connection, guild identity and private forum access, and document rights for photos.
-3. Commission the Jarvis response shape above, with independent reviewer receipts and correct original source citations. The Discord worker **does not scrape sources or grant image rights** on its own.
-4. Post one verified breeder + one strain in a test thread. Verify actual inline images are displayed, credits visible, full research text intact, and no @everyone mention.
+2. Confirm the already-connected `jarvis aquaphoria` bot in the existing guild, the currently live `🔬・BREEDER RESEARCH` forum names and permissions, and rights receipts for photos. Read-only Discord REST GET verified bot and guild on 2026-10-13; this did not publish any post.
+3. Commission the Jarvis response shape above, with explicit `breederForumName` matching an existing forum name, independent reviewer receipts and correct original source citations. The Discord worker **does not scrape sources or grant image rights** on its own; current live environment has no configured `JARVIS_RESEARCH_ENDPOINT`.
+4. Post one verified breeder profile thread and one strain thread **inside that breeder's existing forum**. Verify actual inline images are displayed, credits visible, full research text intact, and no @everyone mention.
 5. Reconcile previously researched 35 Aquapedia working entries, 134 SNR catalog import records and 300-strain target; avoid double-posting aliases and avoid treating derivative seller names as new founders.
 6. Publish in reviewed batches. Maintain message/thread IDs and receipts for idempotent replay; this first revision does **not yet** implement durable cross-job publishing deduplication.
 7. Confirm the live guild message and photo display directly before reporting completion.
 
-**Status:** draft application patch only; not a verified Discord publication. User-owned or explicitly permissioned original photos needed for actual multimedia backfill.
+**Status:** draft application patch only; not a verified Discord publication. Existing bot is online, healthy on local port `8790` as of 2026-10-13; its live checkout is unrelated and not modified. User-owned or explicitly permissioned original photos and approved research cards are needed for actual multimedia backfill.

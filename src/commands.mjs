@@ -6,6 +6,7 @@ import {
 } from 'discord.js';
 import { calculateRetailBreakdown, centsToMoney, moneyToCents } from './pricing.mjs';
 import { ensureVendorWorkspace, provisionAquaphoriaLayout } from './layout.mjs';
+import { publishAquapediaCards } from './aquapedia-posts.mjs';
 import {
   getCanonicalStaffRole,
   isCanonicalStaff,
@@ -687,7 +688,9 @@ async function handleResearch(interaction, deps) {
 
   if (result.status === 'completed') {
     const files = (result.files ?? []).map((file) => file.url ? `[${file.path}](${file.url})` : `\`${file.path}\``).join('\n');
-    return interaction.editReply(`🧬 **Aquapedia research completed**\n${result.summary ?? 'Verified research was added.'}${result.duplicateOf ? `\nDuplicate/alias of: **${result.duplicateOf}**` : ''}${result.confidence ? `\nConfidence: **${result.confidence}**` : ''}${files ? `\n${files}` : ''}`.slice(0, 1950));
+    const publication = await publishAquapediaCards(interaction.guild, result).catch((error) => ({ posted: 0, reason: `publish_error:${error.message}` }));
+    const publishNote = publication.posted ? `\n📸 Posted ${publication.posted} rich breeder/strain dossier(s) in the private breeder forum.` : `\n📸 Dossier publication pending: ${publication.reason}.`;
+    return interaction.editReply(`🧬 **Aquapedia research completed**\n${result.summary ?? 'Verified research was added.'}${result.duplicateOf ? `\nDuplicate/alias of: **${result.duplicateOf}**` : ''}${result.confidence ? `\nConfidence: **${result.confidence}**` : ''}${files ? `\n${files}` : ''}${publishNote}`.slice(0, 1950));
   }
   return interaction.editReply(`🔎 Research queued for Aquapedia verification. Job: \`${result.jobId}\`${result.url ? `\n${result.url}` : ''}`);
 }

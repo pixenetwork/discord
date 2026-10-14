@@ -94,6 +94,11 @@ export function createResearchService({ jarvis, aquapedia, store }) {
           preferPrimaryJapaneseSources: true,
           preserveConflicts: true,
           aquapediaEvidenceLevels: true,
+          structuredDiscordCards: true,
+          breederForumThreads: true,
+          realSpecimenPhotoReferences: true,
+          photoRightsAndPhotographerCreditRequired: true,
+          onlyPublishWithExplicitReviewApproval: true,
         },
       }),
     });

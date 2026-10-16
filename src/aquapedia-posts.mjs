@@ -116,8 +116,16 @@ export async function publishAquapediaCards(guild, result) {
     let thread;
     if (existing) {
       thread = existing;
-      if (thread.archived) await thread.setArchived(false, 'Append approved Aquapedia evidence');
-      await thread.send(payload);
+      const botId = guild?.client?.user?.id;
+      if (!botId || typeof thread.messages?.fetch !== 'function') { skipped += 1; continue; }
+      const history = await thread.messages.fetch({ limit: 100 });
+      const recordId = safeText(card.id || card.name, 70);
+      const previous = [...history.values()].find((message) => message.author?.id === botId
+        && message.embeds?.some((embed) => embed.footer?.text?.startsWith(`Aquapedia • ${recordId} •`))
+        && typeof message.edit === 'function');
+      if (!previous) { skipped += 1; continue; }
+      if (thread.archived) await thread.setArchived(false, 'Update approved Aquapedia evidence');
+      await previous.edit(payload);
     } else {
       thread = await forum.threads.create({ name, message: payload, reason: 'Approved Aquapedia breeder or strain dossier' });
     }

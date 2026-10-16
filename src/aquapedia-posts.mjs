@@ -90,6 +90,8 @@ export async function publishAquapediaCards(guild, result) {
   }
   const cards = Array.isArray(result.cards) ? result.cards.slice(0, MAX_RECORDS) : [];
   if (!cards.length) return { posted: 0, reason: 'no_structured_cards' };
+  const botId = guild?.client?.user?.id;
+  if (!botId) return { posted: 0, reason: 'bot_identity_missing' };
   const channels = [...(guild?.channels?.cache?.values?.() ?? [])];
   const category = channels.find((c) => c.type === 4 && c.name === CATEGORY_NAME);
   if (!category) return { posted: 0, reason: 'existing_breeder_category_not_found' };
@@ -97,6 +99,8 @@ export async function publishAquapediaCards(guild, result) {
   if (!forums.length) return { posted: 0, reason: 'existing_breeder_forums_not_found' };
   let posted = 0;
   let skipped = 0;
+  let unverified = 0;
+  const receipts = [];
   const destinations = new Map();
   const ordered = [...cards].sort((a, b) => Number(b.entityType === 'breeder') - Number(a.entityType === 'breeder'));
   for (const card of ordered) {
@@ -114,10 +118,10 @@ export async function publishAquapediaCards(guild, result) {
     const threads = [...active.threads.values(), ...archived.threads.values()];
     const { name, existing } = matchingThread(threads, card);
     let thread;
+    let priorMessageId = null;
     if (existing) {
       thread = existing;
-      const botId = guild?.client?.user?.id;
-      if (!botId || typeof thread.messages?.fetch !== 'function') { skipped += 1; continue; }
+      if (typeof thread.messages?.fetch !== 'function') { skipped += 1; continue; }
       const history = await thread.messages.fetch({ limit: 100 });
       const recordId = safeText(card.id || card.name, 70);
       const previous = [...history.values()].find((message) => message.author?.id === botId
@@ -126,16 +130,52 @@ export async function publishAquapediaCards(guild, result) {
       if (!previous) { skipped += 1; continue; }
       if (thread.archived) await thread.setArchived(false, 'Update approved Aquapedia evidence');
       await previous.edit(payload);
+      priorMessageId = previous.id;
     } else {
       thread = await forum.threads.create({ name, message: payload, reason: 'Approved Aquapedia breeder or strain dossier' });
     }
+    let readback = null;
+    try {
+      readback = priorMessageId
+        ? await thread.messages.fetch(priorMessageId)
+        : (typeof thread.fetchStarterMessage === 'function' ? await thread.fetchStarterMessage() : null);
+    } catch {
+      // The Discord write may have succeeded. Stop to avoid duplicates on a retry.
+      unverified += 1;
+      break;
+    }
+    const recordId = safeText(card.id || card.name, 70);
+    const verified = Boolean(readback?.id && readback.author?.id === botId
+      && readback.embeds?.some((embed) => embed.footer?.text?.startsWith(`Aquapedia • ${recordId} •`)));
+    if (!verified) { unverified += 1; break; }
+    receipts.push({ recordId, threadId: thread.id, messageId: readback.id, verified: true });
     destinations.set(forum.name + ':' + name, thread.id);
     posted += 1;
   }
   return {
     posted,
     skipped,
-    reason: posted ? 'published_to_existing_breeder_forums' : 'no_matching_authorized_breeder_forum',
+    unverified,
+    receipts,
+    reason: unverified ? 'message_readback_unverified' : posted ? 'verified_in_existing_breeder_forums' : 'no_matching_authorized_breeder_forum',
     threadIds: [...destinations.values()],
   };
+}
+
+export async function persistVerifiedReceipts(store, jobId, publication) {
+  const receipts = (Array.isArray(publication?.receipts) ? publication.receipts : [])
+    .filter((entry) => entry?.verified === true && entry.recordId && entry.threadId && entry.messageId)
+    .map(({ recordId, threadId, messageId }) => ({ recordId, threadId, messageId, verified: true }));
+  if (!receipts.length) return { recorded: 0, reason: 'no_verified_receipts' };
+  if (!jobId || typeof store?.recordResearchJob !== 'function') {
+    throw new Error('A verified research job and durable store are required for publication receipts');
+  }
+  await store.recordResearchJob({
+    id: String(jobId),
+    discordPublicationReceipts: receipts,
+    discordPublishedCount: receipts.length,
+    discordUnverifiedCount: Math.max(0, Number(publication.unverified) || 0),
+    discordVerifiedAt: new Date().toISOString(),
+  });
+  return { recorded: receipts.length, reason: 'receipts_persisted' };
 }

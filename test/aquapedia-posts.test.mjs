@@ -98,3 +98,16 @@ test('does not post in unrelated forums with same name outside breeder category'
   const result = await publishAquapediaCards(guild, { status: 'completed', discordPublicationApproved: true, cards: [strain] });
   assert.equal(result.posted, 0);
 });
+
+test('private IPv4 and loopback IPv6 photo URLs cannot be embedded', () => {
+  const result = buildAquapediaPost({
+    ...strain,
+    photos: [
+      { url: 'https://127.0.0.1/private.png', reuseStatus: 'owner_owned', credit: 'Unknown' },
+      { url: 'https://[::1]/private.png', reuseStatus: 'licensed', credit: 'Unknown' },
+      { url: 'https://192.168.1.1/private.png', reuseStatus: 'cc0', credit: 'Unknown' },
+    ]
+  });
+  assert.equal(result.embeds.length, 1);
+  assert.ok(!result.embeds[0].image);
+});

@@ -1,3 +1,5 @@
+import { ChannelType } from 'discord.js';
+
 // Source-backed, permission-gated Aquapedia messages for *existing* breeder forums.
 const CATEGORY_NAME = '🔬・BREEDER RESEARCH';
 const ALLOWED_RIGHTS = new Set(['owner_owned', 'licensed', 'permission_granted', 'public_domain', 'cc0']);
@@ -16,9 +18,11 @@ function httpsUrl(value) {
   try {
     const url = new URL(String(value ?? ''));
     if (url.protocol !== 'https:' || url.username || url.password) return null;
-    const hostname = url.hostname.toLowerCase();
-    if (hostname === 'localhost' || hostname.endsWith('.local') || hostname.endsWith('.internal')
-      || /^\\d+\\.\\d+\\.\\d+\\.\\d+$/.test(hostname)) return null;
+    const hostname = url.hostname.toLowerCase().replace(/\.$/, '');
+    // No literal IP addresses or local domain names in Discord's remote image loader.
+    if (hostname.startsWith('[') || /^\d{1,3}(?:\.\d{1,3}){3}$/.test(hostname)
+      || hostname === 'localhost' || hostname.endsWith('.localhost')
+      || hostname.endsWith('.local') || hostname.endsWith('.internal')) return null;
     return url.href;
   } catch { return null; }
 }
@@ -77,6 +81,30 @@ export function buildAquapediaPost(record) {
   };
 }
 
+async function fetchCompleteArchivedThreads(forum) {
+  const found = [];
+  let before = null;
+  // Bound enumeration, but never create a duplicate if the archive is incomplete.
+  for (let pageNumber = 0; pageNumber < 25; pageNumber++) {
+    const page = await forum.threads.fetchArchived(before
+      ? { limit: 100, before }
+      : { limit: 100 });
+    const batch = [...page.threads.values()];
+    found.push(...batch);
+    if (!page.hasMore) return found;
+    const oldest = batch.at(-1);
+    const archiveDate = oldest?.archivedAt ?? (oldest?.archiveTimestamp ? new Date(oldest.archiveTimestamp) : null);
+    if (!(archiveDate instanceof Date) || !Number.isFinite(archiveDate.getTime())) {
+      throw new Error('Archived breeder forum pagination cursor not available');
+    }
+    if (before && archiveDate.getTime() >= before.getTime()) {
+      throw new Error('Archived breeder forum pagination failed to advance');
+    }
+    before = archiveDate;
+  }
+  throw new Error('Archived breeder forum exceeded safe pagination limit');
+}
+
 function matchingThread(threads, record) {
   const name = record.entityType === 'breeder' ? `Breeder profile — ${safeText(record.name, 70)}` : safeText(record.name, 95);
   return { name, existing: threads.find((thread) => thread.name === name) ?? null };
@@ -93,9 +121,9 @@ export async function publishAquapediaCards(guild, result) {
   const botId = guild?.client?.user?.id;
   if (!botId) return { posted: 0, reason: 'bot_identity_missing' };
   const channels = [...(guild?.channels?.cache?.values?.() ?? [])];
-  const category = channels.find((c) => c.type === 4 && c.name === CATEGORY_NAME);
+  const category = channels.find((c) => c.type === ChannelType.GuildCategory && c.name === CATEGORY_NAME);
   if (!category) return { posted: 0, reason: 'existing_breeder_category_not_found' };
-  const forums = channels.filter((c) => c.type === 15 && c.parentId === category.id);
+  const forums = channels.filter((c) => c.type === ChannelType.GuildForum && c.parentId === category.id);
   if (!forums.length) return { posted: 0, reason: 'existing_breeder_forums_not_found' };
   let posted = 0;
   let skipped = 0;
@@ -112,10 +140,23 @@ export async function publishAquapediaCards(guild, result) {
     const target = desired || fallback;
     const forum = forums.find((c) => c.name === target);
     if (!forum || (!breeder && target !== 'unknown-breeders')) { skipped += 1; continue; }
-    const payload = buildAquapediaPost(card);
-    const active = await forum.threads.fetchActive();
-    const archived = await forum.threads.fetchArchived({ limit: 100 });
-    const threads = [...active.threads.values(), ...archived.threads.values()];
+    let payload;
+    try {
+      payload = buildAquapediaPost(card);
+    } catch {
+      skipped += 1;
+      continue;
+    }
+    let threads;
+    try {
+      const active = await forum.threads.fetchActive();
+      const archived = await fetchCompleteArchivedThreads(forum);
+      threads = [...active.threads.values(), ...archived];
+    } catch {
+      // Do not create or append when existing discussions cannot be enumerated.
+      skipped += 1;
+      break;
+    }
     const { name, existing } = matchingThread(threads, card);
     let thread;
     let priorMessageId = null;

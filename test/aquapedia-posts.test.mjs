@@ -19,11 +19,14 @@ function guildWithForums(names) {
       async fetchArchived() { return { threads: new Map() }; },
       async create({ name: title, message }) {
         events.push({ op: 'create', forumName: name, title, message });
-        return { id: 'thread-' + events.length, name: title, archived: false, async send(payload) { events.push({ op: 'send', payload }); } };
+        const starter = { id: 'message-' + events.length, author: { id: 'test-bot' }, embeds: message.embeds };
+        return { id: 'thread-' + events.length, name: title, archived: false,
+          async fetchStarterMessage() { return starter; },
+          async send(payload) { events.push({ op: 'send', payload }); } };
       },
     }
   }));
-  return { guild: { channels: { cache: new Map([['category', category], ...forums.map((forum) => [forum.name, forum])]) } }, events };
+  return { guild: { client: { user: { id: 'test-bot' } }, channels: { cache: new Map([['category', category], ...forums.map((forum) => [forum.name, forum])]) } }, events };
 }
 
 test('breeder card contains substantive info and only licensed inline photos', () => {

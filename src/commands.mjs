@@ -679,7 +679,7 @@ async function handleResearch(interaction, deps) {
   if (!isOwner(interaction, deps.config) && !staff && !vendor) {
     return interaction.reply({ content: 'Aquapedia research commands are currently limited to Aquaphoria staff and approved vendors.', ephemeral: true });
   }
-  await interaction.deferReply();
+  await interaction.deferReply({ ephemeral: true });
   const result = await deps.research.research({
     entityType: interaction.options.getString('type', true),
     name: interaction.options.getString('name', true),

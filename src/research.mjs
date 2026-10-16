@@ -94,6 +94,11 @@ export function createResearchService({ jarvis, aquapedia, store }) {
           preferPrimaryJapaneseSources: true,
           preserveConflicts: true,
           aquapediaEvidenceLevels: true,
+          structuredDiscordCards: true,
+          breederForumThreads: true,
+          realSpecimenPhotoReferences: true,
+          photoRightsAndPhotographerCreditRequired: true,
+          onlyPublishWithExplicitReviewApproval: true,
         },
       }),
     });
@@ -106,12 +111,14 @@ export function createResearchService({ jarvis, aquapedia, store }) {
     async research({ entityType, name, requestedBy }) {
       if (!['strain', 'breeder'].includes(entityType)) throw new Error('Research type must be strain or breeder');
       if (!String(name ?? '').trim()) throw new Error('Research name is required');
+      const requester = String(requestedBy ?? '');
+      if (!/^\d{15,22}$/.test(requester)) throw new Error('A valid Discord user ID is required');
 
       const job = {
         id: crypto.randomUUID(),
         entityType,
         name: String(name).trim(),
-        requestedBy: String(requestedBy),
+        requestedBy: requester,
         status: 'started',
         createdAt: new Date().toISOString(),
       };
@@ -140,6 +147,8 @@ export function createResearchService({ jarvis, aquapedia, store }) {
         confidence: result.confidence ?? null,
         duplicateOf: result.duplicateOf ?? null,
         files: written,
+        discordPublicationApproved: result.discordPublicationApproved === true,
+        cards: Array.isArray(result.cards) ? result.cards.slice(0, 30) : [],
       };
     },
   });

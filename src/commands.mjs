@@ -6,6 +6,7 @@ import {
 } from 'discord.js';
 import { calculateRetailBreakdown, centsToMoney, moneyToCents } from './pricing.mjs';
 import { ensureVendorWorkspace, provisionAquaphoriaLayout } from './layout.mjs';
+import { publishAquapediaCards, persistVerifiedReceipts } from './aquapedia-posts.mjs';
 import {
   getCanonicalStaffRole,
   isCanonicalStaff,
@@ -678,7 +679,7 @@ async function handleResearch(interaction, deps) {
   if (!isOwner(interaction, deps.config) && !staff && !vendor) {
     return interaction.reply({ content: 'Aquapedia research commands are currently limited to Aquaphoria staff and approved vendors.', ephemeral: true });
   }
-  await interaction.deferReply();
+  await interaction.deferReply({ ephemeral: true });
   const result = await deps.research.research({
     entityType: interaction.options.getString('type', true),
     name: interaction.options.getString('name', true),
@@ -687,7 +688,13 @@ async function handleResearch(interaction, deps) {
 
   if (result.status === 'completed') {
     const files = (result.files ?? []).map((file) => file.url ? `[${file.path}](${file.url})` : `\`${file.path}\``).join('\n');
-    return interaction.editReply(`🧬 **Aquapedia research completed**\n${result.summary ?? 'Verified research was added.'}${result.duplicateOf ? `\nDuplicate/alias of: **${result.duplicateOf}**` : ''}${result.confidence ? `\nConfidence: **${result.confidence}**` : ''}${files ? `\n${files}` : ''}`.slice(0, 1950));
+    const publication = await publishAquapediaCards(interaction.guild, result).catch((error) => ({ posted: 0, reason: `publish_error:${error.message}` }));
+    const stored = await persistVerifiedReceipts(deps.store, result.jobId, publication)
+      .catch(() => ({ recorded: 0, reason: 'receipt_storage_failed' }));
+    const publishNote = publication.posted
+      ? `\n📸 Verified ${publication.posted} breeder/strain post(s) in the private forum; receipt ${stored.recorded === publication.posted ? 'saved' : 'storage pending'}${publication.unverified ? `; ${publication.unverified} post(s) not verified` : ''}.`
+      : `\n📸 Dossier publication pending: ${publication.reason}.`;
+    return interaction.editReply(`🧬 **Aquapedia research completed**\n${result.summary ?? 'Verified research was added.'}${result.duplicateOf ? `\nDuplicate/alias of: **${result.duplicateOf}**` : ''}${result.confidence ? `\nConfidence: **${result.confidence}**` : ''}${files ? `\n${files}` : ''}${publishNote}`.slice(0, 1950));
   }
   return interaction.editReply(`🔎 Research queued for Aquapedia verification. Job: \`${result.jobId}\`${result.url ? `\n${result.url}` : ''}`);
 }

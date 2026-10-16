@@ -50,7 +50,9 @@ export function buildAquapediaPost(record) {
     field('Origins / development history', record.history),
     field('Lineage / parent crosses', record.lineage, 'Not independently established'),
     field('Breeding & grade', record.breeding),
-    field('Care notes', record.care, 'General medaka care applies; strain-specific parameters not established'),
+    field('Care notes', record.care, /shrimp|caridina|neocaridina/i.test([record.organismGroup, record.taxon, record.species].join(' '))
+      ? 'Shrimp care depends on genus and lineage; strain-specific parameters are not established'
+      : 'General medaka care applies; strain-specific parameters not established'),
     field('Evidence confidence', record.confidence ?? 'Unverified'),
     field('Research sources', sources.map((url, i) => `[${i + 1}](${url})`).join(' • '), 'Original-source citation pending'),
   ];

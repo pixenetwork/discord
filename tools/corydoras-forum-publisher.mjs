@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import { breedingEvidenceLines } from './corydoras-breeding-evidence.mjs';
+import { morphAuditLines } from './corydoras-morph-audit.mjs';
 import { createHash } from 'node:crypto';
 import path from 'node:path';
 import os from 'node:os';
@@ -319,6 +320,7 @@ function morphPacket(rec) {
       '**What is documented:** ' + rec.facts,
       '**Evidence status:** ' + rec.status,
       '**Breeding / genetics:** Original pedigree and inheritance must be independently checked unless explicitly documented above.',
+      ...morphAuditLines(rec.id),
       '**Sources:** ' + rec.sources.join(' '),
       '**Aquapedia dossier:** ' + PR_URL
     ].join('\n'),
@@ -409,14 +411,15 @@ async function post(forum,recordKey,name,payload,tags,known,botId,kind) {
   return {action:'posted',recordKey,threadId:created.id,messageId:starter.id};
 }
 // Permit a bounded correction to a bot-owned research starter post without duplicating it.
-async function refreshRecord(forum, threads, rec, botId, receiptFile=RECEIPT_FILE) {
+async function refreshRecord(forum, threads, rec, botId, receiptFile=RECEIPT_FILE, packetFactory=sourcePacket) {
   const thread=threads.get(rec.name);
   if(!thread)throw new Error('Cannot refresh missing research thread: '+rec.name);
   const marker='AQP-CORY-'+rec.id;
   const starter=await thread.fetchStarterMessage();
   if(!starter?.id||starter.author?.id!==botId||!starter.embeds?.some(e=>e.footer?.text?.startsWith(marker)))
     throw new Error('Research source ownership/marker mismatch; refusing edit: '+rec.name);
-  const payload=sourcePacket(rec);
+  const payload=packetFactory(rec);
+  if(payload.content.length>2000)throw new Error('Corydoras revision exceeds Discord message limit');
   const changed=starter.content!==payload.content;
   if(changed)await starter.edit(payload);
   const readback=await thread.messages.fetch({message:starter.id,force:true});
@@ -456,7 +459,10 @@ async function main() {
   const mode=process.argv.includes('--apply')?'apply':'plan';
   const nextFlag=process.argv.find(a=>a.startsWith('--next='));
   const refreshFlag=process.argv.find(a=>a.startsWith('--refresh-id='));
+  const morphRefreshFlag=process.argv.find(a=>a.startsWith('--refresh-morph-id='));
   const refreshId=refreshFlag?.split('=')[1]??null;
+  if(morphRefreshFlag && (refreshFlag||nextFlag||!MORPHS.some(x=>x.id===morphRefreshFlag.split('=')[1])))
+    throw new Error('--refresh-morph-id requires one known captive morph, and no competing writer flags');
   if(refreshFlag && (!/^[0-9]+$/.test(refreshId)||nextFlag))
     throw new Error('--refresh-id requires a numerical source ID and cannot accompany --next');
   const nextCount=nextFlag?Number(nextFlag.split('=')[1]):null;
@@ -480,20 +486,29 @@ async function main() {
     if(sources.length!==1)throw new Error('Exact public Aquapedia category not found unambiguously');
     requirePublic(sources[0],guild.id);
     const target=await ensureChannel(guild,sources[0]);
-    console.log(JSON.stringify({mode,guildId:guild.id,botId:user.id,category:target.category?.name||'(would create)',forum:target.forum?.name||'(would create)',sourceCount:catalog.length,priorityMatched:selected.matches.length,priorityMissing:selected.missing,uniqueMorphs:MORPHS.length,plannedPosts:process.argv.includes('--pin-guide')?0:(refreshFlag?1:(nextFlag?nextCount:Math.min(limit,selected.matches.length)+MORPHS.length+1))}));
-    if(mode==='plan'&&!nextFlag&&!refreshFlag)return;
+    console.log(JSON.stringify({mode,guildId:guild.id,botId:user.id,category:target.category?.name||'(would create)',forum:target.forum?.name||'(would create)',sourceCount:catalog.length,priorityMatched:selected.matches.length,priorityMissing:selected.missing,uniqueMorphs:MORPHS.length,plannedPosts:process.argv.includes('--pin-guide')?0:((refreshFlag||morphRefreshFlag)?1:(nextFlag?nextCount:Math.min(limit,selected.matches.length)+MORPHS.length+1))}));
+    if(mode==='plan'&&!nextFlag&&!refreshFlag&&!morphRefreshFlag)return;
     const forum=target.forum;
     if(!forum)throw new Error('No forum returned after provisioning');
     const existing=await allThreads(forum);
     const nextSelection=nextFlag?nextCatalogBatch(catalog,new Set(existing.keys()),nextCount):[];
     if(nextFlag)console.log(JSON.stringify({nextBatchPreview:nextSelection.map(r=>({name:r.name,kind:r.kind,source:r.source})),selectionCount:nextSelection.length,existingThreads:existing.size}));
     const refreshRec=refreshFlag?catalog.find(r=>r.id===refreshId):null;
+    const morphRefreshRec=morphRefreshFlag?MORPHS.find(r=>r.id===morphRefreshFlag.split('=')[1]):null;
     if(refreshFlag) {
       if(!refreshRec)throw new Error('Unknown directory ID: '+refreshId);
       if(!existing.has(refreshRec.name))throw new Error('Target thread not found: '+refreshRec.name);
       console.log(JSON.stringify({refreshPreview:{id:refreshRec.id,name:refreshRec.name,source:refreshRec.source}}));
     }
+    if(morphRefreshRec){
+      if(!existing.has(morphRefreshRec.name))throw new Error('Existing morph thread not found: '+morphRefreshRec.name);
+      console.log(JSON.stringify({morphRefreshPreview:{id:morphRefreshRec.id,name:morphRefreshRec.name}}));
+    }
     if(mode==='plan')return;
+    if(morphRefreshRec){
+      console.log(JSON.stringify(await refreshRecord(forum,existing,morphRefreshRec,user.id,RECEIPT_FILE,morphPacket)));
+      return;
+    }
     if(refreshRec){
       console.log(JSON.stringify(await refreshRecord(forum,existing,refreshRec,user.id)));
       return;

@@ -87,3 +87,12 @@
 - Original scientific review of L274/Baryancistrus isaaci and L384/B. quilombola from the 2025 Trombetas revision; original descriptions of Peckoltia, Hypancistrus, and Guyanancistrus included. No copyrighted specimen images copied.
 - Publisher imports `tools/pleco-research-batch6.mjs`, QA 24/24 focused tests and read-only preflight selected 125. Sixth batch details and each exact public link in [Aquapedia source dossier](https://github.com/pixenetwork/aquapedia/blob/athena/pleco-foundation-20260924/research/plecos/2026-10-17-l-number-crosswalk-batch-06.md).
 - Review branch remains **draft PR #28**, distinct from concurrent Corydoras PR, not merged. Aegis/Cerberus independent science check and public Aquapedia website release have **not** been verified.
+
+
+## Seventh batch — 147/147 public audit (2026-10-17)
+
+- Reused existing public Plecopedia forum/category and authorized Aquaphoria bot. Single one-shot publisher confirmed **21 new topic threads** with exact starter-content marker, bot ownership, and readback checks; **125 earlier research topics reused** without duplication.
+- Fresh full read-only Discord audit returned **`live-audit-passed`, `verifiedPosts:147`, `indexPinned:true`, `publicForum:true`, `publicCategory:true`**. Exactly **146 research topic starters and one pinned index**.
+- Seventh batch now housed in `tools/pleco-research-batch7.mjs`, imported into `tools/pleco-forum-publisher.mjs`. Local QA 29/29 tests passed, including L267 to *Ancistrus yanesha*, L159 to *A. luzia*, *Hypancistrus parkateje*, Rio Negro *Hypancistrus* distinction, and *Pseudoqolus koko* current genus.
+- [Aquapedia batch-07 research](https://github.com/pixenetwork/aquapedia/blob/athena/pleco-foundation-20260924/research/plecos/2026-10-17-l-number-crosswalk-batch-07.md) contains all 21 exact verified Discord thread URLs and scientific references.
+- This source-code branch remains isolated in **draft PR #28**, intentionally not forced onto the changing Corydoras branch. It is **not merged**. The scientific entries are **research drafts**, not approved species/captive lineage pedigrees or deployed Aquapedia website pages. Independent Aegis/Cerberus review, photo licensing and public website promotion have not occurred.

@@ -71,6 +71,11 @@ const CORE_LAYOUT = [
       ['🦐・shrimp-guides', 'Freshwater shrimp care, grading, breeding, and identification guides.'],
       ['🩺・care-help', 'General freshwater aquarium husbandry and care help.'],
     ],
+    forums: [{
+      name: '🦐・shrimp-research',
+      topic: 'Public source-backed ornamental shrimp breeder and competition research. Each breeder or event gets its own thread; award entrant is not automatically strain inventor.',
+      tags: ['Breeder', 'Competition', 'Lineage', 'Genetics', 'Husbandry'].map((name) => ({ name, moderated: false })),
+    }],
   },
   {
     category: '🌿・COMMUNITY',
@@ -157,7 +162,7 @@ async function ensureCategory(guild, name, permissionOverwrites = undefined) {
   return guild.channels.create({ name, type: ChannelType.GuildCategory, permissionOverwrites, reason: 'Aquaphoria Discord layout provisioning' });
 }
 
-async function ensureForumChannel(guild, parent, { name, topic, tags }, permissionOverwrites = undefined) {
+async function ensureForumChannel(guild, parent, { name, topic, tags }, permissionOverwrites = undefined, reason = 'Aquaphoria forum provisioning') {
   const existing = guild.channels.cache.find(
     (channel) => channel.type === ChannelType.GuildForum && channel.name === name && channel.parentId === parent.id,
   );
@@ -167,7 +172,7 @@ async function ensureForumChannel(guild, parent, { name, topic, tags }, permissi
       ...tag,
       ...(existingTagIds.has(tag.name) ? { id: existingTagIds.get(tag.name) } : {}),
     }));
-    await existing.edit({ topic, availableTags }, 'Sync Aquaphoria translated-publications forum');
+    await existing.edit({ topic, availableTags }, reason);
     await syncPrivateOverwrites(existing, permissionOverwrites);
     return existing;
   }
@@ -178,7 +183,7 @@ async function ensureForumChannel(guild, parent, { name, topic, tags }, permissi
     topic,
     availableTags: tags,
     permissionOverwrites,
-    reason: 'Aquaphoria translated-publications provisioning',
+    reason,
   });
 }
 
@@ -233,7 +238,10 @@ export async function provisionAquaphoriaLayout(guild, { ownerUserId, store = nu
       created.push({ category: category.name, channel: channel.name, id: channel.id, type: 'text' });
     }
     for (const forumSpec of section.forums ?? []) {
-      const channel = await ensureForumChannel(guild, category, forumSpec, permissionOverwrites);
+      const reason = forumSpec.name === '🦐・shrimp-research'
+        ? 'Aquaphoria public shrimp research forum provisioning'
+        : 'Aquaphoria private publication forum provisioning';
+      const channel = await ensureForumChannel(guild, category, forumSpec, permissionOverwrites, reason);
       created.push({ category: category.name, channel: channel.name, id: channel.id, type: 'forum' });
     }
   }
@@ -261,7 +269,7 @@ export async function provisionTranslatedPublicationsForum(guild, { ownerUserId,
   const forumSpec = section?.forums?.find((entry) => entry.name === '📚・translated-publications');
   if (!section || !forumSpec) throw new Error('Translated publications forum definition is missing');
   const category = await ensureCategory(guild, section.category, overwrites);
-  const channel = await ensureForumChannel(guild, category, forumSpec, overwrites);
+  const channel = await ensureForumChannel(guild, category, forumSpec, overwrites, 'Aquaphoria private translated-publications forum provisioning');
   return { categoryId: category.id, channelId: channel.id, channelName: channel.name };
 }
 
@@ -294,4 +302,33 @@ export function layoutDefinition() {
 
 export function publicationTagDefinitions() {
   return structuredClone(PUBLICATION_TAGS);
+}
+
+export async function provisionShrimpPublicResearchForum(guild) {
+  const section = CORE_LAYOUT.find((entry) => entry.category === '📚・AQUAPEDIA');
+  const spec = section?.forums?.find((entry) => entry.name === '🦐・shrimp-research');
+  if (!spec) throw new Error('Shrimp research forum definition is missing');
+  // Do not make an existing private category public or create a competing one.
+  const category = guild?.channels?.cache?.find(
+    (channel) => channel.type === ChannelType.GuildCategory && channel.name === section.category,
+  );
+  if (!category) return { status: 'category_not_found' };
+  const everyone = guild?.roles?.everyone;
+  if (!everyone || (!category.permissionsFor?.(everyone)?.has(PermissionFlagsBits.ViewChannel)
+    || !category.permissionsFor?.(everyone)?.has(PermissionFlagsBits.ReadMessageHistory))) {
+    return { status: 'category_not_public' };
+  }
+  const existing = guild.channels.cache.find(
+    (channel) => channel.type === ChannelType.GuildForum && channel.parentId === category.id && channel.name === spec.name,
+  );
+  if (existing && (!existing.permissionsFor?.(everyone)?.has(PermissionFlagsBits.ViewChannel)
+    || !existing.permissionsFor?.(everyone)?.has(PermissionFlagsBits.ReadMessageHistory))) {
+    return { status: 'forum_not_public' };
+  }
+  const channel = await ensureForumChannel(guild, category, spec, undefined, 'Aquaphoria public shrimp research forum provisioning');
+  if (!channel.permissionsFor?.(everyone)?.has(PermissionFlagsBits.ViewChannel)
+    || !channel.permissionsFor?.(everyone)?.has(PermissionFlagsBits.ReadMessageHistory)) {
+    return { status: 'forum_not_public' };
+  }
+  return { status: 'ready', categoryId: category.id, channelId: channel.id, forumName: channel.name };
 }

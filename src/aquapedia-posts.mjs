@@ -48,6 +48,21 @@ export function buildAquapediaPost(record) {
     .map((source) => httpsUrl(typeof source === 'string' ? source : source?.url))
     .filter(Boolean).slice(0, 5);
   const photos = photosAllowed(record.photos);
+  // Discord embed values are limited to 1024 characters. Preserve every complete
+  // source URL without truncating Markdown link targets in safeText().
+  const sourceFields = [];
+  let sourceChunk = '';
+  for (const [index, url] of sources.entries()) {
+    const citation = `[${index + 1}](${url})`;
+    if (citation.length > 420) throw new Error('A research source URL exceeds the safe embed field limit');
+    if (sourceChunk && sourceChunk.length + 3 + citation.length > 420) {
+      sourceFields.push(field(sourceFields.length ? `Research sources (${sourceFields.length + 1})` : 'Research sources', sourceChunk));
+      sourceChunk = '';
+    }
+    sourceChunk += (sourceChunk ? ' • ' : '') + citation;
+  }
+  if (sourceChunk) sourceFields.push(field(sourceFields.length ? `Research sources (${sourceFields.length + 1})` : 'Research sources', sourceChunk));
+  if (!sourceFields.length) sourceFields.push(field('Research sources', '', 'Original-source citation pending'));
   const fields = [
     field('Breeder / creator', record.breederName ?? (record.entityType === 'breeder' ? record.name : null)),
     field('Description & identifying traits', record.description ?? record.phenotype),
@@ -58,7 +73,7 @@ export function buildAquapediaPost(record) {
       ? 'Shrimp care depends on genus and lineage; strain-specific parameters are not established'
       : 'General medaka care applies; strain-specific parameters not established'),
     field('Evidence confidence', record.confidence ?? 'Unverified'),
-    field('Research sources', sources.map((url, i) => `[${i + 1}](${url})`).join(' • '), 'Original-source citation pending'),
+    ...sourceFields,
   ];
   const embed = {
     title: (record.entityType === 'breeder' ? 'BREEDER • ' : 'STRAIN • ') + title,

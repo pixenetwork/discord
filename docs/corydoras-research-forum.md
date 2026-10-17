@@ -40,3 +40,14 @@ node --env-file="<existing authorized bot .env path>" tools/corydoras-forum-publ
 The CLI's apply mode requires the user's approval to publish. It automatically reuses already-posted matching threads, so bounded retries are idempotent. **Do not run the apply command concurrently.**
 
 The historical 2026-10-16 index and the research claims remain sourced in [Aquapedia PR #20](https://github.com/pixenetwork/aquapedia/pull/20), not duplicated as a new brain or independent content authority.
+
+
+## Verified continuation — 2026-10-17
+
+- Existing private forum: https://discord.com/channels/1519337502379475095/1560887812910350339
+- Pinned master directory index: https://discord.com/channels/1519337502379475095/1560887817217904641
+- Third bounded publication run: **80 new** bot-authored and API-readback-verified threads, making **191 forum posts** total (**182 source-directory entries + 8 captive morphs + 1 pinned index**). **346 of the original 528 directory records remain** without individual threads; not every directory record is a distinct valid species or genetic strain.
+- Four existing named profiles enriched in place with source-backed identity, original description/recorded localities, care cautions and evidence references: [C. aurofrenatus](https://discord.com/channels/1519337502379475095/1560907001150701610), [O. oharai](https://discord.com/channels/1519337502379475095/1560907008071176274), [O. venezuelanus](https://discord.com/channels/1519337502379475095/1560908309572358188) and [O. schultzei](https://discord.com/channels/1519337502379475095/1560907181308776539). Force-fetched starter messages were compared against intended content and corrections were receipted.
+- The historically coded **CW068 is the described 2025 species O. oharai**, based on the original species description: https://www.ni.bio.br/1982-0224-2024-0134/ . The current Eschmeyer Catalog considers *Corydoras venezuelanus* synonymous with *O. aenea*, while hobby references do not all agree. *O. schultzei* status remains uncertain. These records are individually marked with **Taxonomy / Needs review** tags, and distinct from the German breeder-selected black commercial morph.
+- Original species description locations and habitat observations **must not be copied into captive breeding water-parameter claims**, and C/CW aliases must not be summed as additional valid species.
+- Research crosswalk and claim-level sources appended to the still-draft **Aquapedia PR #20**; the Discord worker remains in draft PR #26. No independent Aegis/Cerberus verification, merge or public Aquapedia website release is asserted.

@@ -39,6 +39,10 @@ export const PRIORITY_NAMES = [
 ];
 const LINEAGE_NOTE = {
   'Corydoras sp. CW005': 'CW005 is the historical aquarium code for the described species Corydoras aurofrenatus (Eigenmann & Kennedy, 1903), according to the ScotCat specialist crosswalk; do not count the code as another distinct species.',
+  'Corydoras aurofrenatus': 'Formally described species; historical CW005 / Corrientes trade code refers to the same fish, not a different species. Original type locality: Aguada near Arroyo Trementina, Paraguay (Eigenmann & Kennedy, 1903).',
+  'Osteogaster oharai': 'Described in 2025 from the form previously designated CW068. Documented populations: rio Aripuanã (Madeira basin) and rio Juruena (Tapajós basin), Mato Grosso, Brazil. Distinctive oblique dark dorsolateral stripe.',
+  'Osteogaster venezuelanus': 'TAXONOMY DISPUTED: Corydoras World lists this as a species, but Eschmeyer’s Catalog of Fishes currently treats the original C. venezuelanus as a synonym of O. aenea. This historical wild-origin name is NOT the captive-selected Black Venezuela line.',
+  'Osteogaster schultzei': 'TAXONOMY UNCERTAIN: Eschmeyer’s Catalog of Fishes lists O. schultzei as uncertain; historically synonymized with O. aenea, with possible distinct status discussed. The commercially bred black schultzei-type strain is not itself a separate formal species.',
   'Hoplisoma sterbai': 'Sterba’s Cory; separate wild-type fish from any albino, black or longfin captive selections.',
   'Hoplisoma panda': 'Panda Cory; breeder-selected variants require independent parentage and inheritance evidence.',
   'Hoplisoma adolfoi': 'Upper Rio Negro orange-cap patterned species; compare with H. duplicareum and other mimics.',
@@ -175,6 +179,37 @@ function nextCatalogBatch(catalog, occupiedNames, limit) {
 }
 function safe(s,limit=350){return String(s??'').replace(/@(here|everyone)/ig,'@\u200b$1').slice(0,limit);}
 function kindTag(kind){return kind==='Named taxon'?'Named species':kind==='C-coded'?'C-number':'CW-number';}
+const CONTESTED_NAMED_TAXA = new Set(['Osteogaster venezuelanus','Osteogaster schultzei']);
+function nameClassification(rec){return rec.name==='Brochis Taiosh'?'Unverified directory name':CONTESTED_NAMED_TAXA.has(rec.name)?'Contested taxonomic status':kindTag(rec.kind);}
+// Only attach these species-specific assertions where traceable specialist or
+// original taxonomic sources have been checked. Habitat data are NOT tank targets.
+const SPECIES_EVIDENCE = {
+  'Corydoras aurofrenatus': [
+    '**Names and lineage:** Original described name Corydoras aurofrenatus Eigenmann & Kennedy, 1903. CW005 and Corrientes are historical identification aliases, not separate taxa.',
+    '**Origin and identification:** Type locality Aguada near Arroyo Trementina, Paraguay; long-snouted, with two dark flank blotches and an elongated upper caudal lobe.',
+    '**Field / care:** Reported from the Paraguay–Paraná drainage. ScotCat suggests fine sand and a varied sinking diet; published species-specific breeding protocol is not confirmed here.',
+    '**Taxonomic verification:** https://www.scotcat.com/callichthyidae/c_aurofrenatus.htm ; https://www.seriouslyfish.com/species/corydoras-aurofrenatus/ ; https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?genus=Corydoras&tbl=species'
+  ],
+  'Osteogaster oharai': [
+    '**Names and lineage:** Described by Tencatt, Carvalho, Silva & Britto (2025), after previously appearing in the trade as CW068. CW068 is a historical alias, not a second new species.',
+    '**Identity:** Oblique, dark dorsolateral flank stripe; the original description contrasts fin, bone and pigment characters with congeneric species.',
+    '**Documented locality:** Rio Aripuanã drainage of the Madeira basin and rio Juruena drainage of the Tapajós basin, Mato Grosso, Brazil.',
+    '**Habitat observed in the wild:** Small/shallow streams or intermittent pools with marginal vegetation, sand/clay, leaf litter, logs and dark water in the Juruena basin. These observations are NOT validated aquarium water targets.',
+    '**Breeding / genealogy:** No named original captive-line breeder or proven strain inheritance from these sources; do not attribute wild scientific discovery to a hobby breeder.',
+    '**Original description:** https://www.ni.bio.br/1982-0224-2024-0134/ ; https://www.scotcat.com/callichthyidae/osteogaster_oharai.htm'
+  ],
+  'Osteogaster venezuelanus': [
+    '**Taxonomic conflict:** The 2026 Eschmeyer Catalog of Fishes currently treats Corydoras venezuelanus Ihering, 1911 as a synonym of Osteogaster aenea. Specialist Corydoras World and ScotCat retain the historical name as a distinguishable hobby population/species. Do not claim consensus validity.',
+    '**Historic type locality:** Río Cabriales, Valencia, Carabobo, Venezuela (original name from Ihering, 1911). This locality does NOT describe the separately developed commercial black line.',
+    '**Black-line distinction:** The captive selected Black Venezuela / schultzei-black trade line was developed in Germany; it should not be confused with wild orange-shouldered venezuelanus-type populations.',
+    '**Evidence:** https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=4920 ; https://www.scotcat.com/callichthyidae/osteogaster_venezuelanus.htm ; https://www.practicalfishkeeping.co.uk/features/the-legend-of-the-cory/'
+  ],
+  'Osteogaster schultzei': [
+    '**Taxonomic conflict:** The Eschmeyer Catalog labels the original schultzei species status uncertain; historically synonymized with Osteogaster aenea but discussed as potentially valid. Never count it as a confidently distinct named species without taxonomic review.',
+    '**Captive trait distinction:** The domestically selected black schultzei-type line is a separate strain-history question; specialist Ian Fuller reports early 1990s German line selection by Hartmut Eberhardt.',
+    '**Evidence:** https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?genus=Osteogaster&tbl=species ; https://www.practicalfishkeeping.co.uk/features/the-legend-of-the-cory/'
+  ]
+};
 function sourcePacket(rec) {
   const extra=rec.name.includes('CW128')||rec.name.includes('CW207')
     ? '\n**2026 original taxonomy:** https://doi.org/10.1590/1982-0224-2025-0146'
@@ -190,12 +225,13 @@ function sourcePacket(rec) {
   return {
     content: [
       '**' + safe(rec.name,100) + '**',
-      '**Classification:** ' + (rec.name==='Brochis Taiosh'?'Unverified directory name':kindTag(rec.kind)) + ' | **Research genus group:** ' + safe(rec.group,30),
+      '**Classification:** ' + nameClassification(rec) + ' | **Research genus group:** ' + safe(rec.group,30),
       ...(directoryWarning?['**Naming caution:** ' + directoryWarning]:[]),
       '**Status:** Research draft / verification pending. A C/CW identifier is NOT necessarily a different species or domestic strain.',
       '**Identity / notes:** ' + safe(note,350),
       '**Breeder / founder:** Not established from this index.',
-      '**Care / breeding:** Species-specific parameters not yet independently validated.',
+      '**Care / breeding:** Species-specific parameters not yet independently validated unless documented directly below.',
+      ...(SPECIES_EVIDENCE[rec.name] ?? []),
       '**Source record:** ' + rec.source + extra,
       '**Aquapedia dossier:** ' + PR_URL
     ].join('\n'),
@@ -329,6 +365,20 @@ async function refreshRecord(forum, threads, rec, botId, receiptFile=RECEIPT_FIL
   const readback=await thread.messages.fetch({message:starter.id,force:true});
   if(readback?.author?.id!==botId||readback.content!==payload.content||!readback.embeds?.some(e=>e.footer?.text?.startsWith(marker)))
     throw new Error('Refresh readback failed. Stop before retry: '+rec.name);
+  let tagChanged=false;
+  if(CONTESTED_NAMED_TAXA.has(rec.name)){
+    const desired=tagIds(forum,['Taxonomy','Needs review']);
+    if(desired.length!==2)throw new Error('Contested taxon tags missing from forum; refusing metadata edit');
+    const current=[...(thread.appliedTags??[])];
+    if(desired.length!==current.length||desired.some(id=>!current.includes(id))){
+      if(typeof thread.setAppliedTags!=='function')throw new Error('Missing forum thread tag edit permission');
+      await thread.setAppliedTags(desired,'Mark contested Corydoras taxonomy as research only');
+      tagChanged=true;
+    }
+    const checked=await thread.fetch(true);
+    if(!desired.every(id=>checked.appliedTags?.includes(id))||checked.appliedTags.length!==desired.length)
+      throw new Error('Contested taxon tags could not be verified after edit: '+rec.name);
+  }
   const contentHash=createHash('sha256').update(readback.content).digest('hex');
   let alreadyReceipted=false;
   if(fs.existsSync(receiptFile)){
@@ -338,11 +388,11 @@ async function refreshRecord(forum, threads, rec, botId, receiptFile=RECEIPT_FIL
       return previous.kind==='revision'&&previous.recordKey===rec.id&&previous.threadId===thread.id&&previous.contentHash===contentHash&&previous.verified===true;
     });
   }
-  if(!alreadyReceipted){
+  if(!alreadyReceipted||tagChanged){
     fs.mkdirSync(path.dirname(receiptFile),{recursive:true});
-    fs.appendFileSync(receiptFile,JSON.stringify({at:new Date().toISOString(),action:changed?'updated':'reconciled',contentHash,sourceSha:SOURCE_SHA,guildId:forum.guild.id,forumId:forum.id,kind:'revision',recordKey:rec.id,threadId:thread.id,messageId:readback.id,verified:true})+'\n');
+    fs.appendFileSync(receiptFile,JSON.stringify({at:new Date().toISOString(),action:changed?'updated':tagChanged?'retagged':'reconciled',tagChanged,contentHash,sourceSha:SOURCE_SHA,guildId:forum.guild.id,forumId:forum.id,kind:'revision',recordKey:rec.id,threadId:thread.id,messageId:readback.id,verified:true})+'\n');
   }
-  return {action:changed?'updated':alreadyReceipted?'unchanged':'reconciled',recordKey:rec.id,threadId:thread.id,messageId:readback.id,verified:true};
+  return {action:changed?'updated':tagChanged?'retagged':alreadyReceipted?'unchanged':'reconciled',recordKey:rec.id,threadId:thread.id,messageId:readback.id,verified:true};
 }
 
 async function main() {
@@ -405,7 +455,7 @@ async function main() {
     }
     let posted=0,present=0;
     const choices=nextFlag
-      ? nextSelection.map(rec=>({key:rec.id,name:rec.name,payload:sourcePacket(rec),tags:[rec.name==='Brochis Taiosh'?'Taxonomy':kindTag(rec.kind),'Needs review'],kind:'directory'}))
+      ? nextSelection.map(rec=>({key:rec.id,name:rec.name,payload:sourcePacket(rec),tags:[rec.name==='Brochis Taiosh'||CONTESTED_NAMED_TAXA.has(rec.name)?'Taxonomy':kindTag(rec.kind),'Needs review'],kind:'directory'}))
       : [
         {key:'master-index-528',name:GUIDE_TITLE,payload:guidePacket(catalog),tags:['Research index','Taxonomy'],kind:'index'},
         ...selected.matches.slice(0,limit).map(rec=>({key:rec.id,name:rec.name,payload:sourcePacket(rec),tags:[kindTag(rec.kind),'Needs review'],kind:'directory'})),

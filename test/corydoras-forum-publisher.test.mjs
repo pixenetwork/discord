@@ -75,6 +75,31 @@ test('CW005 post reconciles the historic number with a formally named species',(
   assert.match(packet.content,/Corydoras aurofrenatus/);
   assert.match(packet.content,/scotcat.com\/callichthyidae\/c_aurofrenatus/);
 });
+test('taxonomically contested names receive taxonomy review tags, never an unqualified named-species tag',async()=>{
+ const rec={id:'484',group:'osteogaster',kind:'Named taxon',name:'Osteogaster venezuelanus',source:'https://www.corydorasworld.com/lineages/fish/484'};
+ const dir=fs.mkdtempSync(path.join(os.tmpdir(),'aq-cory-tags-'));
+ try{
+   const receipt=path.join(dir,'revisions.jsonl');
+   const p=sourcePacket(rec);
+   const starter={id:'starter',author:{id:'bot'},embeds:p.embeds,content:p.content,edit:async()=>{throw Error('No content edit expected')}};
+   let appliedTags=['named','review'];
+   const thread={
+     id:'thread',get appliedTags(){return appliedTags;},
+     fetchStarterMessage:async()=>starter,
+     messages:{fetch:async()=>starter},
+     async setAppliedTags(ids){appliedTags=ids;},
+     async fetch(force){assert.equal(force,true);return {appliedTags};}
+   };
+   const forum={id:'forum',guild:{id:'guild'},availableTags:[{name:'Taxonomy',id:'taxonomy'},{name:'Needs review',id:'review'}]};
+   const map=new Map([[rec.name,thread]]);
+   const result=await refreshRecord(forum,map,rec,'bot',receipt);
+   assert.equal(result.action,'retagged');
+   assert.deepEqual(appliedTags,['taxonomy','review']);
+   const repeat=await refreshRecord(forum,map,rec,'bot',receipt);
+   assert.equal(repeat.action,'unchanged');
+   assert.equal(fs.readFileSync(receipt,'utf8').trim().split('\n').length,1);
+ }finally{fs.rmSync(dir,{recursive:true,force:true});}
+});
 test('bot-owned forum starter corrections are read back and saved once',async()=>{
   const rec={id:'499',group:'corydoras',kind:'CW-coded',name:'Corydoras sp. CW005',source:'https://www.corydorasworld.com/lineages/fish/499'};
   const dir=fs.mkdtempSync(path.join(os.tmpdir(),'aq-cory-test-'));
@@ -135,6 +160,34 @@ test('master index provides 528 listings as a CSV with honest limitations',()=>{
 // Source integration runs on the Main PC only. It is optional in portable unit tests;
 // actual publication ALWAYS requires the pinned Aquapedia Git source, not a fixture.
 const sourceWorktree=process.env.AQUAPEDIA_WORKTREE||path.join(os.homedir(),'Aquapedia-Release-20261014');
+test('source-backed named descriptions contain traceable taxonomic and locality evidence',{skip:!fs.existsSync(sourceWorktree)},()=>{
+ const actual=catalogFromSource();
+ for(const name of ['Corydoras aurofrenatus','Osteogaster oharai','Osteogaster venezuelanus','Osteogaster schultzei']){
+   const rec=actual.find(x=>x.name===name);
+   assert.ok(rec, 'The pinned source directory must contain '+name);
+   const post=sourcePacket(rec);
+   assert.ok(post.content.length<=2000, name+' must fit a Discord post');
+   assert.deepEqual(post.allowedMentions,{parse:[]});
+   assert.match(post.content,/https:\/\//);
+   assert.match(post.content,/Research draft \/ verification pending/);
+ }
+ const oharai=sourcePacket(actual.find(x=>x.name==='Osteogaster oharai'));
+ assert.match(oharai.content,/CW068/);
+ assert.match(oharai.content,/Aripuanã/);
+ assert.match(oharai.content,/Juruena/);
+ assert.match(oharai.content,/2025/);
+ assert.match(oharai.content,/original captive-line breeder|No named original captive-line breeder/);
+ const venezuelanus=sourcePacket(actual.find(x=>x.name==='Osteogaster venezuelanus'));
+ assert.match(venezuelanus.content,/Contested taxonomic status/);
+ assert.match(venezuelanus.content,/synonym of Osteogaster aenea/);
+ assert.match(venezuelanus.content,/NOT the captive-selected Black Venezuela/);
+ const schultzei=sourcePacket(actual.find(x=>x.name==='Osteogaster schultzei'));
+ assert.match(schultzei.content,/Contested taxonomic status/);
+ assert.match(schultzei.content,/uncertain/);
+ const aurofrenatus=sourcePacket(actual.find(x=>x.name==='Corydoras aurofrenatus'));
+ assert.match(aurofrenatus.content,/CW005/);
+ assert.match(aurofrenatus.content,/Arroyo Trementina/);
+});
 test('actual pinned Aquapedia index has 528 source records when checkout is present',{skip:!fs.existsSync(sourceWorktree)},()=>{
  const records=catalogFromSource();
  assert.equal(records.length,528);

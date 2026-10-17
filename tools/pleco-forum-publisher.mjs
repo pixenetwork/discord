@@ -7,6 +7,7 @@ import { createHash } from 'node:crypto';
 import { PLECO_BATCH2 } from './pleco-research-batch2.mjs';
 import { PLECO_BATCH3 } from './pleco-research-batch3.mjs';
 import { PLECO_BATCH4 } from './pleco-research-batch4.mjs';
+import { PLECO_BATCH5 } from './pleco-research-batch5.mjs';
 import { Client, ClientUser, GatewayIntentBits, ChannelType, PermissionFlagsBits, ChannelFlags } from 'discord.js';
 
 const GUILD_ID = '1519337502379475095';
@@ -45,6 +46,7 @@ export const records = [
  ...PLECO_BATCH2,
  ...PLECO_BATCH3,
  ...PLECO_BATCH4,
+ ...PLECO_BATCH5,
 ];
 function makePacket(r){
  const key=MARKER+r.id;

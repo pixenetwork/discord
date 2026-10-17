@@ -78,3 +78,12 @@
 - Exact public thread links and original taxonomic/hobby research citations are indexed in [Aquapedia fifth-batch research](https://github.com/pixenetwork/aquapedia/blob/athena/pleco-foundation-20260924/research/plecos/2026-10-17-l-number-crosswalk-batch-05.md).
 - Code changes uploaded to this separate **draft PR #28**, with no force push to the diverged Corydoras PR #26 branch. No secondary Discord worker, bot login, timer or duplicated gateway was created.
 - **Still not complete:** exhaustive L/LDA list, independent Aegis/Cerberus scientific review, credited/licensed specimen imagery, verified captive pedigree and live website publish. Public posts remain labeled research draft; **104 forum dossiers are not 104 different scientifically validated species**.
+
+
+## Sixth batch — 126/126 live audit (2026-10-17)
+
+- Used existing Aquaphoria bot with one-shot REST-only publisher; **21 new starter threads** bot-authored, hash and content readback-verified, **104 earlier topics reused** without duplication.
+- Full independent read-only Discord check returned `live-audit-passed`, `verifiedPosts:126`, `indexPinned:true`, `publicForum:true`, `publicCategory:true`: **125 topic threads + one pinned guide** in same public Aquapedia forum.
+- Original scientific review of L274/Baryancistrus isaaci and L384/B. quilombola from the 2025 Trombetas revision; original descriptions of Peckoltia, Hypancistrus, and Guyanancistrus included. No copyrighted specimen images copied.
+- Publisher imports `tools/pleco-research-batch6.mjs`, QA 24/24 focused tests and read-only preflight selected 125. Sixth batch details and each exact public link in [Aquapedia source dossier](https://github.com/pixenetwork/aquapedia/blob/athena/pleco-foundation-20260924/research/plecos/2026-10-17-l-number-crosswalk-batch-06.md).
+- Review branch remains **draft PR #28**, distinct from concurrent Corydoras PR, not merged. Aegis/Cerberus independent science check and public Aquapedia website release have **not** been verified.

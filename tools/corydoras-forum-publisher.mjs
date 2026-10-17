@@ -38,6 +38,8 @@ export const PRIORITY_NAMES = [
   'Corydoras sp. CW128', 'Corydoras sp. CW207',
 ];
 const LINEAGE_NOTE = {
+  'Corydoras negro': 'Knaack, 2004. The name references the Río Negro of the Río Blanco system in Santa Cruz, Bolivia—not Brazil’s larger Rio Negro. This is a described wild species, not a domestically selected black morph.',
+  'Corydoras septentrionalis': 'Gosline, 1940. Type locality Río Piña (Guarapiché system), Monagas, Venezuela; northern Orinoco tributaries. Do not confuse this locality with Amazon Rio Negro species.',
   'Corydoras fulleri': 'Formally described in 2021 from Peruvian rio Madeira tributaries; C115 and C116 represent the same highly variable species. The epithet honors Ian Fuller, who is not thereby established as the founder of a captive breed.',
   'Corydoras isaacisbrueckeri': 'Formally described in 2026 by Tencatt, Hercos, Carvalho, Santos & Britto from the rio Tefé basin, Brazil. Do not equate this described species with unidentified CW128 or CW207 without a specimen-level match.',
   'Corydoras sp. CW005': 'CW005 is the historical aquarium code for the described species Corydoras aurofrenatus (Eigenmann & Kennedy, 1903), according to the ScotCat specialist crosswalk; do not count the code as another distinct species.',
@@ -186,6 +188,20 @@ function nameClassification(rec){return rec.name==='Brochis Taiosh'?'Unverified 
 // Only attach these species-specific assertions where traceable specialist or
 // original taxonomic sources have been checked. Habitat data are NOT tank targets.
 const SPECIES_EVIDENCE = {
+  'Corydoras negro': [
+    '**Formal name:** Corydoras negro Knaack, 2004, valid in Eschmeyer’s Catalog of Fishes, described from Bolivia.',
+    '**Type locality:** Río Negro in the Río Blanco drainage around Urubichá, Ñuflo de Chávez Province, Santa Cruz, eastern Bolivia. NOT the Brazilian Rio Negro. Holotype MTD F 28472.',
+    '**Original distribution:** Blanco River / Guaporé–Iténez basin, Bolivia; reported size around 51 mm standard length. This is wild provenance, not proof of an imported aquarium lineage.',
+    '**Breeding and traits:** No original captive line breeder, validated inheritance or species-specific spawning water parameters established in these sources.',
+    '**Specialist and catalog sources:** https://www.planetcatfish.com/common/species.php?species_id=1896 ; https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?family=Callichthyidae&tbl=species'
+  ],
+  'Corydoras septentrionalis': [
+    '**Formal name:** Corydoras septentrionalis Gosline, 1940, valid long-snouted species in the Catalog of Fishes.',
+    '**Type locality:** Río Piña, 6 km north of Maturín, Guarapiché drainage, Monagas, Venezuela. Type specimen CAS-SU 35055. Regional distribution: Orinoco basin.',
+    '**Biology (FishBase):** Reported stream-current habitat, facultative air breathing and adhesive-egg deposition. These are species-profile reports rather than evidence of a particular breeder-created strain.',
+    '**Breeder and awards:** Commercial founder, full captive pedigree, exact genetically inherited varieties and contest awards not established here.',
+    '**Sources:** https://www.fishbase.org/summary/SpeciesSummary.php?id=46227&lang=English ; https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?genus=Corydoras&tbl=species'
+  ],
   'Corydoras fulleri': [
     '**Identity:** Tencatt et al. (2021), Journal of Fish Biology. Named for Ian Fuller; eponym ≠ captive breeder founder.',
     '**Historic code crosswalk:** Hobby C115 and C116 were identified as one variable species. Specialist keeper accounts cite German captive breeding in which different phenotypes arose among siblings; neither code identifies a distinct genetic species.',
@@ -237,8 +253,8 @@ function sourcePacket(rec) {
       : '';
   const directoryWarning=rec.name==='Brochis Taiosh'
     ? 'Source directory label is not a validated Latin binomial; its formal species or trade identity remains unresolved.'
-    : rec.name.startsWith('Osteogasters ')
-      ? 'Source directory appears to contain a genus spelling inconsistency. Retain the original listing for traceability, but confirm the accepted name.'
+    : /^(Osteogasters|Hoplisomas|Gastrdermus) /.test(rec.name)
+      ? 'Source directory has a genus spelling inconsistency (likely typo). Retain the raw label for traceability; any corrected genus needs independent nomenclatural validation.'
       : '';
   const note=LINEAGE_NOTE[rec.name] || 'Taxonomy, type locality, local population, captive pedigree, and breeding data require record-level review.';
   return {

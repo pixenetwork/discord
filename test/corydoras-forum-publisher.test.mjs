@@ -205,6 +205,33 @@ test('Fuller eponym and historic C115/C116 describe one variable scientific spec
  assert.match(text,/pubmed.ncbi.nlm.nih.gov\/33837549/);
  assert.ok(text.length<=2000,'Discord message must fit 2000 characters: '+text.length);
 });
+test('Bolivian Negro and Orinoco Northern Cory are not mixed with Amazon Rio Negro',{skip:!fs.existsSync(sourceWorktree)},()=>{
+ const cat=catalogFromSource();
+ for(const [name,phrases] of [
+  ['Corydoras negro',['Santa Cruz','Bolivia','NOT the Brazilian Rio Negro','Knaack, 2004']],
+  ['Corydoras septentrionalis',['Río Piña','Guarapiché','Monagas','Orinoco']]
+ ]){
+  const rec=cat.find(r=>r.name===name);
+  assert.ok(rec,name+' source directory record');
+  const content=sourcePacket(rec).content;
+  assert.ok(content.length<=2000,name+' Discord body overflow: '+content.length);
+  for(const phrase of phrases)assert.ok(content.includes(phrase),name+': '+phrase);
+  assert.match(content,/not established|not.*established|No original captive/i);
+ }
+});
+test('source spelling errors are warnings not invented formal species',()=>{
+ for(const [name,id,group] of [
+  ['Osteogasters sp. CW026','520','osteogaster'],
+  ['Hoplisomas sp. C073','152','hoplisoma'],
+  ['Gastrdermus sp. CW131','870','gastrodermus']
+ ]){
+  const packet=sourcePacket({name,id,group,kind:name.includes('CW')?'CW-coded':'C-coded',source:'https://www.corydorasworld.com/lineages/fish/'+id});
+  assert.match(packet.content,/genus spelling inconsistency/);
+  assert.match(packet.content,/Research draft/);
+  assert.match(packet.content,/Source record:/);
+  assert.equal(packet.embeds[0].footer.text.startsWith('AQP-CORY-'+id),true);
+ }
+});
 test('source-backed named descriptions contain traceable taxonomic and locality evidence',{skip:!fs.existsSync(sourceWorktree)},()=>{
  const actual=catalogFromSource();
  for(const name of ['Corydoras aurofrenatus','Osteogaster oharai','Osteogaster venezuelanus','Osteogaster schultzei']){

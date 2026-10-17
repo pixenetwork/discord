@@ -3,9 +3,9 @@ import assert from 'node:assert/strict';
 import {records,makePacket,makeGuide} from '../tools/pleco-forum-publisher.mjs';
 
 test('all Plecopedia IDs and thread titles are unique',()=>{
- assert.equal(records.length,84);
- assert.equal(new Set(records.map(r=>r.id)).size,84);
- assert.equal(new Set(records.map(r=>r.title)).size,84);
+ assert.equal(records.length,104);
+ assert.equal(new Set(records.map(r=>r.id)).size,104);
+ assert.equal(new Set(records.map(r=>r.title)).size,104);
  assert.deepEqual(records.filter(r=>r.name==='Hypancistrus seideli').map(r=>r.id),
   ['l066','l236','l287','l333','l399','l400']);
 });
@@ -35,7 +35,7 @@ test('Gold Nugget paper citation is its confirmed 2011 original DOI',()=>{
 test('forum guide distinguishes L-number vs species and warns against copying photos',()=>{
  const guide=makeGuide();
  assert.match(guide.content,/not the complete L-number catalog/i);
- assert.match(guide.content,/84 standalone research topics/i);
+ assert.match(guide.content,/104 standalone research topics/i);
  assert.match(guide.content,/No copied\/AI-generated animal photographs/i);
  assert.match(guide.embeds[0].footer.text,/AQP-PLECO-master-index/);
 });
@@ -104,4 +104,31 @@ test('unlicensed fish images never get embedded and first-breeder certainty is q
  const r=records.find(x=>x.id==='breeder-andreas-tanke-l398');
  assert.match(r.fact,/probably|qualified|cautious/i);
  for(const record of records.slice(-20)){const pkt=makePacket(record);assert.ok(pkt.content.length<=2000);assert.ok(!pkt.files);assert.deepEqual(pkt.allowedMentions.parse,[]);}
+});
+
+test('fifth batch localities and taxonomic uncertainty are explicit',()=>{
+ const ids=['l011','l035','l108','l116','l131','l153'];
+ assert.deepEqual(ids.map(id=>records.find(r=>r.id===id)?.kind),['Taxonomy','L-number','L-number','L-number','L-number','L-number']);
+ for(const id of ids){const r=records.find(x=>x.id===id);assert.match(r.name,/cf\./);assert.ok(r.sources[0].startsWith('https://'))}
+});
+test('L083 and L165 conflicting gibbiceps identity is not silently merged',()=>{
+ const a=records.find(x=>x.id==='l083'),b=records.find(x=>x.id==='l165');
+ assert.match(a.name,/cf\./);assert.match(a.fact,/L165/);assert.match(b.name,/gibbiceps/);
+});
+test('L191 remains a provisional comparison while L418 is named Panaque titan',()=>{
+ assert.equal(records.find(x=>x.id==='l191').kind,'L-number');
+ assert.match(records.find(x=>x.id==='l191').name,/cf\. titan/);
+ assert.equal(records.find(x=>x.id==='l418').kind,'Named species');
+});
+test('2025 L333 science links the renamed seideli taxon with caution on abstract contradiction',()=>{
+ const r=records.find(x=>x.id==='study-l333-captive');
+ assert.match(r.fact,/56 fish/);
+ assert.match(r.fact,/145 spawns/);
+ assert.match(r.breeding,/contradictory/);
+ assert.match(r.sources[1],/1982-0224-2024-0080/);
+});
+test('Peckoltia amjikin diagnosis does not hallucinate official L038 assignment',()=>{
+ const r=records.find(x=>x.id==='p-amjikin');
+ assert.match(r.fact,/L038 assignment is NOT proven/);
+ assert.match(r.sources[0],/jfb\.70235/);
 });

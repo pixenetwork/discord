@@ -3,9 +3,9 @@ import assert from 'node:assert/strict';
 import {records,makePacket,makeGuide} from '../tools/pleco-forum-publisher.mjs';
 
 test('all Plecopedia IDs and thread titles are unique',()=>{
- assert.equal(records.length,104);
- assert.equal(new Set(records.map(r=>r.id)).size,104);
- assert.equal(new Set(records.map(r=>r.title)).size,104);
+ assert.equal(records.length,125);
+ assert.equal(new Set(records.map(r=>r.id)).size,125);
+ assert.equal(new Set(records.map(r=>r.title)).size,125);
  assert.deepEqual(records.filter(r=>r.name==='Hypancistrus seideli').map(r=>r.id),
   ['l066','l236','l287','l333','l399','l400']);
 });
@@ -35,7 +35,7 @@ test('Gold Nugget paper citation is its confirmed 2011 original DOI',()=>{
 test('forum guide distinguishes L-number vs species and warns against copying photos',()=>{
  const guide=makeGuide();
  assert.match(guide.content,/not the complete L-number catalog/i);
- assert.match(guide.content,/104 standalone research topics/i);
+ assert.match(guide.content,/125 standalone research topics/i);
  assert.match(guide.content,/No copied\/AI-generated animal photographs/i);
  assert.match(guide.embeds[0].footer.text,/AQP-PLECO-master-index/);
 });
@@ -131,4 +131,33 @@ test('Peckoltia amjikin diagnosis does not hallucinate official L038 assignment'
  const r=records.find(x=>x.id==='p-amjikin');
  assert.match(r.fact,/L038 assignment is NOT proven/);
  assert.match(r.sources[0],/jfb\.70235/);
+});
+
+test('2025 Trombetas L274 and L384 map to different named species',()=>{
+ const a=records.find(x=>x.id==='bary-isaaci'),b=records.find(x=>x.id==='bary-quilombola');
+ assert.match(a.name,/Baryancistrus isaaci/);
+ assert.match(b.name,/Baryancistrus quilombola/);
+ assert.equal(a.kind,'Named species');assert.equal(b.kind,'Named species');
+ assert.match(records.find(x=>x.id==='l274-alias').name,/isaaci/);
+ assert.match(records.find(x=>x.id==='l384-alias').name,/quilombola/);
+ assert.notEqual(a.id,b.id);
+});
+test('Peckoltia greedoi recorded in Rio Gurupi not Orinoco',()=>{
+ const r=records.find(x=>x.id==='peckol-greedoi');
+ assert.match(r.area,/Gurupi/);
+ assert.doesNotMatch(r.area,/Orinoco/);
+});
+test('2007 Hypancistrus contradens and lunaorum diagnosis preserves spot-size difference',()=>{
+ const a=records.find(x=>x.id==='hyp-contradens');
+ const b=records.find(x=>x.id==='hyp-lunaorum');
+ assert.equal(a.kind,'Named species');assert.equal(b.kind,'Named species');
+ assert.match(a.fact,/larger than nasal opening/);
+ assert.match(b.fact,/smaller than nasal aperture/);
+ assert.match(a.fact,/L201a/);
+});
+test('newly described Guyanancistrus are names, not presumed L-number imports',()=>{
+ const r=['guyan-nassauensis','guyan-brownsberg','guyan-teretirostris','guyan-tenuis','guyan-megastictus'].map(id=>records.find(x=>x.id===id));
+ assert.equal(r.filter(x=>x?.kind==='Named species').length,5);
+ assert.equal(new Set(r.map(x=>x.name)).size,5);
+ for(const x of r)assert.match(x.sources[0],/0189789/);
 });

@@ -3,9 +3,9 @@ import assert from 'node:assert/strict';
 import {records,makePacket,makeGuide} from '../tools/pleco-forum-publisher.mjs';
 
 test('all Plecopedia IDs and thread titles are unique',()=>{
- assert.equal(records.length,125);
- assert.equal(new Set(records.map(r=>r.id)).size,125);
- assert.equal(new Set(records.map(r=>r.title)).size,125);
+ assert.equal(records.length,146);
+ assert.equal(new Set(records.map(r=>r.id)).size,146);
+ assert.equal(new Set(records.map(r=>r.title)).size,146);
  assert.deepEqual(records.filter(r=>r.name==='Hypancistrus seideli').map(r=>r.id),
   ['l066','l236','l287','l333','l399','l400']);
 });
@@ -35,7 +35,7 @@ test('Gold Nugget paper citation is its confirmed 2011 original DOI',()=>{
 test('forum guide distinguishes L-number vs species and warns against copying photos',()=>{
  const guide=makeGuide();
  assert.match(guide.content,/not the complete L-number catalog/i);
- assert.match(guide.content,/125 standalone research topics/i);
+ assert.match(guide.content,/146 standalone research topics/i);
  assert.match(guide.content,/No copied\/AI-generated animal photographs/i);
  assert.match(guide.embeds[0].footer.text,/AQP-PLECO-master-index/);
 });
@@ -160,4 +160,31 @@ test('newly described Guyanancistrus are names, not presumed L-number imports',(
  assert.equal(r.filter(x=>x?.kind==='Named species').length,5);
  assert.equal(new Set(r.map(x=>x.name)).size,5);
  for(const x of r)assert.match(x.sources[0],/0189789/);
+});
+
+test('seventh batch correctly resolves L267 Ancistrus yanesha rather than a new artificial strain',()=>{
+ const s=records.find(x=>x.id==='anc-yanesha'),a=records.find(x=>x.id==='anc-l267-alias');
+ assert.match(s.name,/Ancistrus yanesha/);assert.match(s.fact,/L267/);assert.equal(s.kind,'Named species');
+ assert.equal(a.kind,'L-number');assert.match(a.name,/yanesha/);
+});
+test('new 2025 Tocantins Hypancistrus is parkateje and not an unsubstantiated L code',()=>{
+ const r=records.find(x=>x.id==='hyp-parkateje');assert.equal(r.kind,'Named species');
+ assert.match(r.name,/parkateje/);assert.match(r.fact,/E-shaped snout/);
+ assert.doesNotMatch(r.fact,/L\d{3}/);
+});
+test('Rio Negro spotted Hypancistrus are not L201 trade code clones',()=>{
+ const a=records.find(x=>x.id==='hyp-phantasma'),b=records.find(x=>x.id==='hyp-margaritatus');
+ assert.match(a.area,/Uaupés/);assert.match(b.area,/Takutu/);
+ assert.equal(a.kind,'Named species');assert.equal(b.kind,'Named species');
+});
+test('L159 now maps to Ancistrus luzia with documented Tapajos-Xingu range',()=>{
+ const r=records.find(x=>x.id==='anc-luzia');
+ assert.match(r.title,/L159/);assert.match(r.name,/Ancistrus luzia/);
+ assert.match(r.fact,/adipose fin/);
+});
+test('Panaqolus koko retains original name but records CAS accepted reclassification',()=>{
+ const r=records.find(x=>x.id==='pana-koko');
+ assert.match(r.name,/Pseudoqolus koko/);
+ assert.match(r.fact,/Panaqolus koko/);
+ assert.match(r.sources[0],/calacademy/);
 });

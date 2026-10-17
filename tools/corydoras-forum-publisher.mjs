@@ -38,6 +38,15 @@ export const PRIORITY_NAMES = [
   'Corydoras sp. CW128', 'Corydoras sp. CW207',
 ];
 const LINEAGE_NOTE = {
+  'Hoplisoma psamathos': 'The 2022 original description explicitly describes historical CW172 from the Rio Jamanxim, Tapajós basin as Corydoras psamathos, transferred in 2024 to Hoplisoma. CW172 is an alias for a described wild species, not a separate captive strain.',
+  'Hoplisoma thanatos': 'The 2022 original description explicitly identifies historic CW146 as Corydoras thanatos, now Hoplisoma thanatos after 2024. Its resemblance to H. hypnos reflects wild mimicry, not a documented selective cross.',
+  'Corydoras sp. CW173': 'Historical code CW173 = the species described in 2022 as Corydoras hypnos, currently Hoplisoma hypnos. Not an additional unique taxon or breeder-selected line.',
+  'Corydoras sp. CW172': 'Historical code CW172 = described Hoplisoma psamathos (originally Corydoras psamathos, 2022). Retain code as a synonym/trade alias, not a distinct taxon.',
+  'Corydoras sp. CW146': 'Historical CW146 = the species described in 2022 as Corydoras thanatos, now Hoplisoma thanatos. Not a distinct separate species count.',
+  'Hoplisoma sp. CW111': 'Zebrina/Vulcan code CW111 remains a distinct unresolved form: the 2022 expedition did NOT find a specimen clearly matching its color pattern. Do not synonymize with hypnos, psamathos or thanatos.',
+  'Hoplisoma hypnos': 'Described as Corydoras hypnos by Tencatt, Ohara, Sousa & Britto in 2022 from the rio Jamanxim (Tapajós drainage), Pará, Brazil; transferred to Hoplisoma in 2024. The paper discusses CW111 but does not establish it as a synonym of hypnos.',
+  'Hoplisoma knaacki': 'Described by Tencatt & Evers in 2016, originally Corydoras knaacki; type locality is swamps near Santa Rita in the Inambari/Madre de Dios drainage, Peru. The species epithet is not evidence of a selected domestic strain founder.',
+  'Hoplisoma parallelum': 'Historical Corydoras parallelus Burgess, 1993, C002 trade designation; original type locality Rio Içana, upper Rio Negro, Brazil. Distinct from lookalike larger two-line trade fish often called Super parallelus.',
   'Hoplisoma granti': 'Described in 2019 after resolving decades of Corydoras arcuatus trade-name confusion: C020 usually represents this species, while true C. arcuatus was associated with CW036. Do not treat either C/CW code as a captive-selected variety.',
   'Hoplisoma eversi': 'Formerly Corydoras eversi Tencatt & Britto, 2016. Current combination Hoplisoma eversi (2024 revision); the type locality is a tributary of the Rio Araguaia, Goiás, Brazil. Its eponym is not proof of a captive founder.',
   'Corydoras serratus': 'Sands, 1995; long-snouted wild species, type from Rio Poranga in the upper Rio Negro drainage, Amazonas, Brazil. Distinct from similarly banded masked cory species.',
@@ -186,8 +195,9 @@ function nextCatalogBatch(catalog, occupiedNames, limit) {
 }
 function safe(s,limit=350){return String(s??'').replace(/@(here|everyone)/ig,'@\u200b$1').slice(0,limit);}
 function kindTag(kind){return kind==='Named taxon'?'Named species':kind==='C-coded'?'C-number':'CW-number';}
+function kindTagForRecord(rec){const m=rec.name.match(/\bsp\.?\s*(CW|C)\d+\b/i);return m?(m[1].toUpperCase()==='CW'?'CW-number':'C-number'):kindTag(rec.kind);}
 const CONTESTED_NAMED_TAXA = new Set(['Osteogaster venezuelanus','Osteogaster schultzei']);
-function nameClassification(rec){return rec.name==='Brochis Taiosh'?'Unverified directory name':CONTESTED_NAMED_TAXA.has(rec.name)?'Contested taxonomic status':kindTag(rec.kind);}
+function nameClassification(rec){return rec.name==='Brochis Taiosh'?'Unverified directory name':CONTESTED_NAMED_TAXA.has(rec.name)?'Contested taxonomic status':kindTagForRecord(rec);}
 // Only attach these species-specific assertions where traceable specialist or
 // original taxonomic sources have been checked. Habitat data are NOT tank targets.
 const SPECIES_EVIDENCE = {
@@ -277,7 +287,7 @@ function sourcePacket(rec) {
       : '';
   const directoryWarning=rec.name==='Brochis Taiosh'
     ? 'Source directory label is not a validated Latin binomial; its formal species or trade identity remains unresolved.'
-    : /^(Osteogasters|Hoplisomas|Hoplisoms|Gastrdermus) /.test(rec.name)
+    : /^(Osteogasters|Hoplisomas|Hoplisoms|Holisoma|Brochiss|Gastrdermus) /.test(rec.name)
       ? 'Source directory has a genus spelling inconsistency (likely typo). Retain the raw label for traceability; any corrected genus needs independent nomenclatural validation.'
       : '';
   const note=LINEAGE_NOTE[rec.name] || 'Taxonomy, type locality, local population, captive pedigree, and breeding data require record-level review.';
@@ -500,10 +510,10 @@ async function main() {
     }
     let posted=0,present=0;
     const choices=nextFlag
-      ? nextSelection.map(rec=>({key:rec.id,name:rec.name,payload:sourcePacket(rec),tags:[rec.name==='Brochis Taiosh'||CONTESTED_NAMED_TAXA.has(rec.name)?'Taxonomy':kindTag(rec.kind),'Needs review'],kind:'directory'}))
+      ? nextSelection.map(rec=>({key:rec.id,name:rec.name,payload:sourcePacket(rec),tags:[rec.name==='Brochis Taiosh'||CONTESTED_NAMED_TAXA.has(rec.name)?'Taxonomy':kindTagForRecord(rec),'Needs review'],kind:'directory'}))
       : [
         {key:'master-index-528',name:GUIDE_TITLE,payload:guidePacket(catalog),tags:['Research index','Taxonomy'],kind:'index'},
-        ...selected.matches.slice(0,limit).map(rec=>({key:rec.id,name:rec.name,payload:sourcePacket(rec),tags:[kindTag(rec.kind),'Needs review'],kind:'directory'})),
+        ...selected.matches.slice(0,limit).map(rec=>({key:rec.id,name:rec.name,payload:sourcePacket(rec),tags:[kindTagForRecord(rec),'Needs review'],kind:'directory'})),
         ...MORPHS.map(rec=>({key:rec.id,name:rec.name,payload:morphPacket(rec),tags:['Captive strain','Needs review'],kind:'morph'})),
       ];
     for(const item of choices){

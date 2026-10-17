@@ -254,6 +254,33 @@ test('source spelling oddity Hoplisoms CW088 remains explicitly provisional',()=
  assert.match(post.content,/genus spelling inconsistency/);
  assert.match(post.content,/Research draft/);
 });
+test('new historical C codes and place names remain provisional and sourced',{skip:!fs.existsSync(sourceWorktree)},()=>{
+  const catalog=catalogFromSource();
+  for(const [name,words] of [
+    ['Hoplisoma hypnos',['2022','Jamanxim','CW111']],
+    ['Hoplisoma knaacki',['2016','Santa Rita','Madre de Dios']],
+    ['Hoplisoma parallelum',['C002','Rio Içana','Super parallelus']]
+  ]){
+    const rec=catalog.find(x=>x.name===name);
+    assert.ok(rec,name);
+    const post=sourcePacket(rec);
+    assert.ok(post.content.length<=2000,name+': '+post.content.length);
+    for(const word of words)assert.match(post.content,new RegExp(word));
+    assert.deepEqual(post.allowedMentions,{parse:[]});
+  }
+  for(const name of ['Holisoma sp CW142','Brochiss sp. C152']){
+    const post=sourcePacket({id:'99',kind:'C-coded',name,group:'hoplisoma',source:'https://www.corydorasworld.com/lineages/fish/99'});
+    assert.match(post.content,/genus spelling inconsistency/);
+  }
+});
+test('source directory labeled named taxon with CW39 is treated as historical code',{skip:!fs.existsSync(sourceWorktree)},()=>{
+ const rec=catalogFromSource().find(r=>r.name==='Hoplisoma sp. CW39');
+ assert.ok(rec);
+ assert.equal(rec.kind,'Named taxon');
+ const post=sourcePacket(rec);
+ assert.match(post.content,/Classification:\*\* CW-number/);
+ assert.doesNotMatch(post.content,/Classification:\*\* Named species/);
+});
 test('source-backed named descriptions contain traceable taxonomic and locality evidence',{skip:!fs.existsSync(sourceWorktree)},()=>{
  const actual=catalogFromSource();
  for(const name of ['Corydoras aurofrenatus','Osteogaster oharai','Osteogaster venezuelanus','Osteogaster schultzei']){

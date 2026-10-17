@@ -58,4 +58,13 @@
   - L239 *Baryancistrus beggini*: https://discord.com/channels/1519337502379475095/1560955932400427049
   - Christophe Girardet first-person 2009 L025 spawning report: https://discord.com/channels/1519337502379475095/1560955934845440142
 - Preserve **draft research**, no unlicensed photographs, no invented taxonomic identities or original breeders, and no fabricated independent Aegis/Cerberus votes. No Aquapedia public website promotion occurred in this pass.
-- **Current source-code delivery status:** source commits are present in the dedicated Main PC Git worktree, but the shared Discord remote branch has diverged (local ahead, remote new commits). Do not force push or overwrite unrelated Corydoras modifications; reconcile with current PR branch before any push or merge.
+- **Current source-code delivery status:** Plecopedia publisher code, tests and batch sources have been committed to independent [draft GitHub PR #28](https://github.com/pixenetwork/discord/pull/28), created from `main`, without overwriting the diverged Corydoras workstream. PR is **not merged**; public Discord publication is independently documented.
+
+## Fourth Plecopedia batch — final live audit (2026-10-17)
+
+- Reused the same authorized Aquaphoria bot and public `📚・AQUAPEDIA` / `🐟・pleco-research` forum. **20 new** source-backed threads were posted; **64 prior** topics were found and reused without duplicate publication.
+- Read-only full audit finished with `live-audit-passed`, **`verifiedPosts:85`** (= **84 research topics + one pinned index**), `indexPinned:true`, `publicForum:true`, and `publicCategory:true`.
+- The canonical 20 live Discord topic URLs and original-paper references are indexed under [Aquapedia research batch 04](https://github.com/pixenetwork/aquapedia/blob/athena/pleco-foundation-20260924/research/plecos/2026-10-17-l-number-crosswalk-batch-04.md).
+- This batch distinguishes L397 from L398 *Panaqolus tankei*, original L144 from domestic Lemon Ancistrus, unofficial 'L600' from formally allocated L-codes, L128 from L200, valid *Pseudacanthicus nyktos*, and breeder accounts for L046 and L398.
+- **Publisher QA:** 15/15 focused tests on Main PC. The reviewing code is in [draft PR #28](https://github.com/pixenetwork/discord/pull/28); the branch intentionally avoids concurrent Corydoras code and requires independent review before merge.
+- **Scientific review and site status:** research drafts only. No image rights asserted, no unlicensed photos copied, no verified genetics/pedigrees invented, independent Aegis/Cerberus review pending, and no live Aquapedia website deployment in this pass.

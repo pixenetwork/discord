@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import {
-  catalogFromSource, priorityRecords, nextCatalogBatch, sourcePacket, morphPacket, refreshRecord,
+  catalogFromSource, priorityRecords, nextCatalogBatch, sourcePacket, morphPacket, refreshRecord, ensureChannel,
   guidePacket, PRIORITY_NAMES, TAGS, MORPHS
 } from '../tools/corydoras-forum-publisher.mjs';
 
@@ -28,6 +28,29 @@ function syntheticDirectory() {
   return rows.join('\n');
 }
 const fixtureCatalog=catalogFromSource(syntheticDirectory());
+test('public Aquapedia publisher reuses the existing forum and cannot recreate it privately',async()=>{
+  const everyone='1519337502379475095';
+  const publicCategory={id:'public',name:'📚・AQUAPEDIA',type:4,permissionOverwrites:{cache:new Map()}};
+  const forum={id:'forum',name:'🐟・corydoras-research',type:15,parentId:'public',permissionOverwrites:{cache:new Map()}};
+  let writes=0;
+  const guild={
+    id:everyone,
+    channels:{cache:new Map([['public',publicCategory],['forum',forum]]),create:async()=>{writes++;throw Error('Should not provision new forum')}},
+    roles:{everyone:{permissions:{has:()=>true}}}
+  };
+  const result=await ensureChannel(guild,publicCategory);
+  assert.equal(result.forum,forum);
+  assert.equal(writes,0);
+  forum.parentId='private';
+  await assert.rejects(ensureChannel(guild,publicCategory),/Existing public Corydoras research forum not found/);
+  forum.parentId='public';
+  forum.permissionOverwrites.cache.set(everyone,{deny:{has:()=>true}});
+  await assert.rejects(ensureChannel(guild,publicCategory),/denies @everyone ViewChannel/);
+  forum.permissionOverwrites.cache.clear();
+  guild.channels.cache.delete('forum');
+  await assert.rejects(ensureChannel(guild,publicCategory),/not found under Aquapedia/);
+  assert.equal(writes,0);
+});
 test('catalog parser accepts 528 unique labels in three distinct source classifications',()=>{
  assert.equal(fixtureCatalog.length,528);
  assert.equal(new Set(fixtureCatalog.map(x=>x.id)).size,528);

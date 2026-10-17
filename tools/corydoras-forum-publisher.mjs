@@ -13,9 +13,9 @@ const SOURCE_PATH = 'research/inbox/perplexity/corydoras-history-species-localit
 const REPO = process.env.AQUAPEDIA_WORKTREE || path.join(os.homedir(), 'Aquapedia-Release-20261014');
 const SOURCE_URL = 'https://github.com/pixenetwork/aquapedia/blob/' + SOURCE_SHA + '/' + SOURCE_PATH;
 const PR_URL = 'https://github.com/pixenetwork/aquapedia/pull/20';
-const SOURCE_CATEGORY = '🔬・AQUAPEDIA RESEARCH';
-const CATEGORY = '🐟・CORYDORAS RESEARCH';
-const FORUM = '🧬・species-and-strains';
+const SOURCE_CATEGORY = '📚・AQUAPEDIA';
+const CATEGORY = '📚・AQUAPEDIA';
+const FORUM = '🐟・corydoras-research';
 const GUIDE_TITLE = 'START HERE — Corydoras Research Index';
 const TAGS = ['Research index','Named species','C-number','CW-number','Captive strain','Breeding','Taxonomy','ID / Lookalikes','Needs review'];
 const ALLOW_MENTIONS = { parse: [] };
@@ -273,43 +273,29 @@ function guidePacket(catalog) {
     allowedMentions:ALLOW_MENTIONS
   };
 }
-function perms(ch) {
-  return [...ch.permissionOverwrites.cache.values()].map(x=>({id:x.id,type:x.type,allow:x.allow.bitfield,deny:x.deny.bitfield}));
-}
-function requirePrivacy(ch,guildId) {
+// Public forum only: no permission mutation and never recreate a deleted forum.
+function requirePublic(ch,guildId){
   const everyone=ch.permissionOverwrites.cache.get(guildId);
-  if(!everyone?.deny.has(PermissionFlagsBits.ViewChannel))throw new Error('Research category lacks explicit @everyone ViewChannel denial: '+ch.name);
+  if(everyone?.deny.has(PermissionFlagsBits.ViewChannel))
+    throw new Error('Public Aquapedia channel denies @everyone ViewChannel: '+ch.name);
 }
-async function ensureChannel(guild, sourceCategory, doApply) {
+async function ensureChannel(guild, sourceCategory) {
   const list=[...guild.channels.cache.values()];
-  const sameCat=list.filter(c=>c.type===ChannelType.GuildCategory && c.name===CATEGORY);
-  if(sameCat.length>1)throw new Error('Ambiguous duplicate Corydoras categories');
-  let category=sameCat[0];
-  if(category)requirePrivacy(category,guild.id);
-  if(!category && doApply){
-    category=await guild.channels.create({name:CATEGORY,type:ChannelType.GuildCategory,
-      permissionOverwrites:perms(sourceCategory),reason:'Approved Aquapedia Corydoras forum classification'});
-    requirePrivacy(category,guild.id);
-  }
-  const sameForum=list.filter(c=>c.type===ChannelType.GuildForum && c.name===FORUM && (!category||c.parentId===category.id));
-  if(sameForum.length>1)throw new Error('Ambiguous duplicate Corydoras forums');
-  let forum=sameForum[0];
-  if(forum) {
-    if(forum.parentId!==category.id)throw new Error('Corydoras forum parent mismatch');
-    requirePrivacy(forum,guild.id);
-  }
-  if(!forum && doApply){
-    if(!category)throw new Error('Missing research category');
-    forum=await guild.channels.create({
-      name:FORUM,type:ChannelType.GuildForum,parent:category.id,
-      topic:'Private Aquapedia Corydoras species, C/CW-numbered forms and documented breeder-selected strains. Research drafts clearly tagged. No unlicensed images.',
-      availableTags:TAGS.map(name=>({name,moderated:false})),
-      permissionOverwrites:perms(category),
-      reason:'User-approved Corydoras research forum'
-    });
-    requirePrivacy(forum,guild.id);
-  }
-  return {category,forum};
+  const categories=list.filter(c=>c.type===ChannelType.GuildCategory && c.name===CATEGORY);
+  if(categories.length!==1||categories[0].id!==sourceCategory.id)
+    throw new Error('Public Aquapedia category not uniquely matched; refusing publication');
+  requirePublic(sourceCategory,guild.id);
+  const everyoneRole=guild.roles?.everyone;
+  if(everyoneRole && !everyoneRole.permissions.has(PermissionFlagsBits.ViewChannel))
+    throw new Error('Guild @everyone lacks ViewChannel');
+  const forumCandidates=list.filter(c=>c.type===ChannelType.GuildForum && c.name===FORUM);
+  if(forumCandidates.length!==1||forumCandidates[0].parentId!==sourceCategory.id)
+    throw new Error('Existing public Corydoras research forum not found under Aquapedia');
+  const forum=forumCandidates[0];
+  requirePublic(forum,guild.id);
+  if(forum.permissionOverwrites.cache.size!==0)
+    throw new Error('Corydoras forum permissions differ from public Aquapedia category; refusing publication');
+  return {category:sourceCategory,forum};
 }
 async function allThreads(forum) {
   const active=await forum.threads.fetchActive();
@@ -420,9 +406,9 @@ async function main() {
     const guild=await client.guilds.fetch(guildId);
     await guild.channels.fetch();
     const sources=[...guild.channels.cache.values()].filter(c=>c.type===ChannelType.GuildCategory && c.name===SOURCE_CATEGORY);
-    if(sources.length!==1)throw new Error('Exact private Aquapedia research source category not found unambiguously');
-    requirePrivacy(sources[0],guild.id);
-    const target=await ensureChannel(guild,sources[0],mode==='apply'&&!nextFlag&&!refreshFlag);
+    if(sources.length!==1)throw new Error('Exact public Aquapedia category not found unambiguously');
+    requirePublic(sources[0],guild.id);
+    const target=await ensureChannel(guild,sources[0]);
     console.log(JSON.stringify({mode,guildId:guild.id,botId:user.id,category:target.category?.name||'(would create)',forum:target.forum?.name||'(would create)',sourceCount:catalog.length,priorityMatched:selected.matches.length,priorityMissing:selected.missing,uniqueMorphs:MORPHS.length,plannedPosts:process.argv.includes('--pin-guide')?0:(refreshFlag?1:(nextFlag?nextCount:Math.min(limit,selected.matches.length)+MORPHS.length+1))}));
     if(mode==='plan'&&!nextFlag&&!refreshFlag)return;
     const forum=target.forum;
@@ -472,4 +458,4 @@ async function main() {
 if(import.meta.url===new URL('file://' + process.argv[1].replaceAll('\\','/')).href){
   main().catch(error=>{console.error('STOP',error?.message||String(error));process.exitCode=1;});
 }
-export {catalogFromSource,priorityRecords,nextCatalogBatch,sourcePacket,morphPacket,guidePacket,refreshRecord,TAGS,MORPHS};
+export {catalogFromSource,priorityRecords,nextCatalogBatch,sourcePacket,morphPacket,guidePacket,refreshRecord,ensureChannel,TAGS,MORPHS};

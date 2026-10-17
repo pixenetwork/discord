@@ -4,9 +4,9 @@ This is an **explicit one-shot REST publishing tool** for the existing Aquaphori
 
 ## Intended live layout
 
-- Parent category: `🐟・CORYDORAS RESEARCH`
-- Forum channel: `🧬・species-and-strains`
-- Private access: inherit exactly the existing `🔬・AQUAPEDIA RESEARCH` category's permission overwrites. Explicit @everyone ViewChannel denial is required.
+- Parent category: `📚・AQUAPEDIA` (public)
+- Forum channel: `🐟・corydoras-research` (public)
+- Public access: forum and parent category have no restrictive permission overwrites; @everyone has ViewChannel. The publisher now refuses to create or re-privatize a missing or moved forum.
 - Forum threads: one per selected directory name or documented captive morph, with separate source/status/evidence fields, no unlicensed photos, and Discord mentions disabled.
 - One START HERE thread with the exact-source 528-record CSV attachment and links to the canonical Aquapedia dossier.
 
@@ -44,10 +44,28 @@ The historical 2026-10-16 index and the research claims remain sourced in [Aquap
 
 ## Verified continuation — 2026-10-17
 
-- Existing private forum: https://discord.com/channels/1519337502379475095/1560887812910350339
+- Existing forum (originally private, moved into public Aquapedia on 2026-10-17): https://discord.com/channels/1519337502379475095/1560887812910350339
 - Pinned master directory index: https://discord.com/channels/1519337502379475095/1560887817217904641
 - Third bounded publication run: **80 new** bot-authored and API-readback-verified threads, making **191 forum posts** total (**182 source-directory entries + 8 captive morphs + 1 pinned index**). **346 of the original 528 directory records remain** without individual threads; not every directory record is a distinct valid species or genetic strain.
 - Four existing named profiles enriched in place with source-backed identity, original description/recorded localities, care cautions and evidence references: [C. aurofrenatus](https://discord.com/channels/1519337502379475095/1560907001150701610), [O. oharai](https://discord.com/channels/1519337502379475095/1560907008071176274), [O. venezuelanus](https://discord.com/channels/1519337502379475095/1560908309572358188) and [O. schultzei](https://discord.com/channels/1519337502379475095/1560907181308776539). Force-fetched starter messages were compared against intended content and corrections were receipted.
 - The historically coded **CW068 is the described 2025 species O. oharai**, based on the original species description: https://www.ni.bio.br/1982-0224-2024-0134/ . The current Eschmeyer Catalog considers *Corydoras venezuelanus* synonymous with *O. aenea*, while hobby references do not all agree. *O. schultzei* status remains uncertain. These records are individually marked with **Taxonomy / Needs review** tags, and distinct from the German breeder-selected black commercial morph.
 - Original species description locations and habitat observations **must not be copied into captive breeding water-parameter claims**, and C/CW aliases must not be summed as additional valid species.
 - Research crosswalk and claim-level sources appended to the still-draft **Aquapedia PR #20**; the Discord worker remains in draft PR #26. No independent Aegis/Cerberus verification, merge or public Aquapedia website release is asserted.
+
+## Public Aquapedia move — 2026-10-17
+
+At the user's explicit request, the **existing** Discord forum `1560887812910350339` was moved from the private `🐟・CORYDORAS RESEARCH` category `1560887811962445854` to the pre-existing **public** `📚・AQUAPEDIA` category `1557338241903099945`, and renamed `🐟・corydoras-research`.
+
+Only the forum's channel was modified. Its four private permission overrides were cleared to match the public Aquapedia category, which has zero permission overwrites and whose guild @everyone role has ViewChannel permission. Its topic now explicitly describes publicly accessible, evidence-labelled research. The private breeder/research sections were not changed. The original forum ID, all topic threads, tags, and pinned master index `1560887817217904641` remain unchanged; Discord REST readback verified parent ID, forum name, zero overwrites and pinned index parent.
+
+**Future publisher rule:** fail closed if the public forum is absent, renamed, placed outside Aquapedia, or given private overrides. Do not recreate the old private category/forum or assume that a public directory record is taxonomically verified.
+
+Migration command (read-only by default):
+
+```powershell
+node --env-file="<existing authorized bot .env path>" tools/move-corydoras-forum-public.mjs
+# --apply is only needed to reconcile an authorized, known old-state deployment.
+node --env-file="<existing authorized bot .env path>" tools/move-corydoras-forum-public.mjs --apply
+```
+
+The final live move receipt is written locally under `%LOCALAPPDATA%\PixelNetwork\corydoras-public-forum-move-20261017.json` with IDs and readback status but without credentials.

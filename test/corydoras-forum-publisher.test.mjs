@@ -183,6 +183,28 @@ test('master index provides 528 listings as a CSV with honest limitations',()=>{
 // Source integration runs on the Main PC only. It is optional in portable unit tests;
 // actual publication ALWAYS requires the pinned Aquapedia Git source, not a fixture.
 const sourceWorktree=process.env.AQUAPEDIA_WORKTREE||path.join(os.homedir(),'Aquapedia-Release-20261014');
+test('2026 Tefé species dossier grounds taxonomy, locality, diagnosis and provenance',{skip:!fs.existsSync(sourceWorktree)},()=>{
+ const source=catalogFromSource().find(r=>r.name==='Corydoras isaacisbrueckeri');
+ assert.ok(source);
+ const packet=sourcePacket(source);
+ assert.match(packet.content,/Tencatt, Hercos, Carvalho, Santos & Britto/);
+ assert.match(packet.content,/rio Tefé/);
+ assert.match(packet.content,/CW128 or CW207/);
+ assert.match(packet.content,/NOT a recommended aquarium range/);
+ assert.match(packet.content,/primary sources|Primary sources/);
+ assert.ok(packet.content.length<=2000,'Discord message content must fit 2000 characters: '+packet.content.length);
+});
+test('Fuller eponym and historic C115/C116 describe one variable scientific species',{skip:!fs.existsSync(sourceWorktree)},()=>{
+ const rec=catalogFromSource().find(r=>r.name==='Corydoras fulleri');
+ assert.ok(rec);
+ const text=sourcePacket(rec).content;
+ assert.match(text,/C115 and C116/);
+ assert.match(text,/Ian Fuller/);
+ assert.match(text,/río Manuripe/);
+ assert.match(text,/sibling/);
+ assert.match(text,/pubmed.ncbi.nlm.nih.gov\/33837549/);
+ assert.ok(text.length<=2000,'Discord message must fit 2000 characters: '+text.length);
+});
 test('source-backed named descriptions contain traceable taxonomic and locality evidence',{skip:!fs.existsSync(sourceWorktree)},()=>{
  const actual=catalogFromSource();
  for(const name of ['Corydoras aurofrenatus','Osteogaster oharai','Osteogaster venezuelanus','Osteogaster schultzei']){

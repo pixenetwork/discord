@@ -69,3 +69,13 @@ node --env-file="<existing authorized bot .env path>" tools/move-corydoras-forum
 ```
 
 The final live move receipt is written locally under `%LOCALAPPDATA%\PixelNetwork\corydoras-public-forum-move-20261017.json` with IDs and readback status but without credentials.
+
+
+## Public Aquapedia Corydoras publication — fourth batch, 2026-10-17
+
+- **80 new** source-directory threads published by the existing authorized bot to public AQUAPEDIA / corydoras-research forum (channel ID 1560887812910350339), in one bounded run. Each starter message was fetched and its bot author plus stable AQP-CORY source ID verified. Rate limiting was respected without launching a second writer.
+- Live receipts: **271 verified distinct forum posts** = **262 source-directory records**, **8 separately labelled captive morphs** and **1 pinned index**. **266 of 528** dated original directory entries lack individual threads; 528 is not a verified species or strain count. Zero duplicate thread IDs, zero duplicate directory record IDs, zero unverified publication receipts.
+- Two previously posted profiles **updated in place** with force-refetched readback and revision receipts:
+  - [Corydoras fulleri](https://discord.com/channels/1519337502379475095/1560929267745951785): formally described in 2021 from Peruvian Madre de Dios/Manuripe tributaries, historic C115/C116 codes apply to the same species, and Ian Fuller is the honoree, not thereby a documented line founder. https://pubmed.ncbi.nlm.nih.gov/33837549/ ; https://www.scotcat.com/callichthyidae/c_fulleri.htm
+  - [Corydoras isaacisbrueckeri](https://discord.com/channels/1519337502379475095/1560929358926057634): formally described in 2026 from rio Tefé, diagnostic morphology, wild field chemistry NOT aquarium recommendations; CW128/CW207 still unresolved separate codes. https://www.ni.bio.br/1982-0224-2025-0146/ ; https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=78599
+- Both profiles retain explicit unknown breeder lineage, genetics, awards and reusable-photo rights. Detailed source additions staged to the still-draft pixenetwork/aquapedia PR #20. Independent review is still required before merging Discord PR #26 or site publication.

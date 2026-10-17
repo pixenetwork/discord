@@ -38,6 +38,8 @@ export const PRIORITY_NAMES = [
   'Corydoras sp. CW128', 'Corydoras sp. CW207',
 ];
 const LINEAGE_NOTE = {
+  'Corydoras fulleri': 'Formally described in 2021 from Peruvian rio Madeira tributaries; C115 and C116 represent the same highly variable species. The epithet honors Ian Fuller, who is not thereby established as the founder of a captive breed.',
+  'Corydoras isaacisbrueckeri': 'Formally described in 2026 by Tencatt, Hercos, Carvalho, Santos & Britto from the rio Tefé basin, Brazil. Do not equate this described species with unidentified CW128 or CW207 without a specimen-level match.',
   'Corydoras sp. CW005': 'CW005 is the historical aquarium code for the described species Corydoras aurofrenatus (Eigenmann & Kennedy, 1903), according to the ScotCat specialist crosswalk; do not count the code as another distinct species.',
   'Corydoras aurofrenatus': 'Formally described species; historical CW005 / Corrientes trade code refers to the same fish, not a different species. Original type locality: Aguada near Arroyo Trementina, Paraguay (Eigenmann & Kennedy, 1903).',
   'Osteogaster oharai': 'Described in 2025 from the form previously designated CW068. Documented populations: rio Aripuanã (Madeira basin) and rio Juruena (Tapajós basin), Mato Grosso, Brazil. Distinctive oblique dark dorsolateral stripe.',
@@ -184,6 +186,23 @@ function nameClassification(rec){return rec.name==='Brochis Taiosh'?'Unverified 
 // Only attach these species-specific assertions where traceable specialist or
 // original taxonomic sources have been checked. Habitat data are NOT tank targets.
 const SPECIES_EVIDENCE = {
+  'Corydoras fulleri': [
+    '**Identity:** Tencatt et al. (2021), Journal of Fish Biology. Named for Ian Fuller; eponym ≠ captive breeder founder.',
+    '**Historic code crosswalk:** Hobby C115 and C116 were identified as one variable species. Specialist keeper accounts cite German captive breeding in which different phenotypes arose among siblings; neither code identifies a distinct genetic species.',
+    '**Original provenance:** Two río Manuripe tributaries and a tributary of río Madre de Dios, Madeira drainage, Peru, from original research. Distinguish scientific collection from captive farm provenance.',
+    '**Identification:** Two caudal-fin-base blotches, specialized sensory-canal and branchial characters, variable flank band. See original diagnostic treatment rather than relying on color alone.',
+    '**Breeding:** Specialist sources report captive breeding by 2005, but founder pedigree, inheritance loci, exact spawning method and awards remain unverified.',
+    '**Sources:** https://pubmed.ncbi.nlm.nih.gov/33837549/ ; https://www.scotcat.com/callichthyidae/c_fulleri.htm ; https://www.aquariumglaser.de/en/fisharchive/corydoras-fulleri-c115-c116-2/'
+  ],
+  'Corydoras isaacisbrueckeri': [
+    '**Formal description:** Tencatt, Hercos, Carvalho, Santos & Britto (2026), Neotropical Ichthyology 24(2): e250146; Eschmeyer’s Catalog of Fishes accepts this as a valid species.',
+    '**Known locality:** Igarapé da ATM (type), igarapé da Barreira and igarapé do Pavão, rio Tefé basin, Amazonas, Brazil.',
+    '**Diagnosis:** Dark eye mask and extended dark dorsal-base flank patch; confirm other fin, pattern and bone characters in the original description.',
+    '**Field habitat:** Original collectors reported forest streams and marginal coarse yellow sandbars. One recorded dry-season sample had water temperature 25.6 C, pH 6.2 and conductivity 45.6 µS/cm; a single field sample is NOT a recommended aquarium range.',
+    '**Breeder / founder:** No captive line founder or proven inherited selection trait documented in the original description.',
+    '**C/CW provenance:** No verified CW128 or CW207 identification; keep codes unresolved.',
+    '**Primary sources:** https://www.ni.bio.br/1982-0224-2025-0146/ ; https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=78599'
+  ],
   'Corydoras aurofrenatus': [
     '**Names and lineage:** Original described name Corydoras aurofrenatus Eigenmann & Kennedy, 1903. CW005 and Corrientes are historical identification aliases, not separate taxa.',
     '**Origin and identification:** Type locality Aguada near Arroyo Trementina, Paraguay; long-snouted, with two dark flank blotches and an elongated upper caudal lobe.',

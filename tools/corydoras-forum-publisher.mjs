@@ -38,6 +38,9 @@ export const PRIORITY_NAMES = [
   'Corydoras sp. CW128', 'Corydoras sp. CW207',
 ];
 const LINEAGE_NOTE = {
+  'Hoplisoma granti': 'Described in 2019 after resolving decades of Corydoras arcuatus trade-name confusion: C020 usually represents this species, while true C. arcuatus was associated with CW036. Do not treat either C/CW code as a captive-selected variety.',
+  'Hoplisoma eversi': 'Formerly Corydoras eversi Tencatt & Britto, 2016. Current combination Hoplisoma eversi (2024 revision); the type locality is a tributary of the Rio Araguaia, Goiás, Brazil. Its eponym is not proof of a captive founder.',
+  'Corydoras serratus': 'Sands, 1995; long-snouted wild species, type from Rio Poranga in the upper Rio Negro drainage, Amazonas, Brazil. Distinct from similarly banded masked cory species.',
   'Corydoras negro': 'Knaack, 2004. The name references the Río Negro of the Río Blanco system in Santa Cruz, Bolivia—not Brazil’s larger Rio Negro. This is a described wild species, not a domestically selected black morph.',
   'Corydoras septentrionalis': 'Gosline, 1940. Type locality Río Piña (Guarapiché system), Monagas, Venezuela; northern Orinoco tributaries. Do not confuse this locality with Amazon Rio Negro species.',
   'Corydoras fulleri': 'Formally described in 2021 from Peruvian rio Madeira tributaries; C115 and C116 represent the same highly variable species. The epithet honors Ian Fuller, who is not thereby established as the founder of a captive breed.',
@@ -188,6 +191,27 @@ function nameClassification(rec){return rec.name==='Brochis Taiosh'?'Unverified 
 // Only attach these species-specific assertions where traceable specialist or
 // original taxonomic sources have been checked. Habitat data are NOT tank targets.
 const SPECIES_EVIDENCE = {
+  'Hoplisoma granti': [
+    '**Taxonomy:** Originally described as Corydoras granti Tencatt, Lima & Britto (2019); 2024 phylogenomic revision uses Hoplisoma granti. Distinct from the true 1938 Corydoras arcuatus.',
+    '**Trade-code crosswalk:** Decades of skunk-cory aquarium imports sold as C. arcuatus largely represent C020 = H. granti; true C. arcuatus is associated with CW036. Do not count C020 as a separate domesticated genetic strain.',
+    '**Original type locality:** Igarapé Ya-Mirim (Iazinho), a Cauaburi tributary in the Rio Negro drainage near São Gabriel da Cachoeira, Amazonas, Brazil. Described range also spans western/central Amazon tributaries.',
+    '**Wild habitat:** Known from both blackwater and turbid streams, sometimes alongside other corys. No validated spawning-water target.',
+    '**Breeder pedigree:** No verified founder of a selected H. granti line or inherited trade-code phenotype from the taxonomic papers. Avoid attributing wild-species description to a commercial breeder.',
+    '**Evidence:** https://www.fishbase.se/biblio/BiblioSummary.php?id=137973&speccode=71311&syncode=175776 ; https://www.sciencedirect.com/science/article/pii/S0044848621011236'
+  ],
+  'Hoplisoma eversi': [
+    '**Taxonomy:** Described as Corydoras eversi Tencatt & Britto (2016), reclassified as Hoplisoma eversi in the 2024 phylogenomic revision. Eschmeyer currently lists the latter as valid.',
+    '**Original provenance:** Unnamed stream tributary to Rio Araguaia, Montes Claros de Goiás, Goiás, Brazil; holotype MNRJ 43195. This scientific type locality does not prove the origin of any individual aquarium shipment.',
+    '**Breeding and awards:** No verified captive selective-breeding founder, strain inheritance or competition record from the original taxonomic sources. Name honors a person; it is not proof of domestic breeding.',
+    '**Sources:** https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=74221 ; https://doi.org/10.1093/zoolinnean/zlae053'
+  ],
+  'Corydoras serratus': [
+    '**Formal identity:** Corydoras serratus Sands (1995), valid long-snouted Corydoras in Eschmeyer. Reported only from the upper Rio Negro basin, Brazil, in the cited catalog.',
+    '**Type locality:** Rio Poranga, near Nobua oba, about 8 km north of the local confluence feeding the upper Rio Negro, Amazonas, Brazil. Holotype LIVCM 1994.4.38.',
+    '**Identification caution:** Mask/dorsolateral markings may resemble other upper Negro fish; a photo alone cannot validate locality or lineage. Compare original diagnostic characters before claiming identity.',
+    '**Breeding provenance:** No original domestic strain founder, inherited color-line pedigree, repeatable species-specific spawning regimen, or competition award established here.',
+    '**Sources:** https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?genus=Corydoras&tbl=species ; https://www.gbif.org/species/2342783'
+  ],
   'Corydoras negro': [
     '**Formal name:** Corydoras negro Knaack, 2004, valid in Eschmeyer’s Catalog of Fishes, described from Bolivia.',
     '**Type locality:** Río Negro in the Río Blanco drainage around Urubichá, Ñuflo de Chávez Province, Santa Cruz, eastern Bolivia. NOT the Brazilian Rio Negro. Holotype MTD F 28472.',
@@ -253,7 +277,7 @@ function sourcePacket(rec) {
       : '';
   const directoryWarning=rec.name==='Brochis Taiosh'
     ? 'Source directory label is not a validated Latin binomial; its formal species or trade identity remains unresolved.'
-    : /^(Osteogasters|Hoplisomas|Gastrdermus) /.test(rec.name)
+    : /^(Osteogasters|Hoplisomas|Hoplisoms|Gastrdermus) /.test(rec.name)
       ? 'Source directory has a genus spelling inconsistency (likely typo). Retain the raw label for traceability; any corrected genus needs independent nomenclatural validation.'
       : '';
   const note=LINEAGE_NOTE[rec.name] || 'Taxonomy, type locality, local population, captive pedigree, and breeding data require record-level review.';

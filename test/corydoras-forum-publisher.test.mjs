@@ -232,6 +232,28 @@ test('source spelling errors are warnings not invented formal species',()=>{
   assert.equal(packet.embeds[0].footer.text.startsWith('AQP-CORY-'+id),true);
  }
 });
+test('granti, eversi and serratus carry scientific provenance not invented breeding lines',{skip:!fs.existsSync(sourceWorktree)},()=>{
+ const catalog=catalogFromSource();
+ for(const [name,parts] of [
+  ['Hoplisoma granti',['C020','CW036','Igarapé Ya-Mirim','Tencatt']],
+  ['Hoplisoma eversi',['Rio Araguaia','2016','2024','MNRJ 43195']],
+  ['Corydoras serratus',['Rio Poranga','upper Rio Negro','LIVCM 1994.4.38']]
+ ]){
+  const item=catalog.find(r=>r.name===name);
+  assert.ok(item,'Dated specialist directory must include '+name);
+  const packet=sourcePacket(item);
+  for(const part of parts)assert.ok(packet.content.includes(part),name+' missing '+part);
+  assert.ok(packet.content.length<=2000,name+' Discord content length='+packet.content.length);
+  assert.match(packet.content,/Breeder \/ founder:\*\* Not established/);
+  assert.deepEqual(packet.allowedMentions,{parse:[]});
+ }
+});
+test('source spelling oddity Hoplisoms CW088 remains explicitly provisional',()=>{
+ const item={id:'584',name:'Hoplisoms sp. CW088',group:'hoplisoma',kind:'CW-coded',source:'https://www.corydorasworld.com/lineages/fish/584'};
+ const post=sourcePacket(item);
+ assert.match(post.content,/genus spelling inconsistency/);
+ assert.match(post.content,/Research draft/);
+});
 test('source-backed named descriptions contain traceable taxonomic and locality evidence',{skip:!fs.existsSync(sourceWorktree)},()=>{
  const actual=catalogFromSource();
  for(const name of ['Corydoras aurofrenatus','Osteogaster oharai','Osteogaster venezuelanus','Osteogaster schultzei']){

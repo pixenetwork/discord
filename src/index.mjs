@@ -1,5 +1,5 @@
 import { createServer } from 'node:http';
-import { Client, Events, GatewayIntentBits } from 'discord.js';
+import { ActivityType, Client, Events, GatewayIntentBits } from 'discord.js';
 import { loadConfig, assertDiscordConfig } from './config.mjs';
 import { createStore } from './store.mjs';
 import { createShopifyClient } from './shopify.mjs';
@@ -11,6 +11,8 @@ import { createGptController } from './gpt.mjs';
 import { createPaidOrderWebhookHandler } from './webhook-handler.mjs';
 import { handleInteraction, registerGuildCommands } from './commands.mjs';
 import { provisionTranslatedPublicationsForum } from './layout.mjs';
+import { createMemberLifecycle } from './member-lifecycle.mjs';
+import { createMarketplaceModeration } from './marketplace-moderation.mjs';
 
 const config = loadConfig();
 assertDiscordConfig(config);
@@ -24,10 +26,18 @@ const orders = createOrderService({ config, store, shopify });
 const deps = Object.freeze({ config, store, shopify, catalog, collections, research, orders });
 const gpt = createGptController(deps);
 
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+const gatewayIntents = [GatewayIntentBits.Guilds];
+if (config.memberSafety.enabled) gatewayIntents.push(GatewayIntentBits.GuildMembers);
+if (config.moderation.enabled) gatewayIntents.push(GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent);
+if (config.fivem.enabled) gatewayIntents.push(GatewayIntentBits.GuildPresences);
+const client = new Client({ intents: gatewayIntents });
+
 // The supervisor monitors gateway liveness; full bootstrap readiness is checked separately.
 let bootstrapComplete = false;
 let bootstrapFailed = false;
+
+const memberLifecycle = createMemberLifecycle({ config, store, logError: (message) => console.error(message) });
+const marketplaceModeration = createMarketplaceModeration({ config, logError: (message) => console.error(message) });
 
 async function aquaphoriaGuild() {
   return client.guilds.cache.get(config.discord.guildId) ?? client.guilds.fetch(config.discord.guildId);
@@ -51,6 +61,7 @@ const handlePaidOrderWebhook = createPaidOrderWebhookHandler({
 
 client.once(Events.ClientReady, async (readyClient) => {
   try {
+    if (config.activity.name) readyClient.user.setActivity(config.activity.name, { type: ActivityType.Playing });
     const guild = await aquaphoriaGuild();
     // Resolve the configured member via Discord before creating private permission overwrites.
     // A valid member may be absent from the Gateway's cold-start cache.
@@ -76,6 +87,21 @@ client.on(Events.InteractionCreate, (interaction) => {
 client.on(Events.Error, (error) => {
   void logBotError(`Discord client error: ${error.stack ?? error.message}`);
 });
+
+if (config.memberSafety.enabled) {
+  client.on(Events.GuildMemberAdd, (member) => {
+    void memberLifecycle.onJoin(member).catch((error) => logBotError(`Member join handler failed: ${error.message}`));
+  });
+  client.on(Events.GuildMemberRemove, (member) => {
+    void memberLifecycle.onLeave(member).catch((error) => logBotError(`Member leave handler failed: ${error.message}`));
+  });
+}
+
+if (config.moderation.enabled) {
+  client.on(Events.MessageCreate, (message) => {
+    void marketplaceModeration.onMessage(message).catch((error) => logBotError(`Marketplace moderation failed: ${error.message}`));
+  });
+}
 
 async function readRawBody(request, maxBytes = 2 * 1024 * 1024) {
   const chunks = [];

@@ -1,7 +1,9 @@
-import { ChannelType } from 'discord.js';
+import { ChannelType, PermissionFlagsBits } from 'discord.js';
 
 // Source-backed, permission-gated Aquapedia messages for *existing* breeder forums.
 const CATEGORY_NAME = '🔬・BREEDER RESEARCH';
+const PUBLIC_CATEGORY_NAME = '📚・AQUAPEDIA';
+const PUBLIC_FORUM_NAME = '🦐・shrimp-research';
 const ALLOWED_RIGHTS = new Set(['owner_owned', 'licensed', 'permission_granted', 'public_domain', 'cc0']);
 const MAX_RECORDS = 30;
 
@@ -39,8 +41,8 @@ function field(name, value, empty = 'Not established') {
 }
 
 export function buildAquapediaPost(record) {
-  if (!record || !['breeder', 'strain'].includes(record.entityType) || !safeText(record.name)) {
-    throw new Error('A breeder/strain name and valid entityType are required');
+  if (!record || !['breeder', 'strain', 'competition'].includes(record.entityType) || !safeText(record.name)) {
+    throw new Error('A breeder, strain or competition name and valid entityType are required');
   }
   const title = safeText(record.name, 160);
   const japanese = safeText(record.japaneseName, 100);
@@ -48,6 +50,21 @@ export function buildAquapediaPost(record) {
     .map((source) => httpsUrl(typeof source === 'string' ? source : source?.url))
     .filter(Boolean).slice(0, 5);
   const photos = photosAllowed(record.photos);
+  if (record.entityType === 'competition') {
+    if (record.organismGroup !== 'shrimp' || !sources.length) {
+      throw new Error('Public shrimp competition records must have a reliable HTTPS source');
+    }
+    return {
+      content: safeText(record.message || record.summary || title, 1900),
+      embeds: [{
+        title: 'COMPETITION • ' + title,
+        description: 'Competition results credit entrants and exhibited stock, not automatically the original strain creator.',
+        fields: [field('Research sources', sources.map((url, i) => `[${i + 1}](${url})`).join(' • '), 'Source unavailable')],
+        footer: { text: `Aquapedia • ${safeText(record.id || title, 70)} • photos pending rights review` },
+      }],
+      allowedMentions: { parse: [] },
+    };
+  }
   // Discord embed values are limited to 1024 characters. Preserve every complete
   // source URL without truncating Markdown link targets in safeText().
   const sourceFields = [];
@@ -121,7 +138,7 @@ async function fetchCompleteArchivedThreads(forum) {
 }
 
 function matchingThread(threads, record) {
-  const name = record.entityType === 'breeder' ? `Breeder profile — ${safeText(record.name, 70)}` : safeText(record.name, 95);
+  const name = record.entityType === 'breeder' ? `Breeder profile — ${safeText(record.name, 70)}` : record.entityType === 'competition' ? `Competition — ${safeText(record.name, 80)}` : safeText(record.name, 95);
   return { name, existing: threads.find((thread) => thread.name === name) ?? null };
 }
 
@@ -131,15 +148,26 @@ export async function publishAquapediaCards(guild, result) {
   if (result?.status !== 'completed' || result.discordPublicationApproved !== true) {
     return { posted: 0, reason: 'review_or_completion_pending' };
   }
+  const publicShrimp = result.publicShrimpResearch === true;
+  if (publicShrimp && result.publicAudienceApproved !== true) {
+    return { posted: 0, reason: 'public_audience_approval_pending' };
+  }
   const cards = Array.isArray(result.cards) ? result.cards.slice(0, MAX_RECORDS) : [];
   if (!cards.length) return { posted: 0, reason: 'no_structured_cards' };
   const botId = guild?.client?.user?.id;
   if (!botId) return { posted: 0, reason: 'bot_identity_missing' };
   const channels = [...(guild?.channels?.cache?.values?.() ?? [])];
-  const category = channels.find((c) => c.type === ChannelType.GuildCategory && c.name === CATEGORY_NAME);
-  if (!category) return { posted: 0, reason: 'existing_breeder_category_not_found' };
+  const category = channels.find((c) => c.type === ChannelType.GuildCategory && c.name === (publicShrimp ? PUBLIC_CATEGORY_NAME : CATEGORY_NAME));
+  if (!category) return { posted: 0, reason: 'research_category_not_found' };
   const forums = channels.filter((c) => c.type === ChannelType.GuildForum && c.parentId === category.id);
-  if (!forums.length) return { posted: 0, reason: 'existing_breeder_forums_not_found' };
+  if (!forums.length) return { posted: 0, reason: 'research_forums_not_found' };
+  const publicForum = publicShrimp ? forums.find((c) => c.name === PUBLIC_FORUM_NAME) : null;
+  if (publicShrimp) {
+    const everyone = guild?.roles?.everyone;
+    if (!publicForum || !everyone || !publicForum.permissionsFor?.(everyone)?.has(PermissionFlagsBits.ViewChannel)) {
+      return { posted: 0, reason: 'public_shrimp_forum_missing_or_not_public' };
+    }
+  }
   let posted = 0;
   let skipped = 0;
   let unverified = 0;
@@ -153,8 +181,13 @@ export async function publishAquapediaCards(guild, result) {
     // An unknown/contested breeder requires explicitly named "unknown-breeders".
     const fallback = forumSlug(breeder);
     const target = desired || fallback;
-    const forum = forums.find((c) => c.name === target);
-    if (!forum || (!breeder && target !== 'unknown-breeders')) { skipped += 1; continue; }
+    const forum = publicShrimp ? publicForum : forums.find((c) => c.name === target);
+    if (publicShrimp && (card.organismGroup !== 'shrimp' || !['breeder', 'competition', 'strain'].includes(card.entityType)
+      || !Array.isArray(card.sources) || !card.sources.some((source) => httpsUrl(typeof source === 'string' ? source : source?.url)))) {
+      skipped += 1;
+      continue;
+    }
+    if (!forum || (!publicShrimp && !breeder && target !== 'unknown-breeders')) { skipped += 1; continue; }
     let payload;
     try {
       payload = buildAquapediaPost(card);

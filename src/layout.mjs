@@ -71,6 +71,11 @@ const CORE_LAYOUT = [
       ['🦐・shrimp-guides', 'Freshwater shrimp care, grading, breeding, and identification guides.'],
       ['🩺・care-help', 'General freshwater aquarium husbandry and care help.'],
     ],
+    forums: [{
+      name: '🦐・shrimp-research',
+      topic: 'Public source-backed ornamental shrimp breeder and competition research. Each breeder or event gets its own thread; award entrant is not automatically strain inventor.',
+      tags: ['Breeder', 'Competition', 'Lineage', 'Genetics', 'Husbandry'].map((name) => ({ name, moderated: false })),
+    }],
   },
   {
     category: '🌿・COMMUNITY',
@@ -294,4 +299,30 @@ export function layoutDefinition() {
 
 export function publicationTagDefinitions() {
   return structuredClone(PUBLICATION_TAGS);
+}
+
+export async function provisionShrimpPublicResearchForum(guild) {
+  const section = CORE_LAYOUT.find((entry) => entry.category === '📚・AQUAPEDIA');
+  const spec = section?.forums?.find((entry) => entry.name === '🦐・shrimp-research');
+  if (!spec) throw new Error('Shrimp research forum definition is missing');
+  // Do not make an existing private category public or create a competing one.
+  const category = guild?.channels?.cache?.find(
+    (channel) => channel.type === ChannelType.GuildCategory && channel.name === section.category,
+  );
+  if (!category) return { status: 'category_not_found' };
+  const everyone = guild?.roles?.everyone;
+  if (!everyone || !category.permissionsFor?.(everyone)?.has(PermissionFlagsBits.ViewChannel)) {
+    return { status: 'category_not_public' };
+  }
+  const existing = guild.channels.cache.find(
+    (channel) => channel.type === ChannelType.GuildForum && channel.parentId === category.id && channel.name === spec.name,
+  );
+  if (existing && !existing.permissionsFor?.(everyone)?.has(PermissionFlagsBits.ViewChannel)) {
+    return { status: 'forum_not_public' };
+  }
+  const channel = await ensureForumChannel(guild, category, spec);
+  if (!channel.permissionsFor?.(everyone)?.has(PermissionFlagsBits.ViewChannel)) {
+    return { status: 'forum_not_public' };
+  }
+  return { status: 'ready', categoryId: category.id, channelId: channel.id, forumName: channel.name };
 }

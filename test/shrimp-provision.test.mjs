@@ -29,6 +29,7 @@ test('adds exactly one public shrimp forum under the existing public Aquapedia c
   assert.equal(x.writes[0].parent, 'c');
   assert.equal(x.writes[0].name, '🦐・shrimp-research');
   assert.equal(x.writes[0].type, 15);
+  assert.match(x.writes[0].reason, /public shrimp research/i);
   assert.equal(x.writes[0].permissionOverwrites, undefined);
 });
 

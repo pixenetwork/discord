@@ -181,12 +181,12 @@ export async function publishAquapediaCards(guild, result) {
     // An unknown/contested breeder requires explicitly named "unknown-breeders".
     const fallback = forumSlug(breeder);
     const target = desired || fallback;
-    const forum = publicShrimp ? publicForum : forums.find((c) => c.name === target);
     if (publicShrimp && (card.organismGroup !== 'shrimp' || !['breeder', 'competition', 'strain'].includes(card.entityType)
       || !Array.isArray(card.sources) || !card.sources.some((source) => httpsUrl(typeof source === 'string' ? source : source?.url)))) {
       skipped += 1;
       continue;
     }
+    const forum = publicShrimp ? publicForum : forums.find((c) => c.name === target);
     if (!forum || (!publicShrimp && !breeder && target !== 'unknown-breeders')) { skipped += 1; continue; }
     let payload;
     try {

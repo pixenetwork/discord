@@ -47,3 +47,13 @@ test('adapter refuses unlicensed images, duplicate IDs and missing competition s
   assert.throws(()=>prepareShrimpPublicBatch({breederManifest:{...breederManifest,cards:[breeders[0],breeders[0],...breeders.slice(2)]},contestManifest}),/duplicate/i);
   assert.throws(()=>prepareShrimpPublicBatch({breederManifest,contestManifest:{...contestManifest,records:[...contestManifest.records.slice(0,-1),{...contests[7],links:[]}]}}),/source/i);
 });
+
+test('public source validation rejects private and literal-IP hosts', () => {
+  for (const host of ['10.1.2.3', '172.16.2.3', '192.168.1.2', '169.254.1.3', '127.0.0.2', '[::1]']) {
+    const clone = { ...breederManifest, cards: [
+      { ...breeders[0], sources: ['https://' + host + '/private'] },
+      ...breeders.slice(1),
+    ] };
+    assert.throws(() => prepareShrimpPublicBatch({ breederManifest: clone, contestManifest }), /source/i);
+  }
+});

@@ -3,8 +3,11 @@
 function goodSource(value) {
   try {
     const url = new URL(value);
+    const host = url.hostname.toLowerCase().replace(/\.$/, '');
     return url.protocol === 'https:' && !url.username && !url.password &&
-      !['localhost', '127.0.0.1', '[::1]'].includes(url.hostname);
+      !host.startsWith('[') && !/^\d{1,3}(?:\.\d{1,3}){3}$/.test(host) &&
+      host !== 'localhost' && !host.endsWith('.localhost') &&
+      !host.endsWith('.local') && !host.endsWith('.internal');
   } catch { return false; }
 }
 

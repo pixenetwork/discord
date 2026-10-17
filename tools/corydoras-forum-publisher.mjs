@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import { breedingEvidenceLines } from './corydoras-breeding-evidence.mjs';
 import { createHash } from 'node:crypto';
 import path from 'node:path';
 import os from 'node:os';
@@ -301,6 +302,7 @@ function sourcePacket(rec) {
       '**Breeder / founder:** Not established from this index.',
       '**Care / breeding:** Species-specific parameters not yet independently validated unless documented directly below.',
       ...(SPECIES_EVIDENCE[rec.name] ?? []),
+      ...breedingEvidenceLines(rec.name),
       '**Source record:** ' + rec.source + extra,
       '**Aquapedia dossier:** ' + PR_URL
     ].join('\n'),

@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import { createHash } from 'node:crypto';
 import path from 'node:path';
 import os from 'node:os';
 import { execFileSync } from 'node:child_process';
@@ -37,6 +38,7 @@ export const PRIORITY_NAMES = [
   'Corydoras sp. CW128', 'Corydoras sp. CW207',
 ];
 const LINEAGE_NOTE = {
+  'Corydoras sp. CW005': 'CW005 is the historical aquarium code for the described species Corydoras aurofrenatus (Eigenmann & Kennedy, 1903), according to the ScotCat specialist crosswalk; do not count the code as another distinct species.',
   'Hoplisoma sterbai': 'Sterba’s Cory; separate wild-type fish from any albino, black or longfin captive selections.',
   'Hoplisoma panda': 'Panda Cory; breeder-selected variants require independent parentage and inheritance evidence.',
   'Hoplisoma adolfoi': 'Upper Rio Negro orange-cap patterned species; compare with H. duplicareum and other mimics.',
@@ -137,15 +139,59 @@ function priorityRecords(catalog) {
   }
   return {matches,missing};
 }
+
+// Dated-source discovery order, not a ranking by rarity or taxonomic confidence.
+// Interleave source genera and named/C/CW record classes in bounded batches.
+function nextCatalogBatch(catalog, occupiedNames, limit) {
+  if(!Number.isInteger(limit)||limit<1||limit>80)throw new Error('Next batch size must be 1 to 80');
+  const occupied=new Set([...occupiedNames].map(name=>String(name).trim().toLowerCase()));
+  const seen=new Set();
+  const groups=[...new Set(catalog.map(item=>item.group))];
+  const kinds=['Named taxon','CW-coded','C-coded'];
+  const pools=new Map();
+  for(const group of groups){
+    for(const kind of kinds){
+      pools.set(group+'::'+kind,catalog.filter(item=>item.group===group&&item.kind===kind&&!occupied.has(item.name.toLowerCase())));
+    }
+  }
+  const results=[];
+  while(results.length<limit){
+    let advanced=false;
+    for(const kind of kinds){
+      for(const group of groups){
+        const item=pools.get(group+'::'+kind).shift();
+        if(!item)continue;
+        advanced=true;
+        const key=item.name.toLowerCase();
+        if(seen.has(key))throw new Error('Duplicate directory display label: '+item.name);
+        seen.add(key);
+        results.push(item);
+        if(results.length>=limit)return results;
+      }
+    }
+    if(!advanced)break;
+  }
+  return results;
+}
 function safe(s,limit=350){return String(s??'').replace(/@(here|everyone)/ig,'@\u200b$1').slice(0,limit);}
 function kindTag(kind){return kind==='Named taxon'?'Named species':kind==='C-coded'?'C-number':'CW-number';}
 function sourcePacket(rec) {
-  const extra=rec.name.includes('CW128')||rec.name.includes('CW207') ? '\n**2026 original taxonomy:** https://doi.org/10.1590/1982-0224-2025-0146' : '';
+  const extra=rec.name.includes('CW128')||rec.name.includes('CW207')
+    ? '\n**2026 original taxonomy:** https://doi.org/10.1590/1982-0224-2025-0146'
+    : rec.name==='Corydoras sp. CW005'
+      ? '\n**CW005 crosswalk:** https://www.scotcat.com/callichthyidae/c_aurofrenatus.htm'
+      : '';
+  const directoryWarning=rec.name==='Brochis Taiosh'
+    ? 'Source directory label is not a validated Latin binomial; its formal species or trade identity remains unresolved.'
+    : rec.name.startsWith('Osteogasters ')
+      ? 'Source directory appears to contain a genus spelling inconsistency. Retain the original listing for traceability, but confirm the accepted name.'
+      : '';
   const note=LINEAGE_NOTE[rec.name] || 'Taxonomy, type locality, local population, captive pedigree, and breeding data require record-level review.';
   return {
     content: [
       '**' + safe(rec.name,100) + '**',
-      '**Classification:** ' + kindTag(rec.kind) + ' | **Research genus group:** ' + safe(rec.group,30),
+      '**Classification:** ' + (rec.name==='Brochis Taiosh'?'Unverified directory name':kindTag(rec.kind)) + ' | **Research genus group:** ' + safe(rec.group,30),
+      ...(directoryWarning?['**Naming caution:** ' + directoryWarning]:[]),
       '**Status:** Research draft / verification pending. A C/CW identifier is NOT necessarily a different species or domestic strain.',
       '**Identity / notes:** ' + safe(note,350),
       '**Breeder / founder:** Not established from this index.',
@@ -269,8 +315,46 @@ async function post(forum,recordKey,name,payload,tags,known,botId,kind) {
   fs.appendFileSync(RECEIPT_FILE,JSON.stringify({at:new Date().toISOString(),sourceSha:SOURCE_SHA,guildId:forum.guild.id,forumId:forum.id,kind,recordKey,threadId:created.id,messageId:starter.id,verified:true})+'\n');
   return {action:'posted',recordKey,threadId:created.id,messageId:starter.id};
 }
+// Permit a bounded correction to a bot-owned research starter post without duplicating it.
+async function refreshRecord(forum, threads, rec, botId, receiptFile=RECEIPT_FILE) {
+  const thread=threads.get(rec.name);
+  if(!thread)throw new Error('Cannot refresh missing research thread: '+rec.name);
+  const marker='AQP-CORY-'+rec.id;
+  const starter=await thread.fetchStarterMessage();
+  if(!starter?.id||starter.author?.id!==botId||!starter.embeds?.some(e=>e.footer?.text?.startsWith(marker)))
+    throw new Error('Research source ownership/marker mismatch; refusing edit: '+rec.name);
+  const payload=sourcePacket(rec);
+  const changed=starter.content!==payload.content;
+  if(changed)await starter.edit(payload);
+  const readback=await thread.messages.fetch({message:starter.id,force:true});
+  if(readback?.author?.id!==botId||readback.content!==payload.content||!readback.embeds?.some(e=>e.footer?.text?.startsWith(marker)))
+    throw new Error('Refresh readback failed. Stop before retry: '+rec.name);
+  const contentHash=createHash('sha256').update(readback.content).digest('hex');
+  let alreadyReceipted=false;
+  if(fs.existsSync(receiptFile)){
+    const raw=fs.readFileSync(receiptFile,'utf8');
+    alreadyReceipted=raw.split(/\r?\n/).filter(Boolean).some(line=>{
+      const previous=JSON.parse(line);
+      return previous.kind==='revision'&&previous.recordKey===rec.id&&previous.threadId===thread.id&&previous.contentHash===contentHash&&previous.verified===true;
+    });
+  }
+  if(!alreadyReceipted){
+    fs.mkdirSync(path.dirname(receiptFile),{recursive:true});
+    fs.appendFileSync(receiptFile,JSON.stringify({at:new Date().toISOString(),action:changed?'updated':'reconciled',contentHash,sourceSha:SOURCE_SHA,guildId:forum.guild.id,forumId:forum.id,kind:'revision',recordKey:rec.id,threadId:thread.id,messageId:readback.id,verified:true})+'\n');
+  }
+  return {action:changed?'updated':alreadyReceipted?'unchanged':'reconciled',recordKey:rec.id,threadId:thread.id,messageId:readback.id,verified:true};
+}
+
 async function main() {
   const mode=process.argv.includes('--apply')?'apply':'plan';
+  const nextFlag=process.argv.find(a=>a.startsWith('--next='));
+  const refreshFlag=process.argv.find(a=>a.startsWith('--refresh-id='));
+  const refreshId=refreshFlag?.split('=')[1]??null;
+  if(refreshFlag && (!/^[0-9]+$/.test(refreshId)||nextFlag))
+    throw new Error('--refresh-id requires a numerical source ID and cannot accompany --next');
+  const nextCount=nextFlag?Number(nextFlag.split('=')[1]):null;
+  if(nextFlag && (!Number.isInteger(nextCount)||nextCount<1||nextCount>80))
+    throw new Error('--next must contain 1 to 80 unpublished directory records');
   const limitFlag=process.argv.find(a=>a.startsWith('--limit='));
   const limit=limitFlag?Number(limitFlag.split('=')[1]):36;
   if(!Number.isInteger(limit)||limit<0||limit>80)throw new Error('--limit must be between 0 and 80');
@@ -288,12 +372,25 @@ async function main() {
     const sources=[...guild.channels.cache.values()].filter(c=>c.type===ChannelType.GuildCategory && c.name===SOURCE_CATEGORY);
     if(sources.length!==1)throw new Error('Exact private Aquapedia research source category not found unambiguously');
     requirePrivacy(sources[0],guild.id);
-    const target=await ensureChannel(guild,sources[0],mode==='apply');
-    console.log(JSON.stringify({mode,guildId:guild.id,botId:user.id,category:target.category?.name||'(would create)',forum:target.forum?.name||'(would create)',sourceCount:catalog.length,priorityMatched:selected.matches.length,priorityMissing:selected.missing,uniqueMorphs:MORPHS.length,plannedPosts:process.argv.includes('--pin-guide')?0:Math.min(limit,selected.matches.length)+MORPHS.length+1}));
-    if(mode==='plan')return;
+    const target=await ensureChannel(guild,sources[0],mode==='apply'&&!nextFlag&&!refreshFlag);
+    console.log(JSON.stringify({mode,guildId:guild.id,botId:user.id,category:target.category?.name||'(would create)',forum:target.forum?.name||'(would create)',sourceCount:catalog.length,priorityMatched:selected.matches.length,priorityMissing:selected.missing,uniqueMorphs:MORPHS.length,plannedPosts:process.argv.includes('--pin-guide')?0:(refreshFlag?1:(nextFlag?nextCount:Math.min(limit,selected.matches.length)+MORPHS.length+1))}));
+    if(mode==='plan'&&!nextFlag&&!refreshFlag)return;
     const forum=target.forum;
     if(!forum)throw new Error('No forum returned after provisioning');
     const existing=await allThreads(forum);
+    const nextSelection=nextFlag?nextCatalogBatch(catalog,new Set(existing.keys()),nextCount):[];
+    if(nextFlag)console.log(JSON.stringify({nextBatchPreview:nextSelection.map(r=>({name:r.name,kind:r.kind,source:r.source})),selectionCount:nextSelection.length,existingThreads:existing.size}));
+    const refreshRec=refreshFlag?catalog.find(r=>r.id===refreshId):null;
+    if(refreshFlag) {
+      if(!refreshRec)throw new Error('Unknown directory ID: '+refreshId);
+      if(!existing.has(refreshRec.name))throw new Error('Target thread not found: '+refreshRec.name);
+      console.log(JSON.stringify({refreshPreview:{id:refreshRec.id,name:refreshRec.name,source:refreshRec.source}}));
+    }
+    if(mode==='plan')return;
+    if(refreshRec){
+      console.log(JSON.stringify(await refreshRecord(forum,existing,refreshRec,user.id)));
+      return;
+    }
     if(process.argv.includes('--pin-guide')) {
       const guide=existing.get(GUIDE_TITLE);
       if(!guide)throw new Error('Research master index thread does not exist');
@@ -307,11 +404,13 @@ async function main() {
       return;
     }
     let posted=0,present=0;
-    const choices=[
-      {key:'master-index-528',name:GUIDE_TITLE,payload:guidePacket(catalog),tags:['Research index','Taxonomy'],kind:'index'},
-      ...selected.matches.slice(0,limit).map(rec=>({key:rec.id,name:rec.name,payload:sourcePacket(rec),tags:[kindTag(rec.kind),'Needs review'],kind:'directory'})),
-      ...MORPHS.map(rec=>({key:rec.id,name:rec.name,payload:morphPacket(rec),tags:['Captive strain','Needs review'],kind:'morph'})),
-    ];
+    const choices=nextFlag
+      ? nextSelection.map(rec=>({key:rec.id,name:rec.name,payload:sourcePacket(rec),tags:[rec.name==='Brochis Taiosh'?'Taxonomy':kindTag(rec.kind),'Needs review'],kind:'directory'}))
+      : [
+        {key:'master-index-528',name:GUIDE_TITLE,payload:guidePacket(catalog),tags:['Research index','Taxonomy'],kind:'index'},
+        ...selected.matches.slice(0,limit).map(rec=>({key:rec.id,name:rec.name,payload:sourcePacket(rec),tags:[kindTag(rec.kind),'Needs review'],kind:'directory'})),
+        ...MORPHS.map(rec=>({key:rec.id,name:rec.name,payload:morphPacket(rec),tags:['Captive strain','Needs review'],kind:'morph'})),
+      ];
     for(const item of choices){
       const receipt=await post(forum,item.key,item.name,item.payload,item.tags,existing,user.id,item.kind);
       if(receipt.action==='posted')posted++;else present++;
@@ -323,4 +422,4 @@ async function main() {
 if(import.meta.url===new URL('file://' + process.argv[1].replaceAll('\\','/')).href){
   main().catch(error=>{console.error('STOP',error?.message||String(error));process.exitCode=1;});
 }
-export {catalogFromSource,priorityRecords,sourcePacket,morphPacket,guidePacket,TAGS,MORPHS};
+export {catalogFromSource,priorityRecords,nextCatalogBatch,sourcePacket,morphPacket,guidePacket,refreshRecord,TAGS,MORPHS};

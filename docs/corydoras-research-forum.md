@@ -29,6 +29,12 @@ node --test test/corydoras-forum-publisher.test.mjs
 node --env-file="<existing authorized bot .env path>" tools/corydoras-forum-publisher.mjs --plan --limit=42
 node --env-file="<existing authorized bot .env path>" tools/corydoras-forum-publisher.mjs --apply --limit=42
 node --env-file="<existing authorized bot .env path>" tools/corydoras-forum-publisher.mjs --apply --pin-guide --limit=0
+# For the next review-labelled, unpublished directory batch:
+node --env-file="<existing authorized bot .env path>" tools/corydoras-forum-publisher.mjs --plan --next=60
+node --env-file="<existing authorized bot .env path>" tools/corydoras-forum-publisher.mjs --apply --next=60
+# To revise an already verified, bot-owned post after source crosswalk research:
+node --env-file="<existing authorized bot .env path>" tools/corydoras-forum-publisher.mjs --plan --refresh-id=499
+node --env-file="<existing authorized bot .env path>" tools/corydoras-forum-publisher.mjs --apply --refresh-id=499
 ```
 
 The CLI's apply mode requires the user's approval to publish. It automatically reuses already-posted matching threads, so bounded retries are idempotent. **Do not run the apply command concurrently.**

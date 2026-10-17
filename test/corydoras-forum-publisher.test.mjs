@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import {
-  catalogFromSource, priorityRecords, sourcePacket, morphPacket,
+  catalogFromSource, priorityRecords, nextCatalogBatch, sourcePacket, morphPacket, refreshRecord,
   guidePacket, PRIORITY_NAMES, TAGS, MORPHS
 } from '../tools/corydoras-forum-publisher.mjs';
 
@@ -22,7 +22,7 @@ function syntheticDirectory() {
   }
   for(let i=1;i<=197;i++){
     const id=331+i;
-    const code = i===1?'CW009':i===2?'CW023':'CW'+String(i+20).padStart(3,'0');
+    const code = i===1?'CW009':i===2?'CW023':'CW'+String(i+200).padStart(3,'0');
     rows.push('| osteogaster | CW-coded | Osteogaster sp. '+code+' | [CW source]('+source(id)+') |');
   }
   return rows.join('\n');
@@ -42,12 +42,67 @@ test('parser fails closed on a truncated or duplicate catalog',()=>{
  rows[1]=rows[0];
  assert.throws(()=>catalogFromSource(rows.join('\n')),/Duplicate source record ID/);
 });
+test('next catalog batch skips already published posts and covers named plus C/CW classes',()=>{
+ const occupied=new Set(['Hoplisoma sterbai','Osteogaster sp. CW009']);
+ const selection=nextCatalogBatch(fixtureCatalog,occupied,45);
+ assert.equal(selection.length,45);
+ assert.equal(new Set(selection.map(x=>x.name)).size,45);
+ assert.ok(selection.some(x=>x.kind==='Named taxon'));
+ assert.ok(selection.some(x=>x.kind==='C-coded'));
+ assert.ok(selection.some(x=>x.kind==='CW-coded'));
+ assert.ok(!selection.some(x=>occupied.has(x.name)));
+ assert.ok(!nextCatalogBatch(fixtureCatalog, new Set(fixtureCatalog.map(x=>x.name)),20).length);
+ assert.throws(()=>nextCatalogBatch(fixtureCatalog,new Set(),100),/must be 1 to 80/);
+});
+test('repeated batches advance deterministically without duplicates',()=>{
+ const first=nextCatalogBatch(fixtureCatalog,new Set(),65);
+ const second=nextCatalogBatch(fixtureCatalog,new Set(first.map(x=>x.name)),65);
+ assert.equal(second.length,65);
+ assert.equal(new Set([...first,...second].map(x=>x.name)).size,130);
+ assert.deepEqual(nextCatalogBatch(fixtureCatalog,new Set(),65),first);
+});
 test('priority records do not invent names absent from source',()=>{
  const {matches,missing}=priorityRecords(fixtureCatalog);
  assert.equal(matches.length+missing.length,PRIORITY_NAMES.length);
  assert.equal(new Set(matches.map(x=>x.id)).size,matches.length);
  assert.ok(matches.some(x=>x.name==='Hoplisoma sterbai'));
  assert.ok(matches.some(x=>x.name==='Osteogaster sp. CW023'));
+});
+test('CW005 post reconciles the historic number with a formally named species',()=>{
+  const rec={id:'499',group:'corydoras',kind:'CW-coded',name:'Corydoras sp. CW005',source:'https://www.corydorasworld.com/lineages/fish/499'};
+  const packet=sourcePacket(rec);
+  assert.match(packet.content,/same species|historical aquarium code/i);
+  assert.match(packet.content,/Corydoras aurofrenatus/);
+  assert.match(packet.content,/scotcat.com\/callichthyidae\/c_aurofrenatus/);
+});
+test('bot-owned forum starter corrections are read back and saved once',async()=>{
+  const rec={id:'499',group:'corydoras',kind:'CW-coded',name:'Corydoras sp. CW005',source:'https://www.corydorasworld.com/lineages/fish/499'};
+  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'aq-cory-test-'));
+  try {
+    const receipt=path.join(dir,'receipts.jsonl');
+    const message={
+      id:'starter',author:{id:'bot'},embeds:[{footer:{text:'AQP-CORY-499 • research draft'}}],
+      content:'Previously incomplete overview',
+      async edit(payload){this.content=payload.content;this.embeds=payload.embeds;}
+    };
+    const thread={id:'thread',fetchStarterMessage:async()=>message,messages:{fetch:async()=>message}};
+    const forum={id:'forum',guild:{id:'guild'}};
+    const map=new Map([[rec.name,thread]]);
+    const changed=await refreshRecord(forum,map,rec,'bot',receipt);
+    assert.equal(changed.action,'updated');
+    assert.equal(fs.readFileSync(receipt,'utf8').trim().split('\n').length,1);
+    const identical=await refreshRecord(forum,map,rec,'bot',receipt);
+    assert.equal(identical.action,'unchanged');
+    assert.equal(fs.readFileSync(receipt,'utf8').trim().split('\n').length,1);
+    await assert.rejects(refreshRecord(forum,map,rec,'other-bot',receipt),/ownership\/marker mismatch/);
+  } finally {fs.rmSync(dir,{recursive:true,force:true});}
+});
+test('ambiguous named and suspect source spelling display explicit naming cautions',()=>{
+  const suspectName=sourcePacket({id:'529',group:'brochis-sub-clade-1',kind:'Named taxon',name:'Brochis Taiosh',source:'https://www.corydorasworld.com/lineages/fish/529'});
+  assert.match(suspectName.content,/Unverified directory name/);
+  assert.match(suspectName.content,/not a validated Latin binomial/);
+  const suspectSpelling=sourcePacket({id:'520',group:'osteogaster',kind:'CW-coded',name:'Osteogasters sp. CW026',source:'https://www.corydorasworld.com/lineages/fish/520'});
+  assert.match(suspectSpelling.content,/genus spelling inconsistency/);
 });
 test('coded source post retains source and a research disclaimer with no unlicensed media',()=>{
  const r=fixtureCatalog.find(x=>x.name==='Osteogaster sp. CW009');

@@ -68,3 +68,13 @@
 - This batch distinguishes L397 from L398 *Panaqolus tankei*, original L144 from domestic Lemon Ancistrus, unofficial 'L600' from formally allocated L-codes, L128 from L200, valid *Pseudacanthicus nyktos*, and breeder accounts for L046 and L398.
 - **Publisher QA:** 15/15 focused tests on Main PC. The reviewing code is in [draft PR #28](https://github.com/pixenetwork/discord/pull/28); the branch intentionally avoids concurrent Corydoras code and requires independent review before merge.
 - **Scientific review and site status:** research drafts only. No image rights asserted, no unlicensed photos copied, no verified genetics/pedigrees invented, independent Aegis/Cerberus review pending, and no live Aquapedia website deployment in this pass.
+
+
+## Fifth Plecopedia batch — completed public audit (2026-10-17)
+
+- Existing Aquaphoria bot published **20** more source-backed topics through the same single-writer, REST-only public Plecopedia forum publisher. The prior **84** topics were identified by bot-owned topic marker and reused (no duplicates). New records in `tools/pleco-research-batch5.mjs`; publisher now imports batch 2–5 plus original baseline.
+- End-to-end independent read-only Discord API audit: **`live-audit-passed`, `verifiedPosts:105`, `indexPinned:true`, `publicForum:true`, `publicCategory:true`**. Exactly **104 research-topic starters + 1 pinned master index**.
+- 20/20 focused local Node.js tests passed in the Main PC source worktree, covering uniqueness, aliases, historic waterbody differences, Panaque titan L418 versus provisional Colombian L191, Xingu L083 uncertainty, 2025 *Peckoltia amjikin* without fabricated L038, and the 2024-online/2025-volume L333 study.
+- Exact public thread links and original taxonomic/hobby research citations are indexed in [Aquapedia fifth-batch research](https://github.com/pixenetwork/aquapedia/blob/athena/pleco-foundation-20260924/research/plecos/2026-10-17-l-number-crosswalk-batch-05.md).
+- Code changes uploaded to this separate **draft PR #28**, with no force push to the diverged Corydoras PR #26 branch. No secondary Discord worker, bot login, timer or duplicated gateway was created.
+- **Still not complete:** exhaustive L/LDA list, independent Aegis/Cerberus scientific review, credited/licensed specimen imagery, verified captive pedigree and live website publish. Public posts remain labeled research draft; **104 forum dossiers are not 104 different scientifically validated species**.

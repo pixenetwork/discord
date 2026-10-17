@@ -57,3 +57,9 @@ test('public source validation rejects private and literal-IP hosts', () => {
     assert.throws(() => prepareShrimpPublicBatch({ breederManifest: clone, contestManifest }), /source/i);
   }
 });
+
+test('batch refuses IDs which become indistinguishable in Discord receipt footers',()=>{
+  const long='a'.repeat(70);
+  const entries=[{...breeders[0], id:long+'A'}, {...breeders[1],id:long+'B'}, ...breeders.slice(2)];
+  assert.throws(()=>prepareShrimpPublicBatch({breederManifest:{...breederManifest,cards:entries},contestManifest}),/ID|identity|70/i);
+});

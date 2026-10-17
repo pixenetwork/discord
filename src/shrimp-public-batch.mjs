@@ -24,7 +24,9 @@ export function prepareShrimpPublicBatch({
   const cards = [];
   const ids = new Set();
   function push(card) {
-    if (!card?.id || !card.name || ids.has(card.id)) throw new Error('Missing or duplicate shrimp research ID');
+    if (!/^[A-Za-z0-9._:-]{1,70}$/.test(String(card?.id ?? '')) || !card.name || ids.has(card.id)) {
+      throw new Error('Missing, duplicate or over-70-character shrimp research ID');
+    }
     ids.add(card.id);
     if (!Array.isArray(card.photos) || card.photos.length !== 0) {
       throw new Error('Public forum posts must not import unreviewed shrimp photos');

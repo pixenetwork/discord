@@ -314,17 +314,20 @@ export async function provisionShrimpPublicResearchForum(guild) {
   );
   if (!category) return { status: 'category_not_found' };
   const everyone = guild?.roles?.everyone;
-  if (!everyone || !category.permissionsFor?.(everyone)?.has(PermissionFlagsBits.ViewChannel)) {
+  if (!everyone || (!category.permissionsFor?.(everyone)?.has(PermissionFlagsBits.ViewChannel)
+    || !category.permissionsFor?.(everyone)?.has(PermissionFlagsBits.ReadMessageHistory))) {
     return { status: 'category_not_public' };
   }
   const existing = guild.channels.cache.find(
     (channel) => channel.type === ChannelType.GuildForum && channel.parentId === category.id && channel.name === spec.name,
   );
-  if (existing && !existing.permissionsFor?.(everyone)?.has(PermissionFlagsBits.ViewChannel)) {
+  if (existing && (!existing.permissionsFor?.(everyone)?.has(PermissionFlagsBits.ViewChannel)
+    || !existing.permissionsFor?.(everyone)?.has(PermissionFlagsBits.ReadMessageHistory))) {
     return { status: 'forum_not_public' };
   }
   const channel = await ensureForumChannel(guild, category, spec, undefined, 'Aquaphoria public shrimp research forum provisioning');
-  if (!channel.permissionsFor?.(everyone)?.has(PermissionFlagsBits.ViewChannel)) {
+  if (!channel.permissionsFor?.(everyone)?.has(PermissionFlagsBits.ViewChannel)
+    || !channel.permissionsFor?.(everyone)?.has(PermissionFlagsBits.ReadMessageHistory)) {
     return { status: 'forum_not_public' };
   }
   return { status: 'ready', categoryId: category.id, channelId: channel.id, forumName: channel.name };

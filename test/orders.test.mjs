@@ -5,6 +5,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { ChannelType, Collection } from 'discord.js';
 import { createOrderService } from '../src/orders.mjs';
+import { provisionAquaphoriaLayout } from '../src/layout.mjs';
 import { createStore } from '../src/store.mjs';
 
 function mockGuild() {
@@ -122,6 +123,10 @@ test('paid-order retry preserves ticket lifecycle, channel, and deterministic pa
       shopify,
     });
     const guild = mockGuild();
+    await provisionAquaphoriaLayout(guild,{ownerUserId:'owner-user'});
+    const magazine = [...guild.channels.cache.values()].find(channel=>channel.name==='📖・medaka-hyakka');
+    assert.ok(magazine,'real magazine forum is present before order retry');
+    magazine.availableTags.push({id:'moderator-tag',name:'Editorial Review',moderated:false});
     const order = {
       id: 12345,
       name: '#1001',
@@ -161,6 +166,8 @@ test('paid-order retry preserves ticket lifecycle, channel, and deterministic pa
       && String(channel.topic ?? '').includes('Aquaphoria ticket key: shopify:12345:toa')
     ));
     const summary = await store.payoutSummary('toa');
+    assert.equal(magazine.availableTags.some(tag=>tag.id==='moderator-tag'),true,
+      'paid-order routing must not alter magazine editorial tags');
     assert.equal(first.tickets.length, 1);
     assert.equal(retry.tickets.length, 1);
     assert.equal(issueRetry.tickets.length, 1);

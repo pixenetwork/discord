@@ -127,3 +127,20 @@ test('magazine provisioning refuses a forum made private rather than changing it
   assert.deepEqual(f.creations,[]);
   assert.equal(f.permissionChanges.includes('forum:'+forum.name),false);
 });
+
+
+test('commerce-only layout reuse ignores magazine drift without changing the issue forums',async()=>{
+  const f=existingAquapediaLayoutFixture();
+  const pub=f.all.find(x=>x.name==='📖・medaka-hyakka');
+  const original=pub.availableTags.map(x=>x.id);
+  pub.availableTags.push({id:'editorial-existing-tag',name:'Editorial Review',moderated:false});
+  await assert.rejects(()=>provisionAquaphoriaLayout(f.guild,{ownerUserId:'owner-user'}),/magazine.*tags|tag.*drift/i);
+  f.edits.length=0;
+  const result=await provisionAquaphoriaLayout(f.guild,{ownerUserId:'owner-user',includePublicMagazines:false});
+  assert.ok(result.roles.staffRoleId);
+  assert.ok(result.channels.some(x=>x.channel==='🦐・shrimp-research'));
+  assert.equal(result.channels.some(x=>x.channel==='📖・medaka-hyakka'),false);
+  assert.deepEqual(pub.availableTags.map(x=>x.id),[...original,'editorial-existing-tag']);
+  assert.equal(f.edits.some(x=>x.name==='📖・medaka-hyakka'),false);
+  assert.deepEqual(f.creations,[]);
+});

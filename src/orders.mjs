@@ -215,7 +215,7 @@ export function createOrderService({ config, store, shopify }) {
     splitOrder,
 
     async routePaidOrder(guild, order) {
-      const layout = await provisionAquaphoriaLayout(guild, { ownerUserId: config.discord.ownerUserId, store });
+      const layout = await provisionAquaphoriaLayout(guild, { ownerUserId: config.discord.ownerUserId, store, includePublicMagazines: false });
       const { groups, unresolved } = await splitOrder(order);
       const tickets = [];
       for (const group of groups) tickets.push(await createVendorTicket(guild, order, group, layout.roles));

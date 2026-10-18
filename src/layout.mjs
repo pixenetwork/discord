@@ -287,7 +287,7 @@ function privateOverwrites(guild, { ownerUserId, staffRoleId, vendorRoleId = nul
   ];
 }
 
-export async function provisionAquaphoriaLayout(guild, { ownerUserId, store = null }) {
+export async function provisionAquaphoriaLayout(guild, { ownerUserId, store = null, includePublicMagazines = true }) {
   const previousRoles = store ? await store.getLayoutRoles() : null;
   const staffRole = await ensureRole(guild, 'Aquaphoria Staff', previousRoles?.staffRoleId);
   const vendorRole = await ensureRole(guild, 'Verified Aquaphoria Vendor', previousRoles?.vendorRoleId);
@@ -307,6 +307,9 @@ export async function provisionAquaphoriaLayout(guild, { ownerUserId, store = nu
       created.push({ category: category.name, channel: channel.name, id: channel.id, type: 'text' });
     }
     for (const forumSpec of section.forums ?? []) {
+      // Commerce/vendor flows do not depend on public magazine metadata.
+      // Owner /aquaphoria setup retains strict fail-closed magazine drift checks.
+      if (!includePublicMagazines && forumSpec.protectExisting) continue;
       const reason = section.category === '📚・AQUAPEDIA'
         ? 'Aquaphoria public Aquapedia forum provisioning'
         : 'Aquaphoria private publication forum provisioning';

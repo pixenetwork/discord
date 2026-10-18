@@ -72,6 +72,10 @@ const CORE_LAYOUT = [
       ['🩺・care-help', 'General freshwater aquarium husbandry and care help.'],
     ],
     forums: [{
+      name: '🐟・medaka-research',
+      topic: 'Public Medakapedia indexes for Japanese breeders, strains, documented lineages and competition evidence. Research claims carry provenance and review status.',
+      tags: ['Breeder', 'Strain', 'Lineage', 'Competition', 'Evidence'].map((name) => ({ name, moderated: false })),
+    }, {
       name: '🦐・shrimp-research',
       topic: 'Public source-backed ornamental shrimp breeder and competition research. Each breeder or event gets its own thread; award entrant is not automatically strain inventor.',
       tags: ['Breeder', 'Competition', 'Lineage', 'Genetics', 'Husbandry'].map((name) => ({ name, moderated: false })),
@@ -242,8 +246,8 @@ export async function provisionAquaphoriaLayout(guild, { ownerUserId, store = nu
       created.push({ category: category.name, channel: channel.name, id: channel.id, type: 'text' });
     }
     for (const forumSpec of section.forums ?? []) {
-      const reason = forumSpec.name === '🦐・shrimp-research'
-        ? 'Aquaphoria public shrimp research forum provisioning'
+      const reason = ['🐟・medaka-research', '🦐・shrimp-research'].includes(forumSpec.name)
+        ? 'Aquaphoria public breeder/strain research forum provisioning'
         : 'Aquaphoria private publication forum provisioning';
       const channel = await ensureForumChannel(guild, category, forumSpec, permissionOverwrites, reason);
       created.push({ category: category.name, channel: channel.name, id: channel.id, type: 'forum' });

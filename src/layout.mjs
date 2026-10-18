@@ -96,22 +96,27 @@ const CORE_LAYOUT = [
       tags: ['Species', 'Genetics', 'Regional', 'Breeding', 'Conservation'].map((name) => ({ name, moderated: false })),
     }, {
       name: 'magazines-and-articles',
+      protectExisting: true,
       topic: 'PUBLIC AQUAPEDIA — ONLY medaka and freshwater shrimp magazines, newsletters, and articles. One thread per issue/article; begin with Issue 1 where available. Free English reading guides and rights-cleared translated excerpts are clearly labeled. No unlicensed reproductions.',
       tags: ['Magazine', 'Newsletter', 'Article', 'Medaka', 'Shrimp', 'English Guide', 'Licensed Translation', 'Free to Read'].map((name) => ({ name, moderated: false })),
     }, {
       name: '📖・medaka-hyakka',
+      protectExisting: true,
       topic: 'Aquapedia public Medaka Hyakka / メダカ百華 — issue number, subject, English reading guide, references and historical context. No republished copyrighted magazine scans.',
       tags: MAGAZINE_ISSUE_TAGS,
     }, {
       name: '📘・medaka-advance',
+      protectExisting: true,
       topic: 'Aquapedia public Medaka Advance / eBookMAG — issue number, subject, English reading guide, references and historical context. No republished copyrighted magazine scans.',
       tags: MAGAZINE_ISSUE_TAGS,
     }, {
       name: '🦐・shrimp-club',
+      protectExisting: true,
       topic: 'Aquapedia public Shrimp Club / シュリンプクラブ — issue number, subject, English reading guide, references and historical context. No republished copyrighted magazine scans.',
       tags: MAGAZINE_ISSUE_TAGS,
     }, {
       name: '🐟・medaka-trip',
+      protectExisting: true,
       topic: 'Aquapedia public Medaka Trip / メダカトリップ — issue number, subject, English reading guide, references and historical context. No republished copyrighted magazine scans.',
       tags: MAGAZINE_ISSUE_TAGS,
     }],
@@ -201,11 +206,36 @@ async function ensureCategory(guild, name, permissionOverwrites = undefined) {
   return guild.channels.create({ name, type: ChannelType.GuildCategory, permissionOverwrites, reason: 'Aquaphoria Discord layout provisioning' });
 }
 
-async function ensureForumChannel(guild, parent, { name, topic, tags }, permissionOverwrites = undefined, reason = 'Aquaphoria forum provisioning') {
+async function ensureForumChannel(guild, parent, { name, topic, tags, protectExisting = false }, permissionOverwrites = undefined, reason = 'Aquaphoria forum provisioning') {
+  if (protectExisting) {
+    const everyone = guild?.roles?.everyone;
+    const publicRead = (channel) => channel?.permissionsFor?.(everyone)?.has(PermissionFlagsBits.ViewChannel)
+      && channel?.permissionsFor?.(everyone)?.has(PermissionFlagsBits.ReadMessageHistory);
+    if (!everyone || !publicRead(parent)) {
+      throw new Error(`Magazine public category access drift: ${name}`);
+    }
+    const colliding = guild.channels.cache.find((channel) => channel.name === name
+      && (channel.parentId !== parent.id || channel.type !== ChannelType.GuildForum));
+    if (colliding) throw new Error(`Magazine forum collision outside its public category: ${name}`);
+  }
   const existing = guild.channels.cache.find(
     (channel) => channel.type === ChannelType.GuildForum && channel.name === name && channel.parentId === parent.id,
   );
   if (existing) {
+    if (protectExisting) {
+      const everyone = guild.roles.everyone;
+      const hasAccess = existing.permissionsFor?.(everyone)?.has(PermissionFlagsBits.ViewChannel)
+        && existing.permissionsFor?.(everyone)?.has(PermissionFlagsBits.ReadMessageHistory);
+      if (!hasAccess) throw new Error(`Magazine forum not public: ${name}`);
+      const expectedNames = tags.map((tag) => tag.name);
+      const liveNames = (existing.availableTags ?? []).map((tag) => tag.name);
+      if (JSON.stringify(liveNames) !== JSON.stringify(expectedNames)
+        || (existing.availableTags ?? []).some((tag) => !tag.id)) {
+        throw new Error(`Magazine forum tags drift: ${name}`);
+      }
+      if (existing.topic !== topic) throw new Error(`Magazine forum topic drift: ${name}`);
+      return existing;
+    }
     const existingTagIds = new Map((existing.availableTags ?? []).map((tag) => [tag.name, tag.id]));
     const availableTags = tags.map((tag) => ({
       ...tag,

@@ -33,6 +33,7 @@ function existingAquapediaLayoutFixture() {
       const forum={
         id:'forum:'+spec.name,parentId:category.id,name:spec.name,type:ChannelType.GuildForum,
         topic:spec.topic,
+        permissionsFor:()=>({has:()=>true}),
         availableTags:spec.tags.map(x=>({id:'tag:'+spec.name+':'+x.name,...x})),
         permissionOverwrites:{set:async()=>permissionChanges.push('forum:'+spec.name)},
         async edit(options,reason) {
@@ -72,9 +73,7 @@ test('whole-layout provisioning reuses live magazine forums and exact issue tag 
     assert.equal(after.id,before.id,name+' ID changed');
     assert.equal(returned.find(x=>x.channel===name)?.id,before.id,name+' receipt changed');
     assert.deepEqual(new Map(after.availableTags.map(t=>[t.name,t.id])),before.tags,name+' tags replaced');
-    const edit=f.edits.find(x=>x.name===name);
-    assert.ok(edit,name+' was not found as an existing forum');
-    assert.match(edit.reason,/public Aquapedia forum provisioning/);
+    assert.equal(f.edits.some(x=>x.name===name),false,name+' existing live metadata should not be rewritten');
     assert.equal(f.permissionChanges.includes('forum:'+name),false,name+' public overwrites mutated');
   }
   assert.ok(f.permissionChanges.some(x=>x.startsWith('forum:📚・translated-publications')),'existing private forum policy still enforced');
@@ -91,4 +90,40 @@ test('repeating provisionAquaphoriaLayout preserves all four issue forums and ta
   assert.equal(f.all.length,countBefore);
   assert.deepEqual(f.creations,[]);
   for(const [name,tags] of ids)assert.deepEqual(f.all.find(x=>x.name===name).availableTags.map(t=>t.id),tags);
+});
+
+test('magazine forum provisioning does not silently drop a moderator-added tag',async()=>{
+  const f=existingAquapediaLayoutFixture();
+  const forum=f.all.find(x=>x.name==='📖・medaka-hyakka');
+  forum.availableTags.push({id:'moderator-tag-1',name:'Editorial Review',moderated:false});
+  await assert.rejects(
+    ()=>provisionAquaphoriaLayout(f.guild,{ownerUserId:'owner-user'}),
+    /magazine.*tags|tag.*drift/i
+  );
+  assert.equal(forum.availableTags.some(x=>x.id==='moderator-tag-1'),true);
+  assert.equal(f.edits.some(x=>x.name===forum.name),false);
+  assert.deepEqual(f.creations,[]);
+});
+
+test('magazine provisioning refuses a conflicting forum with the same name outside public Aquapedia',async()=>{
+  const f=existingAquapediaLayoutFixture();
+  f.all.push({id:'hidden-duplicate',name:'📘・medaka-advance',type:ChannelType.GuildForum,parentId:'private-category'});
+  await assert.rejects(
+    ()=>provisionAquaphoriaLayout(f.guild,{ownerUserId:'owner-user'}),
+    /magazine.*collision|duplicate.*magazine/i
+  );
+  assert.deepEqual(f.creations,[]);
+  assert.equal(f.edits.some(x=>x.name==='📘・medaka-advance'),false);
+});
+
+test('magazine provisioning refuses a forum made private rather than changing its public access',async()=>{
+  const f=existingAquapediaLayoutFixture();
+  const forum=f.all.find(x=>x.name==='🦐・shrimp-club');
+  forum.permissionsFor=()=>({has:()=>false});
+  await assert.rejects(
+    ()=>provisionAquaphoriaLayout(f.guild,{ownerUserId:'owner-user'}),
+    /magazine.*public|forum.*public/i
+  );
+  assert.deepEqual(f.creations,[]);
+  assert.equal(f.permissionChanges.includes('forum:'+forum.name),false);
 });

@@ -35,6 +35,11 @@ function mockGuild() {
           type: input.type,
           parentId: input.parent ?? null,
           topic: input.topic ?? null,
+          // Discord exposes effective public readability on GuildCategory/GuildForum.
+          permissionsFor: () => ({ has: () => true }),
+          availableTags: (input.availableTags ?? []).map((tag, index) => ({
+            ...tag, id: `tag-${channelSequence}-${index}`,
+          })),
           permissionOverwrites: {
             async set() {},
           },

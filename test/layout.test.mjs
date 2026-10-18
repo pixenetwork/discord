@@ -120,3 +120,20 @@ test('private forum provisioning requires the configured owner to resolve to a c
     /owner .* is not cached/i,
   );
 });
+
+test('public research includes both Medaka and Shrimp directories with correct source tags', () => {
+  const sections = layoutDefinition();
+  const publicSection = sections.find((section) => section.category === '📚・AQUAPEDIA');
+  assert.ok(publicSection);
+  assert.equal(publicSection.vendorOnly, undefined);
+  assert.equal(publicSection.staffOnly, undefined);
+  for (const [name, expectedTags] of [
+    ['🐟・medaka-research', ['Breeder', 'Strain', 'Lineage', 'Competition', 'Evidence']],
+    ['🦐・shrimp-research', ['Breeder', 'Competition', 'Lineage', 'Genetics', 'Husbandry']],
+  ]) {
+    const matches = publicSection.forums.filter((forum) => forum.name === name);
+    assert.equal(matches.length, 1, 'one canonical public forum: ' + name);
+    assert.deepEqual(matches[0].tags.map((tag) => tag.name), expectedTags);
+    assert.match(matches[0].topic, /research|evidence/i);
+  }
+});

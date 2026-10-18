@@ -96,3 +96,14 @@
 - Seventh batch now housed in `tools/pleco-research-batch7.mjs`, imported into `tools/pleco-forum-publisher.mjs`. Local QA 29/29 tests passed, including L267 to *Ancistrus yanesha*, L159 to *A. luzia*, *Hypancistrus parkateje*, Rio Negro *Hypancistrus* distinction, and *Pseudoqolus koko* current genus.
 - [Aquapedia batch-07 research](https://github.com/pixenetwork/aquapedia/blob/athena/pleco-foundation-20260924/research/plecos/2026-10-17-l-number-crosswalk-batch-07.md) contains all 21 exact verified Discord thread URLs and scientific references.
 - This source-code branch remains isolated in **draft PR #28**, intentionally not forced onto the changing Corydoras branch. It is **not merged**. The scientific entries are **research drafts**, not approved species/captive lineage pedigrees or deployed Aquapedia website pages. Independent Aegis/Cerberus review, photo licensing and public website promotion have not occurred.
+
+
+## Eighth batch — live public 168/168 audit (2026-10-17)
+
+- The existing REST-only one-shot publisher (authorized Aquaphoria bot; no new Gateway session or scheduler) created **21 new research threads** and identified the previous **146** research threads without duplicating them.
+- Independent read-only full Discord REST audit: **`live-audit-passed`, `verifiedPosts:168`, `indexPinned:true`, `publicForum:true`, `publicCategory:true`**. This is **167 research topics plus one pinned master index**, not 167 formally verified species.
+- Scientific highlight: L455, L456, and L457 are historical codes referring to *Chaetostoma sacramento* (2024), not three new species or validated genetic lines; the 2024 descriptions of Ecuadorian *Panaqolus orcesi* and *P. pantostiktos* refer to distinct Napo/Tigre basin collections.
+- New publisher source: `tools/pleco-research-batch8.mjs` and related test/source updates in **draft PR #28**. **34/34** focused local tests passed before authorization. Unrelated Corydoras source modifications were not overwritten.
+- New Aquapedia source-backed dossier and **all exact 21 live thread URLs**: [batch 08 research](https://github.com/pixenetwork/aquapedia/blob/athena/pleco-foundation-20260924/research/plecos/2026-10-17-l-number-crosswalk-batch-08.md). Data staging: [research JSON](https://github.com/pixenetwork/aquapedia/blob/athena/pleco-foundation-20260924/data/plecos/2026-10-17-batch-08.research.json).
+- **Not production website content:** Aquapedia GitHub repository main README lists a knowledge-base structure, but no observed frontend `package.json` or page entrypoint in expected root/`apps/web` locations. An explicit, verified frontend and data ingestion path are required before describing these drafts as live website pages.
+- No copyrighted taxon photographs copied; no invented breeder identity, founder genetics, independent Aegis/Cerberus review, species authentication or website release. PR remains draft and unmerged.

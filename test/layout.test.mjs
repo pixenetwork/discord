@@ -129,7 +129,7 @@ test('public research includes both Medaka and Shrimp directories with correct s
   assert.equal(publicSection.staffOnly, undefined);
   for (const [name, expectedTags] of [
     ['🐟・medaka-research', ['Breeder', 'Strain', 'Lineage', 'Competition', 'Evidence']],
-    ['🦐・shrimp-research', ['Breeder', 'Competition', 'Lineage', 'Genetics', 'Husbandry']],
+    ['🦐・shrimp-research', ['Breeder', 'Strain', 'Competition', 'Lineage', 'Genetics', 'Husbandry']],
   ]) {
     const matches = publicSection.forums.filter((forum) => forum.name === name);
     assert.equal(matches.length, 1, 'one canonical public forum: ' + name);

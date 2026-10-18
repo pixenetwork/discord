@@ -1,3 +1,4 @@
+import { probePublicThreadCapacity } from './thread-capacity.mjs';
 import { ChannelType, PermissionFlagsBits } from 'discord.js';
 
 // Source-backed, permission-gated Aquapedia messages for *existing* breeder forums.
@@ -243,6 +244,7 @@ export async function publishAquapediaCards(guild, result) {
   let posted = 0;
   let skipped = 0;
   let unverified = 0;
+  let capacityBlocked = false;
   const receipts = [];
   const destinations = new Map();
   const ordered = [...cards].sort((a, b) => Number(b.entityType === 'breeder') - Number(a.entityType === 'breeder'));
@@ -292,10 +294,22 @@ export async function publishAquapediaCards(guild, result) {
         && message.embeds?.some((embed) => embed.footer?.text?.startsWith(`Aquapedia • ${recordId} •`))
         && typeof message.edit === 'function');
       if (!previous) { skipped += 1; continue; }
-      if (thread.archived) await thread.setArchived(false, 'Update approved Aquapedia evidence');
+      if (thread.archived) {
+        // Reopening an archived thread also consumes a guild-wide active slot.
+        if (publicResearch) {
+          const capacity = await probePublicThreadCapacity(guild);
+          if (!capacity.allowed) { capacityBlocked = true; skipped += 1; break; }
+        }
+        await thread.setArchived(false, 'Update approved Aquapedia evidence');
+      }
       await previous.edit(payload);
       priorMessageId = previous.id;
     } else {
+      if (publicResearch) {
+        // The active-thread ceiling is GUILD-wide, not specific to this forum.
+        const capacity = await probePublicThreadCapacity(guild);
+        if (!capacity.allowed) { capacityBlocked = true; skipped += 1; break; }
+      }
       thread = await forum.threads.create({ name, message: payload, reason: 'Approved Aquapedia breeder or strain dossier' });
     }
     let readback = null;
@@ -321,7 +335,7 @@ export async function publishAquapediaCards(guild, result) {
     skipped,
     unverified,
     receipts,
-    reason: unverified ? 'message_readback_unverified' : posted ? 'verified_in_existing_breeder_forums' : 'no_matching_authorized_breeder_forum',
+    reason: unverified ? 'message_readback_unverified' : capacityBlocked ? 'discord_thread_capacity_guard' : posted ? 'verified_in_existing_breeder_forums' : 'no_matching_authorized_breeder_forum',
     threadIds: [...destinations.values()],
   };
 }

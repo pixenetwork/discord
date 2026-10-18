@@ -67,3 +67,25 @@ public content and review state. It does not log in, create channels or post.
    are independently verified. The website being live is not a Discord receipt.
 
 Current release status: **code prepared; Discord posts not yet verified live**.
+
+## Deterministic 22-record publication simulation (no Discord connection)
+
+After downloading the current Aquapedia breeder-card and competition-highlight
+JSON manifests to the **same authorized machine**, run:
+
+```sh
+node tools/verify-shrimp-public-batch.mjs <breeder-cards.json> <competition-highlights.json>
+node tools/verify-shrimp-batch-e2e.mjs <breeder-cards.json> <competition-highlights.json>
+```
+
+The second command builds an entirely **in-memory Discord guild/forum mock** from
+the actual source records. It tests an approval-closed rejection, one breeder
+canary, the remaining 21 records, bot-authored message-ID receipts, and a
+second full-batch pass that must edit exactly 22 existing threads with **zero
+new duplicate threads**. No Discord token, network credentials, or real bot
+process are accessed. The displayed receipt IDs are *synthetic* and must
+**never** be logged or represented as live Discord publication evidence.
+
+This test is necessary but not sufficient for live release. The production
+worker's exact launch path, authorized credential/state handoff, forum access,
+and real Discord readback receipts remain independent deployment gates.

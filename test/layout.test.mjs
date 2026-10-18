@@ -121,7 +121,7 @@ test('private forum provisioning requires the configured owner to resolve to a c
   );
 });
 
-test('public research includes both Medaka and Shrimp directories with correct source tags', () => {
+test('public research includes Medaka, Shrimp, and Arowana directories with source tags', () => {
   const sections = layoutDefinition();
   const publicSection = sections.find((section) => section.category === '📚・AQUAPEDIA');
   assert.ok(publicSection);
@@ -130,6 +130,7 @@ test('public research includes both Medaka and Shrimp directories with correct s
   for (const [name, expectedTags] of [
     ['🐟・medaka-research', ['Breeder', 'Strain', 'Lineage', 'Competition', 'Evidence']],
     ['🦐・shrimp-research', ['Breeder', 'Strain', 'Competition', 'Lineage', 'Genetics', 'Husbandry']],
+    ['🐉・arowana-research', ['Species', 'Genetics', 'Regional', 'Breeding', 'Conservation']],
   ]) {
     const matches = publicSection.forums.filter((forum) => forum.name === name);
     assert.equal(matches.length, 1, 'one canonical public forum: ' + name);

@@ -257,7 +257,7 @@ export async function publishAquapediaCards(guild, result) {
   const receipts = [];
   const destinations = new Map();
   const ordered = [...cards].sort((a, b) => Number(b.entityType === 'breeder') - Number(a.entityType === 'breeder'));
-  const expectedOrganism = publicShrimp ? 'shrimp' : publicMedaka ? 'medaka' : 'arowana';
+  const expectedOrganism = publicShrimp ? 'shrimp' : publicMedaka ? 'medaka' : publicArowana ? 'arowana' : null;
   const allowedPublicTypes = publicShrimp ? ['breeder', 'competition', 'strain'] : publicMedaka ? ['competition'] : ['species', 'research', 'strain'];
   for (const card of ordered) {
     const desired = forumSlug(card.breederForumName);
@@ -336,7 +336,7 @@ export async function publishAquapediaCards(guild, result) {
     skipped,
     unverified,
     receipts,
-    reason: unverified ? 'message_readback_unverified' : posted ? 'verified_in_existing_breeder_forums' : 'no_matching_authorized_breeder_forum',
+    reason: unverified ? 'message_readback_unverified' : posted ? (publicMedaka ? 'verified_in_existing_public_medaka_forum' : 'verified_in_existing_breeder_forums') : 'no_matching_authorized_breeder_forum',
     threadIds: [...destinations.values()],
   };
 }

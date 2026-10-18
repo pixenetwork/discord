@@ -113,12 +113,14 @@ test('Medaka source must include real direct organizer evidence, not just an Aqu
 });
 
 test('Medaka public route disallows conflicting public targets and duplicate stable IDs', async () => {
-  const { guild, created } = mockGuild();
-  const both = await publishAquapediaCards(guild, { ...approved, publicShrimpResearch: true });
-  const dup = await publishAquapediaCards(guild, { ...approved, cards: [contest, { ...contest }] });
+  const { guild: conflictingGuild, created: conflictingPosts } = mockGuild();
+  const both = await publishAquapediaCards(conflictingGuild, { ...approved, publicShrimpResearch: true });
+  const { guild: duplicateGuild, created: duplicatePosts } = mockGuild();
+  const dup = await publishAquapediaCards(duplicateGuild, { ...approved, cards: [contest, { ...contest }] });
   assert.equal(both.posted, 0);
   assert.equal(dup.posted, 0);
-  assert.equal(created.length, 0);
+  assert.equal(conflictingPosts.length, 0);
+  assert.equal(duplicatePosts.length, 0);
 });
 
 test('standalone Medaka competition rendering does not invent a founding breeder', () => {
@@ -126,4 +128,26 @@ test('standalone Medaka competition rendering does not invent a founding breeder
   assert.match(payload.embeds[0].title, /COMPETITION/);
   assert.match(payload.embeds[0].description, /not automatically the original strain creator/);
   assert.equal(payload.embeds[0].fields.length > 0, true);
+});
+
+test('missing or blank public card IDs are rejected before any Discord write', async () => {
+  for (const id of [undefined, null, '', ' ']) {
+    const { guild, created } = mockGuild();
+    const result = await publishAquapediaCards(guild, {
+      ...approved, cards: [{ ...contest, id }],
+    });
+    assert.equal(result.posted, 0);
+    assert.equal(result.reason, 'invalid_or_duplicate_public_record_id');
+    assert.equal(created.length, 0);
+  }
+});
+
+test('one direct official organizer citation is sufficient with canonical websiteUrl', async () => {
+  const { guild, created } = mockGuild();
+  const result = await publishAquapediaCards(guild, { ...approved,
+    cards: [{ ...contest, sources: ['https://ima-medaka.or.jp/8th_result/'] }],
+  });
+  assert.equal(result.posted, 1);
+  assert.equal(result.reason, 'verified_in_existing_public_medaka_forum');
+  assert.equal(created.length, 1);
 });

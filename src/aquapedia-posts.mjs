@@ -4,6 +4,7 @@ import { ChannelType, PermissionFlagsBits } from 'discord.js';
 const CATEGORY_NAME = '🔬・BREEDER RESEARCH';
 const PUBLIC_CATEGORY_NAME = '📚・AQUAPEDIA';
 const PUBLIC_FORUM_NAME = '🦐・shrimp-research';
+const PUBLIC_AROWANA_FORUM_NAME = '🐉・arowana-research';
 const ALLOWED_RIGHTS = new Set(['owner_owned', 'licensed', 'permission_granted', 'public_domain', 'cc0']);
 const MAX_RECORDS = 30;
 
@@ -71,7 +72,7 @@ function field(name, value, empty = 'Not established') {
 }
 
 export function buildAquapediaPost(record) {
-  if (!record || !['breeder', 'strain', 'competition'].includes(record.entityType) || !safeText(record.name)) {
+  if (!record || !['breeder', 'strain', 'competition', 'species', 'research'].includes(record.entityType) || !safeText(record.name)) {
     throw new Error('A breeder, strain or competition name and valid entityType are required');
   }
   const title = safeText(record.name, 160);
@@ -112,7 +113,14 @@ export function buildAquapediaPost(record) {
   }
   if (sourceChunk) sourceFields.push(field(sourceFields.length ? `Research sources (${sourceFields.length + 1})` : 'Research sources', sourceChunk));
   if (!sourceFields.length) sourceFields.push(field('Research sources', '', 'Original-source citation pending'));
-  const fields = [
+  const fields = ['species', 'research'].includes(record.entityType) ? [
+    field('Identity / scope', record.description ?? record.phenotype),
+    field('Origins / geographical range', record.history),
+    field('Genetics / interpretation', record.lineage, 'Not independently established'),
+    field('Biology, welfare and conservation', record.care),
+    field('Evidence confidence', record.confidence ?? 'Evidence under review'),
+    ...sourceFields,
+  ] : [
     field('Breeder / creator', record.breederName ?? (record.entityType === 'breeder' ? record.name : null)),
     field('Description & identifying traits', record.description ?? record.phenotype),
     field('Origins / development history', record.history),
@@ -125,7 +133,7 @@ export function buildAquapediaPost(record) {
     ...sourceFields,
   ];
   const embed = {
-    title: (record.entityType === 'breeder' ? 'BREEDER • ' : 'STRAIN • ') + title,
+    title: (record.entityType === 'breeder' ? 'BREEDER • ' : record.entityType === 'species' ? 'SPECIES • ' : record.entityType === 'research' ? 'RESEARCH • ' : 'STRAIN • ') + title,
     description: japanese ? `Japanese: ${japanese}\n${safeText(record.summary, 450)}` : safeText(record.summary || title, 450),
     fields,
     footer: { text: `Aquapedia • ${safeText(record.id || title, 70)} • ${photos.length ? 'licensed imagery' : 'photos pending rights review'}` },
@@ -141,7 +149,7 @@ export function buildAquapediaPost(record) {
   const embeds = [embed, ...extraEmbeds];
   ensureDiscordEmbedLimits(embeds);
   return {
-    content: `🧬 **${title}** — ${record.entityType === 'breeder' ? 'breeder profile' : 'strain dossier'}${photos.length ? '' : '\n📷 Original specimen images pending documented reuse permission.'}`,
+    content: `🧬 **${title}** — ${record.entityType === 'breeder' ? 'breeder profile' : record.entityType === 'species' ? 'species dossier' : record.entityType === 'research' ? 'research guide' : 'strain dossier'}${photos.length ? '' : '\n📷 Original specimen images pending documented reuse permission.'}${record.organismGroup === 'arowana' && httpsUrl(record.websiteUrl) ? '\nFull research: ' + httpsUrl(record.websiteUrl) : ''}`,
     embeds,
     allowedMentions: { parse: [] },
   };
@@ -171,14 +179,16 @@ async function fetchCompleteArchivedThreads(forum) {
   throw new Error('Archived breeder forum exceeded safe pagination limit');
 }
 
-function matchingThread(threads, record, publicShrimp = false) {
+function matchingThread(threads, record, publicResearch = false) {
   let name;
-  if (publicShrimp) {
+  if (publicResearch) {
     // Distinguish two strains with the same display name without exceeding
     // Discord's 100-character thread-name limit. IDs are prevalidated.
     const idTag = '[' + record.id + ']';
     const prefix = record.entityType === 'breeder' ? 'Breeder — '
-      : record.entityType === 'competition' ? 'Competition — ' : 'Strain — ';
+      : record.entityType === 'competition' ? 'Competition — '
+        : record.entityType === 'species' ? 'Species — '
+          : record.entityType === 'research' ? 'Research — ' : 'Strain — ';
     const spaceForName = Math.max(0, 100 - prefix.length - idTag.length - 1);
     name = prefix + safeText(record.name, spaceForName) + ' ' + idTag;
   } else {
@@ -197,12 +207,15 @@ export async function publishAquapediaCards(guild, result) {
     return { posted: 0, reason: 'review_or_completion_pending' };
   }
   const publicShrimp = result.publicShrimpResearch === true;
-  if (publicShrimp && result.publicAudienceApproved !== true) {
+  const publicArowana = result.publicArowanaResearch === true;
+  if (publicShrimp && publicArowana) return { posted: 0, reason: 'conflicting_public_destinations' };
+  const publicResearch = publicShrimp || publicArowana;
+  if (publicResearch && result.publicAudienceApproved !== true) {
     return { posted: 0, reason: 'public_audience_approval_pending' };
   }
   const cards = Array.isArray(result.cards) ? result.cards.slice(0, MAX_RECORDS) : [];
   if (!cards.length) return { posted: 0, reason: 'no_structured_cards' };
-  if (publicShrimp) {
+  if (publicResearch) {
     const ids = new Set();
     for (const card of cards) {
       const id = card?.id;
@@ -215,16 +228,16 @@ export async function publishAquapediaCards(guild, result) {
   const botId = guild?.client?.user?.id;
   if (!botId) return { posted: 0, reason: 'bot_identity_missing' };
   const channels = [...(guild?.channels?.cache?.values?.() ?? [])];
-  const category = channels.find((c) => c.type === ChannelType.GuildCategory && c.name === (publicShrimp ? PUBLIC_CATEGORY_NAME : CATEGORY_NAME));
+  const category = channels.find((c) => c.type === ChannelType.GuildCategory && c.name === (publicResearch ? PUBLIC_CATEGORY_NAME : CATEGORY_NAME));
   if (!category) return { posted: 0, reason: 'research_category_not_found' };
   const forums = channels.filter((c) => c.type === ChannelType.GuildForum && c.parentId === category.id);
   if (!forums.length) return { posted: 0, reason: 'research_forums_not_found' };
-  const publicForum = publicShrimp ? forums.find((c) => c.name === PUBLIC_FORUM_NAME) : null;
-  if (publicShrimp) {
+  const publicForum = publicResearch ? forums.find((c) => c.name === (publicShrimp ? PUBLIC_FORUM_NAME : PUBLIC_AROWANA_FORUM_NAME)) : null;
+  if (publicResearch) {
     const everyone = guild?.roles?.everyone;
     if (!publicForum || !everyone || (!publicForum.permissionsFor?.(everyone)?.has(PermissionFlagsBits.ViewChannel)
       || !publicForum.permissionsFor?.(everyone)?.has(PermissionFlagsBits.ReadMessageHistory))) {
-      return { posted: 0, reason: 'public_shrimp_forum_missing_or_not_public' };
+      return { posted: 0, reason: publicShrimp ? 'public_shrimp_forum_missing_or_not_public' : 'public_arowana_forum_missing_or_not_public' };
     }
   }
   let posted = 0;
@@ -240,13 +253,16 @@ export async function publishAquapediaCards(guild, result) {
     // An unknown/contested breeder requires explicitly named "unknown-breeders".
     const fallback = forumSlug(breeder);
     const target = desired || fallback;
-    if (publicShrimp && (card.organismGroup !== 'shrimp' || !['breeder', 'competition', 'strain'].includes(card.entityType)
-      || !Array.isArray(card.sources) || !card.sources.some((source) => httpsUrl(typeof source === 'string' ? source : source?.url)))) {
+    if (publicResearch && (card.organismGroup !== (publicShrimp ? 'shrimp' : 'arowana')
+      || !(publicShrimp ? ['breeder', 'competition', 'strain'] : ['species', 'research', 'strain']).includes(card.entityType)
+      || (publicArowana && (!Array.isArray(card.photos) || card.photos.length !== 0))
+      || !Array.isArray(card.sources) || !card.sources.some((source) => httpsUrl(typeof source === 'string' ? source : source?.url))
+      || (publicArowana && !/^https:\/\/aquapedia\.app\/arowanapedia\/[a-z0-9-]+\/$/.test(String(card.websiteUrl ?? ''))))) {
       skipped += 1;
       continue;
     }
-    const forum = publicShrimp ? publicForum : forums.find((c) => c.name === target);
-    if (!forum || (!publicShrimp && !breeder && target !== 'unknown-breeders')) { skipped += 1; continue; }
+    const forum = publicResearch ? publicForum : forums.find((c) => c.name === target);
+    if (!forum || (!publicResearch && !breeder && target !== 'unknown-breeders')) { skipped += 1; continue; }
     let payload;
     try {
       payload = buildAquapediaPost(card);
@@ -264,7 +280,7 @@ export async function publishAquapediaCards(guild, result) {
       skipped += 1;
       break;
     }
-    const { name, existing } = matchingThread(threads, card, publicShrimp);
+    const { name, existing } = matchingThread(threads, card, publicResearch);
     let thread;
     let priorMessageId = null;
     if (existing) {

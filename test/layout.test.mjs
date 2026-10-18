@@ -138,3 +138,43 @@ test('public research includes Medaka, Shrimp, and Arowana directories with sour
     assert.match(matches[0].topic, /research|evidence/i);
   }
 });
+
+
+test('each live Aquapedia magazine title has exactly one public forum with persistent issue/subject tags', () => {
+  const publicSection = layoutDefinition().find((section) => section.category === '📚・AQUAPEDIA');
+  assert.ok(publicSection);
+  assert.equal(publicSection.vendorOnly, undefined);
+  assert.equal(publicSection.staffOnly, undefined);
+  const sharedTags = ['Issue', 'English Guide', 'Reading Notes', 'History', 'Breeding', 'Traits', 'Genetics', 'Care'];
+  const expected = [
+    ['📖・medaka-hyakka', 'Medaka Hyakka / メダカ百華'],
+    ['📘・medaka-advance', 'Medaka Advance / eBookMAG'],
+    ['🦐・shrimp-club', 'Shrimp Club / シュリンプクラブ'],
+    ['🐟・medaka-trip', 'Medaka Trip / メダカトリップ'],
+  ];
+  const forumNames = publicSection.forums.map(({ name }) => name);
+  assert.equal(new Set(forumNames).size, forumNames.length, 'never define duplicate public magazine forums');
+  for (const [name, publication] of expected) {
+    const matches = publicSection.forums.filter(forum => forum.name === name);
+    assert.equal(matches.length, 1, 'one forum per publication: ' + name);
+    const [forum] = matches;
+    assert.deepEqual(forum.tags.map(tag => tag.name), sharedTags);
+    assert.ok(forum.tags.every(tag => tag.moderated === false));
+    assert.match(forum.topic, /issue number, subject, English reading guide/);
+    assert.match(forum.topic, /No republished copyrighted magazine scans/);
+    assert.ok(forum.topic.includes(publication));
+  }
+});
+
+test('the original public magazines-and-articles research forum is preserved separately', () => {
+  const publicSection = layoutDefinition().find(section => section.category === '📚・AQUAPEDIA');
+  const forums = publicSection.forums.filter(({ name }) => name === 'magazines-and-articles');
+  assert.equal(forums.length, 1, 'keep the existing scientific paper and older issue forum');
+  assert.deepEqual(forums[0].tags.map(tag => tag.name), [
+    'Magazine', 'Newsletter', 'Article', 'Medaka', 'Shrimp', 'English Guide', 'Licensed Translation', 'Free to Read',
+  ]);
+  assert.match(forums[0].topic, /Free English reading guides/);
+  assert.match(forums[0].topic, /No unlicensed reproductions/);
+  assert.equal(publicSection.vendorOnly, undefined);
+  assert.equal(publicSection.staffOnly, undefined);
+});

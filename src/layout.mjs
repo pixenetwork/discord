@@ -18,6 +18,17 @@ const PUBLICATION_TAGS = [
   'Shrimp',
 ].map((name) => ({ name, moderated: false }));
 
+const MAGAZINE_ISSUE_TAGS = [
+  'Issue',
+  'English Guide',
+  'Reading Notes',
+  'History',
+  'Breeding',
+  'Traits',
+  'Genetics',
+  'Care',
+].map((name) => ({ name, moderated: false }));
+
 const CORE_LAYOUT = [
   {
     category: '🫧・AQUAPHORIA — START HERE',
@@ -83,6 +94,26 @@ const CORE_LAYOUT = [
       name: '🐉・arowana-research',
       topic: 'Public Aquapedia arowana species, geographic origins, genetics, husbandry, breeders and conservation. Claims are evidence-labelled and wildlife collection localities are protected.',
       tags: ['Species', 'Genetics', 'Regional', 'Breeding', 'Conservation'].map((name) => ({ name, moderated: false })),
+    }, {
+      name: 'magazines-and-articles',
+      topic: 'PUBLIC AQUAPEDIA — ONLY medaka and freshwater shrimp magazines, newsletters, and articles. One thread per issue/article; begin with Issue 1 where available. Free English reading guides and rights-cleared translated excerpts are clearly labeled. No unlicensed reproductions.',
+      tags: ['Magazine', 'Newsletter', 'Article', 'Medaka', 'Shrimp', 'English Guide', 'Licensed Translation', 'Free to Read'].map((name) => ({ name, moderated: false })),
+    }, {
+      name: '📖・medaka-hyakka',
+      topic: 'Aquapedia public Medaka Hyakka / メダカ百華 — issue number, subject, English reading guide, references and historical context. No republished copyrighted magazine scans.',
+      tags: MAGAZINE_ISSUE_TAGS,
+    }, {
+      name: '📘・medaka-advance',
+      topic: 'Aquapedia public Medaka Advance / eBookMAG — issue number, subject, English reading guide, references and historical context. No republished copyrighted magazine scans.',
+      tags: MAGAZINE_ISSUE_TAGS,
+    }, {
+      name: '🦐・shrimp-club',
+      topic: 'Aquapedia public Shrimp Club / シュリンプクラブ — issue number, subject, English reading guide, references and historical context. No republished copyrighted magazine scans.',
+      tags: MAGAZINE_ISSUE_TAGS,
+    }, {
+      name: '🐟・medaka-trip',
+      topic: 'Aquapedia public Medaka Trip / メダカトリップ — issue number, subject, English reading guide, references and historical context. No republished copyrighted magazine scans.',
+      tags: MAGAZINE_ISSUE_TAGS,
     }],
   },
   {
@@ -246,8 +277,8 @@ export async function provisionAquaphoriaLayout(guild, { ownerUserId, store = nu
       created.push({ category: category.name, channel: channel.name, id: channel.id, type: 'text' });
     }
     for (const forumSpec of section.forums ?? []) {
-      const reason = ['🐟・medaka-research', '🦐・shrimp-research', '🐉・arowana-research'].includes(forumSpec.name)
-        ? 'Aquaphoria public breeder/strain research forum provisioning'
+      const reason = section.category === '📚・AQUAPEDIA'
+        ? 'Aquaphoria public Aquapedia forum provisioning'
         : 'Aquaphoria private publication forum provisioning';
       const channel = await ensureForumChannel(guild, category, forumSpec, permissionOverwrites, reason);
       created.push({ category: category.name, channel: channel.name, id: channel.id, type: 'forum' });

@@ -33,6 +33,16 @@ test('Medaka award queue rejects invented photo rights, unsupported websites, an
   }
 });
 
+test('Gachi 5 draft has separately attributed MVP and winning team organizer sources', () => {
+  const record = queue.cards.find((card) => card.id === 'medaka-awards-medaka-gachi-battle-5-2026');
+  assert.ok(record);
+  assert.equal(record.recordCount, 4);
+  assert.equal(record.sources.filter((source) => source.includes('/2026/09/26/')).length, 2);
+  assert.ok(record.sources.some((source) => source.includes('%E3%80%8Amvp%E3%80%8B/')));
+  assert.ok(record.sources.some((source) => source.includes('%E3%80%8A%E5%84%AA%E5%8B%9D%E3%83%81%E3%83%BC%E3%83%A0%E3%80%8B/')));
+  assert.match(record.message, /MVP scores and team battle championships are distinct/);
+});
+
 test('review queue is inert even if handed directly to the public publisher', async () => {
   const result = await publishAquapediaCards(null, queue);
   assert.equal(result.posted, 0);

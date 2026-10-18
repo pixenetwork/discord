@@ -1,0 +1,162 @@
+{
+  "version": 1,
+  "asOf": "2026-10-17",
+  "sourceStatus": "REVIEW_ONLY_UNAPPROVED_NOT_TO_PUBLISH",
+  "sourceAquapediaPR": 72,
+  "previewAquapediaPR": 77,
+  "publisherDiscordPR": 33,
+  "targetExistingForumId": "1561189286399705128",
+  "status": "pending_review",
+  "discordPublicationApproved": false,
+  "publicAudienceApproved": false,
+  "publicMedakaResearch": true,
+  "publicShrimpResearch": false,
+  "publicArowanaResearch": false,
+  "notice": "This file is a review queue only. Source results are show placements, not molecular lineage or creator proof; unlicensed photos deliberately excluded. Jarvis must independently approve exact source SHA and verify live URL + Discord permissions.",
+  "cards": [
+    {
+      "id": "medaka-awards-jma-16th-autumn-japan-medaka-show",
+      "entityType": "competition",
+      "organismGroup": "medaka",
+      "name": "JMA 16th Autumn Japan Medaka Show",
+      "websiteUrl": "https://aquapedia.app/medakapedia/competitions/",
+      "photos": [],
+      "sources": [
+        "https://jma-medaka.com/wp-content/uploads/2025/09/R07%E7%A7%8B%E5%AD%A3%E5%87%BA%E5%93%81%E7%AE%A1%E7%90%86%E8%A1%A8_25_20250918%E9%80%9F%E5%A0%B1%EF%BC%89-1.pdf",
+        "https://aquapedia.app/medakapedia/competitions/"
+      ],
+      "summary": "JMA 16th Autumn Japan Medaka Show (2025-09-19). 3 selected award records indexed by the organizer. overall 1: 森藤 秀太 / Shuta Morifuji — ブラック透明鱗アースアイ; overall 2: 児玉 知晃 / Tomoaki Kodama — ブラックラメワイドフィンリアルロングフィン; overall 3: 田邊 直見 / Naomi Tanabe — 白朱赤透明鱗. Placements credit exhibitors/teams, not automatically genetic strain creators. See the full source-linked Aquapedia table for classifications and remaining awards.",
+      "message": "JMA 16th Autumn Japan Medaka Show (2025-09-19). 3 selected award records indexed by the organizer. overall 1: 森藤 秀太 / Shuta Morifuji — ブラック透明鱗アースアイ; overall 2: 児玉 知晃 / Tomoaki Kodama — ブラックラメワイドフィンリアルロングフィン; overall 3: 田邊 直見 / Naomi Tanabe — 白朱赤透明鱗. Placements credit exhibitors/teams, not automatically genetic strain creators. See the full source-linked Aquapedia table for classifications and remaining awards.",
+      "recordCount": 3,
+      "evidenceLevel": "organizer_reported_placings_no_genetic_creator_proof"
+    },
+    {
+      "id": "medaka-awards-medakafest",
+      "entityType": "competition",
+      "organismGroup": "medaka",
+      "name": "MedakaFest",
+      "websiteUrl": "https://aquapedia.app/medakapedia/competitions/",
+      "photos": [],
+      "sources": [
+        "https://medakafest.com/#winners",
+        "https://aquapedia.app/medakapedia/competitions/"
+      ],
+      "summary": "MedakaFest (2026-09-26). 4 selected award records indexed by the organizer. judges best top view 1: Scottie Johnson — named variety not provided; judges best side view 1: Cesar — named variety not provided; peoples choice in person 1: Jeffrey Castaneda — named variety not provided; peoples choice online 1: Danny Lor — named variety not provided. Placements credit exhibitors/teams, not automatically genetic strain creators. Some named varieties are unreported. See the full source-linked Aquapedia table for classifications and remaining awards.",
+      "message": "MedakaFest (2026-09-26). 4 selected award records indexed by the organizer. judges best top view 1: Scottie Johnson — named variety not provided; judges best side view 1: Cesar — named variety not provided; peoples choice in person 1: Jeffrey Castaneda — named variety not provided; peoples choice online 1: Danny Lor — named variety not provided. Placements credit exhibitors/teams, not automatically genetic strain creators. Some named varieties are unreported. See the full source-linked Aquapedia table for classifications and remaining awards.",
+      "recordCount": 4,
+      "evidenceLevel": "organizer_reported_placings_no_genetic_creator_proof"
+    },
+    {
+      "id": "medaka-awards-medaka-gachi-battle-5",
+      "entityType": "competition",
+      "organismGroup": "medaka",
+      "name": "Medaka Gachi Battle 5",
+      "websiteUrl": "https://aquapedia.app/medakapedia/competitions/",
+      "photos": [],
+      "sources": [
+        "https://www.medakagachibattle.com/category/battle2026/",
+        "https://aquapedia.app/medakapedia/competitions/"
+      ],
+      "summary": "Medaka Gachi Battle 5 (2026-09-26). 4 selected award records indexed by the organizer. mvp 1: メダカ屋サバンナ / Medaka-ya Savanna — エルサ×フェザーライト; mvp 2: Kメダカ / K Medaka — クリステラ; mvp 3: Azumaめだか — ルテウス; team division wins 1: 九極 / Kyūkyoku — named variety not provided. Placements credit exhibitors/teams, not automatically genetic strain creators. Some named varieties are unreported. See the full source-linked Aquapedia table for classifications and remaining awards.",
+      "message": "Medaka Gachi Battle 5 (2026-09-26). 4 selected award records indexed by the organizer. mvp 1: メダカ屋サバンナ / Medaka-ya Savanna — エルサ×フェザーライト; mvp 2: Kメダカ / K Medaka — クリステラ; mvp 3: Azumaめだか — ルテウス; team division wins 1: 九極 / Kyūkyoku — named variety not provided. Placements credit exhibitors/teams, not automatically genetic strain creators. Some named varieties are unreported. See the full source-linked Aquapedia table for classifications and remaining awards.",
+      "recordCount": 4,
+      "evidenceLevel": "organizer_reported_placings_no_genetic_creator_proof"
+    },
+    {
+      "id": "medaka-awards-cips-global-medaka-championship",
+      "entityType": "competition",
+      "organismGroup": "medaka",
+      "name": "CIPS Global Medaka Championship",
+      "websiteUrl": "https://aquapedia.app/medakapedia/competitions/",
+      "photos": [],
+      "sources": [
+        "https://en.cipscom.com/ShowNews/25340.htm",
+        "https://aquapedia.app/medakapedia/competitions/"
+      ],
+      "summary": "CIPS Global Medaka Championship (2025-11-16). 1 selected award records indexed by the organizer. team champion 1: Wolf Pack Team — named variety not provided. Placements credit exhibitors/teams, not automatically genetic strain creators. Some named varieties are unreported. See the full source-linked Aquapedia table for classifications and remaining awards.",
+      "message": "CIPS Global Medaka Championship (2025-11-16). 1 selected award records indexed by the organizer. team champion 1: Wolf Pack Team — named variety not provided. Placements credit exhibitors/teams, not automatically genetic strain creators. Some named varieties are unreported. See the full source-linked Aquapedia table for classifications and remaining awards.",
+      "recordCount": 1,
+      "evidenceLevel": "organizer_reported_placings_no_genetic_creator_proof"
+    },
+    {
+      "id": "medaka-awards-jma-16th-spring-japan-medaka-show",
+      "entityType": "competition",
+      "organismGroup": "medaka",
+      "name": "JMA 16th Spring Japan Medaka Show",
+      "websiteUrl": "https://aquapedia.app/medakapedia/competitions/",
+      "photos": [],
+      "sources": [
+        "https://jma-medaka.com/16th_spring_medaka-fair/",
+        "https://aquapedia.app/medakapedia/competitions/"
+      ],
+      "summary": "JMA 16th Spring Japan Medaka Show (2025-05-16). 11 selected award records indexed by the organizer. overall 1: 安田 清 / Kiyoshi Yasuda — 白朱赤; overall 2: 三好 凌太 / Ryota Miyoshi — 朱赤リアルロングフィンヒカリ; overall 3: 松本 修一 / Shuichi Matsumoto — 朱赤半透明鱗アースアイブラックリムヒレ長ヒカリ; hatsukaichi mayor award 1: 波多野 寛次 — ブラック体外光リアルロングフィン; hatsukaichi tourism award 1: 大江 翔 — 青ラメスワローワイドフィンフサヒレヒカリ; aqualife award 1: 森藤 秀太 — ブラック透明鱗パンダ. Placements credit exhibitors/teams, not automatically genetic strain creators. See the full source-linked Aquapedia table for classifications and remaining awards.",
+      "message": "JMA 16th Spring Japan Medaka Show (2025-05-16). 11 selected award records indexed by the organizer. overall 1: 安田 清 / Kiyoshi Yasuda — 白朱赤; overall 2: 三好 凌太 / Ryota Miyoshi — 朱赤リアルロングフィンヒカリ; overall 3: 松本 修一 / Shuichi Matsumoto — 朱赤半透明鱗アースアイブラックリムヒレ長ヒカリ; hatsukaichi mayor award 1: 波多野 寛次 — ブラック体外光リアルロングフィン; hatsukaichi tourism award 1: 大江 翔 — 青ラメスワローワイドフィンフサヒレヒカリ; aqualife award 1: 森藤 秀太 — ブラック透明鱗パンダ. Placements credit exhibitors/teams, not automatically genetic strain creators. See the full source-linked Aquapedia table for classifications and remaining awards.",
+      "recordCount": 11,
+      "evidenceLevel": "organizer_reported_placings_no_genetic_creator_proof"
+    },
+    {
+      "id": "medaka-awards-ima-8th-international-medaka-show",
+      "entityType": "competition",
+      "organismGroup": "medaka",
+      "name": "IMA 8th International Medaka Show",
+      "websiteUrl": "https://aquapedia.app/medakapedia/competitions/",
+      "photos": [],
+      "sources": [
+        "https://ima-medaka.or.jp/8th_result/",
+        "https://aquapedia.app/medakapedia/competitions/"
+      ],
+      "summary": "IMA 8th International Medaka Show (2025-11-16). 30 selected award records indexed by the organizer. ima A class yokihi 1: 秋山 貴幸 — named variety not provided; ima B class nontransparent tricolor external light 1: 徳永 康雅 — named variety not provided; ima C class mariage 1: 山﨑 由美子 — named variety not provided; ima D class real long fin 1: 井澤 俊夫 — 五式光ダルマリアルロングフィン; ima E class lame top view 1: 大櫛 龍生 — named variety not provided; ima F class external light 1: 山﨑 悟 — named variety not provided. Placements credit exhibitors/teams, not automatically genetic strain creators. Some named varieties are unreported. See the full source-linked Aquapedia table for classifications and remaining awards.",
+      "message": "IMA 8th International Medaka Show (2025-11-16). 30 selected award records indexed by the organizer. ima A class yokihi 1: 秋山 貴幸 — named variety not provided; ima B class nontransparent tricolor external light 1: 徳永 康雅 — named variety not provided; ima C class mariage 1: 山﨑 由美子 — named variety not provided; ima D class real long fin 1: 井澤 俊夫 — 五式光ダルマリアルロングフィン; ima E class lame top view 1: 大櫛 龍生 — named variety not provided; ima F class external light 1: 山﨑 悟 — named variety not provided. Placements credit exhibitors/teams, not automatically genetic strain creators. Some named varieties are unreported. See the full source-linked Aquapedia table for classifications and remaining awards.",
+      "recordCount": 30,
+      "evidenceLevel": "organizer_reported_placings_no_genetic_creator_proof"
+    },
+    {
+      "id": "medaka-awards-medaka-gachi-battle-4",
+      "entityType": "competition",
+      "organismGroup": "medaka",
+      "name": "Medaka Gachi Battle 4",
+      "websiteUrl": "https://aquapedia.app/medakapedia/competitions/",
+      "photos": [],
+      "sources": [
+        "https://www.medakagachibattle.com/2025/09/28/%E3%83%A1%E3%83%80%E3%82%AB%E3%82%AC%E3%83%81%E3%83%90%E3%83%88%E3%83%AB%EF%BC%94-%E3%80%8Amvp%E3%80%8B/",
+        "https://aquapedia.app/medakapedia/competitions/"
+      ],
+      "summary": "Medaka Gachi Battle 4 (2025-09-21). 6 selected award records indexed by the organizer. mvp 1: DJ野郎 — 春菊ラディアレ; mvp 2: メダカ屋サバンナ / Medaka-ya Savanna — ブラックフェザーライト; mvp 3: Kメダカ — レッドウィング; korean mvp selection 1: 垂水 政治 — 名もなきラメ; korean mvp selection 2: 京めだか — ブラックフェザーライト; korean mvp selection 3: 湊養魚場 — 朱光菊. Placements credit exhibitors/teams, not automatically genetic strain creators. See the full source-linked Aquapedia table for classifications and remaining awards.",
+      "message": "Medaka Gachi Battle 4 (2025-09-21). 6 selected award records indexed by the organizer. mvp 1: DJ野郎 — 春菊ラディアレ; mvp 2: メダカ屋サバンナ / Medaka-ya Savanna — ブラックフェザーライト; mvp 3: Kメダカ — レッドウィング; korean mvp selection 1: 垂水 政治 — 名もなきラメ; korean mvp selection 2: 京めだか — ブラックフェザーライト; korean mvp selection 3: 湊養魚場 — 朱光菊. Placements credit exhibitors/teams, not automatically genetic strain creators. See the full source-linked Aquapedia table for classifications and remaining awards.",
+      "recordCount": 6,
+      "evidenceLevel": "organizer_reported_placings_no_genetic_creator_proof"
+    },
+    {
+      "id": "medaka-awards-medaka-gachi-battle-1",
+      "entityType": "competition",
+      "organismGroup": "medaka",
+      "name": "Medaka Gachi Battle 1",
+      "websiteUrl": "https://aquapedia.app/medakapedia/competitions/",
+      "photos": [],
+      "sources": [
+        "https://www.medakagachibattle.com/2022/09/25/%E7%AC%AC%EF%BC%91%E5%9B%9E%E5%A4%A7%E4%BC%9A-mvp/",
+        "https://aquapedia.app/medakapedia/competitions/"
+      ],
+      "summary": "Medaka Gachi Battle 1 (2022-09-25). 1 selected award records indexed by the organizer. mvp 1: 京めだか アンナ — マリアージュロングフィン＆マリアージュキッシングワイドフィン. Placements credit exhibitors/teams, not automatically genetic strain creators. See the full source-linked Aquapedia table for classifications and remaining awards.",
+      "message": "Medaka Gachi Battle 1 (2022-09-25). 1 selected award records indexed by the organizer. mvp 1: 京めだか アンナ — マリアージュロングフィン＆マリアージュキッシングワイドフィン. Placements credit exhibitors/teams, not automatically genetic strain creators. See the full source-linked Aquapedia table for classifications and remaining awards.",
+      "recordCount": 1,
+      "evidenceLevel": "organizer_reported_placings_no_genetic_creator_proof"
+    },
+    {
+      "id": "medaka-awards-medaka-gachi-battle-2",
+      "entityType": "competition",
+      "organismGroup": "medaka",
+      "name": "Medaka Gachi Battle 2",
+      "websiteUrl": "https://aquapedia.app/medakapedia/competitions/",
+      "photos": [],
+      "sources": [
+        "https://www.medakagachibattle.com/2023/10/01/%E7%AC%AC%EF%BC%92%E5%9B%9E%E5%A4%A7%E4%BC%9A-mvp/",
+        "https://aquapedia.app/medakapedia/competitions/"
+      ],
+      "summary": "Medaka Gachi Battle 2 (2023-10-01). 3 selected award records indexed by the organizer. mvp 1: JMU / 垂水 政治 — フロマージュ; mvp 2: SKM / さき・かいめだか — マリアージュ; mvp 3: ミスターX / 鹿行めだか — アビス×和墨RLF. Placements credit exhibitors/teams, not automatically genetic strain creators. See the full source-linked Aquapedia table for classifications and remaining awards.",
+      "message": "Medaka Gachi Battle 2 (2023-10-01). 3 selected award records indexed by the organizer. mvp 1: JMU / 垂水 政治 — フロマージュ; mvp 2: SKM / さき・かいめだか — マリアージュ; mvp 3: ミスターX / 鹿行めだか — アビス×和墨RLF. Placements credit exhibitors/teams, not automatically genetic strain creators. See the full source-linked Aquapedia table for classifications and remaining awards.",
+      "recordCount": 3,
+      "evidenceLevel": "organizer_reported_placings_no_genetic_creator_proof"
+    }
+  ]
+}

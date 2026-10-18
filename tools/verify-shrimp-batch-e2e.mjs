@@ -7,14 +7,26 @@ import { ChannelType, PermissionFlagsBits } from 'discord.js';
 // Explicitly offline: all guild objects below are in-memory mocks.
 // This harness never accepts or reads bot credentials or makes Discord API calls.
 const [breederFile, contestFile] = process.argv.slice(2);
-if (!breederFile || !contestFile) throw new Error('Usage: node tools/verify-shrimp-batch-e2e.mjs <breeders.json> <contests.json>');
-const breeders=JSON.parse(readFileSync(breederFile,'utf8'));
-const contests=JSON.parse(readFileSync(contestFile,'utf8'));
+if (!breederFile || !contestFile) {
+  process.stderr.write('Usage: node tools/verify-shrimp-batch-e2e.mjs <breeders.json> <contests.json>\n');
+  process.exit(2);
+}
+let breeders, contests;
+try {
+  breeders=JSON.parse(readFileSync(breederFile,'utf8'));
+  contests=JSON.parse(readFileSync(contestFile,'utf8'));
+} catch (error) {
+  process.stderr.write('Cannot parse the supplied Aquapedia manifests: '+error.message+'\n');
+  process.exit(2);
+}
 const noApproval=prepareShrimpPublicBatch({breederManifest:breeders,contestManifest:contests});
 assert.equal(noApproval.cards.length,22);
 assert.equal(noApproval.discordPublicationApproved,false);
 const approved=prepareShrimpPublicBatch({breederManifest:breeders,contestManifest:contests,editorialApproved:true,publicAudienceApproved:true});
+assert.equal(approved.discordPublicationApproved,true);
+assert.equal(approved.publicAudienceApproved,true);
 const storedThreads=new Map(), events=[];
+let threadCounter=0;
 const category={id:'aqua-cat',name:'📚・AQUAPEDIA',type:ChannelType.GuildCategory};
 const forum={id:'shrimp-forum-id',name:'🦐・shrimp-research',type:ChannelType.GuildForum,parentId:category.id,
   permissionsFor(){return {has(flag){return [PermissionFlagsBits.ViewChannel,PermissionFlagsBits.ReadMessageHistory].includes(flag)}}},
@@ -22,8 +34,9 @@ const forum={id:'shrimp-forum-id',name:'🦐・shrimp-research',type:ChannelType
     async fetchActive(){return {threads:storedThreads}},
     async fetchArchived(){return {threads:new Map(),hasMore:false}},
     async create({name,message}){
-      const id='thread-'+(storedThreads.size+1);
-      const m={id:'msg-'+(storedThreads.size+1),author:{id:'the-bot'},embeds:message.embeds,
+      const seq=++threadCounter;
+      const id='thread-'+seq;
+      const m={id:'msg-'+seq,author:{id:'the-bot'},embeds:message.embeds,
         async edit(newPayload){this.embeds=newPayload.embeds;events.push({op:'edit',id});return this}};
       const thread={id,name,archived:false,
         messages:{async fetch(q){return typeof q==='string'?m:new Map([[m.id,m]])}},
@@ -57,4 +70,4 @@ assert.equal(rerun.receipts.length,22);
 assert.equal(storedThreads.size,22);
 assert.equal(events.filter(e=>e.op==='create').length,22);
 assert.equal(events.filter(e=>e.op==='edit').length,22);
-console.log(JSON.stringify({simulation:true,sourceBreeders:breeders.cards.length,sourceContests:contests.records.filter(x=>x.kind==='competition').length,approvalDefault:'CLOSED',canaryVerified:canary.receipts.length,remainingVerified:rest.receipts.length,uniqueReceipts:receipts.length,secondPassUpdated:rerun.posted,threadsCreated:storedThreads.size,duplicatesCreated:0,realDiscordWrites:0}));
+console.log(JSON.stringify({simulation:true,sourceBreeders:breeders.cards.length,sourceContests:contests.records.filter(x=>x.kind==='competition').length,approvalDefault:'CLOSED',canaryVerified:canary.receipts.length,remainingVerified:rest.receipts.length,uniqueReceipts:receipts.length,secondPassUpdated:rerun.posted,threadsCreated:storedThreads.size,duplicatesCreated:Math.max(0,events.filter(e=>e.op==='create').length-22),realDiscordWrites:0}));

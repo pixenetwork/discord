@@ -248,6 +248,7 @@ async function ensureForumChannel(guild, parent, { name, topic, tags, protectExi
     await syncPrivateOverwrites(existing, permissionOverwrites);
     return existing;
   }
+  if (protectExisting) throw new Error(`Magazine forum missing; refusing to replace historical issue threads: ${name}`);
   return guild.channels.create({
     name,
     type: ChannelType.GuildForum,
@@ -291,6 +292,17 @@ function privateOverwrites(guild, { ownerUserId, staffRoleId, vendorRoleId = nul
 }
 
 export async function provisionAquaphoriaLayout(guild, { ownerUserId, store = null, includePublicMagazines = true }) {
+  if (includePublicMagazines) {
+    // All historical magazine forums must exist and match BEFORE any role/channel writes.
+    // Otherwise a late failure could leave research/commerce categories partially edited.
+    const section = CORE_LAYOUT.find((entry) => entry.category === '📚・AQUAPEDIA');
+    const parent = guild.channels.cache.find((channel) => channel.type === ChannelType.GuildCategory
+      && channel.name === section.category);
+    if (!parent) throw new Error('Magazine public category missing; refusing partial layout update');
+    for (const spec of section.forums.filter((entry) => entry.protectExisting)) {
+      await ensureForumChannel(guild, parent, spec, undefined, 'Read-only magazine layout preflight');
+    }
+  }
   const previousRoles = store ? await store.getLayoutRoles() : null;
   const staffRole = await ensureRole(guild, 'Aquaphoria Staff', previousRoles?.staffRoleId);
   const vendorRole = await ensureRole(guild, 'Verified Aquaphoria Vendor', previousRoles?.vendorRoleId);

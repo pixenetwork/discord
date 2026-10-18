@@ -162,3 +162,32 @@ test('magazine setup rejects two forums with same title inside the public catego
   assert.equal(f.edits.some(x=>x.name===original.name),false);
   assert.deepEqual(f.creations,[]);
 });
+
+
+test('owner setup refuses a missing live magazine forum instead of recreating an empty replacement',async()=>{
+  const f=existingAquapediaLayoutFixture();
+  const name='📖・medaka-hyakka';
+  const current=f.all.findIndex(x=>x.name===name);
+  assert.ok(current>=0);
+  f.all.splice(current,1);
+  await assert.rejects(
+    ()=>provisionAquaphoriaLayout(f.guild,{ownerUserId:'owner-user'}),
+    /magazine.*missing|missing.*magazine/i
+  );
+  assert.deepEqual(f.creations,[],'must not call Discord channel creation for a lost live magazine forum');
+});
+
+
+test('owner setup validates all protected magazines before any other layout writes',async()=>{
+  const f=existingAquapediaLayoutFixture();
+  const idx=f.all.findIndex(x=>x.name==='📖・medaka-hyakka');
+  assert.ok(idx>=0);
+  f.all.splice(idx,1);
+  await assert.rejects(
+    ()=>provisionAquaphoriaLayout(f.guild,{ownerUserId:'owner-user'}),
+    /magazine.*missing|missing.*magazine/i
+  );
+  assert.deepEqual(f.edits,[], 'failed magazine preflight must not edit a different channel first');
+  assert.deepEqual(f.permissionChanges,[], 'failed magazine preflight must not change private or public permission overwrites');
+  assert.deepEqual(f.creations,[], 'failed magazine preflight must not create any channel');
+});

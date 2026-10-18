@@ -246,7 +246,7 @@ export async function provisionAquaphoriaLayout(guild, { ownerUserId, store = nu
       created.push({ category: category.name, channel: channel.name, id: channel.id, type: 'text' });
     }
     for (const forumSpec of section.forums ?? []) {
-      const reason = ['🐟・medaka-research', '🦐・shrimp-research'].includes(forumSpec.name)
+      const reason = ['🐟・medaka-research', '🦐・shrimp-research', '🐉・arowana-research'].includes(forumSpec.name)
         ? 'Aquaphoria public breeder/strain research forum provisioning'
         : 'Aquaphoria private publication forum provisioning';
       const channel = await ensureForumChannel(guild, category, forumSpec, permissionOverwrites, reason);

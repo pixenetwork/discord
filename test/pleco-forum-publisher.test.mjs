@@ -3,9 +3,9 @@ import assert from 'node:assert/strict';
 import {records,makePacket,makeGuide} from '../tools/pleco-forum-publisher.mjs';
 
 test('all Plecopedia IDs and thread titles are unique',()=>{
- assert.equal(records.length,146);
- assert.equal(new Set(records.map(r=>r.id)).size,146);
- assert.equal(new Set(records.map(r=>r.title)).size,146);
+ assert.equal(records.length,167);
+ assert.equal(new Set(records.map(r=>r.id)).size,167);
+ assert.equal(new Set(records.map(r=>r.title)).size,167);
  assert.deepEqual(records.filter(r=>r.name==='Hypancistrus seideli').map(r=>r.id),
   ['l066','l236','l287','l333','l399','l400']);
 });
@@ -35,7 +35,7 @@ test('Gold Nugget paper citation is its confirmed 2011 original DOI',()=>{
 test('forum guide distinguishes L-number vs species and warns against copying photos',()=>{
  const guide=makeGuide();
  assert.match(guide.content,/not the complete L-number catalog/i);
- assert.match(guide.content,/146 standalone research topics/i);
+ assert.match(guide.content,/167 standalone research topics/i);
  assert.match(guide.content,/No copied\/AI-generated animal photographs/i);
  assert.match(guide.embeds[0].footer.text,/AQP-PLECO-master-index/);
 });
@@ -187,4 +187,38 @@ test('Panaqolus koko retains original name but records CAS accepted reclassifica
  assert.match(r.name,/Pseudoqolus koko/);
  assert.match(r.fact,/Panaqolus koko/);
  assert.match(r.sources[0],/calacademy/);
+});
+
+test('2024 Chaetostoma sacramento contains three historic codes, one named species',()=>{
+ const keys=['chaeto-sacramento','l455-chaeto','l456-chaeto','l457-chaeto'].map(id=>records.find(r=>r.id===id));
+ assert.equal(keys.length,4);for(const r of keys)assert.ok(r);
+ assert.equal(keys.filter(x=>x.kind==='Named species').length,1);
+ for(const r of keys)assert.match(r.name,/sacramento/);
+ for(const r of keys)assert.match(r.sources[0],/zse.100.118522/);
+});
+test('new Ecuadorian Panaqolus have independent 2024 type localities',()=>{
+ const a=records.find(r=>r.id==='pana-orcesi'),b=records.find(r=>r.id==='pana-pantostiktos');
+ assert.match(a.area,/Napo/);assert.match(b.area,/Tigre/);
+ assert.equal(a.kind,'Named species');assert.equal(b.kind,'Named species');
+ assert.equal(a.sources[0],b.sources[0]);
+ assert.notEqual(a.area,b.area);
+});
+test('Lasiancistrus revision treats prior synonyms as historical, not 6 new species',()=>{
+ const a=records.find(r=>r.id==='lasi-schomburgkii');
+ assert.match(a.fact,/synonyms/);
+ assert.match(a.fact,/pictus/);
+ assert.match(a.fact,/castelnaui/);
+ const x=records.find(r=>r.id==='lasi-tentaculatus');
+ assert.match(x.fact,/tentacules/);
+});
+test('Pseudacanthicus major is not L024 or L025',()=>{
+ const a=records.find(r=>r.id==='pseudoac-major');
+ assert.match(a.name,/Pseudacanthicus major/);
+ assert.match(a.fact,/L024/);assert.match(a.fact,/L025/);
+ assert.match(a.sources[0],/4387.3.5/);
+});
+test('2014 Tapajos Pseudancistrus zawadzkii is named species distinct from alias',()=>{
+ const a=records.find(r=>r.id==='pseudo-zawadzkii');
+ assert.equal(a.kind,'Named species');
+ assert.match(a.area,/Tapajós/);assert.match(a.fact,/2014/);
 });

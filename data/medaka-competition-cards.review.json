@@ -15,7 +15,7 @@
   "notice": "This file is a review queue only. Source results are show placements, not molecular lineage or creator proof; unlicensed photos deliberately excluded. Jarvis must independently approve exact source SHA and verify live URL + Discord permissions.",
   "cards": [
     {
-      "id": "medaka-awards-jma-16th-autumn-japan-medaka-show",
+      "id": "medaka-awards-jma-16th-autumn-japan-medaka-show-2025",
       "entityType": "competition",
       "organismGroup": "medaka",
       "name": "JMA 16th Autumn Japan Medaka Show",
@@ -31,7 +31,7 @@
       "evidenceLevel": "organizer_reported_placings_no_genetic_creator_proof"
     },
     {
-      "id": "medaka-awards-medakafest",
+      "id": "medaka-awards-medakafest-2026",
       "entityType": "competition",
       "organismGroup": "medaka",
       "name": "MedakaFest",
@@ -47,7 +47,7 @@
       "evidenceLevel": "organizer_reported_placings_no_genetic_creator_proof"
     },
     {
-      "id": "medaka-awards-medaka-gachi-battle-5",
+      "id": "medaka-awards-medaka-gachi-battle-5-2026",
       "entityType": "competition",
       "organismGroup": "medaka",
       "name": "Medaka Gachi Battle 5",
@@ -63,7 +63,7 @@
       "evidenceLevel": "organizer_reported_placings_no_genetic_creator_proof"
     },
     {
-      "id": "medaka-awards-cips-global-medaka-championship",
+      "id": "medaka-awards-cips-global-medaka-championship-2025",
       "entityType": "competition",
       "organismGroup": "medaka",
       "name": "CIPS Global Medaka Championship",
@@ -79,7 +79,7 @@
       "evidenceLevel": "organizer_reported_placings_no_genetic_creator_proof"
     },
     {
-      "id": "medaka-awards-jma-16th-spring-japan-medaka-show",
+      "id": "medaka-awards-jma-16th-spring-japan-medaka-show-2025",
       "entityType": "competition",
       "organismGroup": "medaka",
       "name": "JMA 16th Spring Japan Medaka Show",
@@ -95,7 +95,7 @@
       "evidenceLevel": "organizer_reported_placings_no_genetic_creator_proof"
     },
     {
-      "id": "medaka-awards-ima-8th-international-medaka-show",
+      "id": "medaka-awards-ima-8th-international-medaka-show-2025",
       "entityType": "competition",
       "organismGroup": "medaka",
       "name": "IMA 8th International Medaka Show",
@@ -111,7 +111,7 @@
       "evidenceLevel": "organizer_reported_placings_no_genetic_creator_proof"
     },
     {
-      "id": "medaka-awards-medaka-gachi-battle-4",
+      "id": "medaka-awards-medaka-gachi-battle-4-2025",
       "entityType": "competition",
       "organismGroup": "medaka",
       "name": "Medaka Gachi Battle 4",
@@ -127,7 +127,7 @@
       "evidenceLevel": "organizer_reported_placings_no_genetic_creator_proof"
     },
     {
-      "id": "medaka-awards-medaka-gachi-battle-1",
+      "id": "medaka-awards-medaka-gachi-battle-1-2022",
       "entityType": "competition",
       "organismGroup": "medaka",
       "name": "Medaka Gachi Battle 1",
@@ -143,7 +143,7 @@
       "evidenceLevel": "organizer_reported_placings_no_genetic_creator_proof"
     },
     {
-      "id": "medaka-awards-medaka-gachi-battle-2",
+      "id": "medaka-awards-medaka-gachi-battle-2-2023",
       "entityType": "competition",
       "organismGroup": "medaka",
       "name": "Medaka Gachi Battle 2",

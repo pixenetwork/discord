@@ -50,7 +50,7 @@ function existingAquapediaLayoutFixture() {
     roles:{everyone:every,cache:roleCache,async create(){throw Error('Unexpected role creation')}},
     members:{cache:new Map([['owner-user',{user:{id:'owner-user'}}]])},
     channels:{
-      cache:{find:predicate=>all.find(predicate)},
+      cache:{find:predicate=>all.find(predicate),filter:predicate=>({size:all.filter(predicate).length})},
       async create(options){creations.push(options);throw Error('Unexpected channel creation: '+options.name)}
     }
   };
@@ -142,5 +142,23 @@ test('commerce-only layout reuse ignores magazine drift without changing the iss
   assert.equal(result.channels.some(x=>x.channel==='📖・medaka-hyakka'),false);
   assert.deepEqual(pub.availableTags.map(x=>x.id),[...original,'editorial-existing-tag']);
   assert.equal(f.edits.some(x=>x.name==='📖・medaka-hyakka'),false);
+  assert.deepEqual(f.creations,[]);
+});
+
+
+test('magazine setup rejects two forums with same title inside the public category without editing either',async()=>{
+  const f=existingAquapediaLayoutFixture();
+  const original=f.all.find(x=>x.name==='📖・medaka-hyakka');
+  f.all.push({
+    ...original,
+    id:'shadow-magazine-forum',
+    availableTags:original.availableTags.map(x=>({...x})),
+    async edit(){throw Error('A second same-category magazine forum must never be edited')}
+  });
+  await assert.rejects(
+    ()=>provisionAquaphoriaLayout(f.guild,{ownerUserId:'owner-user'}),
+    /magazine.*duplicate|duplicate.*magazine|magazine.*collision/i
+  );
+  assert.equal(f.edits.some(x=>x.name===original.name),false);
   assert.deepEqual(f.creations,[]);
 });

@@ -10,6 +10,7 @@ import { PLECO_BATCH4 } from './pleco-research-batch4.mjs';
 import { PLECO_BATCH5 } from './pleco-research-batch5.mjs';
 import { PLECO_BATCH6 } from './pleco-research-batch6.mjs';
 import { PLECO_BATCH7 } from './pleco-research-batch7.mjs';
+import { PLECO_BATCH8 } from './pleco-research-batch8.mjs';
 import { Client, ClientUser, GatewayIntentBits, ChannelType, PermissionFlagsBits, ChannelFlags } from 'discord.js';
 
 const GUILD_ID = '1519337502379475095';
@@ -51,6 +52,7 @@ export const records = [
  ...PLECO_BATCH5,
  ...PLECO_BATCH6,
  ...PLECO_BATCH7,
+ ...PLECO_BATCH8,
 ];
 function makePacket(r){
  const key=MARKER+r.id;

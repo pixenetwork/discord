@@ -75,6 +75,10 @@ const CORE_LAYOUT = [
       name: '🦐・shrimp-research',
       topic: 'Public source-backed ornamental shrimp breeder and competition research. Each breeder or event gets its own thread; award entrant is not automatically strain inventor.',
       tags: ['Breeder', 'Competition', 'Lineage', 'Genetics', 'Husbandry'].map((name) => ({ name, moderated: false })),
+    }, {
+      name: '🐉・arowana-research',
+      topic: 'Public Aquapedia arowana species, geographic origins, genetics, husbandry, breeders and conservation. Claims are evidence-labelled and wildlife collection localities are protected.',
+      tags: ['Species', 'Genetics', 'Regional', 'Breeding', 'Conservation'].map((name) => ({ name, moderated: false })),
     }],
   },
   {
@@ -304,10 +308,10 @@ export function publicationTagDefinitions() {
   return structuredClone(PUBLICATION_TAGS);
 }
 
-export async function provisionShrimpPublicResearchForum(guild) {
+async function provisionPublicAquapediaForum(guild, name) {
   const section = CORE_LAYOUT.find((entry) => entry.category === '📚・AQUAPEDIA');
-  const spec = section?.forums?.find((entry) => entry.name === '🦐・shrimp-research');
-  if (!spec) throw new Error('Shrimp research forum definition is missing');
+  const spec = section?.forums?.find((entry) => entry.name === name);
+  if (!spec) throw new Error('Aquapedia public research forum definition is missing');
   // Do not make an existing private category public or create a competing one.
   const category = guild?.channels?.cache?.find(
     (channel) => channel.type === ChannelType.GuildCategory && channel.name === section.category,
@@ -325,10 +329,18 @@ export async function provisionShrimpPublicResearchForum(guild) {
     || !existing.permissionsFor?.(everyone)?.has(PermissionFlagsBits.ReadMessageHistory))) {
     return { status: 'forum_not_public' };
   }
-  const channel = await ensureForumChannel(guild, category, spec, undefined, 'Aquaphoria public shrimp research forum provisioning');
+  const channel = await ensureForumChannel(guild, category, spec, undefined, (name === '🦐・shrimp-research' ? 'Aquaphoria public shrimp research forum provisioning' : 'Aquaphoria public arowana research forum provisioning'));
   if (!channel.permissionsFor?.(everyone)?.has(PermissionFlagsBits.ViewChannel)
     || !channel.permissionsFor?.(everyone)?.has(PermissionFlagsBits.ReadMessageHistory)) {
     return { status: 'forum_not_public' };
   }
   return { status: 'ready', categoryId: category.id, channelId: channel.id, forumName: channel.name };
+}
+
+export async function provisionShrimpPublicResearchForum(guild) {
+  return provisionPublicAquapediaForum(guild, '🦐・shrimp-research');
+}
+
+export async function provisionArowanaPublicResearchForum(guild) {
+  return provisionPublicAquapediaForum(guild, '🐉・arowana-research');
 }

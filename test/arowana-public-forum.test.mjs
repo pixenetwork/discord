@@ -1,0 +1,58 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { PermissionFlagsBits } from 'discord.js';
+import { publishAquapediaCards } from '../src/aquapedia-posts.mjs';
+
+function guildFixture(visible=true){
+ const created=[];
+ const everyone={id:'everyone'};
+ const category={id:'cat',type:4,name:'📚・AQUAPEDIA'};
+ const forum={id:'arowana-forum',type:15,name:'🐉・arowana-research',parentId:'cat',
+   permissionsFor(role){return {has(flag){return role===everyone && visible;}};},
+   threads:{
+     async fetchActive(){return {threads:new Map()};},
+     async fetchArchived(){return {threads:new Map(),hasMore:false};},
+     async create({name,message}){
+       created.push({name,message});
+       const id=String(created.length);
+       return {id:'thread-'+id, async fetchStarterMessage(){
+         return {id:'message-'+id,author:{id:'bot'},embeds:message.embeds};
+       }};
+     }
+   }};
+ const guild={roles:{everyone},client:{user:{id:'bot'}},
+   channels:{cache:new Map([['category',category],['forum',forum]])}};
+ return {guild,created};
+}
+const card={id:'arowana.asian-arowana',name:'Asian arowana',entityType:'species',
+ organismGroup:'arowana',summary:'Verified taxon with color morphs',
+ description:'Scleropages formosus',history:'Southeast Asian drainage populations',
+ lineage:'Color morphs are not separate species',care:'Large, secure aquaria',
+ sources:['https://doi.org/10.1016/j.repbre.2023.12.001'],
+ photos:[],websiteUrl:'https://aquapedia.app/arowanapedia/asian-arowana/'};
+const approved={status:'completed',discordPublicationApproved:true,
+ publicAudienceApproved:true,publicArowanaResearch:true,cards:[card]};
+test('arowana publishes a single sourced canary in its own public forum and returns readback receipt',async()=>{
+ const {guild,created}=guildFixture();
+ const result=await publishAquapediaCards(guild,approved);
+ assert.equal(result.posted,1);
+ assert.equal(result.receipts.length,1);
+ assert.equal(result.receipts[0].verified,true);
+ assert.match(created[0].name,/^Species/);
+ assert.match(created[0].message.content,/https:\/\/aquapedia\.app\/arowanapedia\/asian-arowana/);
+});
+test('arowana never posts to hidden forums or without explicit approvals',async()=>{
+ for(const [visible,request] of [[false,approved],[true,{...approved,publicAudienceApproved:false}]]) {
+  const {guild,created}=guildFixture(visible);
+  const result=await publishAquapediaCards(guild,request);
+  assert.equal(result.posted,0);
+  assert.equal(created.length,0);
+ }
+});
+test('arowana blocks mixed organism records and external article links',async()=>{
+ for(const patch of [{organismGroup:'shrimp'},{websiteUrl:'https://example.com/'}]) {
+  const {guild,created}=guildFixture();
+  const result=await publishAquapediaCards(guild,{...approved,cards:[{...card,...patch}]});
+  assert.equal(result.posted,0);assert.equal(created.length,0);
+ }
+});

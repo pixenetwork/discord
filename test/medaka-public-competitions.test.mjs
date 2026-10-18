@@ -14,7 +14,8 @@ const contest = {
 };
 
 function mockGuild({ publicVisible = true, historyVisible = true, forumId = MEDAKA_FORUM_ID,
-  forumName = '🐟・medaka-research', categoryName = '📚・AQUAPEDIA' } = {}) {
+  forumName = '🐟・medaka-research', categoryName = '📚・AQUAPEDIA',
+  activeThreadCount = 200, capacityUnavailable = false } = {}) {
   const created = [];
   const category = { type: 4, id: 'aquapedia-category', name: categoryName };
   const forum = {
@@ -40,7 +41,13 @@ function mockGuild({ publicVisible = true, historyVisible = true, forumId = MEDA
   const guild = {
     roles: { everyone: { id: 'everyone' } },
     client: { user: { id: 'aquaphoria-bot' } },
-    channels: { cache: new Map([['cat', category], ['forum', forum]]) }
+    channels: {
+      cache: new Map([['cat', category], ['forum', forum]]),
+      async fetchActiveThreads() {
+        if (capacityUnavailable) throw new Error('guild active thread inventory unavailable');
+        return { threads: { size: activeThreadCount } };
+      },
+    }
   };
   return { guild, created };
 }
@@ -150,4 +157,15 @@ test('one direct official organizer citation is sufficient with canonical websit
   assert.equal(result.posted, 1);
   assert.equal(result.reason, 'verified_in_existing_public_medaka_forum');
   assert.equal(created.length, 1);
+});
+
+
+test('Medaka public publisher preserves guild-wide thread capacity guard', async () => {
+  for (const settings of [{ activeThreadCount: 950 }, { activeThreadCount: 1000 }, { capacityUnavailable: true }]) {
+    const { guild, created } = mockGuild(settings);
+    const result = await publishAquapediaCards(guild, approved);
+    assert.equal(result.posted, 0, JSON.stringify(settings));
+    assert.equal(result.reason, 'discord_thread_capacity_guard', JSON.stringify(settings));
+    assert.equal(created.length, 0);
+  }
 });

@@ -23,12 +23,17 @@ const TAGS = ['Research index','Named species','C-number','CW-number','Captive s
 const ALLOW_MENTIONS = { parse: [] };
 const RECEIPT_FILE = path.join(os.homedir(), 'AppData', 'Local', 'PixelNetwork', 'corydoras-research-receipts.jsonl');
 
+// Match exact directory labels in the pinned 528-record source.
+// Brochis arcuata and Gastrodermus napoensis are current combinations.
+// This directory says Gastrodermus pauciradiatum, but other authorities
+// prefer G. pauciradiatus: preserve source label and flag naming mismatch.
+// Neither name spelling creates another species or breeding line.
 export const PRIORITY_NAMES = [
   'Hoplisoma sterbai', 'Hoplisoma panda', 'Hoplisoma adolfoi', 'Hoplisoma duplicareum',
   'Hoplisoma weitzmanii', 'Hoplisoma schwartzi', 'Hoplisoma tukano', 'Hoplisoma julii',
   'Hoplisoma trilineatum', 'Hoplisoma paleatum', 'Hoplisoma habrosum', 'Hoplisoma simile',
-  'Hoplisoma concolor', 'Hoplisoma melini', 'Hoplisoma arcuatum', 'Hoplisoma metae',
-  'Hoplisoma napoense', 'Hoplisoma gossei', 'Hoplisoma axelrodi', 'Hoplisoma leucomelas',
+  'Hoplisoma concolor', 'Hoplisoma melini', 'Brochis arcuata', 'Hoplisoma metae',
+  'Gastrodermus napoensis', 'Hoplisoma gossei', 'Hoplisoma axelrodi', 'Hoplisoma leucomelas',
   'Osteogaster aenea', 'Osteogaster eques', 'Osteogaster melanotaenia',
   'Osteogaster sp. CW009', 'Osteogaster sp. CW010', 'Osteogaster sp. CW014',
   'Osteogaster sp. CW023', 'Brochis pantanalensis', 'Brochis splendens',
@@ -36,7 +41,7 @@ export const PRIORITY_NAMES = [
   'Brochis leopardus', 'Brochis reticulata', 'Gastrodermus pygmaeus',
   'Gastrodermus hastatus', 'Gastrodermus elegans', 'Corydoras geoffroy',
   'Corydoras narcissus', 'Corydoras fowleri', 'Scleromystax barbatus',
-  'Scleromystax kronei', 'Aspidoras pauciradiatus',
+  'Scleromystax kronei', 'Gastrodermus pauciradiatum',
   'Corydoras sp. CW128', 'Corydoras sp. CW207',
 ];
 const LINEAGE_NOTE = {

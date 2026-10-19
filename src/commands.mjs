@@ -8,6 +8,7 @@ import { calculateRetailBreakdown, centsToMoney, moneyToCents } from './pricing.
 import { ensureVendorWorkspace, provisionAquaphoriaLayout } from './layout.mjs';
 import { publishAquapediaCards, persistVerifiedReceipts } from './aquapedia-posts.mjs';
 import { createShrimpReleaseService } from './shrimp-release-service.mjs';
+const shrimpReleaseService = createShrimpReleaseService();
 import {
   getCanonicalStaffRole,
   isCanonicalStaff,
@@ -795,8 +796,7 @@ async function handleShrimpRelease(interaction, deps) {
   }
   const mode = interaction.options.getSubcommand(true);
   await interaction.deferReply({ ephemeral: true });
-  const service = createShrimpReleaseService();
-  const outcome = await service.run({
+  const outcome = await shrimpReleaseService.run({
     mode, guild: interaction.guild, store: deps.store, ownerApproved: true,
   });
   const tag = outcome.stage;

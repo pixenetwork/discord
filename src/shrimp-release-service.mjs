@@ -38,14 +38,13 @@ export async function loadPinnedShrimpRelease({ readSource = async (fileName) =>
   return { cards: batch.cards, sourceCommit: SHRIMP_RELEASE_SOURCE_COMMIT, approval: 'CLOSED' };
 }
 
-// Single-process lock protects against concurrent Discord interactions.
 // The live deployment must separately enforce a single owner worker.
-let releaseBusy = false;
-
+// A shared service instance serializes owner commands within that worker.
 export function createShrimpReleaseService({
   loadBatch = loadPinnedShrimpRelease,
   publish = publishAquapediaCards,
 } = {}) {
+  let releaseBusy = false;
   return Object.freeze({
     async run({ mode, guild, store, ownerApproved = false } = {}) {
       if (!['status', 'canary', 'finish'].includes(mode)) {

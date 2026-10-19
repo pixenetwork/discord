@@ -200,3 +200,21 @@ test('even the configured owner cannot release into a different Discord guild',a
  assert.match(replies[0].content,/configured Aquaphoria server/);
  assert.equal(replies[0].ephemeral,true);
 });
+
+test('one shared release service refuses overlapping owner interactions',async()=>{
+ let releasePublish;
+ let notifyStarted;
+ const started = new Promise(resolve=>{ notifyStarted=resolve; });
+ const pending = new Promise(resolve=>{ releasePublish=resolve; });
+ const store={async getResearchJob(){return null;},async recordResearchJob(job){return job;}};
+ const svc=createShrimpReleaseService({
+   loadBatch:async()=>({cards:entries,sourceCommit:sourceTag}),
+   publish:async()=>{notifyStarted();await pending;return {posted:0,unverified:1,skipped:0,receipts:[]};}
+ });
+ const first=svc.run({mode:'canary',guild,store,ownerApproved:true});
+ await started;
+ const second=await svc.run({mode:'canary',guild,store,ownerApproved:true});
+ assert.equal(second.stage,'busy');
+ releasePublish();
+ assert.equal((await first).stage,'canary_unverified');
+});

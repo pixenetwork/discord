@@ -149,3 +149,54 @@ test('persistent Aquaphoria store reopens actual verified canary receipts',async
    assert.equal((await reloaded.getResearchJob('release-test')).discordPublicationReceipts[0].messageId,'456');
  } finally { await rm(dir,{recursive:true,force:true}); }
 });
+
+test('Discord rejects a non-owner slash command before any release loader or writes',async()=>{
+ const route=createCommandRouter({config:{discord:{ownerUserId:'real-owner',guildId:'test-guild'}},store:{}});
+ const replies=[];
+ await route.handle({
+   user:{id:'outsider'},commandName:'shrimp-release',
+   isChatInputCommand:()=>true,isButton:()=>false,
+   options:{getSubcommand:()=> 'canary'},
+   reply:async(x)=>{replies.push(x);},
+   guild:{channels:{cache:new Map()}},
+ });
+ assert.equal(replies.length,1);
+ assert.match(replies[0].content,/Only the Aquaphoria owner/);
+ assert.equal(replies[0].ephemeral,true);
+});
+
+test('owner status uses an ephemeral reply without a Discord publication',async()=>{
+ const replies=[];
+ const route=createCommandRouter({
+   config:{discord:{ownerUserId:'real-owner',guildId:'test-guild'}},
+   store:{async getResearchJob(){return null;},async recordResearchJob(){throw new Error('status must never write');}},
+ });
+ await route.handle({
+   user:{id:'real-owner'},commandName:'shrimp-release',
+   isChatInputCommand:()=>true,isButton:()=>false,
+   options:{getSubcommand:()=> 'status'},
+   deferReply:async(x)=>{replies.push({defer:x});},
+   editReply:async(x)=>{replies.push({edit:x});},
+   guild:{id:'test-guild',channels:{cache:new Map()}},
+ });
+ assert.equal(replies[0].defer.ephemeral,true);
+ assert.match(replies[1].edit.content,/No verified public receipts/);
+});
+
+test('even the configured owner cannot release into a different Discord guild',async()=>{
+ const replies=[];
+ const route=createCommandRouter({
+   config:{discord:{ownerUserId:'real-owner',guildId:'configured-aquaphoria-guild'}},
+   store:{async getResearchJob(){throw new Error('must not read store');}},
+ });
+ await route.handle({
+   user:{id:'real-owner'},commandName:'shrimp-release',
+   isChatInputCommand:()=>true,isButton:()=>false,
+   options:{getSubcommand:()=> 'canary'},
+   reply:async(x)=>{replies.push(x);},
+   guild:{id:'some-other-guild',channels:{cache:new Map()}},
+ });
+ assert.equal(replies.length,1);
+ assert.match(replies[0].content,/configured Aquaphoria server/);
+ assert.equal(replies[0].ephemeral,true);
+});

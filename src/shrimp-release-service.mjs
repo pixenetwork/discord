@@ -101,24 +101,26 @@ export function createShrimpReleaseService({
         }
         const merged = new Map(receipts.map((r) => [r.recordId, r]));
         for (const r of confirmed) merged.set(r.recordId, r);
+        const verifiedCount = batch.cards.filter((card) => verifiedReceipt(merged.get(card.id), card.id)).length;
+        const allVerified = verifiedCount === 22;
         // Persist actual Discord readback receipts, never synthetic dry-run results.
         if (confirmed.length) {
           await store.recordResearchJob({
             id: key, sourceCommit: batch.sourceCommit, guildId: guild.id,
-            status: merged.size === 22 ? 'completed' : 'release_in_progress',
+            status: allVerified ? 'completed' : 'release_in_progress',
             discordPublicationReceipts: [...merged.values()],
-            discordPublishedCount: merged.size,
+            discordPublishedCount: verifiedCount,
             discordUnverifiedCount: Number(result.unverified) || 0,
             discordVerifiedAt: new Date().toISOString(),
             releaseStage: mode === 'canary' ? 'canary_verified'
-              : merged.size === 22 ? 'completed' : 'partial',
+              : allVerified ? 'completed' : 'partial',
           });
         }
         return mode === 'canary'
           ? { stage: 'canary_verified', verifiedCount: 1, total: 22, receipt: confirmed[0] }
-          : { stage: merged.size === 22 && result?.posted === 21 && !result.unverified && !result.skipped
+          : { stage: allVerified && result?.posted === 21 && !result.unverified && !result.skipped
               ? 'completed' : 'partial',
-            verifiedCount: merged.size, total: 22,
+            verifiedCount, total: 22,
             unverified: Number(result?.unverified) || 0, skipped: Number(result?.skipped) || 0 };
       } finally {
         releaseBusy = false;

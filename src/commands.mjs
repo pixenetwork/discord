@@ -790,6 +790,9 @@ async function handleShrimpRelease(interaction, deps) {
   if (!isOwner(interaction, deps.config)) {
     return interaction.reply({ content: 'Only the Aquaphoria owner can run Shrimpapedia releases.', ephemeral: true });
   }
+  if (!interaction.guild?.id || interaction.guild.id !== deps.config.discord.guildId) {
+    return interaction.reply({ content: 'Shrimpapedia releases are restricted to the configured Aquaphoria server.', ephemeral: true });
+  }
   const mode = interaction.options.getSubcommand(true);
   await interaction.deferReply({ ephemeral: true });
   const service = createShrimpReleaseService();

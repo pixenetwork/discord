@@ -443,6 +443,11 @@ export function createStore({ dataDir }) {
       });
     },
 
+    async getResearchJob(jobId) {
+      const state = await load();
+      return state.researchJobs[String(jobId)] ?? null;
+    },
+
     async recordResearchJob(job) {
       if (!job?.id) throw new Error('Research job id is required');
       return mutate((state) => {

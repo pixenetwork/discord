@@ -1,0 +1,318 @@
+{
+  "version": 1,
+  "created_at": "2026-10-15",
+  "source_branch": "research/shrimp-breeder-dossiers-20261015-batch01",
+  "source_research_pr": 54,
+  "publisher_source": "pixenetwork/discord PR #21 src/aquapedia-posts.mjs",
+  "status": "pending_review",
+  "discordPublicationApproved": false,
+  "photo_rights_checked": true,
+  "no_copying_images": true,
+  "expected_breeder_cards": 14,
+  "requires": [
+    "merge/review research",
+    "resolve exact existing private breeder forum IDs",
+    "authorization by approved publishing service",
+    "message ID and readback receipts"
+  ],
+  "cards": [
+    {
+      "id": "shrimp-breeder-skyfish-leon-su",
+      "entityType": "breeder",
+      "organismGroup": "shrimp",
+      "name": "Skyfish / Leon Su",
+      "breederName": "Skyfish / Leon Su",
+      "breederForumName": null,
+      "summary": "Research profile of shrimp breeder or breeder-associated stock in Taiwan. Full Aquapedia profile: https://aquapedia.app/shrimpapedia/breeders/skyfish-leon-su/",
+      "description": "Galaxy Fishbone • Galaxy Cape • Galaxy Zebra • Metallic Blue Boa",
+      "history": "Reported location: Taiwan. Confirm whether each listed stock line was developed, maintained or retailed by this breeder.",
+      "lineage": "Not a DNA-verified or complete parent-by-parent pedigree. Originator claim verified for Galaxy Fishbone; precise pedigree not public.",
+      "breeding": "Multi-year pattern-selection program; scaled selective breeding for difficult Crystal/Taiwan Bee lines. Skyfish explicitly described Metallic Blue Boa (2016) as an evolution of its Galaxy Fishbone line.",
+      "care": "Line-specific pH, GH, KH, temperature and substrate should be cited from breeder or species guidance, not inferred from trade names.",
+      "confidence": "Sources: breeder/company or specialist reports; creator attribution varies. Originator claim verified for Galaxy Fishbone; precise pedigree not public.",
+      "sources": [
+        "https://skyfish-aqua.com/%E5%85%AC%E5%8F%B8%E4%BB%8B%E7%B4%B9/"
+      ],
+      "photos": [],
+      "research_file": "research/shrimp-breeder-dossiers-batch001-2026-10-15.md",
+      "forum_resolution": "EXACT_EXISTING_FORUM_REQUIRED"
+    },
+    {
+      "id": "shrimp-breeder-larmax-international-kc-wang",
+      "entityType": "breeder",
+      "organismGroup": "shrimp",
+      "name": "Larmax International / KC Wang",
+      "breederName": "Larmax International / KC Wang",
+      "breederForumName": null,
+      "summary": "Research profile of shrimp breeder or breeder-associated stock in Taiwan. Full Aquapedia profile: https://aquapedia.app/shrimpapedia/breeders/larmax-international-kc-wang/",
+      "description": "Red Rili • Red/Orange Volcano Rili • Snowstorm • Blue Zebra",
+      "history": "Reported location: Taiwan. Confirm whether each listed stock line was developed, maintained or retailed by this breeder.",
+      "lineage": "Not a DNA-verified or complete parent-by-parent pedigree. Red Rili origin claimed by breeder; other traded catalog lines do not imply creator credit.",
+      "breeding": "Larmax says Snowstorm was selected from Snowball-type stock for dense white pigment over several years, with extra refinement after its 2023 show. Blue Zebra is stripe-pattern selection, not merely color grading.",
+      "care": "Line-specific pH, GH, KH, temperature and substrate should be cited from breeder or species guidance, not inferred from trade names.",
+      "confidence": "Sources: breeder/company or specialist reports; creator attribution varies. Red Rili origin claimed by breeder; other traded catalog lines do not imply creator credit.",
+      "sources": [
+        "https://www.larmax.com.tw/post/the-snowstorm"
+      ],
+      "photos": [],
+      "research_file": "research/shrimp-breeder-dossiers-batch001-2026-10-15.md",
+      "forum_resolution": "EXACT_EXISTING_FORUM_REQUIRED"
+    },
+    {
+      "id": "shrimp-breeder-hwa-shrimp-yang-zhenhua",
+      "entityType": "breeder",
+      "organismGroup": "shrimp",
+      "name": "HWA Shrimp / Yang Zhenhua",
+      "breederName": "HWA Shrimp / Yang Zhenhua",
+      "breederForumName": null,
+      "summary": "Research profile of shrimp breeder or breeder-associated stock in Taiwan. Full Aquapedia profile: https://aquapedia.app/shrimpapedia/breeders/hwa-shrimp-yang-zhenhua/",
+      "description": "Rampage / Fancy Tiger • Galaxy Snowfall • Lava Tiger",
+      "history": "Reported location: Taiwan. Confirm whether each listed stock line was developed, maintained or retailed by this breeder.",
+      "lineage": "Not a DNA-verified or complete parent-by-parent pedigree. Breeder-profile interview; preserve genotype claims as reported, not genetically proven.",
+      "breeding": "Interview reports Crystal Shrimp × Tiger breeding underpinning Rampage; years of selective breeding, a shrimp-safe Cannon Tube filtration concept, and thin buffering-soil experimentation. Snowfall selects fine speckling; Lava Tiger selects red-black pattern.",
+      "care": "Line-specific pH, GH, KH, temperature and substrate should be cited from breeder or species guidance, not inferred from trade names.",
+      "confidence": "Sources: breeder/company or specialist reports; creator attribution varies. Breeder-profile interview; preserve genotype claims as reported, not genetically proven.",
+      "sources": [
+        "https://rareshrimp.com/hwa-shrimp/"
+      ],
+      "photos": [],
+      "research_file": "research/shrimp-breeder-dossiers-batch001-2026-10-15.md",
+      "forum_resolution": "EXACT_EXISTING_FORUM_REQUIRED"
+    },
+    {
+      "id": "shrimp-breeder-vin-shrimp-vin-fish",
+      "entityType": "breeder",
+      "organismGroup": "shrimp",
+      "name": "VIN Shrimp / VIN Fish",
+      "breederName": "VIN Shrimp / VIN Fish",
+      "breederForumName": null,
+      "summary": "Research profile of shrimp breeder or breeder-associated stock in Taiwan. Full Aquapedia profile: https://aquapedia.app/shrimpapedia/breeders/vin-shrimp-vin-fish/",
+      "description": "Red/Black Galaxy • Galaxy Fishbone • Golden Galaxy • Blue Boa • Fancy Tiger",
+      "history": "Reported location: Taiwan. Confirm whether each listed stock line was developed, maintained or retailed by this breeder.",
+      "lineage": "Not a DNA-verified or complete parent-by-parent pedigree. The catalog proves maintained/marketed lines, not that VIN created every Galaxy or Boa strain.",
+      "breeding": "VIN says it systematically classified and bred its Galaxy program for more than three years to improve opacity, body/shell coverage and offspring pattern consistency.",
+      "care": "Line-specific pH, GH, KH, temperature and substrate should be cited from breeder or species guidance, not inferred from trade names.",
+      "confidence": "Sources: breeder/company or specialist reports; creator attribution varies. The catalog proves maintained/marketed lines, not that VIN created every Galaxy or Boa strain.",
+      "sources": [
+        "https://www.vinshrimp.com/pages/galaxy-series"
+      ],
+      "photos": [],
+      "research_file": "research/shrimp-breeder-dossiers-batch001-2026-10-15.md",
+      "forum_resolution": "EXACT_EXISTING_FORUM_REQUIRED"
+    },
+    {
+      "id": "shrimp-breeder-michael-h-sler",
+      "entityType": "breeder",
+      "organismGroup": "shrimp",
+      "name": "Michael Häsler",
+      "breederName": "Michael Häsler",
+      "breederForumName": null,
+      "summary": "Research profile of shrimp breeder or breeder-associated stock in Germany. Full Aquapedia profile: https://aquapedia.app/shrimpapedia/breeders/michael-hasler/",
+      "description": "Red Demon • Black Rose OE • Blue Dream OE • Green Demon • Orange Sakura OE",
+      "history": "Reported location: Germany. Confirm whether each listed stock line was developed, maintained or retailed by this breeder.",
+      "lineage": "Not a DNA-verified or complete parent-by-parent pedigree. Coauthored account; no exclusive founder claims for all OE lines.",
+      "breeding": "Coauthored breeder article explains selection/outcross/backcross: Black Sapphire OE × Dark Green Jade, then a Dark Green Jade backcross to strengthen Green Demon color. Orange Sakura OE appeared within a Green Demon breeding group.",
+      "care": "Line-specific pH, GH, KH, temperature and substrate should be cited from breeder or species guidance, not inferred from trade names.",
+      "confidence": "Sources: breeder/company or specialist reports; creator attribution varies. Coauthored account; no exclusive founder claims for all OE lines.",
+      "sources": [
+        "https://my-fish.org/faszination-aquaristik-neocaridina-mit-orange-eyes-die-neuen-farbwunder-und-zuchtlinien-im-check/"
+      ],
+      "photos": [],
+      "research_file": "research/shrimp-breeder-dossiers-batch001-2026-10-15.md",
+      "forum_resolution": "EXACT_EXISTING_FORUM_REQUIRED"
+    },
+    {
+      "id": "shrimp-breeder-dr-philipp-baumann",
+      "entityType": "breeder",
+      "organismGroup": "shrimp",
+      "name": "Dr. Philipp Baumann",
+      "breederName": "Dr. Philipp Baumann",
+      "breederForumName": null,
+      "summary": "Research profile of shrimp breeder or breeder-associated stock in Germany. Full Aquapedia profile: https://aquapedia.app/shrimpapedia/breeders/dr-philipp-baumann/",
+      "description": "Blue Jelly OE • Red Onyx OE • Green Demon OE",
+      "history": "Reported location: Germany. Confirm whether each listed stock line was developed, maintained or retailed by this breeder.",
+      "lineage": "Not a DNA-verified or complete parent-by-parent pedigree. Do not attribute all coauthored breeding lines individually without records.",
+      "breeding": "The jointly authored Häsler–Baumann account describes Bloody Mary OE × Blue Jelly and Red Onyx OE development using selected Black Rose OE. The article does not identify which coauthor performed each individual cross.",
+      "care": "Line-specific pH, GH, KH, temperature and substrate should be cited from breeder or species guidance, not inferred from trade names.",
+      "confidence": "Sources: breeder/company or specialist reports; creator attribution varies. Do not attribute all coauthored breeding lines individually without records.",
+      "sources": [
+        "https://my-fish.org/faszination-aquaristik-neocaridina-mit-orange-eyes-die-neuen-farbwunder-und-zuchtlinien-im-check/"
+      ],
+      "photos": [],
+      "research_file": "research/shrimp-breeder-dossiers-batch001-2026-10-15.md",
+      "forum_resolution": "EXACT_EXISTING_FORUM_REQUIRED"
+    },
+    {
+      "id": "shrimp-breeder-peiwen-shrimps",
+      "entityType": "breeder",
+      "organismGroup": "shrimp",
+      "name": "Peiwen Shrimps",
+      "breederName": "Peiwen Shrimps",
+      "breederForumName": null,
+      "summary": "Research profile of shrimp breeder or breeder-associated stock in Taiwan. Full Aquapedia profile: https://aquapedia.app/shrimpapedia/breeders/peiwen-shrimps/",
+      "description": "PRL • Black Bee • Super Crystal Black • Red/Black Pinto • Ocean Blue • Orange Eye Blue Devil • Fishbone Fancy Tiger (inventor claim reported by interview)",
+      "history": "Reported location: Taiwan. Confirm whether each listed stock line was developed, maintained or retailed by this breeder.",
+      "lineage": "Not a DNA-verified or complete parent-by-parent pedigree. These are contest entries and breeder-maintained stocks, not original-invention proofs.",
+      "breeding": "Specialist interview reports 500+ tanks; Peiwen emphasizes strong bloodlines, stable water and careful selection. A breeder-reported ~9% of Fishbone Fancy Tiger offspring retain the target pattern; not independently reproduced. Tank layout and GH/KH are unverified.",
+      "care": "Line-specific pH, GH, KH, temperature and substrate should be cited from breeder or species guidance, not inferred from trade names.",
+      "confidence": "Specialist interview attributes Fishbone Fancy Tiger creation to Peiwen, including ~9% pattern retention (reported, not controlled). Other traded/contest stock associations are not inventor proofs.",
+      "sources": [
+        "https://rareshrimp.com/peiwen-shrimps/"
+      ],
+      "photos": [],
+      "research_file": "research/shrimp-breeder-dossiers-batch001-2026-10-15.md",
+      "forum_resolution": "EXACT_EXISTING_FORUM_REQUIRED"
+    },
+    {
+      "id": "shrimp-breeder-garnelen-pott",
+      "entityType": "breeder",
+      "organismGroup": "shrimp",
+      "name": "Garnelen-Pott",
+      "breederName": "Garnelen-Pott",
+      "breederForumName": null,
+      "summary": "Research profile of shrimp breeder or breeder-associated stock in Germany. Full Aquapedia profile: https://aquapedia.app/shrimpapedia/breeders/garnelen-pott/",
+      "description": "Bloody Mary • Blue Dream OE • Green Jade • Orange Sakura • Black Sakura • Taiwan Bee • Pinto • Galaxy Fishbone • Red Blue Rili (one bicolor catalog line)",
+      "history": "Reported location: Germany. Confirm whether each listed stock line was developed, maintained or retailed by this breeder.",
+      "lineage": "Not a DNA-verified or complete parent-by-parent pedigree. First-person breeder claims, not an independent audit or origin claim.",
+      "breeding": "Operator reports 75-tank in-house captive breeding and line-specific sorting; for its Caridina tanks RO water GH 4–6, KH 0, pH 5.8–6.5, active soil, 21–24°C. Its Blue Dream OE may use local tap water: do not transfer that practice to Caridina.",
+      "care": "Line-specific pH, GH, KH, temperature and substrate should be cited from breeder or species guidance, not inferred from trade names.",
+      "confidence": "Sources: breeder/company or specialist reports; creator attribution varies. First-person breeder claims, not an independent audit or origin claim.",
+      "sources": [
+        "https://garnelen-pott.de/collections/caridina-garnelen"
+      ],
+      "photos": [],
+      "research_file": "research/shrimp-breeder-dossiers-batch001-2026-10-15.md",
+      "forum_resolution": "EXACT_EXISTING_FORUM_REQUIRED"
+    },
+    {
+      "id": "shrimp-breeder-flip-aquatics-robert-lupton",
+      "entityType": "breeder",
+      "organismGroup": "shrimp",
+      "name": "Flip Aquatics / Robert Lupton",
+      "breederName": "Flip Aquatics / Robert Lupton",
+      "breederForumName": null,
+      "summary": "Research profile of shrimp breeder or breeder-associated stock in United States. Full Aquapedia profile: https://aquapedia.app/shrimpapedia/breeders/flip-aquatics-robert-lupton/",
+      "description": "Blue Dream Neocaridina • assorted Neocaridina/Caridina sold",
+      "history": "Reported location: United States. Confirm whether each listed stock line was developed, maintained or retailed by this breeder.",
+      "lineage": "Not a DNA-verified or complete parent-by-parent pedigree. Breeder/retailer/importer: stock origin must be checked per item; NOT creator of every listed variety.",
+      "breeding": "Company documents breeding-facility origins plus ongoing imports, 30-day quarantine, RO with GH/KH+ for Neocaridina, GH+ and buffering soil for Bee Caridina, and Matten/sponge filtration.",
+      "care": "Line-specific pH, GH, KH, temperature and substrate should be cited from breeder or species guidance, not inferred from trade names.",
+      "confidence": "Sources: breeder/company or specialist reports; creator attribution varies. Breeder/retailer/importer: stock origin must be checked per item; NOT creator of every listed variety.",
+      "sources": [
+        "https://flipaquatics.com/pages/frequently-asked-questions"
+      ],
+      "photos": [],
+      "research_file": "research/shrimp-breeder-dossiers-batch001-2026-10-15.md",
+      "forum_resolution": "EXACT_EXISTING_FORUM_REQUIRED"
+    },
+    {
+      "id": "shrimp-breeder-hisayasu-suzuki",
+      "entityType": "breeder",
+      "organismGroup": "shrimp",
+      "name": "Hisayasu Suzuki",
+      "breederName": "Hisayasu Suzuki",
+      "breederForumName": null,
+      "summary": "Research profile of shrimp breeder or breeder-associated stock in Japan. Full Aquapedia profile: https://aquapedia.app/shrimpapedia/breeders/hisayasu-suzuki/",
+      "description": "Crystal Red Shrimp (historical)",
+      "history": "Reported location: Japan. Confirm whether each listed stock line was developed, maintained or retailed by this breeder.",
+      "lineage": "Not a DNA-verified or complete parent-by-parent pedigree. Secondary historical consensus; exact original archive and date remain unresolved.",
+      "breeding": "Historical specialist accounts report noticing red-color mutants among Bee shrimp in the early 1990s and selecting/breeding red lines, named/marketed Crystal Red around 1996.",
+      "care": "Line-specific pH, GH, KH, temperature and substrate should be cited from breeder or species guidance, not inferred from trade names.",
+      "confidence": "Sources: breeder/company or specialist reports; creator attribution varies. Secondary historical consensus; exact original archive and date remain unresolved.",
+      "sources": [
+        "https://aquariumbreeder.com/crystal-red-shrimp-detailed-guide-care-diet-and-breeding/"
+      ],
+      "photos": [],
+      "research_file": "research/shrimp-breeder-dossiers-batch001-2026-10-15.md",
+      "forum_resolution": "EXACT_EXISTING_FORUM_REQUIRED"
+    },
+    {
+      "id": "aquapedia-tb-shrimp-the-brothers",
+      "entityType": "breeder",
+      "organismGroup": "shrimp",
+      "name": "TB Shrimp / The Brothers Shrimp",
+      "breederName": "TB Shrimp / The Brothers Shrimp",
+      "breederForumName": null,
+      "summary": "Breeder or line-source research profile. Region: Vietnam (reported; farm address unverified). Full Aquapedia profile: https://aquapedia.app/shrimpapedia/breeders/tb-shrimp-the-brothers-shrimp/",
+      "description": "Orange Bolts; Red Galaxy Fishbone Snowflakes; Red Fancy Tiger; Orange Metallic Boa; Red/Black Blizzard; Red/Black Snowfall; Orange-base Wasp",
+      "history": "Region: Vietnam (reported; farm address unverified). Creator vs exhibitor vs line-source claims are distinct.",
+      "lineage": "Original full genetic crosses not independently established; do not treat winning stock or matching trade names as verified parentage.",
+      "breeding": "Generational selective grading for color/pattern and colony stability (distributor). Social breeder posts show deliberate next-generation Blizzard selection; exact crossing/pH not public.",
+      "care": "Line-specific water conditions are not published or independently verified in these sources.",
+      "confidence": "source-backed-secondary. NAISC 2024: 1st Orange Bolts (Cat 8), 1st Red Galaxy Fishbone Snowflakes (Cat 9), 2nd Red Fancy Tiger (Cat 11), 3rd Orange Metallic Boa (Cat 13), 2nd Innovation (line unspecified). Do not equate competition entrant with original breeder.",
+      "sources": [
+        "https://rareshrimp.com/north-american-international-shrimp-competition-naisc-2024/",
+        "https://shrimpcove.com/2-home"
+      ],
+      "photos": [],
+      "research_file": "research/shrimp-breeder-dossiers-batch002-tb-marcel-galactic-sixi-2026-10-15.md",
+      "forum_resolution": "EXACT_EXISTING_FORUM_REQUIRED"
+    },
+    {
+      "id": "aquapedia-galactic-shrimps-marcin-stadnik",
+      "entityType": "breeder",
+      "organismGroup": "shrimp",
+      "name": "Galactic Shrimps / Marcin Stadnik",
+      "breederName": "Galactic Shrimps / Marcin Stadnik",
+      "breederForumName": null,
+      "summary": "Breeder or line-source research profile. Region: Poland. Full Aquapedia profile: https://aquapedia.app/shrimpapedia/breeders/galactic-shrimps-marcin-stadnik/",
+      "description": "Red/Black Snowfall; Red Fancy Tiger; Pure Red Line GS Line 2; Galactic Red Stardust; OE Blue Bolt; Hornet; Red/Black Nanashi; Blue Boa; Metallic Blue Boa (seller catalog)",
+      "history": "Region: Poland. Creator vs exhibitor vs line-source claims are distinct.",
+      "lineage": "Original full genetic crosses not independently established; do not treat winning stock or matching trade names as verified parentage.",
+      "breeding": "First-person breeding-room account: >100 tanks (~80L average); UGF with ADA Amazonia, notes improved stability in own system; does not establish superiority from a controlled trial.",
+      "care": "Line-specific water conditions are not published or independently verified in these sources.",
+      "confidence": "first-party-self-reported. TGISC Dortmund 2023: brewer's retrospective credits Marcin 4 gold + 4 silver + 2 bronze; individual strain-to-medal matching still pending official score sheets. Also judged Italy 2023. Do not equate competition entrant with original breeder.",
+      "sources": [
+        "https://www.galacticshrimps.pl/en/",
+        "https://www.galacticshrimps.pl/en/under-gravel-filtration-ugf-in-a-shrimp-tank-the-best-method-for-your-aquarium/",
+        "https://www.galacticshrimps.pl/en/the-german-international-shrimp-contest-dortmund-2023/"
+      ],
+      "photos": [],
+      "research_file": "research/shrimp-breeder-dossiers-batch002-tb-marcel-galactic-sixi-2026-10-15.md",
+      "forum_resolution": "EXACT_EXISTING_FORUM_REQUIRED"
+    },
+    {
+      "id": "aquapedia-marcel-netherlands-identity-provisional",
+      "entityType": "breeder",
+      "organismGroup": "shrimp",
+      "name": "Marcel — OE White Caridina",
+      "breederName": "Marcel — OE White Caridina",
+      "breederForumName": null,
+      "summary": "Breeder or line-source research profile. Region: Netherlands (surname unverified). Full Aquapedia profile: https://aquapedia.app/shrimpapedia/breeders/marcel-oe-white-caridina/",
+      "description": "Orange-eye white-pigment Caridina (interviewer-described innovation)",
+      "history": "Region: Netherlands (surname unverified). Creator vs exhibitor vs line-source claims are distinct.",
+      "lineage": "Original full genetic crosses not independently established; do not treat winning stock or matching trade names as verified parentage.",
+      "breeding": "Producer visited Marcel's breeding setup and discussed development; full parent crosses, number of generations, water parameters, and surname are unverified.",
+      "care": "Line-specific water conditions are not published or independently verified in these sources.",
+      "confidence": "identity-provisional. No verifiable contest award found; do not attach achievements of Marcel Wientges or other unrelated people. Do not equate competition entrant with original breeder.",
+      "sources": [
+        "https://www.youtube.com/watch?v=cOGDNH7G72g"
+      ],
+      "photos": [],
+      "research_file": "research/shrimp-breeder-dossiers-batch002-tb-marcel-galactic-sixi-2026-10-15.md",
+      "forum_resolution": "EXACT_EXISTING_FORUM_REQUIRED"
+    },
+    {
+      "id": "aquapedia-sixi-shrimp-unverified-operator",
+      "entityType": "breeder",
+      "organismGroup": "shrimp",
+      "name": "SIXI Shrimp",
+      "breederName": "SIXI Shrimp",
+      "breederForumName": null,
+      "summary": "Breeder or line-source research profile. Region: not established. Full Aquapedia profile: https://aquapedia.app/shrimpapedia/breeders/sixi-shrimp/",
+      "description": "Klein Blue/Extreme Blue Bolt; Red Snowfall; Black Snowfall; 3-band Crystal Red; Blue/Green Boa; Blood Red Galaxy Fishbone Boa",
+      "history": "Region: not established. Creator vs exhibitor vs line-source claims are distinct.",
+      "lineage": "Original full genetic crosses not independently established; do not treat winning stock or matching trade names as verified parentage.",
+      "breeding": "Line-source descriptions emphasize clean crystal banding, intense blue and tight snowflake/fishbone patterns; no directly documented breeding crosses/water parameters.",
+      "care": "Line-specific water conditions are not published or independently verified in these sources.",
+      "confidence": "line-provenance-provisional. US exhibitor Shrimp Studio reports winning with SIXI-source Red Snowfalls in Chicago Aquashella 2026; this is NOT proof SIXI personally entered. Official results pending. Do not equate competition entrant with original breeder.",
+      "sources": [
+        "https://www.globuya.com/US/Santa-Cruz/108477804262025/Shrimp-Studio",
+        "https://www.ebay.com/itm/235490019689"
+      ],
+      "photos": [],
+      "research_file": "research/shrimp-breeder-dossiers-batch002-tb-marcel-galactic-sixi-2026-10-15.md",
+      "forum_resolution": "EXACT_EXISTING_FORUM_REQUIRED"
+    }
+  ]
+}

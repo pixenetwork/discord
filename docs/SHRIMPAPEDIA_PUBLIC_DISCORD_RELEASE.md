@@ -89,3 +89,43 @@ process are accessed. The displayed receipt IDs are *synthetic* and must
 This test is necessary but not sufficient for live release. The production
 worker's exact launch path, authorized credential/state handoff, forum access,
 and real Discord readback receipts remain independent deployment gates.
+
+## Owner-controlled release command — October 19, 2026
+
+The bot now includes an owner-only, administrator-visible
+`/shrimp-release` command. It is **not** invoked at startup, from HTTP, or
+by background automation. Only the configured `AQUAPHORIA_OWNER_USER_ID`
+may execute it; rejected users cannot activate the release.
+
+**Inputs:** `data/shrimp-release/breeders.json` and
+`data/shrimp-release/competitions.json` are pinned to Aquapedia commit
+`2bade20e5a0e80b1c6786c0be6523a2cef92dda7`. The release loader
+verifies both SHA-256 checksums before assembling 14 breeder and 8 contest
+cards. The checked-in manifests retain `NOT_POSTED` / approval-closed
+source metadata and contain no rehosted breeder photographs.
+
+Supported owner actions within the **already running, single-instance bot**:
+
+1. `/shrimp-release status`: private count of actual stored message
+   receipts, no Discord post writes.
+2. `/shrimp-release canary`: explicit owner action approves exactly the
+   first breeder for public release. Publisher verifies the bot author,
+   source record ID, Discord thread ID and message ID, then saves a
+   canary receipt to the persistent store.
+3. `/shrimp-release finish`: explicit owner action may publish the
+   remaining 21 only when a verified canary receipt exists for the same
+   source revision **and** Discord guild. Stores verified receipts by
+   record ID, reports partial/unverified writes without declaring success.
+
+The record key is scoped by source commit and guild ID. Attempts inside
+the same Node process are serialized. Once all 22 receipts are stored,
+a repeat owner action is read-only. The underlying publisher updates
+matching bot-owned posts rather than creating duplicate threads.
+
+**Do not run these actions on a newly spawned competing bot.**
+The production service's privileged launcher, credential injection,
+persistent `DATA_DIR` and reliable rollback must first be verified.
+The code/repository deployment and the Discord publication are separate
+release phases. Real public posts are confirmed only by their Discord
+thread/message IDs and successful durable-store writes; simulation IDs
+do not count.

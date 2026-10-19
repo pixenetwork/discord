@@ -13,6 +13,8 @@ import {
   revokeVendorAccess,
 } from './authorization.mjs';
 
+import { aquapediaDmCommand, aquapediaDmController } from './breeder-dm.mjs';
+
 const PRODUCT_CATEGORIES = [
   ['Live fish', 'live_fish'],
   ['Eggs', 'eggs'],
@@ -367,7 +369,7 @@ function commandDefinitions() {
         ))
       .addStringOption((option) => option.setName('details').setDescription('Tell us what you need help with').setRequired(true).setMaxLength(1000)));
 
-  return [aquaphoria, vendor, catalog, product, research, order, payout, ticket];
+  return [aquaphoria, vendor, catalog, product, research, order, payout, ticket, aquapediaDmCommand()];
 }
 
 async function requireVendor(interaction, store) {
@@ -844,8 +846,9 @@ export function createCommandRouter(deps) {
     definitions: commandDefinitions().map((command) => command.toJSON()),
 
     async handle(interaction) {
-      if (!interaction.isChatInputCommand()) return;
       try {
+        if (await aquapediaDmController.handle(interaction, deps)) return;
+        if (!interaction.isChatInputCommand()) return;
         if (interaction.commandName === 'aquaphoria') return await handleSetup(interaction, deps);
         if (interaction.commandName === 'vendor') return await handleVendor(interaction, deps);
         if (interaction.commandName === 'catalog') return await handleCatalog(interaction, deps);

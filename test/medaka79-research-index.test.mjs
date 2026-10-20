@@ -49,6 +49,8 @@ test('index rejects changes in research evidence tiers, image rights and pedigre
   }
   const wrong=structuredClone(source);wrong.records[0].primary_source_url='http://example.com/fish';
   assert.throws(()=>buildMedaka79Index(wrong),/Unapproved or unsafe/);
+  const rootUrl=structuredClone(source);rootUrl.records[0].primary_source_url='https://medakazukan.net/';
+  assert.throws(()=>buildMedaka79Index(rootUrl),/Unapproved or unsafe/);
   const duplicate=structuredClone(source);duplicate.records[1].id=duplicate.records[0].id;
   assert.throws(()=>buildMedaka79Index(duplicate),/duplicate Medaka/);
 });
@@ -60,6 +62,10 @@ test('no publication is claimed without every authenticated Discord readback',()
   const messages=expected.map((content,i)=>({id:String(9000+i),content,author:{id:botId}}));
   assert.equal(verifyMedaka79PublishedMessages(plan,[],botId),false);
   assert.equal(verifyMedaka79PublishedMessages(plan,messages,botId),true);
+  const added=structuredClone(messages);added[1].content='PREFACE\n'+added[1].content;
+  assert.equal(verifyMedaka79PublishedMessages(plan,added,botId),false);
+  const markerOnly=structuredClone(messages);markerOnly[1].content=plan.parts[0].marker;
+  assert.equal(verifyMedaka79PublishedMessages(plan,markerOnly,botId),false);
   assert.equal(verifyMedaka79PublishedMessages(plan,messages.slice(0,-1),botId),false);
   const fake=structuredClone(messages);fake[1].author.id='attacker';
   assert.equal(verifyMedaka79PublishedMessages(plan,fake,botId),false);

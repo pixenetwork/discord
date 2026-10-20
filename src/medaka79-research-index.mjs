@@ -35,7 +35,7 @@ export function buildMedaka79Index(matrix, { rawSource } = {}) {
     names.add(id);
     const url = new URL(String(item.primary_source_url ?? 'https://invalid.invalid'));
     if (url.protocol !== 'https:' || !ALLOWED_HOSTS.has(url.hostname)
-      || url.username || url.password || !url.pathname) {
+      || url.username || url.password || url.pathname === '/') {
       throw new Error('Unapproved or unsafe specialist research source URL');
     }
     if (item.photo_rights !== 'NOT_GRANTED'
@@ -116,12 +116,12 @@ export function buildMedaka79Index(matrix, { rawSource } = {}) {
 export function verifyMedaka79PublishedMessages(plan, messages, botId) {
   if (!plan || !Array.isArray(messages) || !botId
     || messages.length !== plan.parts.length + 1) return false;
-  const expected = [MEDAKA79_STARTER_MARKER, ...plan.parts.map(part => part.marker)];
+  const expected = [plan.starter, ...plan.parts.map(part => part.content)];
   const ids = new Set();
   for (let i = 0; i < messages.length; i += 1) {
     const message = messages[i];
     if (!message?.id || ids.has(message.id) || message.author?.id !== botId
-      || !message.content?.includes(expected[i])) return false;
+      || message.content !== expected[i]) return false;
     ids.add(message.id);
   }
   return true;

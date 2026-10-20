@@ -70,6 +70,8 @@ const CORE_LAYOUT = [
       ['🐟・medaka-guides', 'Medaka strain, care, breeding, and identification guides.'],
       ['🦐・shrimp-guides', 'Freshwater shrimp care, grading, breeding, and identification guides.'],
       ['🩺・care-help', 'General freshwater aquarium husbandry and care help.'],
+      ['🔎・research-requests', 'Suggest medaka, shrimp, Corydoradinae, pleco, arowana and freshwater research questions for Aquapedia; do not share private breeder correspondence or copyrighted files.'],
+      ['📖・sources-and-credits', 'How Aquapedia checks scientific evidence, species names, breeding claims and photo permissions; links and credited original sources instead of copied publications.'],
     ],
     forums: [{
       name: '🦐・shrimp-research',
@@ -80,6 +82,16 @@ const CORE_LAYOUT = [
       topic: 'Public Aquapedia arowana species, geographic origins, genetics, husbandry, breeders and conservation. Claims are evidence-labelled and wildlife collection localities are protected.',
       tags: ['Species', 'Genetics', 'Regional', 'Breeding', 'Conservation'].map((name) => ({ name, moderated: false })),
     }],
+  },
+  {
+    category: '🐟・CORYDORASPEDIA',
+    channels: [
+      ['💬・corydoras-discussion', 'Corydoradinae community questions and conversations. Science-backed profiles and C/CW references remain in the existing Aquapedia research forum.'],
+      ['🥚・corydoras-breeding', 'Share your own spawning and fry-rearing logs, egg counts, feeding trials and observations; distinguish anecdotal practice from controlled research.'],
+      ['🧬・corydoras-traits', 'Discuss species identification, C/CW codes, color morphs, laser lines and pedigrees; trade names and appearances alone do not establish genes or parentage.'],
+      ['🩺・corydoras-care', 'Species-specific Corydoradinae husbandry, substrate, water quality, health and compatibility questions; no unsupported universal care parameters.'],
+      ['📸・corydoras-showcase', 'Share original photos and videos of Corydoradinae with correct owner credit; never repost breeder photos without permission.'],
+    ],
   },
   {
     category: '🌿・COMMUNITY',

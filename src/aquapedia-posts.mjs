@@ -6,6 +6,9 @@ const CATEGORY_NAME = '🔬・BREEDER RESEARCH';
 const PUBLIC_CATEGORY_NAME = '📚・AQUAPEDIA';
 const PUBLIC_FORUM_NAME = '🦐・shrimp-research';
 const PUBLIC_AROWANA_FORUM_NAME = '🐉・arowana-research';
+const PUBLIC_MEDAKA_FORUM_NAME = '🐟・medaka-research';
+const PUBLIC_MEDAKA_FORUM_ID = '1561189286399705128';
+const MEDAKA_ORGANIZER_HOSTS = new Set(['jma-medaka.com', 'ima-medaka.or.jp', 'medakagachibattle.com', 'medakafest.com', 'en.cipscom.com']);
 const ALLOWED_RIGHTS = new Set(['owner_owned', 'licensed', 'permission_granted', 'public_domain', 'cc0']);
 const MAX_RECORDS = 30;
 
@@ -29,6 +32,13 @@ function httpsUrl(value) {
       || hostname.endsWith('.local') || hostname.endsWith('.internal')) return null;
     return url.href;
   } catch { return null; }
+}
+
+function approvedMedakaOrganizerSource(source) {
+  const url = httpsUrl(typeof source === 'string' ? source : source?.url);
+  if (!url) return false;
+  const host = new URL(url).hostname.toLowerCase().replace(/^www\./, '');
+  return MEDAKA_ORGANIZER_HOSTS.has(host);
 }
 
 function sourceCitationFields(sources) {
@@ -83,8 +93,8 @@ export function buildAquapediaPost(record) {
     .filter(Boolean).slice(0, 5);
   const photos = photosAllowed(record.photos);
   if (record.entityType === 'competition') {
-    if (record.organismGroup !== 'shrimp' || !sources.length) {
-      throw new Error('Public shrimp competition records must have a reliable HTTPS source');
+    if (!['shrimp', 'medaka'].includes(record.organismGroup) || !sources.length) {
+      throw new Error('Competition records require an approved organism group and HTTPS source');
     }
     const embeds = [{
       title: 'COMPETITION • ' + title,
@@ -209,8 +219,9 @@ export async function publishAquapediaCards(guild, result) {
   }
   const publicShrimp = result.publicShrimpResearch === true;
   const publicArowana = result.publicArowanaResearch === true;
-  if (publicShrimp && publicArowana) return { posted: 0, reason: 'conflicting_public_destinations' };
-  const publicResearch = publicShrimp || publicArowana;
+  const publicMedaka = result.publicMedakaResearch === true;
+  if ([publicShrimp, publicArowana, publicMedaka].filter(Boolean).length > 1) return { posted: 0, reason: 'conflicting_public_destinations' };
+  const publicResearch = publicShrimp || publicArowana || publicMedaka;
   if (publicResearch && result.publicAudienceApproved !== true) {
     return { posted: 0, reason: 'public_audience_approval_pending' };
   }
@@ -233,12 +244,12 @@ export async function publishAquapediaCards(guild, result) {
   if (!category) return { posted: 0, reason: 'research_category_not_found' };
   const forums = channels.filter((c) => c.type === ChannelType.GuildForum && c.parentId === category.id);
   if (!forums.length) return { posted: 0, reason: 'research_forums_not_found' };
-  const publicForum = publicResearch ? forums.find((c) => c.name === (publicShrimp ? PUBLIC_FORUM_NAME : PUBLIC_AROWANA_FORUM_NAME)) : null;
+  const publicForum = publicResearch ? forums.find((c) => c.name === (publicShrimp ? PUBLIC_FORUM_NAME : publicMedaka ? PUBLIC_MEDAKA_FORUM_NAME : PUBLIC_AROWANA_FORUM_NAME)) : null;
   if (publicResearch) {
     const everyone = guild?.roles?.everyone;
-    if (!publicForum || !everyone || (!publicForum.permissionsFor?.(everyone)?.has(PermissionFlagsBits.ViewChannel)
+    if (!publicForum || (publicMedaka && publicForum.id !== PUBLIC_MEDAKA_FORUM_ID) || !everyone || (!publicForum.permissionsFor?.(everyone)?.has(PermissionFlagsBits.ViewChannel)
       || !publicForum.permissionsFor?.(everyone)?.has(PermissionFlagsBits.ReadMessageHistory))) {
-      return { posted: 0, reason: publicShrimp ? 'public_shrimp_forum_missing_or_not_public' : 'public_arowana_forum_missing_or_not_public' };
+      return { posted: 0, reason: publicShrimp ? 'public_shrimp_forum_missing_or_not_public' : publicMedaka ? 'public_medaka_forum_missing_or_not_public' : 'public_arowana_forum_missing_or_not_public' };
     }
   }
   let posted = 0;
@@ -248,6 +259,8 @@ export async function publishAquapediaCards(guild, result) {
   const receipts = [];
   const destinations = new Map();
   const ordered = [...cards].sort((a, b) => Number(b.entityType === 'breeder') - Number(a.entityType === 'breeder'));
+  const expectedOrganism = publicShrimp ? 'shrimp' : publicMedaka ? 'medaka' : publicArowana ? 'arowana' : null;
+  const allowedPublicTypes = publicShrimp ? ['breeder', 'competition', 'strain'] : publicMedaka ? ['competition'] : ['species', 'research', 'strain'];
   for (const card of ordered) {
     const desired = forumSlug(card.breederForumName);
     const breeder = card.entityType === 'breeder' ? card.name : card.breederName;
@@ -255,11 +268,13 @@ export async function publishAquapediaCards(guild, result) {
     // An unknown/contested breeder requires explicitly named "unknown-breeders".
     const fallback = forumSlug(breeder);
     const target = desired || fallback;
-    if (publicResearch && (card.organismGroup !== (publicShrimp ? 'shrimp' : 'arowana')
-      || !(publicShrimp ? ['breeder', 'competition', 'strain'] : ['species', 'research', 'strain']).includes(card.entityType)
-      || (publicArowana && (!Array.isArray(card.photos) || card.photos.length !== 0))
+    if (publicResearch && (card.organismGroup !== expectedOrganism
+      || !allowedPublicTypes.includes(card.entityType)
+      || ((publicArowana || publicMedaka) && (!Array.isArray(card.photos) || card.photos.length !== 0))
       || !Array.isArray(card.sources) || !card.sources.some((source) => httpsUrl(typeof source === 'string' ? source : source?.url))
-      || (publicArowana && !/^https:\/\/aquapedia\.app\/arowanapedia\/[a-z0-9-]+\/$/.test(String(card.websiteUrl ?? ''))))) {
+      || (publicArowana && !/^https:\/\/aquapedia\.app\/arowanapedia\/[a-z0-9-]+\/$/.test(String(card.websiteUrl ?? '')))
+      || (publicMedaka && card.websiteUrl !== 'https://aquapedia.app/medakapedia/competitions/')
+      || (publicMedaka && !card.sources.some(approvedMedakaOrganizerSource)))) {
       skipped += 1;
       continue;
     }
@@ -335,7 +350,7 @@ export async function publishAquapediaCards(guild, result) {
     skipped,
     unverified,
     receipts,
-    reason: unverified ? 'message_readback_unverified' : capacityBlocked ? 'discord_thread_capacity_guard' : posted ? 'verified_in_existing_breeder_forums' : 'no_matching_authorized_breeder_forum',
+    reason: unverified ? 'message_readback_unverified' : capacityBlocked ? 'discord_thread_capacity_guard' : posted ? (publicMedaka ? 'verified_in_existing_public_medaka_forum' : 'verified_in_existing_breeder_forums') : 'no_matching_authorized_breeder_forum',
     threadIds: [...destinations.values()],
   };
 }

@@ -1,0 +1,226 @@
+{
+  "schemaVersion": 1,
+  "batchId": "verified-breeder-20261019-01",
+  "publicationStatus": "NOT_POSTED_AUTHENTICATED_PUBLISHER_REQUIRED",
+  "discordPublicationApproved": false,
+  "scope": "Existing Aquapedia breeder research forums only; never create or guess target IDs",
+  "dataOrigin": "Verified breeder-run first-party sites and linked IG/FB account identities; no casual hobbyist sources",
+  "references": [
+    "https://aquapedia.app/medakapedia/breeder-evidence/2026/",
+    "https://aquapedia.app/shrimpapedia/breeder-evidence/2026/"
+  ],
+  "postingRequirements": [
+    "Resolve guild/forum IDs from authorized logged-in Discord session",
+    "Check existing breeder threads to avoid duplicates",
+    "Run authorized Discord publisher and read back message IDs",
+    "Record actual posting receipts before changing publication status",
+    "Read back the exact Tarumi thread ID (title alone is not a unique posting address) and all remaining destination IDs."
+  ],
+  "receiptState": {
+    "verifiedThreadIds": [],
+    "verifiedMessageIds": [],
+    "posted": 0
+  },
+  "cards": [
+    {
+      "id": "verified-savanna-2026-elsa-and-show",
+      "entityType": "breeder",
+      "organismGroup": "medaka",
+      "name": "Medaka-ya Savanna — Elsa lineage and 2026 show",
+      "breederName": "Medaka-ya Savanna",
+      "description": "Breeder-reported Elsa development: Miyuki Hikari Matsui Swallow Longfin high-fin stock combined with Fromage Kissing, with multigeneration fin selection.",
+      "history": "Savanna's 2026 show entry named Elsa × Featherlight won Mariage-type Longfin entry 8A with 804 category points and ranked first in the separately scored MVP tally of 262.",
+      "lineage": "Reported breeder stock inputs; individual parent sex, F1/F2 data, genotype, and exact Elsa × Featherlight show-entry ancestry are NOT verified.",
+      "breeding": "Original breeder page and official event awards corroborated; different competition scales must not be added.",
+      "care": "No new water-care claim made from contest or social-media data.",
+      "confidence": "Original breeder claim + official organizer results; not DNA-verified pedigree.",
+      "sources": [
+        "https://savanna-medaka.com/pages/varieties",
+        "https://www.medakagachibattle.com/category/news/",
+        "https://www.instagram.com/medakayasavanna/"
+      ],
+      "photos": [],
+      "forum_resolution": "EXACT_EXISTING_BREEDER_FORUM_REQUIRED",
+      "siteUrl": "https://aquapedia.app/medakapedia/breeder-evidence/2026/"
+    },
+    {
+      "id": "verified-tarumi-2026-kuro-rintou",
+      "entityType": "breeder",
+      "organismGroup": "medaka",
+      "name": "Masaharu Tarumi — 2026 official result",
+      "breederName": "垂水政治 / Masaharu Tarumi",
+      "japaneseName": "黒輪刀",
+      "description": "Medaka Gachi Battle Korean MVP list credits Tarumi's entry 1C 黒輪刀 with second place and 31 votes.",
+      "history": "A specific official event result; this is not evidence he created every variant bearing that name.",
+      "lineage": "Original parent lines and Japanese-name romanization remain breeder verification questions.",
+      "breeding": "Named stock and official score only; breeding technique and sexed founders not supplied.",
+      "care": "No husbandry claim inferred.",
+      "confidence": "Official competition result and organizer-linked breeder account; unknown genetic ancestry.",
+      "sources": [
+        "https://www.medakagachibattle.com/2026/09/26/%e3%83%a1%e3%83%80%e3%82%ab%e3%82%ac%e3%83%81%e3%83%90%e3%83%88%e3%83%ab5-%e3%80%8amvp%e3%80%8b/",
+        "https://www.instagram.com/tarumi_m/"
+      ],
+      "photos": [],
+      "forum_resolution": "EXACT_EXISTING_BREEDER_FORUM_REQUIRED",
+      "siteUrl": "https://aquapedia.app/medakapedia/breeder-evidence/2026/"
+    },
+    {
+      "id": "verified-larmax-2026-rili",
+      "entityType": "breeder",
+      "organismGroup": "shrimp",
+      "name": "Larmax International — Red Rili and Volcano Rili",
+      "breederName": "Larmax International",
+      "description": "Larmax's 2018–2026 Red Rili selection comparison plus its March 2026 first-party Volcano Rili report.",
+      "history": "The farm described earlier Volcano-series names Golden-Back Red Rili and Golden-Back Orange Rili, and selection for dorsal coverage, shell pigment density and segmented transparent zones.",
+      "lineage": "Names and selection criteria are NOT evidence of a documented Red × Orange parent cross or Mendelian dominance.",
+      "breeding": "Breeder describes multigeneration selection and culling; no individual founder IDs or quantified F2 ratios.",
+      "care": "Do not infer water-parameter targets from color-pattern names.",
+      "confidence": "Breeder-owned articles; claims are first person, without independent genetic assays.",
+      "sources": [
+        "https://www.larmax.com.tw/post/red-rili-where-consistency-is-selected",
+        "https://www.larmax.com.tw/post/volcano-rili-where-breeding-precision-meets-wild-aesthetics",
+        "https://www.instagram.com/larmax_taiwan/"
+      ],
+      "photos": [],
+      "forum_resolution": "EXACT_EXISTING_BREEDER_FORUM_REQUIRED",
+      "siteUrl": "https://aquapedia.app/shrimpapedia/breeder-evidence/2026/"
+    },
+    {
+      "id": "verified-skyfish-2018-galaxy",
+      "entityType": "breeder",
+      "organismGroup": "shrimp",
+      "name": "SkyFish — Galaxy Fishbone breeder history",
+      "breederName": "SkyFish / Leon Su",
+      "description": "SkyFish founder's historical interview describes approximately three years selecting Galaxy Fishbone from reported Crystal, Orange Tiger and Black King Kong-related stock traits.",
+      "history": "The interview recounts a breeding operation scaling 2013/2018 facilities; those counts are historical and are not verified as today's operating scale.",
+      "lineage": "Multiple reported source traits are not three directly documented individual parents or validated alleles.",
+      "breeding": "Repeated selection addressed unstable pigmentation and pattern. Founding crosses and molecular inheritance remain unproven.",
+      "care": "GH 2–4 and pH 5.8–6.8 were the founder's reported Crystal-shrimp planted-tank practice, not a universal Caridina recipe.",
+      "confidence": "Founder first-person interview reproduced on SkyFish site; source-stock report, not genotyped genealogy.",
+      "sources": [
+        "https://skyfish-aqua.com/aquarama%E5%9C%8B%E9%9A%9B%E6%B0%B4%E6%97%8F%E5%B1%95%E5%B0%88%E8%A8%AA/",
+        "https://www.facebook.com/SkyFishShrimpFarm"
+      ],
+      "photos": [],
+      "forum_resolution": "EXACT_EXISTING_BREEDER_FORUM_REQUIRED",
+      "siteUrl": "https://aquapedia.app/shrimpapedia/breeder-evidence/2026/"
+    }
+  ],
+  "publisherValidation": {
+    "validatedOn": "2026-10-20",
+    "publisherImplementation": "pixenetwork/discord/src/aquapedia-posts.mjs buildAquapediaPost",
+    "checkType": "local_offline_dry_run_only",
+    "validationResult": "4_OF_4_PASSED",
+    "checks": [
+      "structured_embeds_rendered",
+      "all_source_links_present",
+      "discord_embed_limits_respected",
+      "allowedMentions_disabled",
+      "no_breeder_photos_copied",
+      "no_out_of_scope_hobbyist_sources",
+      "no_network_discord_write"
+    ],
+    "receiptsCreated": 0,
+    "cards": [
+      {
+        "id": "verified-savanna-2026-elsa-and-show",
+        "embedCount": 1,
+        "fieldCount": 8,
+        "sourceCount": 3,
+        "embedCharacters": 1152
+      },
+      {
+        "id": "verified-tarumi-2026-kuro-rintou",
+        "embedCount": 1,
+        "fieldCount": 8,
+        "sourceCount": 2,
+        "embedCharacters": 929
+      },
+      {
+        "id": "verified-larmax-2026-rili",
+        "embedCount": 1,
+        "fieldCount": 8,
+        "sourceCount": 3,
+        "embedCharacters": 1161
+      },
+      {
+        "id": "verified-skyfish-2018-galaxy",
+        "embedCount": 1,
+        "fieldCount": 8,
+        "sourceCount": 2,
+        "embedCharacters": 1205
+      }
+    ]
+  },
+  "targetDiscovery": {
+    "observedOn": "2026-10-20",
+    "verified": {
+      "recordId": "verified-tarumi-2026-kuro-rintou",
+      "publicForumLabel": "medaka-research",
+      "existingThreadTitlePrefix": "BREEDER - Masaharu Tarumi",
+      "evidence": "Signed-in desktop Discord UI inspected read-only; title exists",
+      "forumId": null,
+      "threadId": null
+    },
+    "unresolved": [
+      "Exact destination IDs for all four cards have not been read back",
+      "Main PC Discord UI background navigation did not reliably switch to target thread",
+      "Work PC web Discord requires sign-in; local Discord desktop UI did not render"
+    ],
+    "publicationAttempted": false
+  },
+  "publisherRouting": {
+    "createdOn": "2026-10-20",
+    "code": "pixenetwork/discord/src/verified-breeder-public-batch.mjs",
+    "codeReview": "https://github.com/pixenetwork/discord/pull/42",
+    "mode": "OWNER_APPROVAL_REQUIRED_NO_AUTOMATIC_POSTING",
+    "publicAudienceApproved": false,
+    "releaseStatus": "NOT_DISPATCHED",
+    "requireReadback": true,
+    "readbackReceipts": [],
+    "targetRoutes": {
+      "verified-savanna-2026-elsa-and-show": {
+        "forum": "medaka-research",
+        "mode": "existing_only",
+        "breederKey": "Medaka-ya Savanna",
+        "threadTitlePrefix": "BREEDER - Medaka-ya Savanna",
+        "threadId": null,
+        "verifiedForumPermission": false
+      },
+      "verified-tarumi-2026-kuro-rintou": {
+        "forum": "medaka-research",
+        "mode": "existing_only",
+        "breederKey": "Masaharu Tarumi",
+        "threadTitlePrefix": "BREEDER - Masaharu Tarumi",
+        "threadId": null,
+        "verifiedForumPermission": false
+      },
+      "verified-larmax-2026-rili": {
+        "forum": "shrimp-research",
+        "mode": "create_if_missing",
+        "breederKey": "Larmax",
+        "threadTitlePrefix": null,
+        "threadId": null,
+        "verifiedForumPermission": false
+      },
+      "verified-skyfish-2018-galaxy": {
+        "forum": "shrimp-research",
+        "mode": "create_if_missing",
+        "breederKey": "SkyFish",
+        "threadTitlePrefix": null,
+        "threadId": null,
+        "verifiedForumPermission": false
+      }
+    },
+    "deliveryGuards": [
+      "Use only the ID-to-route pinning included in the reviewed Discord publisher.",
+      "Match publicly readable Aquapedia categories and exact breeder subjects, never private research forums.",
+      "Enumerate active and archived threads before any write and fail closed on ambiguous names.",
+      "Do not create a new shrimp thread if another thread already refers to the same breeder.",
+      "Require the bot to have CreatePublicThreads permission before creating a public shrimp research thread.",
+      "Do not send if the selected thread is archived, has unreviewable message history, or already contains this card marker.",
+      "Require bot-authored post readback with Discord message ID and source marker before setting posted count.",
+      "Do not repost breeder photos, private Facebook group text, or random hobbyist claims."
+    ]
+  }
+}

@@ -35,6 +35,22 @@ export async function publishApprovedMedaka79({
   if(typeof authorizer?.verifySignedApproval!=='function'){
     throw new Error('Verified signed publication authorization is required');
   }
+  // Issue 2 fix: validate ALL injected runtime capabilities BEFORE consuming
+  // the signed authorization grant so a misconfigured runtime fails immediately
+  // without spending a potentially one-use signed approval token.
+  if(typeof lock?.acquire!=='function'
+    || typeof receiptStore?.get!=='function'
+    || typeof receiptStore?.save!=='function'
+    || typeof receiptStore?.savePartial!=='function'
+    || typeof receiptStore?.loadPartial!=='function'
+    || typeof discord?.getForumState!=='function'
+    || typeof discord?.enumerateThreads!=='function'
+    || typeof discord?.createThread!=='function'
+    || typeof discord?.send!=='function'
+    || typeof discord?.fetchMessage!=='function'
+    || !discord.botId){
+    throw new Error('Approved one-writer Discord publisher runtime unavailable');
+  }
   // The trusted runtime verifies signature, owner identity, expiry and scope.
   // Plain chat text, booleans, forged receipts or caller-supplied approval flags
   // must NEVER be treated as signature verification.
@@ -48,23 +64,19 @@ export async function publishApprovedMedaka79({
     || grant.publicAudienceApproved!==true){
     throw new Error('Verified signed publication authorization missing or mismatched');
   }
-  if(typeof lock?.acquire!=='function'
-    || typeof receiptStore?.get!=='function'
-    || typeof receiptStore?.save!=='function'
-    || typeof discord?.getForumState!=='function'
-    || typeof discord?.enumerateThreads!=='function'
-    || typeof discord?.createThread!=='function'
-    || typeof discord?.send!=='function'
-    || typeof discord?.fetchMessage!=='function'
-    || !discord.botId){
-    throw new Error('Approved one-writer Discord publisher runtime unavailable');
-  }
 
   const release=await lock.acquire(plan.jobId);
   if(typeof release!=='function')throw new Error('Exclusive Discord writer lock not obtained');
   try{
     const previous=await receiptStore.get(plan.jobId);
     if(previous)throw new Error('Publication receipt already exists; verify it in Discord before retrying');
+
+    // Issue 1 fix: load any durable partial state saved by a prior interrupted
+    // run. If a partial exists we resume into that already-created thread; the
+    // duplicate-thread guard is bypassed for the known-in-progress thread so we
+    // never accidentally create a second copy.
+    const partial=await receiptStore.loadPartial(plan.jobId);
+
     const forum=await discord.getForumState(plan.guildId,plan.forumId);
     if(forum?.guildId!==plan.guildId || forum?.forumId!==plan.forumId
       || forum.publicView!==true
@@ -75,30 +87,59 @@ export async function publishApprovedMedaka79({
     if(inventory?.complete!==true || !Array.isArray(inventory.threads)){
       throw new Error('Complete active and archived Medaka thread history unavailable');
     }
-    if(inventory.threads.some(t=>t.name===plan.threadName
-      || String(t.name??'').includes('79 sourced Medaka')
-      || String(t.name??'').includes('79 Medaka research'))){
-      throw new Error('Possible duplicate Medaka research thread; reconcile before publishing');
+
+    let thread;
+    let messageIds;
+    if(partial?.threadId && Array.isArray(partial.messageIds) && partial.messageIds.length>=1){
+      // Resume path: reuse the existing partial thread rather than creating a duplicate.
+      thread={threadId:partial.threadId,starterId:partial.messageIds[0]};
+      messageIds=partial.messageIds.map(String);
+    } else {
+      // Fresh-start path: enforce the duplicate-thread guard before creating.
+      if(inventory.threads.some(t=>t.name===plan.threadName
+        || String(t.name??'').includes('79 sourced Medaka')
+        || String(t.name??'').includes('79 Medaka research'))){
+        throw new Error('Possible duplicate Medaka research thread; reconcile before publishing');
+      }
+      const created=await discord.createThread({
+        forumId:plan.forumId, name:plan.threadName,
+        content:plan.starter,allowedMentions:{parse:[]},flags:4096, // SuppressEmbeds
+      });
+      if(!created?.threadId || !created?.starterId){
+        throw new Error('Discord starter post not verifiable');
+      }
+      thread=created;
+      messageIds=[String(thread.starterId)];
+      // Persist partial state immediately after thread creation so a crash
+      // before the first reply can be resumed rather than creating a duplicate.
+      await receiptStore.savePartial({
+        jobId:plan.jobId,threadId:String(thread.threadId),messageIds:[...messageIds],
+      });
     }
 
-    const thread=await discord.createThread({
-      forumId:plan.forumId, name:plan.threadName,
-      content:plan.starter,allowedMentions:{parse:[]},flags:4096, // SuppressEmbeds
-    });
-    if(!thread?.threadId || !thread?.starterId){
-      throw new Error('Discord starter post not verifiable');
-    }
-    const messageIds=[String(thread.starterId)];
-    for(const part of plan.parts){
+    // Send only the parts not yet present in the partial state.
+    const partsToSend=plan.parts.slice(messageIds.length-1);
+    for(const part of partsToSend){
       const sent=await discord.send(thread.threadId,{
         content:part.content,allowedMentions:{parse:[]},flags:4096, // SuppressEmbeds
       });
       if(!sent?.id)throw new Error('Discord returned a reply without message ID');
       messageIds.push(String(sent.id));
+      // Issue 1 fix: persist updated partial state after every successful reply
+      // so a crash mid-loop leaves a recoverable audit trail of sent IDs.
+      await receiptStore.savePartial({
+        jobId:plan.jobId,threadId:String(thread.threadId),messageIds:[...messageIds],
+      });
     }
+
+    // Issue 3 fix: explicit null-message readback diagnostics.
+    // A null result from fetchMessage is surfaced as a distinct named error
+    // rather than propagating silently into verifyMedaka79PublishedMessages.
     const readbacks=[];
     for(const id of messageIds){
-      readbacks.push(await discord.fetchMessage(thread.threadId,id));
+      const msg=await discord.fetchMessage(thread.threadId,id);
+      if(!msg)throw new Error('Discord message '+id+' could not be fetched after posting; partial state requires manual reconciliation');
+      readbacks.push(msg);
     }
     if(!verifyMedaka79PublishedMessages(plan,readbacks,discord.botId)){
       throw new Error('Discord full-content bot-owned message readback mismatch; no completion receipt stored');

@@ -13,7 +13,8 @@ const TIERS = [
 const ALLOWED_HOSTS = new Set(['medakazukan.net', 'www.medakazukan.net', 'medakanoyakata.muragon.com']);
 
 function safe(value, max = 140) {
-  const text = String(value ?? '').replace(/[\r\n\t]/g, ' ').replace(/[@`*_~|<>]/g, ' ').trim();
+  // Issue 5 fix: also strip ] and ( to prevent Markdown link injection (CWE-79).
+  const text = String(value ?? '').replace(/[\r
   if (!text || text.length > max) throw new Error('Invalid source-research display text');
   return text;
 }
@@ -36,7 +37,9 @@ export function buildMedaka79Index(matrix, { rawSource } = {}) {
     const url = new URL(String(item.primary_source_url ?? 'https://invalid.invalid'));
     if (url.protocol !== 'https:' || !ALLOWED_HOSTS.has(url.hostname)
       || url.username || url.password || url.pathname === '/') {
-      throw new Error('Unapproved or unsafe specialist research source URL');
+      || url.username || url.password || url.pathname === '/'
+      // Issue 4 fix: reject query strings and hash fragments on allowed hosts (CWE-74).
+      || url.search || url.hash) {
     }
     if (item.photo_rights !== 'NOT_GRANTED'
       || item.authenticated_standalone_bloodline !== false

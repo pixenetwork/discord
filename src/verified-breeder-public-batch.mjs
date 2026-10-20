@@ -21,8 +21,14 @@ const blocked = (reason, receipts = [], skipped = 0) => ({
 });
 
 function validRoute(card, route) {
-  return Boolean(route && route.forum === ALLOWED_FORUMS[card.organismGroup]
+  const pinned = VERIFIED_BREEDER_ROUTES[card.id];
+  return Boolean(route && pinned
+    && route.forum === pinned.forum
+    && route.mode === pinned.mode
+    && route.breederKey === pinned.breederKey
+    && route.forum === ALLOWED_FORUMS[card.organismGroup]
     && ['existing_only', 'create_if_missing'].includes(route.mode)
+    && normalized(card.breederName).includes(normalized(route.breederKey))
     && safe(route.breederKey).length >= 4
     && /^[a-zA-Z0-9-]{6,70}$/.test(card.id)
     && normalized(route.breederKey) !== 'breeder'
@@ -86,9 +92,11 @@ function findExisting(threads, card, route) {
   const key = normalized(route.breederKey);
   const matches = threads.filter((t) => {
     const n = normalized(t.name);
-    if (!n.includes(key)) return false;
-    // Only breeder subject threads, never an unrelated casual mention.
-    return n.startsWith('breeder ') || n.startsWith('breeder profile ');
+    // Require the breeder's actual title to lead the thread name. A passing
+    // mention in a different breeder's title is NOT an address to publish to.
+    const subject = n.replace(/^breeder (?:profile )?/, '');
+    if (subject === n) return false;
+    return subject === key || subject.startsWith(key + ' ');
   });
   return matches;
 }

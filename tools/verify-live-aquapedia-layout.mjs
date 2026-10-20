@@ -31,7 +31,7 @@ function publicRead(channel, parent = null) {
   return (flags & PermissionFlagsBits.ViewChannel) !== 0n
     && (flags & PermissionFlagsBits.ReadMessageHistory) !== 0n;
 }
-function expectedTags(forum) { return [...forum.tags.map(tag => tag.name)].sort(); }
+function expectedTags(forum) { return [...forum.tags.map(tag => tag.name)].sort((a, b) => a.localeCompare(b)); }
 for (const section of required) {
   if (categoryNames.has(section.category)) errors.push('Duplicate canonical spec ' + section.category);
   categoryNames.add(section.category);
@@ -56,7 +56,7 @@ for (const section of required) {
     if (forumNames.has(spec.name)) errors.push('Duplicate spec name: ' + spec.name);
     forumNames.add(spec.name);
     const forum = byId.get(spec.id);
-    if (!forum || forum.name !== spec.name || forum.type !== ChannelType.GuildForum
+    if (forum?.name !== spec.name || forum.type !== ChannelType.GuildForum
       || forum.parent_id !== category.id) {
       errors.push('Protected forum ID/name/parent mismatch: ' + spec.name);
       continue;
@@ -68,7 +68,7 @@ for (const section of required) {
     const names = tags.map(tag => tag.name);
     if (new Set(names).size !== names.length
       || names.length !== spec.tags.length
-      || JSON.stringify(names.sort()) !== JSON.stringify(expectedTags(spec))
+      || JSON.stringify(names.sort((a, b) => a.localeCompare(b))) !== JSON.stringify(expectedTags(spec))
       || tags.some(tag => !tag.id || tag.moderated !== false)) {
       errors.push('Forum tag drift: ' + spec.name);
     }

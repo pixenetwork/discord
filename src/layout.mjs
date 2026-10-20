@@ -287,9 +287,9 @@ async function ensureForumChannel(guild, parent, { name, topic, tags, protectExi
     if (!everyone || !publicRead(parent)) {
       throw new Error(`Magazine public category access drift: ${name}`);
     }
-    const colliding = guild.channels.cache.find((channel) => channel.name === name
+    const colliding = guild.channels.cache.filter((channel) => channel.name === name
       && (channel.parentId !== parent.id || channel.type !== ChannelType.GuildForum));
-    if (colliding) throw new Error(`Magazine forum collision outside its public category: ${name}`);
+    if (colliding.size > 0) throw new Error(`Magazine forum collision outside its public category: ${name}`);
     // A duplicate in the *same* category is equally ambiguous; never pick the first.
     const sameNamedForums = guild.channels.cache.filter((channel) => channel.name === name);
     if (sameNamedForums.size > 1) throw new Error(`Magazine duplicate forums: ${name}`);
@@ -308,7 +308,7 @@ async function ensureForumChannel(guild, parent, { name, topic, tags, protectExi
       const liveNames = (existing.availableTags ?? []).map((tag) => tag.name);
       if (new Set(liveNames).size !== liveNames.length
         || liveNames.length !== expectedNames.length
-        || [...liveNames].sort().join('\u0000') !== [...expectedNames].sort().join('\u0000')
+        || [...liveNames].sort((a, b) => a.localeCompare(b)).join('\u0000') !== [...expectedNames].sort((a, b) => a.localeCompare(b)).join('\u0000')
         || (existing.availableTags ?? []).some((tag) => !tag.id || tag.moderated !== false)) {
         throw new Error(`Magazine forum tags drift: ${name}`);
       }

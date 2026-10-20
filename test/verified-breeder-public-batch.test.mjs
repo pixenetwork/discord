@@ -153,3 +153,23 @@ test('medaka route cannot point into shrimp forum',async()=>{
   const res=await publishVerifiedBreederPublicBatch(f.guild,{...request([originalCards[1]]),routes});
   assert.equal(res.posted,0);assert.equal(res.reason,'route_source_or_rights_invalid');
 });
+
+test('wrongly reassigned breeder ID route is rejected even within the same public forum',async()=>{
+  const f=fixture();
+  const routes={...VERIFIED_BREEDER_ROUTES,
+    [originalCards[1].id]:{...VERIFIED_BREEDER_ROUTES[originalCards[1].id],breederKey:'Medaka-ya Savanna'}};
+  const res=await publishVerifiedBreederPublicBatch(f.guild,{...request([originalCards[1]]),routes});
+  assert.equal(res.posted,0);
+  assert.equal(res.reason,'route_source_or_rights_invalid');
+  assert.equal(f.sends.length+f.creates.length,0);
+});
+test('a different breeder thread merely mentioning Tarumi must not be selected',async()=>{
+  const f=fixture();
+  const map=(await f.medakaForum.threads.fetchActive()).threads;
+  map.delete('medaka-tarumi');
+  map.set('wrong-subject',{id:'wrong-subject',name:'BREEDER - Yukio Oba discussion about Masaharu Tarumi'});
+  const result=await publishVerifiedBreederPublicBatch(f.guild,request([originalCards[1]]));
+  assert.equal(result.posted,0);
+  assert.equal(result.reason,'required_existing_breeder_thread_missing');
+  assert.equal(f.sends.length+f.creates.length,0);
+});

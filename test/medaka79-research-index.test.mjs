@@ -35,6 +35,15 @@ test('source-linked 79-record Medaka index stays distinct from authenticated str
   }
 });
 
+test('source fingerprint is stable across Windows CRLF and Git LF checkouts', () => {
+  const lf=Buffer.from(bytes.toString('utf8').replace(/\r\n/g,'\n'),'utf8');
+  const crlf=Buffer.from(lf.toString('utf8').replace(/\n/g,'\r\n'),'utf8');
+  const clean=buildMedaka79Index(JSON.parse(lf),{rawSource:lf});
+  const windows=buildMedaka79Index(JSON.parse(crlf),{rawSource:crlf});
+  assert.equal(clean.sourceSha256,'5e15684e2059f94a1c4c3c47ba67d723ec5b98ce13097efcf546bdd428e6e7f0');
+  assert.equal(windows.sourceSha256,clean.sourceSha256);
+});
+
 test('index rejects changes in research evidence tiers, image rights and pedigree claims',()=>{
   for(const [field,value] of [
     ['photo_rights','permission_granted'],

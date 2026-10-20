@@ -104,7 +104,11 @@ export function buildMedaka79Index(matrix, { rawSource } = {}) {
     threadName: MEDAKA79_THREAD_NAME,
     records: 79,
     counts,
-    sourceSha256: rawSource ? crypto.createHash('sha256').update(rawSource).digest('hex') : null,
+    sourceSha256: rawSource
+      ? crypto.createHash('sha256').update(Buffer.from(
+        Buffer.from(rawSource).toString('utf8').replace(/\r\n/g, '\n'), 'utf8'
+      )).digest('hex')
+      : null,
     starter,
     parts,
     allowedMentions: { parse: [] },

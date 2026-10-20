@@ -124,7 +124,7 @@ test('paid-order retry preserves ticket lifecycle, channel, and deterministic pa
     });
     const guild = mockGuild();
     // Live magazine forums predate this order; commerce must never try to create them.
-    const aquapedia = layoutDefinition().find(x => x.category === '📚・AQUAPEDIA');
+    const aquapedia = layoutDefinition().find(x => x.category === '📰・AQUAPEDIA — MAGAZINES & ARTICLES');
     const category = await guild.channels.create({ name: aquapedia.category, type: ChannelType.GuildCategory });
     const magazineSpec = aquapedia.forums.find(x => x.name === '📖・medaka-hyakka');
     const magazine = await guild.channels.create({

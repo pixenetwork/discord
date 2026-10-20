@@ -121,60 +121,60 @@ test('private forum provisioning requires the configured owner to resolve to a c
   );
 });
 
-test('public research includes Medaka, Shrimp, and Arowana directories with source tags', () => {
+test('canonical Aquapedia public layout matches three live category identities', () => {
   const sections = layoutDefinition();
-  const publicSection = sections.find((section) => section.category === '📚・AQUAPEDIA');
-  assert.ok(publicSection);
-  assert.equal(publicSection.vendorOnly, undefined);
-  assert.equal(publicSection.staffOnly, undefined);
-  for (const [name, expectedTags] of [
-    ['🐟・medaka-research', ['Breeder', 'Strain', 'Lineage', 'Competition', 'Evidence']],
-    ['🦐・shrimp-research', ['Breeder', 'Strain', 'Competition', 'Lineage', 'Genetics', 'Husbandry']],
-    ['🐉・arowana-research', ['Species', 'Genetics', 'Regional', 'Breeding', 'Conservation']],
+  const intro = sections.find(x => x.category === '📚・AQUAPEDIA');
+  const species = sections.find(x => x.category === '🧬・AQUAPEDIA — SPECIES & GENETICS');
+  const publications = sections.find(x => x.category === '📰・AQUAPEDIA — MAGAZINES & ARTICLES');
+  assert.equal(intro.categoryId, '1557338241903099945');
+  assert.equal(species.categoryId, '1561430495680667719');
+  assert.equal(publications.categoryId, '1561430509328932955');
+  assert.equal(intro.channels.length, 4);
+  assert.equal(intro.forums, undefined);
+  assert.deepEqual(species.channels, []);
+  assert.deepEqual(publications.channels, []);
+  assert.equal(species.forums.length, 6);
+  assert.equal(publications.forums.length, 5);
+  assert.ok([...species.forums, ...publications.forums].every(f => f.protectExisting && f.id.length >= 17));
+  assert.equal(new Set([...species.forums, ...publications.forums].map(f => f.id)).size, 11);
+});
+
+test('research forums retain exact live IDs and evidence tags', () => {
+  const species = layoutDefinition().find(x => x.category === '🧬・AQUAPEDIA — SPECIES & GENETICS');
+  for (const [name, id, tags] of [
+    ['🐟・corydoras-research','1560887812910350339',['Research index','Named species','C-number','CW-number','Captive strain','Breeding','Taxonomy','ID / Lookalikes','Needs review']],
+    ['🐟・pleco-research','1560931428680601630',['Research index','Named species','L-number','Captive morph','Breeding','Breeder history','Taxonomy','Conservation','Needs review']],
+    ['🧬・shrimp-genes','1561148229784043544',['Caridina','Neocaridina','Lineage','Genetics','Evidence']],
+    ['🐟・medaka-research','1561189286399705128',['Breeder','Strain','Lineage','Competition','Evidence']],
+    ['🦐・shrimp-research','1561189288090140743',['Breeder','Strain','Competition','Lineage','Genetics','Husbandry']],
+    ['🐉・arowana-research','1561193084899819680',['Species','Genetics','Regional','Breeding','Conservation']],
   ]) {
-    const matches = publicSection.forums.filter((forum) => forum.name === name);
-    assert.equal(matches.length, 1, 'one canonical public forum: ' + name);
-    assert.deepEqual(matches[0].tags.map((tag) => tag.name), expectedTags);
-    assert.match(matches[0].topic, /research|evidence/i);
+    const match = species.forums.filter(f => f.name === name);
+    assert.equal(match.length, 1);
+    assert.equal(match[0].id, id);
+    assert.deepEqual(match[0].tags.map(t => t.name), tags);
   }
 });
 
-
-test('each live Aquapedia magazine title has exactly one public forum with persistent issue/subject tags', () => {
-  const publicSection = layoutDefinition().find((section) => section.category === '📚・AQUAPEDIA');
-  assert.ok(publicSection);
-  assert.equal(publicSection.vendorOnly, undefined);
-  assert.equal(publicSection.staffOnly, undefined);
-  const sharedTags = ['Issue', 'English Guide', 'Reading Notes', 'History', 'Breeding', 'Traits', 'Genetics', 'Care'];
+test('four magazine title forums and original public article forum retain live IDs and tags', () => {
+  const pub = layoutDefinition().find(x => x.category === '📰・AQUAPEDIA — MAGAZINES & ARTICLES');
   const expected = [
-    ['📖・medaka-hyakka', 'Medaka Hyakka / メダカ百華'],
-    ['📘・medaka-advance', 'Medaka Advance / eBookMAG'],
-    ['🦐・shrimp-club', 'Shrimp Club / シュリンプクラブ'],
-    ['🐟・medaka-trip', 'Medaka Trip / メダカトリップ'],
+    ['🗞️・magazines-and-articles','1560781594032345179'],
+    ['📖・medaka-hyakka','1561284004936687697'],
+    ['📘・medaka-advance','1561284007767965817'],
+    ['🦐・shrimp-club','1561284010464776206'],
+    ['🐟・medaka-trip','1561284012926832680'],
   ];
-  const forumNames = publicSection.forums.map(({ name }) => name);
-  assert.equal(new Set(forumNames).size, forumNames.length, 'never define duplicate public magazine forums');
-  for (const [name, publication] of expected) {
-    const matches = publicSection.forums.filter(forum => forum.name === name);
-    assert.equal(matches.length, 1, 'one forum per publication: ' + name);
-    const [forum] = matches;
-    assert.deepEqual(forum.tags.map(tag => tag.name), sharedTags);
-    assert.ok(forum.tags.every(tag => tag.moderated === false));
-    assert.match(forum.topic, /issue number, subject, English reading guide/);
-    assert.match(forum.topic, /No republished copyrighted magazine scans/);
-    assert.ok(forum.topic.includes(publication));
+  const sharedTags = ['Issue','English Guide','Reading Notes','History','Breeding','Traits','Genetics','Care'];
+  for (const [name,id] of expected) {
+    const matches = pub.forums.filter(x => x.name === name);
+    assert.equal(matches.length,1);
+    assert.equal(matches[0].id,id);
+    assert.ok(matches[0].protectExisting);
+    if (name !== '🗞️・magazines-and-articles') {
+      assert.deepEqual(matches[0].tags.map(x => x.name),sharedTags);
+      assert.match(matches[0].topic,/No republished copyrighted magazine scans/);
+    }
   }
-});
-
-test('the original public magazines-and-articles research forum is preserved separately', () => {
-  const publicSection = layoutDefinition().find(section => section.category === '📚・AQUAPEDIA');
-  const forums = publicSection.forums.filter(({ name }) => name === 'magazines-and-articles');
-  assert.equal(forums.length, 1, 'keep the existing scientific paper and older issue forum');
-  assert.deepEqual(forums[0].tags.map(tag => tag.name), [
-    'Magazine', 'Newsletter', 'Article', 'Medaka', 'Shrimp', 'English Guide', 'Licensed Translation', 'Free to Read',
-  ]);
-  assert.match(forums[0].topic, /Free English reading guides/);
-  assert.match(forums[0].topic, /No unlicensed reproductions/);
-  assert.equal(publicSection.vendorOnly, undefined);
-  assert.equal(publicSection.staffOnly, undefined);
+  assert.match(pub.forums[0].topic,/No unlicensed reproductions/);
 });

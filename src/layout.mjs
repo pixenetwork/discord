@@ -76,50 +76,109 @@ const CORE_LAYOUT = [
   },
   {
     category: '📚・AQUAPEDIA',
+    categoryId: '1557338241903099945',
+    requireExisting: true,
     channels: [
       ['📚・aquapedia', 'Aquaphoria knowledge base highlights and Aquapedia updates.'],
       ['🐟・medaka-guides', 'Medaka strain, care, breeding, and identification guides.'],
       ['🦐・shrimp-guides', 'Freshwater shrimp care, grading, breeding, and identification guides.'],
       ['🩺・care-help', 'General freshwater aquarium husbandry and care help.'],
     ],
-    forums: [{
-      name: '🐟・medaka-research',
-      topic: 'Public Medakapedia indexes for Japanese breeders, strains, documented lineages and competition evidence. Research claims carry provenance and review status.',
-      tags: ['Breeder', 'Strain', 'Lineage', 'Competition', 'Evidence'].map((name) => ({ name, moderated: false })),
-    }, {
-      name: '🦐・shrimp-research',
-      topic: 'Public source-backed ornamental shrimp breeder and competition research. Each breeder or event gets its own thread; award entrant is not automatically strain inventor.',
-      tags: ['Breeder', 'Strain', 'Competition', 'Lineage', 'Genetics', 'Husbandry'].map((name) => ({ name, moderated: false })),
-    }, {
-      name: '🐉・arowana-research',
-      topic: 'Public Aquapedia arowana species, geographic origins, genetics, husbandry, breeders and conservation. Claims are evidence-labelled and wildlife collection localities are protected.',
-      tags: ['Species', 'Genetics', 'Regional', 'Breeding', 'Conservation'].map((name) => ({ name, moderated: false })),
-    }, {
-      name: 'magazines-and-articles',
-      protectExisting: true,
-      topic: 'PUBLIC AQUAPEDIA — ONLY medaka and freshwater shrimp magazines, newsletters, and articles. One thread per issue/article; begin with Issue 1 where available. Free English reading guides and rights-cleared translated excerpts are clearly labeled. No unlicensed reproductions.',
-      tags: ['Magazine', 'Newsletter', 'Article', 'Medaka', 'Shrimp', 'English Guide', 'Licensed Translation', 'Free to Read'].map((name) => ({ name, moderated: false })),
-    }, {
-      name: '📖・medaka-hyakka',
-      protectExisting: true,
-      topic: 'Aquapedia public Medaka Hyakka / メダカ百華 — issue number, subject, English reading guide, references and historical context. No republished copyrighted magazine scans.',
-      tags: MAGAZINE_ISSUE_TAGS,
-    }, {
-      name: '📘・medaka-advance',
-      protectExisting: true,
-      topic: 'Aquapedia public Medaka Advance / eBookMAG — issue number, subject, English reading guide, references and historical context. No republished copyrighted magazine scans.',
-      tags: MAGAZINE_ISSUE_TAGS,
-    }, {
-      name: '🦐・shrimp-club',
-      protectExisting: true,
-      topic: 'Aquapedia public Shrimp Club / シュリンプクラブ — issue number, subject, English reading guide, references and historical context. No republished copyrighted magazine scans.',
-      tags: MAGAZINE_ISSUE_TAGS,
-    }, {
-      name: '🐟・medaka-trip',
-      protectExisting: true,
-      topic: 'Aquapedia public Medaka Trip / メダカトリップ — issue number, subject, English reading guide, references and historical context. No republished copyrighted magazine scans.',
-      tags: MAGAZINE_ISSUE_TAGS,
-    }],
+  },
+  {
+    category: '🧬・AQUAPEDIA — SPECIES & GENETICS',
+    categoryId: '1561430495680667719',
+    requireExisting: true,
+    publicResearch: true,
+    channels: [],
+    forums: [
+      {
+        id: '1560887812910350339',
+        name: '🐟・corydoras-research',
+        protectExisting: true,
+        topic: 'Public Aquapedia research forum for Corydoras species, C/CW numbered forms and captive strains. Provisional identities, histories and genetics are marked for review; photos require reuse permission.',
+        tags: ['Research index','Named species','C-number','CW-number','Captive strain','Breeding','Taxonomy','ID / Lookalikes','Needs review'].map(name => ({ name, moderated: false })),
+      },
+      {
+        id: '1560931428680601630',
+        name: '🐟・pleco-research',
+        protectExisting: true,
+        topic: 'Public Aquapedia Plecopedia research: named species, L-numbers, localities, captive morphs and breeder history; citations, uncertainties and unlicensed-photo restrictions apply.',
+        tags: ['Research index','Named species','L-number','Captive morph','Breeding','Breeder history','Taxonomy','Conservation','Needs review'].map(name => ({ name, moderated: false })),
+      },
+      {
+        id: '1561148229784043544',
+        name: '🧬・shrimp-genes',
+        protectExisting: true,
+        topic: 'Public Aquapedia: source-backed Caridina and Neocaridina genetics, breeding pedigrees, inheritance and research limitations.',
+        tags: ['Caridina','Neocaridina','Lineage','Genetics','Evidence'].map(name => ({ name, moderated: false })),
+      },
+      {
+        id: '1561189286399705128',
+        name: '🐟・medaka-research',
+        protectExisting: true,
+        topic: 'Public Medakapedia indexes for Japanese breeders, strains, documented lineages and competition evidence. Research claims carry provenance and review status.',
+        tags: ['Breeder','Strain','Lineage','Competition','Evidence'].map(name => ({ name, moderated: false })),
+      },
+      {
+        id: '1561189288090140743',
+        name: '🦐・shrimp-research',
+        protectExisting: true,
+        topic: 'Public Shrimpapedia indexes for Caridina/Neocaridina breeders, strains, lineage, genetics and competitions. Names and awards require sources.',
+        tags: ['Breeder','Strain','Competition','Lineage','Genetics','Husbandry'].map(name => ({ name, moderated: false })),
+      },
+      {
+        id: '1561193084899819680',
+        name: '🐉・arowana-research',
+        protectExisting: true,
+        topic: 'Public source-linked Asian, Australian, South American and African arowana research. Pedigrees and locality claims are evidence-labelled.',
+        tags: ['Species','Genetics','Regional','Breeding','Conservation'].map(name => ({ name, moderated: false })),
+      },
+    ],
+  },
+  {
+    category: '📰・AQUAPEDIA — MAGAZINES & ARTICLES',
+    categoryId: '1561430509328932955',
+    requireExisting: true,
+    publicResearch: true,
+    channels: [],
+    forums: [
+      {
+        id: '1560781594032345179',
+        name: '🗞️・magazines-and-articles',
+        protectExisting: true,
+        topic: 'PUBLIC AQUAPEDIA — ONLY medaka and freshwater shrimp magazines, newsletters, and articles. One thread per issue/article; begin with Issue 1 where available. Free English reading guides and rights-cleared translated excerpts are clearly labeled. No unlicensed reproductions.',
+        tags: ['Magazine','Newsletter','Article','Medaka','Shrimp','English Guide','Licensed Translation','Free to Read'].map(name => ({ name, moderated: false })),
+      },
+      {
+        id: '1561284004936687697',
+        name: '📖・medaka-hyakka',
+        protectExisting: true,
+        topic: 'Aquapedia public Medaka Hyakka / メダカ百華 — issue number, subject, English reading guide, references and historical context. No republished copyrighted magazine scans.',
+        tags: MAGAZINE_ISSUE_TAGS,
+      },
+      {
+        id: '1561284007767965817',
+        name: '📘・medaka-advance',
+        protectExisting: true,
+        topic: 'Aquapedia public Medaka Advance / eBookMAG — issue number, subject, English reading guide, references and historical context. No republished copyrighted magazine scans.',
+        tags: MAGAZINE_ISSUE_TAGS,
+      },
+      {
+        id: '1561284010464776206',
+        name: '🦐・shrimp-club',
+        protectExisting: true,
+        topic: 'Aquapedia public Shrimp Club / シュリンプクラブ — issue number, subject, English reading guide, references and historical context. No republished copyrighted magazine scans.',
+        tags: MAGAZINE_ISSUE_TAGS,
+      },
+      {
+        id: '1561284012926832680',
+        name: '🐟・medaka-trip',
+        protectExisting: true,
+        topic: 'Aquapedia public Medaka Trip / メダカトリップ — issue number, subject, English reading guide, references and historical context. No republished copyrighted magazine scans.',
+        tags: MAGAZINE_ISSUE_TAGS,
+      },
+    ],
   },
   {
     category: '🌿・COMMUNITY',
@@ -206,7 +265,21 @@ async function ensureCategory(guild, name, permissionOverwrites = undefined) {
   return guild.channels.create({ name, type: ChannelType.GuildCategory, permissionOverwrites, reason: 'Aquaphoria Discord layout provisioning' });
 }
 
-async function ensureForumChannel(guild, parent, { name, topic, tags, protectExisting = false }, permissionOverwrites = undefined, reason = 'Aquaphoria forum provisioning') {
+function existingPublicCategory(guild, section) {
+  const matches = guild.channels.cache.filter((channel) => channel.type === ChannelType.GuildCategory && channel.name === section.category);
+  const category = guild.channels.cache.find((channel) => channel.id === section.categoryId && channel.type === ChannelType.GuildCategory && channel.name === section.category);
+  if (!category || matches.size !== 1) {
+    throw new Error('Aquapedia public category missing, renamed, or duplicated: ' + section.category);
+  }
+  const everyone = guild.roles?.everyone;
+  if (!everyone || !category.permissionsFor?.(everyone)?.has(PermissionFlagsBits.ViewChannel)
+    || !category.permissionsFor?.(everyone)?.has(PermissionFlagsBits.ReadMessageHistory)) {
+    throw new Error('Aquapedia public category permission drift: ' + section.category);
+  }
+  return category;
+}
+
+async function ensureForumChannel(guild, parent, { name, topic, tags, protectExisting = false, id = null }, permissionOverwrites = undefined, reason = 'Aquaphoria forum provisioning') {
   if (protectExisting) {
     const everyone = guild?.roles?.everyone;
     const publicRead = (channel) => channel?.permissionsFor?.(everyone)?.has(PermissionFlagsBits.ViewChannel)
@@ -226,14 +299,17 @@ async function ensureForumChannel(guild, parent, { name, topic, tags, protectExi
   );
   if (existing) {
     if (protectExisting) {
+      if (!id || existing.id !== id) throw new Error(`Magazine forum ID drift: ${name}`);
       const everyone = guild.roles.everyone;
       const hasAccess = existing.permissionsFor?.(everyone)?.has(PermissionFlagsBits.ViewChannel)
         && existing.permissionsFor?.(everyone)?.has(PermissionFlagsBits.ReadMessageHistory);
       if (!hasAccess) throw new Error(`Magazine forum not public: ${name}`);
       const expectedNames = tags.map((tag) => tag.name);
       const liveNames = (existing.availableTags ?? []).map((tag) => tag.name);
-      if (JSON.stringify(liveNames) !== JSON.stringify(expectedNames)
-        || (existing.availableTags ?? []).some((tag) => !tag.id)) {
+      if (new Set(liveNames).size !== liveNames.length
+        || liveNames.length !== expectedNames.length
+        || [...liveNames].sort().join('\u0000') !== [...expectedNames].sort().join('\u0000')
+        || (existing.availableTags ?? []).some((tag) => !tag.id || tag.moderated !== false)) {
         throw new Error(`Magazine forum tags drift: ${name}`);
       }
       if (existing.topic !== topic) throw new Error(`Magazine forum topic drift: ${name}`);
@@ -292,15 +368,12 @@ function privateOverwrites(guild, { ownerUserId, staffRoleId, vendorRoleId = nul
 }
 
 export async function provisionAquaphoriaLayout(guild, { ownerUserId, store = null, includePublicMagazines = true }) {
-  if (includePublicMagazines) {
-    // All historical magazine forums must exist and match BEFORE any role/channel writes.
-    // Otherwise a late failure could leave research/commerce categories partially edited.
-    const section = CORE_LAYOUT.find((entry) => entry.category === '📚・AQUAPEDIA');
-    const parent = guild.channels.cache.find((channel) => channel.type === ChannelType.GuildCategory
-      && channel.name === section.category);
-    if (!parent) throw new Error('Magazine public category missing; refusing partial layout update');
-    for (const spec of section.forums.filter((entry) => entry.protectExisting)) {
-      await ensureForumChannel(guild, parent, spec, undefined, 'Read-only magazine layout preflight');
+  // Validate exact live public category IDs and all eleven existing public forums
+  // before creating roles/channels or changing private permissions.
+  for (const section of CORE_LAYOUT.filter((entry) => entry.requireExisting && includePublicMagazines)) {
+    const parent = existingPublicCategory(guild, section);
+    for (const spec of section.forums ?? []) {
+      await ensureForumChannel(guild, parent, spec, undefined, 'Read-only Aquapedia public preflight');
     }
   }
   const previousRoles = store ? await store.getLayoutRoles() : null;
@@ -310,13 +383,16 @@ export async function provisionAquaphoriaLayout(guild, { ownerUserId, store = nu
   const created = [];
 
   for (const section of CORE_LAYOUT) {
+    if (!includePublicMagazines && section.requireExisting) continue; // Commerce never provisions or rewrites public Aquapedia.
     const permissionOverwrites = section.staffOnly
       ? privateOverwrites(guild, { ownerUserId, staffRoleId: staffRole.id })
       : section.vendorOnly
         ? privateOverwrites(guild, { ownerUserId, staffRoleId: staffRole.id, vendorRoleId: vendorRole.id })
         : undefined;
 
-    const category = await ensureCategory(guild, section.category, permissionOverwrites);
+    const category = section.requireExisting
+      ? existingPublicCategory(guild, section)
+      : await ensureCategory(guild, section.category, permissionOverwrites);
     for (const [name, topic] of section.channels) {
       const channel = await ensureTextChannel(guild, category, name, topic, permissionOverwrites);
       created.push({ category: category.name, channel: channel.name, id: channel.id, type: 'text' });
@@ -325,8 +401,8 @@ export async function provisionAquaphoriaLayout(guild, { ownerUserId, store = nu
       // Commerce/vendor flows do not depend on public magazine metadata.
       // Owner /aquaphoria setup retains strict fail-closed magazine drift checks.
       if (!includePublicMagazines && forumSpec.protectExisting) continue;
-      const reason = section.category === '📚・AQUAPEDIA'
-        ? 'Aquaphoria public Aquapedia forum provisioning'
+      const reason = section.publicResearch
+        ? 'Aquaphoria public Aquapedia forum verification'
         : 'Aquaphoria private publication forum provisioning';
       const channel = await ensureForumChannel(guild, category, forumSpec, permissionOverwrites, reason);
       created.push({ category: category.name, channel: channel.name, id: channel.id, type: 'forum' });
@@ -392,14 +468,22 @@ export function publicationTagDefinitions() {
 }
 
 async function provisionPublicAquapediaForum(guild, name) {
-  const section = CORE_LAYOUT.find((entry) => entry.category === '📚・AQUAPEDIA');
+  const section = CORE_LAYOUT.find((entry) => entry.category === '🧬・AQUAPEDIA — SPECIES & GENETICS');
   const spec = section?.forums?.find((entry) => entry.name === name);
   if (!spec) throw new Error('Aquapedia public research forum definition is missing');
   // Do not make an existing private category public or create a competing one.
   const category = guild?.channels?.cache?.find(
-    (channel) => channel.type === ChannelType.GuildCategory && channel.name === section.category,
+    (channel) => channel.id === section.categoryId && channel.type === ChannelType.GuildCategory && channel.name === section.category,
   );
   if (!category) return { status: 'category_not_found' };
+  const publicAccess = guild?.roles?.everyone;
+  if (!publicAccess || !category.permissionsFor?.(publicAccess)?.has(PermissionFlagsBits.ViewChannel)
+    || !category.permissionsFor?.(publicAccess)?.has(PermissionFlagsBits.ReadMessageHistory)) {
+    return { status: 'category_not_public' };
+  }
+  // Guard other categories with the same name before trusting the canonical one.
+  try { existingPublicCategory(guild, section); }
+  catch { return { status: 'category_not_found' }; }
   const everyone = guild?.roles?.everyone;
   if (!everyone || (!category.permissionsFor?.(everyone)?.has(PermissionFlagsBits.ViewChannel)
     || !category.permissionsFor?.(everyone)?.has(PermissionFlagsBits.ReadMessageHistory))) {

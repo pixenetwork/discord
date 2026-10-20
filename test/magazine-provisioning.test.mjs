@@ -17,7 +17,7 @@ function existingAquapediaLayoutFixture() {
   const every={id:'everyone-role'};
   for(const section of layout){
     const category={
-      id:'category:'+section.category,name:section.category,type:ChannelType.GuildCategory,
+      id:section.categoryId ?? 'category:'+section.category,name:section.category,type:ChannelType.GuildCategory,
       permissionsFor:()=>({has:()=>true}),
       permissionOverwrites:{set:async()=>permissionChanges.push('category:'+section.category)}
     };
@@ -31,7 +31,7 @@ function existingAquapediaLayoutFixture() {
     }
     for(const spec of section.forums??[]){
       const forum={
-        id:'forum:'+spec.name,parentId:category.id,name:spec.name,type:ChannelType.GuildForum,
+        id:spec.id ?? 'forum:'+spec.name,parentId:category.id,name:spec.name,type:ChannelType.GuildForum,
         topic:spec.topic,
         permissionsFor:()=>({has:()=>true}),
         availableTags:spec.tags.map(x=>({id:'tag:'+spec.name+':'+x.name,...x})),
@@ -59,7 +59,7 @@ function existingAquapediaLayoutFixture() {
 
 test('whole-layout provisioning reuses live magazine forums and exact issue tag IDs without new channels or public permission rewrites',async()=>{
   const f=existingAquapediaLayoutFixture();
-  const watched=['magazines-and-articles','📖・medaka-hyakka','📘・medaka-advance','🦐・shrimp-club','🐟・medaka-trip'];
+  const watched=['🗞️・magazines-and-articles','📖・medaka-hyakka','📘・medaka-advance','🦐・shrimp-club','🐟・medaka-trip'];
   const originals=new Map(f.all.filter(x=>watched.includes(x.name)).map(x=>[
     x.name,{id:x.id,tags:new Map(x.availableTags.map(t=>[t.name,t.id]))}
   ]));
@@ -138,7 +138,7 @@ test('commerce-only layout reuse ignores magazine drift without changing the iss
   f.edits.length=0;
   const result=await provisionAquaphoriaLayout(f.guild,{ownerUserId:'owner-user',includePublicMagazines:false});
   assert.ok(result.roles.staffRoleId);
-  assert.ok(result.channels.some(x=>x.channel==='🦐・shrimp-research'));
+  assert.equal(result.channels.some(x=>x.channel==='🦐・shrimp-research'),false,'commerce does not rewrite protected research');
   assert.equal(result.channels.some(x=>x.channel==='📖・medaka-hyakka'),false);
   assert.deepEqual(pub.availableTags.map(x=>x.id),[...original,'editorial-existing-tag']);
   assert.equal(f.edits.some(x=>x.name==='📖・medaka-hyakka'),false);
@@ -190,4 +190,33 @@ test('owner setup validates all protected magazines before any other layout writ
   assert.deepEqual(f.edits,[], 'failed magazine preflight must not edit a different channel first');
   assert.deepEqual(f.permissionChanges,[], 'failed magazine preflight must not change private or public permission overwrites');
   assert.deepEqual(f.creations,[], 'failed magazine preflight must not create any channel');
+});
+
+test('owner preflight fails closed on wrong canonical species category ID',async()=>{
+  const f=existingAquapediaLayoutFixture();
+  const cat=f.all.find(x=>x.name==='🧬・AQUAPEDIA — SPECIES & GENETICS');
+  cat.id='unexpected-species-category';
+  await assert.rejects(()=>provisionAquaphoriaLayout(f.guild,{ownerUserId:'owner-user'}),/category.*missing|category.*duplicated/i);
+  assert.deepEqual(f.creations,[]);
+  assert.deepEqual(f.edits,[]);
+  assert.deepEqual(f.permissionChanges,[]);
+});
+
+test('owner preflight fails closed on changed historical forum ID',async()=>{
+  const f=existingAquapediaLayoutFixture();
+  f.all.find(x=>x.name==='🐟・corydoras-research').id='replaced-forum';
+  await assert.rejects(()=>provisionAquaphoriaLayout(f.guild,{ownerUserId:'owner-user'}),/forum ID drift/i);
+  assert.deepEqual(f.creations,[]);
+  assert.deepEqual(f.permissionChanges,[]);
+});
+
+test('moderator tag reorder preserves IDs without metadata writes',async()=>{
+  const f=existingAquapediaLayoutFixture();
+  const target=f.all.find(x=>x.name==='📖・medaka-hyakka');
+  const before=new Map(target.availableTags.map(t=>[t.name,t.id]));
+  target.availableTags.reverse();
+  await provisionAquaphoriaLayout(f.guild,{ownerUserId:'owner-user'});
+  assert.deepEqual(new Map(target.availableTags.map(t=>[t.name,t.id])),before);
+  assert.equal(f.edits.some(x=>x.name===target.name),false);
+  assert.deepEqual(f.creations,[]);
 });

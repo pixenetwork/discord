@@ -6,7 +6,6 @@ const CATEGORY_NAME = '🔬・BREEDER RESEARCH';
 const PUBLIC_CATEGORY_NAME = '📚・AQUAPEDIA';
 const PUBLIC_FORUM_NAME = '🦐・shrimp-research';
 const PUBLIC_AROWANA_FORUM_NAME = '🐉・arowana-research';
-const PUBLIC_GUPPY_FORUM_NAME = '🐠・guppy-research';
 const ALLOWED_RIGHTS = new Set(['owner_owned', 'licensed', 'permission_granted', 'public_domain', 'cc0']);
 const MAX_RECORDS = 30;
 
@@ -210,9 +209,8 @@ export async function publishAquapediaCards(guild, result) {
   }
   const publicShrimp = result.publicShrimpResearch === true;
   const publicArowana = result.publicArowanaResearch === true;
-  const publicGuppy = result.publicGuppyResearch === true;
-  if ([publicShrimp, publicArowana, publicGuppy].filter(Boolean).length > 1) return { posted: 0, reason: 'conflicting_public_destinations' };
-  const publicResearch = publicShrimp || publicArowana || publicGuppy;
+  if (publicShrimp && publicArowana) return { posted: 0, reason: 'conflicting_public_destinations' };
+  const publicResearch = publicShrimp || publicArowana;
   if (publicResearch && result.publicAudienceApproved !== true) {
     return { posted: 0, reason: 'public_audience_approval_pending' };
   }
@@ -235,12 +233,12 @@ export async function publishAquapediaCards(guild, result) {
   if (!category) return { posted: 0, reason: 'research_category_not_found' };
   const forums = channels.filter((c) => c.type === ChannelType.GuildForum && c.parentId === category.id);
   if (!forums.length) return { posted: 0, reason: 'research_forums_not_found' };
-  const publicForum = publicResearch ? forums.find((c) => c.name === (publicShrimp ? PUBLIC_FORUM_NAME : publicArowana ? PUBLIC_AROWANA_FORUM_NAME : PUBLIC_GUPPY_FORUM_NAME)) : null;
+  const publicForum = publicResearch ? forums.find((c) => c.name === (publicShrimp ? PUBLIC_FORUM_NAME : PUBLIC_AROWANA_FORUM_NAME)) : null;
   if (publicResearch) {
     const everyone = guild?.roles?.everyone;
     if (!publicForum || !everyone || (!publicForum.permissionsFor?.(everyone)?.has(PermissionFlagsBits.ViewChannel)
       || !publicForum.permissionsFor?.(everyone)?.has(PermissionFlagsBits.ReadMessageHistory))) {
-      return { posted: 0, reason: publicShrimp ? 'public_shrimp_forum_missing_or_not_public' : publicArowana ? 'public_arowana_forum_missing_or_not_public' : 'public_guppy_forum_missing_or_not_public' };
+      return { posted: 0, reason: publicShrimp ? 'public_shrimp_forum_missing_or_not_public' : 'public_arowana_forum_missing_or_not_public' };
     }
   }
   let posted = 0;
@@ -257,208 +255,11 @@ export async function publishAquapediaCards(guild, result) {
     // An unknown/contested breeder requires explicitly named "unknown-breeders".
     const fallback = forumSlug(breeder);
     const target = desired || fallback;
-    if (publicResearch && (card.organismGroup !== (publicShrimp ? 'shrimp' : publicArowana ? 'arowana' : 'guppy')
+    if (publicResearch && (card.organismGroup !== (publicShrimp ? 'shrimp' : 'arowana')
       || !(publicShrimp ? ['breeder', 'competition', 'strain'] : ['species', 'research', 'strain']).includes(card.entityType)
-      || ((publicArowana || publicGuppy) && (!Array.isArray(card.photos) || card.photos.length !== 0))
+      || (publicArowana && (!Array.isArray(card.photos) || card.photos.length !== 0))
       || !Array.isArray(card.sources) || !card.sources.some((source) => httpsUrl(typeof source === 'string' ? source : source?.url))
-      || (publicArowana && !/^https:\/\/aquapedia\.app\/arowanapedia\/[a-z0-9-]+\/$/.test(String(card.websiteUrl ?? '')))
-      || (publicGuppy && !/^https:\/\/aquapedia\.app\/guppypedia\/(?:entries\/gup-[0-9]{3}|care|strains|genetics|breeding|food|health|endlers)\/$/.test(String(card.websiteUrl ?? ''))))) {
-      skipped += 1;
-      continue;
-    }
-    const forum = publicResearch ? publicForum : forums.find((c) => c.name === target);
-    if (!forum || (!publicResearch && !breeder && target !== 'unknown-breeders')) { skipped += 1; continue; }
-    let payload;
-    try {
-      payload = buildAquapediaPost(card);
-    } catch {
-      skipped += 1;
-      continue;
-    }
-    let threads;
-    try {
-      const active = await forum.threads.fetchActive();
-      const archived = await fetchCompleteArchivedThreads(forum);
-      threads = [...active.threads.values(), ...archived];
-    } catch {
-      // Do not create or append when existing discussions cannot be enumerated.
-      skipped += 1;
-      break;
-    }
-    const { name, existing } = matchingThread(threads, card, publicResearch);
-    let thread;
-    let priorMessageId = null;
-    if (existing) {
-      thread = existing;
-      if (typeof thread.messages?.fetch !== 'function') { skipped += 1; continue; }
-      const history = await thread.messages.fetch({ limit: 100 });
-      const recordId = safeText(card.id || card.name, 70);
-      const previous = [...history.values()].find((message) => message.author?.id === botId
-        && message.embeds?.some((embed) => embed.footer?.text?.startsWith(`Aquapedia • ${recordId} •`))
-        && typeof message.edit === 'function');
-      if (!previous) { skipped += 1; continue; }
-      if (thread.archived) {
-        // Reopening an archived thread also consumes a guild-wide active slot.
-        if (publicResearch) {
-          const capacity = await probePublicThreadCapacity(guild);
-          if (!capacity.allowed) { capacityBlocked = true; skipped += 1; break; }
-        }
-        await thread.setArchived(false, 'Update approved Aquapedia evidence');
-      }
-      await previous.edit(payload);
-      priorMessageId = previous.id;
-    } else {
-      if (publicResearch) {
-        // The active-thread ceiling is GUILD-wide, not specific to this forum.
-        const capacity = await probePublicThreadCapacity(guild);
-        if (!capacity.allowed) { capacityBlocked = true; skipped += 1; break; }
-      }
-      thread = await forum.threads.create({ name, message: payload, reason: 'Approved Aquapedia breeder or strain dossier' });
-    }
-    let readback = null;
-    try {
-      readback = priorMessageId
-        ? await thread.messages.fetch(priorMessageId)
-        : (typeof thread.fetchStarterMessage === 'function' ? await thread.fetchStarterMessage() : null);
-    } catch {
-      // The Discord write may have succeeded. Stop to avoid duplicates on a retry.
-      unverified += 1;
-      break;
-    }
-    const recordId = safeText(card.id || card.name, 70);
-    const verified = Boolean(readback?.id && readback.author?.id === botId
-      && readback.embeds?.some((embed) => embed.footer?.text?.startsWith(`Aquapedia • ${recordId} •`)));
-    if (!verified) { unverified += 1; break; }
-    receipts.push({ recordId, threadId: thread.id, messageId: readback.id, verified: true });
-    destinations.set(forum.name + ':' + name, thread.id);
-    posted += 1;
-  }
-  return {
-    posted,
-    skipped,
-    unverified,
-    receipts,
-    reason: unverified ? 'message_readback_unverified' : capacityBlocked ? 'discord_thread_capacity_guard' : posted ? 'verified_in_existing_breeder_forums' : 'no_matching_authorized_breeder_forum',
-    threadIds: [...destinations.values()],
-  };
-}
-
-export async function persistVerifiedReceipts(store, jobId, publication) {
-  const receipts = (Array.isArray(publication?.receipts) ? publication.receipts : [])
-    .filter((entry) => entry?.verified === true && entry.recordId && entry.threadId && entry.messageId)
-    .map(({ recordId, threadId, messageId }) => ({ recordId, threadId, messageId, verified: true }));
-  if (!receipts.length) return { recorded: 0, reason: 'no_verified_receipts' };
-  if (!jobId || typeof store?.recordResearchJob !== 'function') {
-    throw new Error('A verified research job and durable store are required for publication receipts');
-  }
-  await store.recordResearchJob({
-    id: String(jobId),
-    discordPublicationReceipts: receipts,
-    discordPublishedCount: receipts.length,
-    discordUnverifiedCount: Math.max(0, Number(publication.unverified) || 0),
-    discordVerifiedAt: new Date().toISOString(),
-  });
-  return { recorded: receipts.length, reason: 'receipts_persisted' };
-}
- : '^https://aquapedia\\.app/guppypedia/(?:entries/gup-[0-9]{3}/|care/|strains/|genetics/|breeding/|food/|health/|endlers/))) {
-      skipped += 1;
-      continue;
-    }
-    const forum = publicResearch ? publicForum : forums.find((c) => c.name === target);
-    if (!forum || (!publicResearch && !breeder && target !== 'unknown-breeders')) { skipped += 1; continue; }
-    let payload;
-    try {
-      payload = buildAquapediaPost(card);
-    } catch {
-      skipped += 1;
-      continue;
-    }
-    let threads;
-    try {
-      const active = await forum.threads.fetchActive();
-      const archived = await fetchCompleteArchivedThreads(forum);
-      threads = [...active.threads.values(), ...archived];
-    } catch {
-      // Do not create or append when existing discussions cannot be enumerated.
-      skipped += 1;
-      break;
-    }
-    const { name, existing } = matchingThread(threads, card, publicResearch);
-    let thread;
-    let priorMessageId = null;
-    if (existing) {
-      thread = existing;
-      if (typeof thread.messages?.fetch !== 'function') { skipped += 1; continue; }
-      const history = await thread.messages.fetch({ limit: 100 });
-      const recordId = safeText(card.id || card.name, 70);
-      const previous = [...history.values()].find((message) => message.author?.id === botId
-        && message.embeds?.some((embed) => embed.footer?.text?.startsWith(`Aquapedia • ${recordId} •`))
-        && typeof message.edit === 'function');
-      if (!previous) { skipped += 1; continue; }
-      if (thread.archived) {
-        // Reopening an archived thread also consumes a guild-wide active slot.
-        if (publicResearch) {
-          const capacity = await probePublicThreadCapacity(guild);
-          if (!capacity.allowed) { capacityBlocked = true; skipped += 1; break; }
-        }
-        await thread.setArchived(false, 'Update approved Aquapedia evidence');
-      }
-      await previous.edit(payload);
-      priorMessageId = previous.id;
-    } else {
-      if (publicResearch) {
-        // The active-thread ceiling is GUILD-wide, not specific to this forum.
-        const capacity = await probePublicThreadCapacity(guild);
-        if (!capacity.allowed) { capacityBlocked = true; skipped += 1; break; }
-      }
-      thread = await forum.threads.create({ name, message: payload, reason: 'Approved Aquapedia breeder or strain dossier' });
-    }
-    let readback = null;
-    try {
-      readback = priorMessageId
-        ? await thread.messages.fetch(priorMessageId)
-        : (typeof thread.fetchStarterMessage === 'function' ? await thread.fetchStarterMessage() : null);
-    } catch {
-      // The Discord write may have succeeded. Stop to avoid duplicates on a retry.
-      unverified += 1;
-      break;
-    }
-    const recordId = safeText(card.id || card.name, 70);
-    const verified = Boolean(readback?.id && readback.author?.id === botId
-      && readback.embeds?.some((embed) => embed.footer?.text?.startsWith(`Aquapedia • ${recordId} •`)));
-    if (!verified) { unverified += 1; break; }
-    receipts.push({ recordId, threadId: thread.id, messageId: readback.id, verified: true });
-    destinations.set(forum.name + ':' + name, thread.id);
-    posted += 1;
-  }
-  return {
-    posted,
-    skipped,
-    unverified,
-    receipts,
-    reason: unverified ? 'message_readback_unverified' : capacityBlocked ? 'discord_thread_capacity_guard' : posted ? 'verified_in_existing_breeder_forums' : 'no_matching_authorized_breeder_forum',
-    threadIds: [...destinations.values()],
-  };
-}
-
-export async function persistVerifiedReceipts(store, jobId, publication) {
-  const receipts = (Array.isArray(publication?.receipts) ? publication.receipts : [])
-    .filter((entry) => entry?.verified === true && entry.recordId && entry.threadId && entry.messageId)
-    .map(({ recordId, threadId, messageId }) => ({ recordId, threadId, messageId, verified: true }));
-  if (!receipts.length) return { recorded: 0, reason: 'no_verified_receipts' };
-  if (!jobId || typeof store?.recordResearchJob !== 'function') {
-    throw new Error('A verified research job and durable store are required for publication receipts');
-  }
-  await store.recordResearchJob({
-    id: String(jobId),
-    discordPublicationReceipts: receipts,
-    discordPublishedCount: receipts.length,
-    discordUnverifiedCount: Math.max(0, Number(publication.unverified) || 0),
-    discordVerifiedAt: new Date().toISOString(),
-  });
-  return { recorded: receipts.length, reason: 'receipts_persisted' };
-}
-).test(String(card.websiteUrl ?? ''))))) {
+      || (publicArowana && !/^https:\/\/aquapedia\.app\/arowanapedia\/[a-z0-9-]+\/$/.test(String(card.websiteUrl ?? ''))))) {
       skipped += 1;
       continue;
     }

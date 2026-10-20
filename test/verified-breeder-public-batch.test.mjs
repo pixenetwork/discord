@@ -8,7 +8,7 @@ const queue = JSON.parse(readFileSync(new URL('./fixtures-verified-breeders.json
 const originalCards = queue.cards;
 function fixture({
   omitTarumi = false, duplicateTarumi = false, hidden = false,
-  noBotWrite = false, wrongCategory = false, failArchive = false,
+  noBotWrite = false, noCreatePermission = false, wrongCategory = false, failArchive = false,
   failReadback = false,
 } = {}) {
   const sends = [], creates = [];
@@ -46,8 +46,10 @@ function fixture({
   const catShrimp={id:'category-shrimp',type:ChannelType.GuildCategory,name:'📚・AQUAPEDIA'};
   const permission=(role)=>{
     if(role?.id==='everyone')return {has(flag){return !hidden && (flag===PermissionFlagsBits.ViewChannel||flag===PermissionFlagsBits.ReadMessageHistory)}};
-    if(role?.id==='our-bot')return {has(flag){return !noBotWrite && [
-      PermissionFlagsBits.ViewChannel,PermissionFlagsBits.ReadMessageHistory,PermissionFlagsBits.SendMessagesInThreads
+    if(role?.id==='our-bot')return {has(flag){return !noBotWrite
+      && !(noCreatePermission && flag===PermissionFlagsBits.CreatePublicThreads) && [
+      PermissionFlagsBits.ViewChannel,PermissionFlagsBits.ReadMessageHistory,
+      PermissionFlagsBits.SendMessagesInThreads,PermissionFlagsBits.CreatePublicThreads
     ].includes(flag)}};
     return {has(){return false}};
   };
@@ -172,4 +174,21 @@ test('a different breeder thread merely mentioning Tarumi must not be selected',
   assert.equal(result.posted,0);
   assert.equal(result.reason,'required_existing_breeder_thread_missing');
   assert.equal(f.sends.length+f.creates.length,0);
+});
+
+test('potential existing Larmax research topic blocks a duplicate breeder thread',async()=>{
+  const f=fixture();
+  const shrimp=(await f.shrimpForum.threads.fetchActive()).threads;
+  shrimp.set('prior-larmax',{id:'prior-larmax',name:'Research — Larmax International stock history'});
+  const res=await publishVerifiedBreederPublicBatch(f.guild,request([originalCards[2]]));
+  assert.equal(res.posted,0);
+  assert.equal(res.reason,'potential_duplicate_breeder_subject_needs_review');
+  assert.equal(f.creates.length,0);
+});
+test('bot cannot create a public shrimp thread without CreatePublicThreads permission',async()=>{
+  const f=fixture({noCreatePermission:true});
+  const res=await publishVerifiedBreederPublicBatch(f.guild,request([originalCards[2]]));
+  assert.equal(res.posted,0);
+  assert.equal(res.reason,'bot_missing_public_thread_creation_permission');
+  assert.equal(f.creates.length,0);
 });

@@ -529,8 +529,10 @@ async function main() {
       const current=existing.get(EVIDENCE_THREAD_TITLE);
       console.log(JSON.stringify({kind:'corydoras-evidence',mode,existing:Boolean(current),forumId:forum.id,contentLength:packet.content.length}));
       if(mode==='plan')return;
-      const result=await post(forum,EVIDENCE_THREAD_ID,EVIDENCE_THREAD_TITLE,packet,['Research index','Taxonomy','Needs review'],existing,user.id,'evidence');
-      console.log(JSON.stringify({status:'evidence-sync',...result,verified:result.action==='posted'?true:'already-owned',forumId:forum.id}));
+      const result=current
+        ? await refreshRecord(forum,existing,{id:EVIDENCE_THREAD_ID,name:EVIDENCE_THREAD_TITLE},user.id,RECEIPT_FILE,()=>packet)
+        : await post(forum,EVIDENCE_THREAD_ID,EVIDENCE_THREAD_TITLE,packet,['Research index','Taxonomy','Needs review'],existing,user.id,'evidence');
+      console.log(JSON.stringify({status:'evidence-sync',...result,verified:result.verified===true||result.action==='posted',forumId:forum.id}));
       return;
     }
 

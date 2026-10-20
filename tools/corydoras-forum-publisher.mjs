@@ -351,6 +351,32 @@ function guidePacket(catalog) {
     allowedMentions:ALLOW_MENTIONS
   };
 }
+
+const EVIDENCE_THREAD_TITLE = 'Corydoradinae Evidence Desk - Eight Research Areas';
+const EVIDENCE_THREAD_ID = 'evidence-eight-topics-20261019';
+function evidencePacket(){
+  const content=[
+    '**Aquapedia Corydoradinae: eight evidence topics (19 October 2026)**',
+    '**Research draft — not a new species count, not a DNA-confirmed pedigree, and not a care prescription.**',
+    '1. **Taxonomy:** 2024 seven-genera revision and 2025 species-epithet correction. Old Corydoras names remain useful search aliases.',
+    '2. **Localities:** original museum/type drainages, not assumed source of every aquarium specimen.',
+    '3. **Reproduction:** the sperm-drinking/T-position mechanism was studied in bronze cory; avoid species-wide extrapolation.',
+    '4. **Genetics:** a 288-fish bronze-cory behavior study did not test the DNA loci or dominance of domestic color morphs.',
+    '5. **Lookalikes:** similar markings can reflect mimicry; species identification needs diagnostic evidence.',
+    '6. **Health:** venomed fin-spine evidence supports cautious handling; barbel injury has multiple possible causes.',
+    '7. **Conservation:** check dated IUCN assessments and country-specific law; old statuses are not current surveys.',
+    '8. **Breeders:** named firsthand spawning reports do not prove founder pedigrees, show championships, or photo rights.',
+    '**Primary source links:**',
+    'Taxonomy + correction: https://doi.org/10.1093/zoolinnean/zlae053 | https://doi.org/10.1093/zoolinnean/zlaf035',
+    'Breeding: https://doi.org/10.1007/BF00002344',
+    'Behavior: https://www.sciencedirect.com/science/article/pii/S0168159124000534',
+    'Mimicry: https://doi.org/10.1038/nature09660',
+    'Breeder index: https://www.scotcat.com/articles/articles_breeding.htm',
+    '**Publisher policy:** Link, cite and credit; do not rehost copyrighted breeder/journal images. More source verification pending.'
+  ].join('\\n');
+  if(content.length>2000)throw new Error('Evidence update exceeds Discord 2000-character limit');
+  return {content,embeds:[{title:'Corydoradinae: Eight Evidence Areas',description:'Source-linked research summary, provisional. Scientific species, C/CW codes, and selected morphs are distinct record types.',footer:{text:'AQP-CORY-'+EVIDENCE_THREAD_ID+' • research draft'}}],allowedMentions:ALLOW_MENTIONS};
+}
 // Public forum only: no permission mutation and never recreate a deleted forum.
 function requirePublic(ch,guildId){
   const everyone=ch.permissionOverwrites.cache.get(guildId);
@@ -462,10 +488,12 @@ async function refreshRecord(forum, threads, rec, botId, receiptFile=RECEIPT_FIL
 
 async function main() {
   const mode=process.argv.includes('--apply')?'apply':'plan';
+  const evidenceOnly=process.argv.includes('--evidence-only');
   const nextFlag=process.argv.find(a=>a.startsWith('--next='));
   const refreshFlag=process.argv.find(a=>a.startsWith('--refresh-id='));
   const morphRefreshFlag=process.argv.find(a=>a.startsWith('--refresh-morph-id='));
   const refreshId=refreshFlag?.split('=')[1]??null;
+  if(evidenceOnly && (refreshFlag||nextFlag||morphRefreshFlag||process.argv.includes('--pin-guide'))) throw new Error('Evidence update is a standalone one-writer operation');
   if(morphRefreshFlag && (refreshFlag||nextFlag||!MORPHS.some(x=>x.id===morphRefreshFlag.split('=')[1])))
     throw new Error('--refresh-morph-id requires one known captive morph, and no competing writer flags');
   if(refreshFlag && (!/^[0-9]+$/.test(refreshId)||nextFlag))
@@ -491,11 +519,21 @@ async function main() {
     if(sources.length!==1)throw new Error('Exact public Aquapedia category not found unambiguously');
     requirePublic(sources[0],guild.id);
     const target=await ensureChannel(guild,sources[0]);
-    console.log(JSON.stringify({mode,guildId:guild.id,botId:user.id,category:target.category?.name||'(would create)',forum:target.forum?.name||'(would create)',sourceCount:catalog.length,priorityMatched:selected.matches.length,priorityMissing:selected.missing,uniqueMorphs:MORPHS.length,plannedPosts:process.argv.includes('--pin-guide')?0:((refreshFlag||morphRefreshFlag)?1:(nextFlag?nextCount:Math.min(limit,selected.matches.length)+MORPHS.length+1))}));
-    if(mode==='plan'&&!nextFlag&&!refreshFlag&&!morphRefreshFlag)return;
+    console.log(JSON.stringify({mode,guildId:guild.id,botId:user.id,category:target.category?.name||'(would create)',forum:target.forum?.name||'(would create)',sourceCount:catalog.length,priorityMatched:selected.matches.length,priorityMissing:selected.missing,uniqueMorphs:MORPHS.length,plannedPosts:evidenceOnly?1:(process.argv.includes('--pin-guide')?0:((refreshFlag||morphRefreshFlag)?1:(nextFlag?nextCount:Math.min(limit,selected.matches.length)+MORPHS.length+1)))}));
+    if(mode==='plan'&&!nextFlag&&!refreshFlag&&!morphRefreshFlag&&!evidenceOnly)return;
     const forum=target.forum;
     if(!forum)throw new Error('No forum returned after provisioning');
     const existing=await allThreads(forum);
+    if(evidenceOnly){
+      const packet=evidencePacket();
+      const current=existing.get(EVIDENCE_THREAD_TITLE);
+      console.log(JSON.stringify({kind:'corydoras-evidence',mode,existing:Boolean(current),forumId:forum.id,contentLength:packet.content.length}));
+      if(mode==='plan')return;
+      const result=await post(forum,EVIDENCE_THREAD_ID,EVIDENCE_THREAD_TITLE,packet,['Research index','Taxonomy','Needs review'],existing,user.id,'evidence');
+      console.log(JSON.stringify({status:'evidence-sync',...result,verified:result.action==='posted'?true:'already-owned',forumId:forum.id}));
+      return;
+    }
+
     const nextSelection=nextFlag?nextCatalogBatch(catalog,new Set(existing.keys()),nextCount):[];
     if(nextFlag)console.log(JSON.stringify({nextBatchPreview:nextSelection.map(r=>({name:r.name,kind:r.kind,source:r.source})),selectionCount:nextSelection.length,existingThreads:existing.size}));
     const refreshRec=refreshFlag?catalog.find(r=>r.id===refreshId):null;
@@ -549,4 +587,4 @@ async function main() {
 if(import.meta.url===new URL('file://' + process.argv[1].replaceAll('\\','/')).href){
   main().catch(error=>{console.error('STOP',error?.message||String(error));process.exitCode=1;});
 }
-export {catalogFromSource,priorityRecords,nextCatalogBatch,sourcePacket,morphPacket,guidePacket,refreshRecord,ensureChannel,TAGS,MORPHS};
+export {catalogFromSource,priorityRecords,nextCatalogBatch,sourcePacket,morphPacket,guidePacket,evidencePacket,refreshRecord,ensureChannel,TAGS,MORPHS};

@@ -182,6 +182,16 @@ export async function publishVerifiedBreederPublicBatch(guild, request) {
     if (route.mode !== 'create_if_missing') {
       return blocked('required_existing_breeder_thread_missing', receipts, skipped);
     }
+    // A topic with the breeder's name may already exist under a different title.
+    // Never create a competing thread until those potential collisions are reviewed.
+    const breederKey = normalized(route.breederKey);
+    if (threads.some((candidate) => normalized(candidate.name).includes(breederKey))) {
+      return blocked('potential_duplicate_breeder_subject_needs_review', receipts, skipped);
+    }
+    const createPermissions = forum.permissionsFor?.(guild.client.user);
+    if (!createPermissions?.has(PermissionFlagsBits.CreatePublicThreads)) {
+      return blocked('bot_missing_public_thread_creation_permission', receipts, skipped);
+    }
     const capacity = await probePublicThreadCapacity(guild);
     if (!capacity.allowed) return blocked('discord_active_thread_capacity_guard', receipts, skipped);
     const safeName = ('Breeder — ' + safe(card.breederName || card.name)

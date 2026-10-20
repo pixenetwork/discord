@@ -104,7 +104,8 @@ export function buildMedaka79Index(matrix, { rawSource } = {}) {
     threadName: MEDAKA79_THREAD_NAME,
     records: 79,
     counts,
-    sourceSha256: rawSource ? crypto.createHash('sha256').update(rawSource).digest('hex') : null,
+    // Match Git's canonical LF source bytes even when Windows checks out CRLF.
+    sourceSha256: rawSource ? crypto.createHash('sha256').update(Buffer.from(rawSource).toString('utf8').replace(/\r\n/g, '\n')).digest('hex') : null,
     starter,
     parts,
     allowedMentions: { parse: [] },

@@ -82,3 +82,14 @@ test('forum posts never contain unsafe role pings or unauthorized imagery',()=>{
   assert.match(contents,/parents.*unknown|undocumented origins/);
   assert.match(contents,/NOT 79 newly authenticated/);
 });
+
+test('Medaka79 pinned source digest is stable across LF and CRLF checkouts', () => {
+  const lf = Buffer.from(bytes.toString('utf8').replace(/\r\n/g, '\n'), 'utf8');
+  const crlf = Buffer.from(lf.toString('utf8').replace(/\n/g, '\r\n'), 'utf8');
+  const canonical = '5e15684e2059f94a1c4c3c47ba67d723ec5b98ce13097efcf546bdd428e6e7f0';
+  assert.equal(buildMedaka79Index(source, { rawSource: lf }).sourceSha256, canonical);
+  assert.equal(buildMedaka79Index(source, { rawSource: crlf }).sourceSha256, canonical);
+  // Newline normalization must not conceal other evidence modifications.
+  const altered = Buffer.concat([lf, Buffer.from(' ')]);
+  assert.notEqual(buildMedaka79Index(source, { rawSource: altered }).sourceSha256, canonical);
+});

@@ -30,7 +30,7 @@ function syntheticDirectory() {
 const fixtureCatalog=catalogFromSource(syntheticDirectory());
 test('public Aquapedia publisher reuses the existing forum and cannot recreate it privately',async()=>{
   const everyone='1519337502379475095';
-  const publicCategory={id:'public',name:'📚・AQUAPEDIA',type:4,permissionOverwrites:{cache:new Map()}};
+  const publicCategory={id:'public',name:'🧬・AQUAPEDIA — SPECIES & GENETICS',type:4,permissionOverwrites:{cache:new Map()}};
   const forum={id:'forum',name:'🐟・corydoras-research',type:15,parentId:'public',permissionOverwrites:{cache:new Map()}};
   let writes=0;
   const guild={

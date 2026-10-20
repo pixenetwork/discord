@@ -373,7 +373,7 @@ function evidencePacket(){
     'Mimicry: https://doi.org/10.1038/nature09660',
     'Breeder index: https://www.scotcat.com/articles/articles_breeding.htm',
     '**Publisher policy:** Link, cite and credit; do not rehost copyrighted breeder/journal images. More source verification pending.'
-  ].join('\\n');
+  ].join('\n');
   if(content.length>2000)throw new Error('Evidence update exceeds Discord 2000-character limit');
   return {content,embeds:[{title:'Corydoradinae: Eight Evidence Areas',description:'Source-linked research summary, provisional. Scientific species, C/CW codes, and selected morphs are distinct record types.',footer:{text:'AQP-CORY-'+EVIDENCE_THREAD_ID+' • research draft'}}],allowedMentions:ALLOW_MENTIONS};
 }

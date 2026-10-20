@@ -1,5 +1,5 @@
 import { randomUUID } from 'node:crypto';
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, SlashCommandBuilder } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
 
 const PREFIX = 'aqdm';
 const TTL_MS = 5 * 60 * 1000;
@@ -46,7 +46,13 @@ function isOwner(interaction, deps) {
 }
 
 function auditChannel(guild) {
-  return guild?.channels?.cache?.find?.((channel) => channel.name === '🧾・audit-log' && channel.isTextBased()) ?? null;
+  const everyone = guild?.roles?.everyone;
+  if (!everyone) return null;
+  return guild?.channels?.cache?.find?.((channel) => {
+    if (!channel.isTextBased?.() || !(channel.name === '🧾・audit-log' || channel.name.endsWith('bot-log'))) return false;
+    const perms = channel.permissionsFor?.(everyone);
+    return perms && !perms.has(PermissionFlagsBits.ViewChannel);
+  }) ?? null;
 }
 
 export function createAquapediaDmController({ now = Date.now, makeId = randomUUID } = {}) {

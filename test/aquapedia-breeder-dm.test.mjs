@@ -8,8 +8,8 @@ function fixture({ memberExists=true, auditExists=true, sendError=false }={}) {
   const sent=[], audits=[], replies=[];
   const member={ id:ids.breeder, user:{id:ids.breeder,tag:'SNRMedaka#0001',bot:false},
     async send(data){ if(sendError) throw new Error('Cannot send messages');sent.push(data);return {id:'200000000000000099',author:{id:'bot-id'}}; } };
-  const audit={name:'🧾・audit-log',isTextBased:()=>true,async send(data){audits.push(data);return {id:'receipt-'+audits.length};}};
-  const guild={members:{async fetch(id){return memberExists && id===ids.breeder?member:null;}},
+  const audit={name:'🤖・bot-log',isTextBased:()=>true,permissionsFor:()=>({has:()=>false}),async send(data){audits.push(data);return {id:'receipt-'+audits.length};}};
+  const guild={roles:{everyone:{id:'all'}},members:{async fetch(id){return memberExists && id===ids.breeder?member:null;}},
     channels:{cache:{find(fn){return auditExists && fn(audit)?audit:null;}}}};
   const deps={config:{discord:{ownerUserId:ids.owner,guildId:ids.guild}}};
   const command=(userId=ids.owner)=>({

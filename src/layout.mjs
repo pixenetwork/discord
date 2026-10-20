@@ -49,6 +49,16 @@ const CORE_LAYOUT = [
     ],
   },
   {
+    category: '🐟・CORYDORASPEDIA',
+    channels: [
+      ['💬・corydoras-discussion', 'Corydoradinae community questions and conversations. Science-backed profiles and C/CW references remain in the existing Aquapedia research forum.'],
+      ['🥚・corydoras-breeding', 'Share your own spawning and fry-rearing logs, egg counts, feeding trials and observations; distinguish anecdotal practice from controlled research.'],
+      ['🧬・corydoras-traits', 'Discuss species identification, C/CW codes, color morphs, laser lines and pedigrees; trade names and appearances alone do not establish genes or parentage.'],
+      ['🩺・corydoras-care', 'Species-specific Corydoradinae husbandry, substrate, water quality, health and compatibility questions; no unsupported universal care parameters.'],
+      ['📸・corydoras-showcase', 'Share original photos and videos of Corydoradinae with correct owner credit; never repost breeder photos without permission.'],
+    ],
+  },
+  {
     category: '🦐・SHRIMP',
     channels: [
       ['🦐・shrimp-available', 'Freshwater shrimp currently available.'],
@@ -83,16 +93,6 @@ const CORE_LAYOUT = [
       topic: 'Public Aquapedia arowana species, geographic origins, genetics, husbandry, breeders and conservation. Claims are evidence-labelled and wildlife collection localities are protected.',
       tags: ['Species', 'Genetics', 'Regional', 'Breeding', 'Conservation'].map((name) => ({ name, moderated: false })),
     }],
-  },
-  {
-    category: '🐟・CORYDORASPEDIA',
-    channels: [
-      ['💬・corydoras-discussion', 'Corydoradinae community questions and conversations. Science-backed profiles and C/CW references remain in the existing Aquapedia research forum.'],
-      ['🥚・corydoras-breeding', 'Share your own spawning and fry-rearing logs, egg counts, feeding trials and observations; distinguish anecdotal practice from controlled research.'],
-      ['🧬・corydoras-traits', 'Discuss species identification, C/CW codes, color morphs, laser lines and pedigrees; trade names and appearances alone do not establish genes or parentage.'],
-      ['🩺・corydoras-care', 'Species-specific Corydoradinae husbandry, substrate, water quality, health and compatibility questions; no unsupported universal care parameters.'],
-      ['📸・corydoras-showcase', 'Share original photos and videos of Corydoradinae with correct owner credit; never repost breeder photos without permission.'],
-    ],
   },
   {
     category: '🌿・COMMUNITY',

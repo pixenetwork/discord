@@ -1,0 +1,2060 @@
+{
+  "project": "Aquapedia Medaka 400",
+  "name": "79-candidate source and gene-trait acceptance matrix",
+  "timestamp": "2026-10-19",
+  "context": "Governed review of batches 01-08, not a new strain cohort",
+  "branch": "research/medaka400-zukan-18-strains-20261019",
+  "base_main_catalog_medaka": 171,
+  "metadata_source": "existing research files from PR 160 exact branch",
+  "summary": {
+    "total_named_candidates": 79,
+    "creator_attributed": 67,
+    "creator_unattributed": 12,
+    "source_year_recorded": 60,
+    "source_year_missing_or_disputed": 19,
+    "source_reported_stock_pair_entries": 23,
+    "source_reported_selection_or_trait_related": 40,
+    "origin_or_source_pair_not_documented": 16,
+    "world_new_strains": 0,
+    "publicly_published_this_PR": 0,
+    "fully_authenticated_separate_bloodlines": 0,
+    "all_image_licensing_unresolved": 79
+  },
+  "evidence_definition": {
+    "A_referenced_breeding_stock_cross": "Japanese source reports population source mating or crossed breeding stocks. Does not identify exact parent fish, individual genetics, reproduction ratio or independent genotype.",
+    "B_family_selection_or_phenotype_relation": "Historical selection/source family asserted, but specific two-stock founding mating is not resolved.",
+    "C_phenotype_only_origins_unreported": "Catalog identifies characteristic (possibly breeder or year), no source-supported founder pair/relationship in prior research intake."
+  },
+  "critical_rules": [
+    "A score is not independent corroboration. Most of these are single specialist records or reprints of a breeder account.",
+    "Every record requires alias and previous unstructured-research reconciliation before it is counted as a distinct verified cultivar.",
+    "JMA recognition numbers and WEB Zukan species numbers are different sources; do not treat catalog numbering as official recognition.",
+    "No commercial allele has been directly genotyped; never assign 'dominant' or 'recessive' based solely on line stability/fixation.",
+    "Do not publish imagery without original creator's licensed permission.",
+    "Do not merge, publish or Discord-sync PR 160 without independent governed clearance and owner authorization."
+  ],
+  "records": [
+    {
+      "id": "aquamarine-wada-2024",
+      "batch": "01",
+      "name": "Aquamarine",
+      "original_japanese": "アクアマリン",
+      "creator_attributed": "和田敏拓",
+      "creation_year_source_claim": 2024,
+      "primary_source_url": "https://medakazukan.net/1064_aquamarine/",
+      "source_urls": [
+        "https://medakazukan.net/1064_aquamarine/"
+      ],
+      "source_record_number": "1064",
+      "reported_lineage_stages": [
+        "Topaz (ruby-eye albino platinum Miyuki Real Long Fin)",
+        "Rêve"
+      ],
+      "origin_evidence_tier": "A_referenced_breeding_stock_cross",
+      "claim_scope": "breeder/specialist report identifies crossing stock at population level; not validated individual fish",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": "Do not equate the combined phenotype with a single allele; distinguish Morpho serrated/fanlike fins from Real Long Fin maintained fin shape."
+    },
+    {
+      "id": "kotohime-real-longfin-wada",
+      "batch": "01",
+      "name": "Kotohime Real Long Fin",
+      "original_japanese": "琴姫リアルロングフィン",
+      "creator_attributed": "和田敏拓",
+      "creation_year_source_claim": 2023,
+      "primary_source_url": "https://medakazukan.net/0914_kotohimereallongfin/",
+      "source_urls": [
+        "https://medakazukan.net/0914_kotohimereallongfin/"
+      ],
+      "source_record_number": "914",
+      "reported_lineage_stages": [
+        "Kotohime breeding line"
+      ],
+      "origin_evidence_tier": "B_family_selection_or_phenotype_relation",
+      "claim_scope": "historical associated stock or appearance only; not verified founding mating",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": "Existing Kotohime base route is a related identity, not proof the Real Long Fin modifier is the same profile."
+    },
+    {
+      "id": "reve-samurai-hikari",
+      "batch": "01",
+      "name": "Rêve Samurai Hikari",
+      "original_japanese": "レーヴサムライヒカリ",
+      "creator_attributed": null,
+      "creation_year_source_claim": null,
+      "primary_source_url": "https://medakazukan.net/0913_revesamuraihikari/",
+      "source_urls": [
+        "https://medakazukan.net/0913_revesamuraihikari/"
+      ],
+      "source_record_number": "913",
+      "reported_lineage_stages": [
+        "Rêve Hikari stock; Samurai-dorsal expression"
+      ],
+      "origin_evidence_tier": "B_family_selection_or_phenotype_relation",
+      "claim_scope": "historical associated stock or appearance only; not verified founding mating",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": "Catalog explicitly distinguishes Rêve fin-line longfin from Real Long Fin; do not merge those modifiers."
+    },
+    {
+      "id": "sanshoku-lame-real-longfin",
+      "batch": "01",
+      "name": "Tricolor Lamé Real Long Fin",
+      "original_japanese": "三色ラメリアルロングフィン",
+      "creator_attributed": null,
+      "creation_year_source_claim": null,
+      "primary_source_url": "https://medakazukan.net/0912_sansyhokulamereallongfin/",
+      "source_urls": [
+        "https://medakazukan.net/0912_sansyhokulamereallongfin/"
+      ],
+      "source_record_number": "912",
+      "reported_lineage_stages": [
+        "Tricolor lamé breeding line"
+      ],
+      "origin_evidence_tier": "B_family_selection_or_phenotype_relation",
+      "claim_scope": "historical associated stock or appearance only; not verified founding mating",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": "Do not equate with every three-color Miyuki or tricolor lamé-narrowfin variety."
+    },
+    {
+      "id": "beniazami-real-longfin",
+      "batch": "01",
+      "name": "Beniazami Real Long Fin",
+      "original_japanese": "紅薊リアルロングフィン",
+      "creator_attributed": null,
+      "creation_year_source_claim": null,
+      "primary_source_url": "https://medakazukan.net/0911_beniazamireallongfin/",
+      "source_urls": [
+        "https://medakazukan.net/0911_beniazamireallongfin/"
+      ],
+      "source_record_number": "911",
+      "reported_lineage_stages": [
+        "Beniazami base stock",
+        "Red Real Long Fin stock",
+        "backcross into Beniazami"
+      ],
+      "origin_evidence_tier": "A_referenced_breeding_stock_cross",
+      "claim_scope": "breeder/specialist report identifies crossing stock at population level; not validated individual fish",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": "F1 trait expression reported for that breeding stock does not establish a generic dominant allele or guaranteed filial ratio."
+    },
+    {
+      "id": "rinkou-hikari",
+      "batch": "01",
+      "name": "Rinkō Hikari",
+      "original_japanese": "鱗光ヒカリ",
+      "creator_attributed": null,
+      "creation_year_source_claim": null,
+      "primary_source_url": "https://medakazukan.net/0910_rinkouhikari/",
+      "source_urls": [
+        "https://medakazukan.net/0910_rinkouhikari/"
+      ],
+      "source_record_number": "910",
+      "reported_lineage_stages": [
+        "Rinkō-source phenotype with Hikari morphology"
+      ],
+      "origin_evidence_tier": "B_family_selection_or_phenotype_relation",
+      "claim_scope": "historical associated stock or appearance only; not verified founding mating",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": "Rinkō light across scale boundaries is not ordinary isolated lamé and is not the same as Hikari-body dorsal shine."
+    },
+    {
+      "id": "yokihi-seethrough-albino-igawa",
+      "batch": "01",
+      "name": "Yōkihi See-through Albino",
+      "original_japanese": "楊貴妃シースルーアルビノ",
+      "creator_attributed": "井川重信",
+      "creation_year_source_claim": null,
+      "primary_source_url": "https://medakazukan.net/0907_youkihiseethroughalbino/",
+      "source_urls": [
+        "https://medakazukan.net/0907_youkihiseethroughalbino/"
+      ],
+      "source_record_number": "907",
+      "reported_lineage_stages": [],
+      "origin_evidence_tier": "C_phenotype_only_origins_unreported",
+      "claim_scope": "historical associated stock or appearance only; not verified founding mating",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": "See-through is distinct from ordinary transparent scale and lab multi-locus engineered transparent medaka."
+    },
+    {
+      "id": "yokihi-transparent-albino-igawa",
+      "batch": "01",
+      "name": "Yōkihi Transparent-scale Albino",
+      "original_japanese": "楊貴妃透明鱗アルビノ",
+      "creator_attributed": "井川重信",
+      "creation_year_source_claim": null,
+      "primary_source_url": "https://medakazukan.net/0906_youkihitoumeirinalbino/",
+      "source_urls": [
+        "https://medakazukan.net/0906_youkihitoumeirinalbino/"
+      ],
+      "source_record_number": "906",
+      "reported_lineage_stages": [
+        "Yōkihi transparent-scale line"
+      ],
+      "origin_evidence_tier": "B_family_selection_or_phenotype_relation",
+      "claim_scope": "historical associated stock or appearance only; not verified founding mating",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": "Do not merge with see-through albino No.0907: scale transparency and overall internal see-through expression differ."
+    },
+    {
+      "id": "golden-super-hikari",
+      "batch": "01",
+      "name": "Golden Super Hikari",
+      "original_japanese": "黄金スーパーヒカリ",
+      "creator_attributed": null,
+      "creation_year_source_claim": null,
+      "primary_source_url": "https://medakazukan.net/0905_ougonsuperhikari/",
+      "source_urls": [
+        "https://medakazukan.net/0905_ougonsuperhikari/"
+      ],
+      "source_record_number": "905",
+      "reported_lineage_stages": [
+        "Golden Hikari source family"
+      ],
+      "origin_evidence_tier": "B_family_selection_or_phenotype_relation",
+      "claim_scope": "historical associated stock or appearance only; not verified founding mating",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": "Strong Hikari-body dorsal iridophore shine must not be mislabeled as Miyuki-type external light."
+    },
+    {
+      "id": "sasha-chacha-2020",
+      "batch": "01",
+      "name": "Sasha",
+      "original_japanese": "紗々",
+      "creator_attributed": "チャチャめだか",
+      "creation_year_source_claim": 2020,
+      "primary_source_url": "https://medakazukan.net/0904_sasya/",
+      "source_urls": [
+        "https://medakazukan.net/0904_sasya/"
+      ],
+      "source_record_number": "904",
+      "reported_lineage_stages": [
+        "Goshiki Type R source strain",
+        "white-bodied selection and fixation"
+      ],
+      "origin_evidence_tier": "B_family_selection_or_phenotype_relation",
+      "claim_scope": "historical associated stock or appearance only; not verified founding mating",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": "Black rim persists better on pale substrate per source, not a guarantee of universal non-background-response genotype."
+    },
+    {
+      "id": "black-blue-eye-experimental",
+      "batch": "01",
+      "name": "Black Blue-Eye",
+      "original_japanese": "ブルーアイ",
+      "creator_attributed": null,
+      "creation_year_source_claim": null,
+      "primary_source_url": "https://medakazukan.net/0903_blueeye/",
+      "source_urls": [
+        "https://medakazukan.net/0903_blueeye/"
+      ],
+      "source_record_number": "903",
+      "reported_lineage_stages": [],
+      "origin_evidence_tier": "C_phenotype_only_origins_unreported",
+      "claim_scope": "historical associated stock or appearance only; not verified founding mating",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": "Small two-tank F1 breeder observation supports penetrance questions, not a single-gene dominant or recessive law. Use a separate research-experiment edge, never founding pedigree."
+    },
+    {
+      "id": "platinum-marine-blue-wada",
+      "batch": "01",
+      "name": "Platinum Marine Blue",
+      "original_japanese": "プラチナマリンブルー",
+      "creator_attributed": "和田敏拓",
+      "creation_year_source_claim": 2021,
+      "primary_source_url": "https://medakazukan.net/0901_platinummarineblue/",
+      "source_urls": [
+        "https://medakazukan.net/0901_platinummarineblue/"
+      ],
+      "source_record_number": "901",
+      "reported_lineage_stages": [
+        "Marine Blue",
+        "Platinum Miyuki"
+      ],
+      "origin_evidence_tier": "A_referenced_breeding_stock_cross",
+      "claim_scope": "breeder/specialist report identifies crossing stock at population level; not validated individual fish",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": "No sequencing or counts show a single causal external-shine or abdominal-blue allele in this named stock."
+    },
+    {
+      "id": "budoume-albino-platinum-miyuki-nakazato",
+      "batch": "01",
+      "name": "Grape-Eye Albino Platinum Miyuki",
+      "original_japanese": "ブドウ目アルビノプラチナ幹之",
+      "creator_attributed": "中里良則",
+      "creation_year_source_claim": 2022,
+      "primary_source_url": "https://medakazukan.net/0900_budoumealbinoplatinummiyuki/",
+      "source_urls": [
+        "https://medakazukan.net/0900_budoumealbinoplatinummiyuki/"
+      ],
+      "source_record_number": "900",
+      "reported_lineage_stages": [
+        "Platinum Miyuki",
+        "Grape-eye albino Yōkihi"
+      ],
+      "origin_evidence_tier": "A_referenced_breeding_stock_cross",
+      "claim_scope": "breeder/specialist report identifies crossing stock at population level; not validated individual fish",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": "Albino ruby eye is not automatically a known lab tyr or oca2 allele; cannot predict composite dominance without crosses."
+    },
+    {
+      "id": "amaterasu-medaka-beans",
+      "batch": "01",
+      "name": "Amaterasu",
+      "original_japanese": "アマテラス",
+      "creator_attributed": "めだかのビーンズ",
+      "creation_year_source_claim": 2021,
+      "primary_source_url": "https://medakazukan.net/0898_amaterasu/",
+      "source_urls": [
+        "https://medakazukan.net/0898_amaterasu/"
+      ],
+      "source_record_number": "898",
+      "reported_lineage_stages": [],
+      "origin_evidence_tier": "C_phenotype_only_origins_unreported",
+      "claim_scope": "historical associated stock or appearance only; not verified founding mating",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": "External Rinkō is not classic lamé. Competition claims are credited to specialist source, not separately verified original trophies."
+    },
+    {
+      "id": "kinshu-lame-longfin",
+      "batch": "01",
+      "name": "Kinshū Lamé Longfin",
+      "original_japanese": "錦秋ラメヒレ長",
+      "creator_attributed": null,
+      "creation_year_source_claim": null,
+      "primary_source_url": "https://medakazukan.net/0897_kinsyuulamehirenaga/",
+      "source_urls": [
+        "https://medakazukan.net/0897_kinsyuulamehirenaga/"
+      ],
+      "source_record_number": "897",
+      "reported_lineage_stages": [
+        "Kinshū mottled source strain"
+      ],
+      "origin_evidence_tier": "B_family_selection_or_phenotype_relation",
+      "claim_scope": "historical associated stock or appearance only; not verified founding mating",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": "Longfin label should be distinguished from Real Long Fin; source did not establish controlled segregation."
+    },
+    {
+      "id": "hibotan-izumi-enshu-2022",
+      "batch": "01",
+      "name": "Hibotan",
+      "original_japanese": "緋牡丹",
+      "creator_attributed": "メダカファーム泉遠州",
+      "creation_year_source_claim": 2022,
+      "primary_source_url": "https://medakazukan.net/0895_hibotan/",
+      "source_urls": [
+        "https://medakazukan.net/0895_hibotan/"
+      ],
+      "source_record_number": "895",
+      "reported_lineage_stages": [
+        "Suzuran source line",
+        "selected albino lamé derivative"
+      ],
+      "origin_evidence_tier": "B_family_selection_or_phenotype_relation",
+      "claim_scope": "historical associated stock or appearance only; not verified founding mating",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": "Aurora phenotype is a label; do not infer the exact kitlga candidate allele in this commercial breeding stock."
+    },
+    {
+      "id": "cloud-gray-diamond-nakazato",
+      "batch": "01",
+      "name": "Cloud Gray Diamond",
+      "original_japanese": "クラウドグレーダイヤ",
+      "creator_attributed": "中里良則",
+      "creation_year_source_claim": 2022,
+      "primary_source_url": "https://medakazukan.net/cloudgraydia/",
+      "source_urls": [
+        "https://medakazukan.net/cloudgraydia/"
+      ],
+      "source_record_number": "894",
+      "reported_lineage_stages": [
+        "Black Diamond stock",
+        "selection for visible dorsal lamé"
+      ],
+      "origin_evidence_tier": "B_family_selection_or_phenotype_relation",
+      "claim_scope": "historical associated stock or appearance only; not verified founding mating",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": "A paler gray-black background can increase lamé visibility; this does not establish changed reflectance gene dosage."
+    },
+    {
+      "id": "kohaku-spot-lame-wada-2020",
+      "batch": "01",
+      "name": "Kōhaku Spot Lamé",
+      "original_japanese": "紅白スポットラメ",
+      "creator_attributed": "和田敏拓",
+      "creation_year_source_claim": 2020,
+      "primary_source_url": "https://medakazukan.net/0779_kouhakuspotlame/",
+      "source_urls": [
+        "https://medakazukan.net/0779_kouhakuspotlame/"
+      ],
+      "source_record_number": "779",
+      "reported_lineage_stages": [
+        "nontransparent Kohaku Hikari male",
+        "Kohaku external-light female",
+        "F1 spotted-shine selection"
+      ],
+      "origin_evidence_tier": "A_referenced_breeding_stock_cross",
+      "claim_scope": "breeder/specialist report identifies crossing stock at population level; not validated individual fish",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": "Breeder F1/F2 observed percentages are not universal dominant/recessive probabilities; individual DNA allele unconfirmed."
+    },
+    {
+      "id": "mirage-wada-2023",
+      "batch": "02",
+      "name": "Mirage",
+      "original_japanese": "ミラージュ",
+      "creator_attributed": "和田敏拓 / Toshihiro Wada",
+      "creation_year_source_claim": 2023,
+      "primary_source_url": "https://medakanoyakata.muragon.com/entry/1464.html",
+      "source_urls": [
+        "https://medakanoyakata.muragon.com/entry/1464.html",
+        "https://medakanoyakata.muragon.com/entry/1568.html",
+        "https://medakazukan.net/post_lp/%E3%83%9F%E3%83%A9%E3%83%BC%E3%82%B8%E3%83%A5/"
+      ],
+      "source_record_number": null,
+      "reported_lineage_stages": [
+        "Black-body Blue Eye stock",
+        "Tricolor lame narrowfin longfin stock"
+      ],
+      "origin_evidence_tier": "A_referenced_breeding_stock_cross",
+      "claim_scope": "breeder/specialist report identifies crossing stock at population level; not validated individual fish",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": "The 2023 separate Blue-Eye F1 experiment with 15/87 and 11/64 reported same trait and comparable pair of source stocks; identical individual mating batch is NOT confirmed. Phenotype ratio is not Mendelian dominance."
+    },
+    {
+      "id": "morpho-kikyo-wada-2023-2024",
+      "batch": "02",
+      "name": "Morpho Kikyo",
+      "original_japanese": "モルフォ桔梗",
+      "creator_attributed": "和田敏拓 / Toshihiro Wada",
+      "creation_year_source_claim": null,
+      "primary_source_url": "https://medakanoyakata.muragon.com/entry/1572.html",
+      "source_urls": [
+        "https://medakanoyakata.muragon.com/entry/1572.html",
+        "https://medakazukan.net/post_lp/%E3%83%A2%E3%83%AB%E3%83%95%E3%82%A9%E6%A1%94%E6%A2%97/"
+      ],
+      "source_record_number": null,
+      "reported_lineage_stages": [
+        "Mizuiro Kikyo (水色桔梗), Hirokawa Shōichirō breeding line",
+        "Wada Black Morpho subtype Hikari (MLFH × BMA line)"
+      ],
+      "origin_evidence_tier": "A_referenced_breeding_stock_cross",
+      "claim_scope": "breeder/specialist report identifies crossing stock at population level; not validated individual fish",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": "Dated discrepancy (2023 vs 2024) must not be silently resolved; cite both. Parent identity 'Mizuiro Kikyo' is a breeder line, not proof of named individual fish."
+    },
+    {
+      "id": "mirage-glow-wada-2024",
+      "batch": "02",
+      "name": "Mirage Glow",
+      "original_japanese": "ミラージュグロウ",
+      "creator_attributed": "和田敏拓 / Toshihiro Wada (breeder-owned product line)",
+      "creation_year_source_claim": 2024,
+      "primary_source_url": "https://medakazukan.net/post_lp/%E3%83%9F%E3%83%A9%E3%83%BC%E3%82%B8%E3%83%A5%E3%82%B0%E3%83%AD%E3%82%A6/",
+      "source_urls": [
+        "https://medakazukan.net/post_lp/%E3%83%9F%E3%83%A9%E3%83%BC%E3%82%B8%E3%83%A5%E3%82%B0%E3%83%AD%E3%82%A6/"
+      ],
+      "source_record_number": null,
+      "reported_lineage_stages": [
+        "Mirage",
+        "Emekin"
+      ],
+      "origin_evidence_tier": "A_referenced_breeding_stock_cross",
+      "claim_scope": "breeder/specialist report identifies crossing stock at population level; not validated individual fish",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": "Reported fixation is cohort-specific. The 'Mirage Glow Longfin' later used for Mirage Kikyo is a selected variant, not presumed genetically identical to original regular-fin Glow."
+    },
+    {
+      "id": "mirage-kikyo-wada-2026",
+      "batch": "02",
+      "name": "Mirage Kikyo",
+      "original_japanese": "ミラージュ桔梗",
+      "creator_attributed": "和田敏拓 / Toshihiro Wada",
+      "creation_year_source_claim": 2026,
+      "primary_source_url": "https://medakazukan.net/post_lp/10323-2/",
+      "source_urls": [
+        "https://medakazukan.net/post_lp/10323-2/",
+        "https://www.medakanoyakata.jp/?mode=f83&tid=6"
+      ],
+      "source_record_number": null,
+      "reported_lineage_stages": [
+        "Morpho Kikyo",
+        "Mirage Glow Longfin"
+      ],
+      "origin_evidence_tier": "A_referenced_breeding_stock_cross",
+      "claim_scope": "breeder/specialist report identifies crossing stock at population level; not validated individual fish",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": "Document F2 expression and F5 breeding percentages as breeder observations, not proof of any commercial single dominant allele. Alias names do not establish DNA tests."
+    },
+    {
+      "id": "morpho-kikyo-purple-wada-2026",
+      "batch": "02",
+      "name": "Morpho Kikyo Purple",
+      "original_japanese": "モルフォ桔梗～紫～",
+      "creator_attributed": "和田敏拓 / Toshihiro Wada",
+      "creation_year_source_claim": 2026,
+      "primary_source_url": "https://medakazukan.net/post_lp/%E3%83%A2%E3%83%AB%E3%83%95%E3%82%A9%E6%A1%94%E6%A2%97%EF%BD%9E%E7%B4%AB%EF%BD%9E/",
+      "source_urls": [
+        "https://medakazukan.net/post_lp/%E3%83%A2%E3%83%AB%E3%83%95%E3%82%A9%E6%A1%94%E6%A2%97%EF%BD%9E%E7%B4%AB%EF%BD%9E/"
+      ],
+      "source_record_number": null,
+      "reported_lineage_stages": [
+        "Morpho Kikyo",
+        "Purple Kikyo (紫桔梗), created by Hirokawa Shōichirō"
+      ],
+      "origin_evidence_tier": "A_referenced_breeding_stock_cross",
+      "claim_scope": "breeder/specialist report identifies crossing stock at population level; not validated individual fish",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": "Purple Kikyo parent creation belongs to Hirokawa, while 2026 hybrid creation belongs to Wada. Do not transfer 80% body/shape fixation to the Morpho-light trait."
+    },
+    {
+      "id": "morpho-kikyo-subtype-wada-2026",
+      "batch": "02",
+      "name": "Morpho Kikyo Subtype-selected line",
+      "original_japanese": "モルフォ桔梗亜種系統",
+      "creator_attributed": "和田敏拓 / Toshihiro Wada",
+      "creation_year_source_claim": 2026,
+      "primary_source_url": "https://medakazukan.net/post_lp/%E3%83%A2%E3%83%AB%E3%83%95%E3%82%A9%E6%A1%94%E6%A2%97%E4%BA%9C%E7%A8%AE%E7%B3%BB%E7%B5%B1/",
+      "source_urls": [
+        "https://medakazukan.net/post_lp/%E3%83%A2%E3%83%AB%E3%83%95%E3%82%A9%E6%A1%94%E6%A2%97%E4%BA%9C%E7%A8%AE%E7%B3%BB%E7%B5%B1/"
+      ],
+      "source_record_number": null,
+      "reported_lineage_stages": [
+        "Morpho Kikyo source population, caudal ray iridophore subtype"
+      ],
+      "origin_evidence_tier": "B_family_selection_or_phenotype_relation",
+      "claim_scope": "historical associated stock or appearance only; not verified founding mating",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": "This may be a selected *subline* of Morpho Kikyo, not a fully independent founder lineage; do not add to count of independently originated lines without separate identity criteria."
+    },
+    {
+      "id": "pink-sapphire-wada-2022",
+      "batch": "03",
+      "name": "Pink Sapphire",
+      "original_japanese": "ピンクサファイア",
+      "creator_attributed": "和田敏拓 / Toshihiro Wada",
+      "creation_year_source_claim": 2022,
+      "primary_source_url": "https://medakanoyakata.muragon.com/entry/1282.html",
+      "source_urls": [
+        "https://medakanoyakata.muragon.com/entry/1282.html",
+        "https://medakazukan.net/0881_pinksapphire/"
+      ],
+      "source_record_number": null,
+      "reported_lineage_stages": [
+        "Spot Lamé × Black Diamond (2020-07 initial breeding)",
+        "Selected Aurora Pink Lamé population (2021)",
+        "Aurora Pink Lamé × Sapphire black-lamé Miyuki stock (2021)"
+      ],
+      "origin_evidence_tier": "A_referenced_breeding_stock_cross",
+      "claim_scope": "breeder/specialist report identifies crossing stock at population level; not validated individual fish",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": null
+    },
+    {
+      "id": "sakura-wada-2023",
+      "batch": "03",
+      "name": "Sakura",
+      "original_japanese": "さくら",
+      "creator_attributed": "和田敏拓 / Toshihiro Wada",
+      "creation_year_source_claim": 2023,
+      "primary_source_url": "https://medakanoyakata.muragon.com/entry/1465.html",
+      "source_urls": [
+        "https://medakanoyakata.muragon.com/entry/1465.html",
+        "https://medakanoyakata.muragon.com/entry/1747.html"
+      ],
+      "source_record_number": null,
+      "reported_lineage_stages": [
+        "Pink Sapphire development cohort",
+        "Selected vivid pink sibling/derived breeding subline"
+      ],
+      "origin_evidence_tier": "B_family_selection_or_phenotype_relation",
+      "claim_scope": "historical associated stock or appearance only; not verified founding mating",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": null
+    },
+    {
+      "id": "nabana-wada-2023",
+      "batch": "03",
+      "name": "Nabana",
+      "original_japanese": "菜花",
+      "creator_attributed": "和田敏拓 / Toshihiro Wada",
+      "creation_year_source_claim": 2023,
+      "primary_source_url": "https://medakanoyakata.muragon.com/entry/1465.html",
+      "source_urls": [
+        "https://medakanoyakata.muragon.com/entry/1465.html"
+      ],
+      "source_record_number": null,
+      "reported_lineage_stages": [
+        "Pink Sapphire development cohort",
+        "Selected yellow-bodied subgroup (Nabana)"
+      ],
+      "origin_evidence_tier": "B_family_selection_or_phenotype_relation",
+      "claim_scope": "historical associated stock or appearance only; not verified founding mating",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": null
+    },
+    {
+      "id": "pink-sapphire-neo-wada-2025",
+      "batch": "03",
+      "name": "Pink Sapphire NEO",
+      "original_japanese": "ピンクサファイアNEO",
+      "creator_attributed": "和田敏拓 / Toshihiro Wada (store family)",
+      "creation_year_source_claim": 2025,
+      "primary_source_url": "https://medakazukan.net/post_lp/10267-2/",
+      "source_urls": [
+        "https://medakazukan.net/post_lp/10267-2/",
+        "https://medakanoyakata.shop-pro.jp/?cbid=2838660&csid=0&mode=cate&sort=n"
+      ],
+      "source_record_number": null,
+      "reported_lineage_stages": [
+        "Pink Sapphire (Wada line)",
+        "Neptune"
+      ],
+      "origin_evidence_tier": "A_referenced_breeding_stock_cross",
+      "claim_scope": "breeder/specialist report identifies crossing stock at population level; not validated individual fish",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": null
+    },
+    {
+      "id": "sakura-neo-wada-2025",
+      "batch": "03",
+      "name": "Sakura NEO",
+      "original_japanese": "さくらNEO",
+      "creator_attributed": "和田敏拓 / Toshihiro Wada",
+      "creation_year_source_claim": 2025,
+      "primary_source_url": "https://medakanoyakata.muragon.com/entry/1747.html",
+      "source_urls": [
+        "https://medakanoyakata.muragon.com/entry/1747.html",
+        "https://medakazukan.net/post_lp/%E3%81%95%E3%81%8F%E3%82%89neo/"
+      ],
+      "source_record_number": null,
+      "reported_lineage_stages": [
+        "Sakura original bright-pink line",
+        "Pink Sapphire NEO"
+      ],
+      "origin_evidence_tier": "A_referenced_breeding_stock_cross",
+      "claim_scope": "breeder/specialist report identifies crossing stock at population level; not validated individual fish",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": null
+    },
+    {
+      "id": "nabana-neo-wada-2025",
+      "batch": "03",
+      "name": "Nabana NEO",
+      "original_japanese": "菜花NEO",
+      "creator_attributed": "和田敏拓 / Toshihiro Wada",
+      "creation_year_source_claim": 2025,
+      "primary_source_url": "https://medakanoyakata.muragon.com/entry/1748.html",
+      "source_urls": [
+        "https://medakanoyakata.muragon.com/entry/1748.html",
+        "https://medakazukan.net/post_lp/%E8%8F%9C%E8%8A%B1neo/"
+      ],
+      "source_record_number": null,
+      "reported_lineage_stages": [
+        "Sakura (bright-pink original stock)",
+        "Pink Sapphire NEO",
+        "Yellow-body F1 selected and bred through F4"
+      ],
+      "origin_evidence_tier": "A_referenced_breeding_stock_cross",
+      "claim_scope": "breeder/specialist report identifies crossing stock at population level; not validated individual fish",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": null
+    },
+    {
+      "id": "pink-sapphire-neo-daruma-wada-2026",
+      "batch": "03",
+      "name": "Pink Sapphire NEO Daruma",
+      "original_japanese": "ピンクサファイアNEOダルマ",
+      "creator_attributed": "和田敏拓 / Toshihiro Wada",
+      "creation_year_source_claim": 2026,
+      "primary_source_url": "https://medakazukan.net/post_lp/10333-2/",
+      "source_urls": [
+        "https://medakazukan.net/post_lp/10333-2/"
+      ],
+      "source_record_number": null,
+      "reported_lineage_stages": [
+        "Pink Sapphire NEO",
+        "Pink Sapphire Daruma"
+      ],
+      "origin_evidence_tier": "A_referenced_breeding_stock_cross",
+      "claim_scope": "breeder/specialist report identifies crossing stock at population level; not validated individual fish",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": null
+    },
+    {
+      "id": "mamoru-wada-2023",
+      "batch": "03",
+      "name": "Mamoru",
+      "original_japanese": "Mamoru / マモル",
+      "creator_attributed": "和田敏拓 / Toshihiro Wada",
+      "creation_year_source_claim": 2023,
+      "primary_source_url": "https://medakanoyakata.muragon.com/entry/1489.html",
+      "source_urls": [
+        "https://medakanoyakata.muragon.com/entry/1489.html",
+        "https://medakanoyakata.muragon.com/entry/1576.html"
+      ],
+      "source_record_number": null,
+      "reported_lineage_stages": [
+        "Demé front-facing-eye transparent-scale stock",
+        "Kogure's Hitomi bubble-eye stock (not Fukunaga JMA #02 Hitomi)"
+      ],
+      "origin_evidence_tier": "A_referenced_breeding_stock_cross",
+      "claim_scope": "breeder/specialist report identifies crossing stock at population level; not validated individual fish",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": null
+    },
+    {
+      "id": "fromage-tarumi-2023",
+      "batch": "03",
+      "name": "Fromage",
+      "original_japanese": "フロマージュ",
+      "creator_attributed": "垂水政治 / Masaharu Tarumi",
+      "creation_year_source_claim": 2023,
+      "primary_source_url": "https://medakanoyakata.muragon.com/entry/1593.html",
+      "source_urls": [
+        "https://medakanoyakata.muragon.com/entry/1593.html"
+      ],
+      "source_record_number": null,
+      "reported_lineage_stages": [
+        "Emekin",
+        "Black Diamond"
+      ],
+      "origin_evidence_tier": "A_referenced_breeding_stock_cross",
+      "claim_scope": "breeder/specialist report identifies crossing stock at population level; not validated individual fish",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": null
+    },
+    {
+      "id": "midnight-frill-tarumi-2023",
+      "batch": "03",
+      "name": "Midnight Frill (three expression types)",
+      "original_japanese": "ミッドナイトフリル",
+      "creator_attributed": "垂水政治 / Masaharu Tarumi",
+      "creation_year_source_claim": 2023,
+      "primary_source_url": "https://medakanoyakata.muragon.com/entry/1468.html",
+      "source_urls": [
+        "https://medakanoyakata.muragon.com/entry/1468.html",
+        "https://medakanoyakata.muragon.com/entry/1473.html",
+        "https://medakanoyakata.muragon.com/entry/1604.html"
+      ],
+      "source_record_number": null,
+      "reported_lineage_stages": [
+        "Emekin",
+        "Black Diamond",
+        "Selection into external-light / lamé / jet-black named types"
+      ],
+      "origin_evidence_tier": "A_referenced_breeding_stock_cross",
+      "claim_scope": "breeder/specialist report identifies crossing stock at population level; not validated individual fish",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": null
+    },
+    {
+      "id": "mizuiro-kikyo-hirokawa-2020",
+      "batch": "03",
+      "name": "Mizuiro Kikyo",
+      "original_japanese": "水色桔梗",
+      "creator_attributed": "広川正一郎 / Shoichiro Hirokawa",
+      "creation_year_source_claim": 2020,
+      "primary_source_url": "https://medakanoyakata.muragon.com/entry/1098.html",
+      "source_urls": [
+        "https://medakanoyakata.muragon.com/entry/1098.html"
+      ],
+      "source_record_number": null,
+      "reported_lineage_stages": [
+        "Original Hirokawa Mizuiro Kikyo source population; individual parents not recorded"
+      ],
+      "origin_evidence_tier": "B_family_selection_or_phenotype_relation",
+      "claim_scope": "historical associated stock or appearance only; not verified founding mating",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": null
+    },
+    {
+      "id": "purple-kikyo-hirokawa-subline",
+      "batch": "03",
+      "name": "Purple Kikyo",
+      "original_japanese": "紫桔梗",
+      "creator_attributed": "広川正一郎 / Shoichiro Hirokawa",
+      "creation_year_source_claim": null,
+      "primary_source_url": "https://medakanoyakata.muragon.com/entry/1098.html",
+      "source_urls": [
+        "https://medakanoyakata.muragon.com/entry/1098.html",
+        "https://medakazukan.net/post_lp/%E3%83%A2%E3%83%AB%E3%83%95%E3%82%A9%E6%A1%94%E6%A2%97%EF%BD%9E%E7%B4%AB%EF%BD%9E/"
+      ],
+      "source_record_number": null,
+      "reported_lineage_stages": [
+        "Mizuiro Kikyo original family",
+        "Selected purple-blue body-color expression"
+      ],
+      "origin_evidence_tier": "B_family_selection_or_phenotype_relation",
+      "claim_scope": "historical associated stock or appearance only; not verified founding mating",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": null
+    },
+    {
+      "id": "akatsuki-oba-2004",
+      "batch": "05",
+      "name": "Akatsuki",
+      "original_japanese": "暁",
+      "creator_attributed": "大場幸雄 / Yukio Oba",
+      "creation_year_source_claim": 2004,
+      "primary_source_url": "https://medakazukan.net/0012_akatsuki/",
+      "source_urls": [
+        "https://medakazukan.net/0012_akatsuki/"
+      ],
+      "source_record_number": "0012",
+      "reported_lineage_stages": [
+        "Brown wild-type phenotype → Golden Medaka → Kohaku / Amber (historical selection, 2004)",
+        "Hikari-body form of the Kohaku family (Akatsuki)"
+      ],
+      "origin_evidence_tier": "B_family_selection_or_phenotype_relation",
+      "claim_scope": "historical associated stock or appearance only; not verified founding mating",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": null
+    },
+    {
+      "id": "kotoko-oba-2004",
+      "batch": "05",
+      "name": "Kotoko",
+      "original_japanese": "琴琥",
+      "creator_attributed": "大場幸雄 / Yukio Oba",
+      "creation_year_source_claim": 2004,
+      "primary_source_url": "https://medakazukan.net/0014_kotoko/",
+      "source_urls": [
+        "https://medakazukan.net/0014_kotoko/"
+      ],
+      "source_record_number": "0014",
+      "reported_lineage_stages": [
+        "Golden source family → Kohaku / Amber base phenotype",
+        "Hikari Daruma expression (Kotoko), direct parent identities unknown"
+      ],
+      "origin_evidence_tier": "B_family_selection_or_phenotype_relation",
+      "claim_scope": "historical associated stock or appearance only; not verified founding mating",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": null
+    },
+    {
+      "id": "kinrin-swallow-oba-2016",
+      "batch": "05",
+      "name": "Kinrin Swallow",
+      "original_japanese": "金鱗スワロー",
+      "creator_attributed": "大場幸雄 / Yukio Oba",
+      "creation_year_source_claim": 2016,
+      "primary_source_url": "https://medakazukan.net/0353_kinrinswallow/",
+      "source_urls": [
+        "https://medakazukan.net/0353_kinrinswallow/"
+      ],
+      "source_record_number": "0353",
+      "reported_lineage_stages": [],
+      "origin_evidence_tier": "C_phenotype_only_origins_unreported",
+      "claim_scope": "historical associated stock or appearance only; not verified founding mating",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": null
+    },
+    {
+      "id": "kohaku-swallow-oba-2016",
+      "batch": "05",
+      "name": "Kohaku Swallow",
+      "original_japanese": "琥珀スワロー",
+      "creator_attributed": "大場幸雄 / Yukio Oba",
+      "creation_year_source_claim": 2016,
+      "primary_source_url": "https://medakazukan.net/0337_kohakuswallow/",
+      "source_urls": [
+        "https://medakazukan.net/0337_kohakuswallow/"
+      ],
+      "source_record_number": "0337",
+      "reported_lineage_stages": [],
+      "origin_evidence_tier": "C_phenotype_only_origins_unreported",
+      "claim_scope": "historical associated stock or appearance only; not verified founding mating",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": null
+    },
+    {
+      "id": "benijake-swallow-oba-2016",
+      "batch": "05",
+      "name": "Benijake Swallow",
+      "original_japanese": "紅鮭スワロー",
+      "creator_attributed": "大場幸雄 / Yukio Oba",
+      "creation_year_source_claim": 2016,
+      "primary_source_url": "https://medakazukan.net/0354_benijakeswallow/",
+      "source_urls": [
+        "https://medakazukan.net/0354_benijakeswallow/"
+      ],
+      "source_record_number": "0354",
+      "reported_lineage_stages": [],
+      "origin_evidence_tier": "C_phenotype_only_origins_unreported",
+      "claim_scope": "historical associated stock or appearance only; not verified founding mating",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": null
+    },
+    {
+      "id": "kouran-oba-2005",
+      "batch": "05",
+      "name": "Kōran",
+      "original_japanese": "紅蘭",
+      "creator_attributed": "大場幸雄 / Yukio Oba",
+      "creation_year_source_claim": 2005,
+      "primary_source_url": "https://medakazukan.net/0439_kouran/",
+      "source_urls": [
+        "https://medakazukan.net/0439_kouran/"
+      ],
+      "source_record_number": "0439",
+      "reported_lineage_stages": [
+        "Yōkihi / Tōtenkō historical vermilion Hikari family (classification)",
+        "Small Eye Hikari variation (Kōran), exact sire/dam unknown"
+      ],
+      "origin_evidence_tier": "B_family_selection_or_phenotype_relation",
+      "claim_scope": "historical associated stock or appearance only; not verified founding mating",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": null
+    },
+    {
+      "id": "red-cliff-dark-tarumi-2022",
+      "batch": "05",
+      "name": "Red Cliff Dark",
+      "original_japanese": "レッドクリフダークタイプ",
+      "creator_attributed": "垂水政治 / Masaharu Tarumi",
+      "creation_year_source_claim": 2022,
+      "primary_source_url": "https://medakazukan.net/0834_redcliffdarktype/",
+      "source_urls": [
+        "https://medakazukan.net/0834_redcliffdarktype/"
+      ],
+      "source_record_number": "0834",
+      "reported_lineage_stages": [],
+      "origin_evidence_tier": "C_phenotype_only_origins_unreported",
+      "claim_scope": "historical associated stock or appearance only; not verified founding mating",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": null
+    },
+    {
+      "id": "red-cliff-kohaku-tarumi-2022",
+      "batch": "05",
+      "name": "Red Cliff Red-White",
+      "original_japanese": "レッドクリフ紅白タイプ",
+      "creator_attributed": "垂水政治 / Masaharu Tarumi",
+      "creation_year_source_claim": 2022,
+      "primary_source_url": "https://medakanoyakata.muragon.com/entry/1386.html",
+      "source_urls": [
+        "https://medakanoyakata.muragon.com/entry/1386.html"
+      ],
+      "source_record_number": null,
+      "reported_lineage_stages": [
+        "Red Cliff Dark source breeding population",
+        "Selected red-white descendants: Red Cliff Red-White"
+      ],
+      "origin_evidence_tier": "B_family_selection_or_phenotype_relation",
+      "claim_scope": "historical associated stock or appearance only; not verified founding mating",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": null
+    },
+    {
+      "id": "reve-tanaka-2022",
+      "batch": "05",
+      "name": "Rêve",
+      "original_japanese": "レーヴ",
+      "creator_attributed": "田中拓也 / Takuya Tanaka",
+      "creation_year_source_claim": 2022,
+      "primary_source_url": "https://medakazukan.net/0840_reve/",
+      "source_urls": [
+        "https://medakazukan.net/0840_reve/"
+      ],
+      "source_record_number": "0840",
+      "reported_lineage_stages": [
+        "Grand Bleu (Rinkō Longfin × Morpho source stock)",
+        "Black Morpho Subtype Blue",
+        "Selected Rêve (2022)"
+      ],
+      "origin_evidence_tier": "A_referenced_breeding_stock_cross",
+      "claim_scope": "breeder/specialist report identifies crossing stock at population level; not validated individual fish",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": null
+    },
+    {
+      "id": "artemis-tanaka-2022",
+      "batch": "05",
+      "name": "Artemis",
+      "original_japanese": "アルテミス",
+      "creator_attributed": "田中拓也 / Takuya Tanaka",
+      "creation_year_source_claim": 2022,
+      "primary_source_url": "https://medakazukan.net/0836_artemis/",
+      "source_urls": [
+        "https://medakazukan.net/0836_artemis/"
+      ],
+      "source_record_number": "0836",
+      "reported_lineage_stages": [
+        "Dark Emerald Fin source stock",
+        "Selection for Morpho-subtype fin phenotype (other parental stock not documented)"
+      ],
+      "origin_evidence_tier": "B_family_selection_or_phenotype_relation",
+      "claim_scope": "historical associated stock or appearance only; not verified founding mating",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": null
+    },
+    {
+      "id": "morpho-tanaka-2019",
+      "batch": "06",
+      "name": "Original Morpho",
+      "original_japanese": "モルフォ",
+      "creator_attributed": "田中拓也 / Takuya Tanaka",
+      "creation_year_source_claim": 2019,
+      "primary_source_url": "https://medakazukan.net/0254_morpho/",
+      "source_urls": [
+        "https://medakazukan.net/0254_morpho/"
+      ],
+      "source_record_number": null,
+      "reported_lineage_stages": [],
+      "origin_evidence_tier": "C_phenotype_only_origins_unreported",
+      "claim_scope": "historical associated stock or appearance only; not verified founding mating",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": null
+    },
+    {
+      "id": "morpho-subtype-fin-line-tanaka",
+      "batch": "06",
+      "name": "Morpho Subtype (Fin-line)",
+      "original_japanese": "モルフォ亜種",
+      "creator_attributed": "田中拓也 / Takuya Tanaka",
+      "creation_year_source_claim": null,
+      "primary_source_url": "https://medakazukan.net/0823_morphoasyu/",
+      "source_urls": [
+        "https://medakazukan.net/0823_morphoasyu/"
+      ],
+      "source_record_number": null,
+      "reported_lineage_stages": [
+        "Original Tanaka Morpho source family",
+        "Selected reflective fin-ray subtype"
+      ],
+      "origin_evidence_tier": "B_family_selection_or_phenotype_relation",
+      "claim_scope": "historical associated stock or appearance only; not verified founding mating",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": null
+    },
+    {
+      "id": "black-morpho-subtype-tanaka-2021",
+      "batch": "06",
+      "name": "Black Morpho Subtype",
+      "original_japanese": "ブラックモルフォ亜種",
+      "creator_attributed": "田中拓也 / Takuya Tanaka",
+      "creation_year_source_claim": 2021,
+      "primary_source_url": "https://medakazukan.net/0758_blackmorphoasyu/",
+      "source_urls": [
+        "https://medakazukan.net/0758_blackmorphoasyu/"
+      ],
+      "source_record_number": null,
+      "reported_lineage_stages": [
+        "Tanaka Morpho subtype source family",
+        "Black-bodied subtype selection"
+      ],
+      "origin_evidence_tier": "B_family_selection_or_phenotype_relation",
+      "claim_scope": "historical associated stock or appearance only; not verified founding mating",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": null
+    },
+    {
+      "id": "white-morpho-subtype-tanaka-2021",
+      "batch": "06",
+      "name": "White Morpho Subtype",
+      "original_japanese": "ホワイトモルフォ亜種",
+      "creator_attributed": "田中拓也 / Takuya Tanaka",
+      "creation_year_source_claim": 2021,
+      "primary_source_url": "https://medakazukan.net/0805_whitemorphoasyu/",
+      "source_urls": [
+        "https://medakazukan.net/0805_whitemorphoasyu/"
+      ],
+      "source_record_number": null,
+      "reported_lineage_stages": [
+        "Existing White Morpho type (Aquapedia white-morpho-tanaka)",
+        "Additional fin-line subtype selected within this family"
+      ],
+      "origin_evidence_tier": "B_family_selection_or_phenotype_relation",
+      "claim_scope": "historical associated stock or appearance only; not verified founding mating",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": null
+    },
+    {
+      "id": "ruan-morpho-tanaka-2021",
+      "batch": "06",
+      "name": "Ruan Morpho",
+      "original_japanese": "ルアンモルフォ",
+      "creator_attributed": "田中拓也 / Takuya Tanaka",
+      "creation_year_source_claim": 2021,
+      "primary_source_url": "https://medakazukan.net/0842_rueanmorpho/",
+      "source_urls": [
+        "https://medakazukan.net/0842_rueanmorpho/"
+      ],
+      "source_record_number": null,
+      "reported_lineage_stages": [
+        "Tanaka Morpho fin-type source family",
+        "Selected yellow-white bicolor phenotype"
+      ],
+      "origin_evidence_tier": "B_family_selection_or_phenotype_relation",
+      "claim_scope": "historical associated stock or appearance only; not verified founding mating",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": null
+    },
+    {
+      "id": "ruan-morpho-subtype-tanaka-2021",
+      "batch": "06",
+      "name": "Ruan Morpho Subtype",
+      "original_japanese": "ルアンモルフォ亜種",
+      "creator_attributed": "田中拓也 / Takuya Tanaka",
+      "creation_year_source_claim": 2021,
+      "primary_source_url": "https://medakazukan.net/0843_rueanmorphoasyu/",
+      "source_urls": [
+        "https://medakazukan.net/0843_rueanmorphoasyu/"
+      ],
+      "source_record_number": null,
+      "reported_lineage_stages": [
+        "Ruan Morpho selected source family",
+        "Morpho subtype fin-ray-line expression"
+      ],
+      "origin_evidence_tier": "B_family_selection_or_phenotype_relation",
+      "claim_scope": "historical associated stock or appearance only; not verified founding mating",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": null
+    },
+    {
+      "id": "grand-bleu-tanaka-2021",
+      "batch": "06",
+      "name": "Grand Bleu",
+      "original_japanese": "グランブルー",
+      "creator_attributed": "田中拓也 / Takuya Tanaka",
+      "creation_year_source_claim": 2021,
+      "primary_source_url": "https://medakazukan.net/0808_grandblue/",
+      "source_urls": [
+        "https://medakazukan.net/0808_grandblue/"
+      ],
+      "source_record_number": null,
+      "reported_lineage_stages": [
+        "Rinkō Longfin source stock",
+        "Morpho source stock",
+        "Grand Bleu selection for fusahire and fin-line"
+      ],
+      "origin_evidence_tier": "A_referenced_breeding_stock_cross",
+      "claim_scope": "breeder/specialist report identifies crossing stock at population level; not validated individual fish",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": null
+    },
+    {
+      "id": "black-morpho-subtype-real-long-fin-tanaka-2021",
+      "batch": "06",
+      "name": "Black Morpho Subtype Real Long Fin",
+      "original_japanese": "ブラックモルフォ亜種リアルロングフィン",
+      "creator_attributed": "田中拓也 / Takuya Tanaka",
+      "creation_year_source_claim": 2021,
+      "primary_source_url": "https://medakazukan.net/0801blackmorphoasyureallongfin/",
+      "source_urls": [
+        "https://medakazukan.net/0801blackmorphoasyureallongfin/"
+      ],
+      "source_record_number": null,
+      "reported_lineage_stages": [
+        "Black Morpho Subtype source line",
+        "Selected Real Long Fin phenotype; donor stock not reported"
+      ],
+      "origin_evidence_tier": "B_family_selection_or_phenotype_relation",
+      "claim_scope": "historical associated stock or appearance only; not verified founding mating",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": null
+    },
+    {
+      "id": "wakasagi-morpho-subtype-wada-2022",
+      "batch": "06",
+      "name": "Wakasagi Morpho Subtype",
+      "original_japanese": "ワカサギモルフォ亜種",
+      "creator_attributed": "和田敏拓 / Toshihiro Wada",
+      "creation_year_source_claim": 2022,
+      "primary_source_url": "https://medakazukan.net/0844_wakasagimorphoasyu/",
+      "source_urls": [
+        "https://medakazukan.net/0844_wakasagimorphoasyu/"
+      ],
+      "source_record_number": null,
+      "reported_lineage_stages": [
+        "Seiryū Kiryū External-light (清流きりゅう体外光) source stock",
+        "Morpho source stock",
+        "Selection of Wakasagi-like internal black + Morpho subtype fin-line"
+      ],
+      "origin_evidence_tier": "A_referenced_breeding_stock_cross",
+      "claim_scope": "breeder/specialist report identifies crossing stock at population level; not validated individual fish",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": null
+    },
+    {
+      "id": "black-diamond-hirenaga-nakazato-2019",
+      "batch": "06",
+      "name": "Black Diamond Hirenaga",
+      "original_japanese": "ブラックダイヤヒレ長",
+      "creator_attributed": "中里良則 / Yoshinori Nakazato",
+      "creation_year_source_claim": 2019,
+      "primary_source_url": "https://medakazukan.net/0267_blackdiahirenaga/",
+      "source_urls": [
+        "https://medakazukan.net/0267_blackdiahirenaga/"
+      ],
+      "source_record_number": null,
+      "reported_lineage_stages": [
+        "Black Diamond source stock",
+        "Black Hirenaga source stock",
+        "2019 Nakazato selected Black Diamond Hirenaga"
+      ],
+      "origin_evidence_tier": "A_referenced_breeding_stock_cross",
+      "claim_scope": "breeder/specialist report identifies crossing stock at population level; not validated individual fish",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": null
+    },
+    {
+      "id": "black-diamond-hirenaga-daruma-unattributed",
+      "batch": "06",
+      "name": "Black Diamond Hirenaga Daruma",
+      "original_japanese": "ブラックダイヤヒレ長ダルマ",
+      "creator_attributed": null,
+      "creation_year_source_claim": null,
+      "primary_source_url": "https://medakazukan.net/0268_blackdiahirenagadharma/",
+      "source_urls": [
+        "https://medakazukan.net/0268_blackdiahirenagadharma/"
+      ],
+      "source_record_number": null,
+      "reported_lineage_stages": [
+        "Black Diamond Hirenaga phenotype family; Daruma expression documented",
+        "No confirmed mating record or breeder name for the Daruma modifier"
+      ],
+      "origin_evidence_tier": "B_family_selection_or_phenotype_relation",
+      "claim_scope": "historical associated stock or appearance only; not verified founding mating",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": null
+    },
+    {
+      "id": "blue-morpho-subtype-hikari-unattributed",
+      "batch": "06",
+      "name": "Blue Morpho Subtype Hikari",
+      "original_japanese": "青モルフォ亜種ヒカリ",
+      "creator_attributed": null,
+      "creation_year_source_claim": null,
+      "primary_source_url": "https://medakazukan.net/0839_aomorphohikari/",
+      "source_urls": [
+        "https://medakazukan.net/0839_aomorphohikari/"
+      ],
+      "source_record_number": null,
+      "reported_lineage_stages": [
+        "Blue Morpho Subtype source phenotype",
+        "Hikari expression; specific founder/donor pair not documented"
+      ],
+      "origin_evidence_tier": "B_family_selection_or_phenotype_relation",
+      "claim_scope": "historical associated stock or appearance only; not verified founding mating",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": null
+    },
+    {
+      "id": "seirakuan-black-multicolor-lame-2014",
+      "batch": "07",
+      "name": "Black Multicolor Lamé Miyuki",
+      "original_japanese": "黒ラメ幹之",
+      "creator_attributed": "静楽庵 / Seirakuan",
+      "creation_year_source_claim": 2014,
+      "primary_source_url": "https://medakazukan.net/0131_kuroramemiyuki/",
+      "source_urls": [
+        "https://medakazukan.net/0131_kuroramemiyuki/"
+      ],
+      "source_record_number": "0129",
+      "reported_lineage_stages": [
+        "Aurora-derived Black Miyuki stock",
+        "Wada's White Lamé Miyuki stock",
+        "Seirakuan black multicolored lamé selected breeding line (2014)"
+      ],
+      "origin_evidence_tier": "A_referenced_breeding_stock_cross",
+      "claim_scope": "breeder/specialist report identifies crossing stock at population level; not validated individual fish",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": "Source page URI bears 0131 but its on-page WEB Zukan record says 0129. Treat displayed Type No.0129 as authoritative, not URL numerals."
+    },
+    {
+      "id": "seirakuan-black-sapphire-lame-2020",
+      "batch": "07",
+      "name": "Black Lamé Miyuki Sapphire Line",
+      "original_japanese": "黒ラメ幹之サファイア系",
+      "creator_attributed": "静楽庵 / Seirakuan",
+      "creation_year_source_claim": 2020,
+      "primary_source_url": "https://medakazukan.net/0155_kuroramemiyukisafaiya/",
+      "source_urls": [
+        "https://medakazukan.net/0155_kuroramemiyukisafaiya/"
+      ],
+      "source_record_number": "0155",
+      "reported_lineage_stages": [
+        "Dorsal-finless Black Lamé Miyuki founding stock",
+        "Repeated selection for blue lamé",
+        "Black Sapphire stock presented in 2020"
+      ],
+      "origin_evidence_tier": "B_family_selection_or_phenotype_relation",
+      "claim_scope": "historical associated stock or appearance only; not verified founding mating",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": "A blue-lamé appearance alone does not authenticate a Seirakuan-origin Sapphire line."
+    },
+    {
+      "id": "seirakuan-reiwa-black-lame-2019",
+      "batch": "07",
+      "name": "Reiwa Black Lamé",
+      "original_japanese": "令和黒ラメ",
+      "creator_attributed": "静楽庵 / Seirakuan",
+      "creation_year_source_claim": 2019,
+      "primary_source_url": "https://medakazukan.net/0256_reiwakurolame/",
+      "source_urls": [
+        "https://medakazukan.net/0256_reiwakurolame/"
+      ],
+      "source_record_number": "0256",
+      "reported_lineage_stages": [
+        "Black Lamé Miyuki family",
+        "Reiwa semi-transparent / colored-fin selected phenotype; donor mating not given"
+      ],
+      "origin_evidence_tier": "B_family_selection_or_phenotype_relation",
+      "claim_scope": "historical associated stock or appearance only; not verified founding mating",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": "Term 'Reiwa gene' in breeder source is not a sequenced named locus, dominance certificate or allelic Mendelian model."
+    },
+    {
+      "id": "seirakuan-aurora-blue-sapphire-2021",
+      "batch": "07",
+      "name": "Aurora Lamé Miyuki Sapphire Line",
+      "original_japanese": "オーロララメ幹之サファイア系",
+      "creator_attributed": "静楽庵 / Seirakuan",
+      "creation_year_source_claim": 2021,
+      "primary_source_url": "https://medakazukan.net/0802_auroralamemiyukisapphire/",
+      "source_urls": [
+        "https://medakazukan.net/0802_auroralamemiyukisapphire/"
+      ],
+      "source_record_number": "0802",
+      "reported_lineage_stages": [
+        "Seirakuan Sapphire-family stock (family affiliation only)",
+        "Aurora semi-transparent blue-lamé selected line"
+      ],
+      "origin_evidence_tier": "B_family_selection_or_phenotype_relation",
+      "claim_scope": "historical associated stock or appearance only; not verified founding mating",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": "Do not infer this is the same cross as Wada's independently produced Pink Sapphire."
+    },
+    {
+      "id": "seirakuan-yellow-blue-aurora-sapphire-2021",
+      "batch": "07",
+      "name": "Yellow-Blue Aurora Lamé Sapphire Line",
+      "original_japanese": "オーロラ黄ラメ幹之サファイア系",
+      "creator_attributed": "静楽庵 / Seirakuan",
+      "creation_year_source_claim": 2021,
+      "primary_source_url": "https://medakazukan.net/0800_aurorakilamemiyukisapphire/",
+      "source_urls": [
+        "https://medakazukan.net/0800_aurorakilamemiyukisapphire/"
+      ],
+      "source_record_number": "0800",
+      "reported_lineage_stages": [
+        "Seirakuan Sapphire family (catalog lineage label)",
+        "Selected yellow-blue semi-transparent-scale expression"
+      ],
+      "origin_evidence_tier": "B_family_selection_or_phenotype_relation",
+      "claim_scope": "historical associated stock or appearance only; not verified founding mating",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": "Yellow/blue mixed body is not a genetically established dominant combination."
+    },
+    {
+      "id": "seirakuan-tricolor-sapphire-2021",
+      "batch": "07",
+      "name": "Tricolor Lamé Miyuki Sapphire Line",
+      "original_japanese": "三色ラメ幹之サファイア系",
+      "creator_attributed": "静楽庵 / Seirakuan",
+      "creation_year_source_claim": 2021,
+      "primary_source_url": "https://medakazukan.net/0803_sansyokulamemiyukisapphire/",
+      "source_urls": [
+        "https://medakazukan.net/0803_sansyokulamemiyukisapphire/"
+      ],
+      "source_record_number": "0803",
+      "reported_lineage_stages": [
+        "Seirakuan 2016 original multicolor Tricolor Lamé Miyuki (context)",
+        "2021 Sapphire-family blue-lamé tricolor selection; full pair unreported"
+      ],
+      "origin_evidence_tier": "B_family_selection_or_phenotype_relation",
+      "claim_scope": "historical associated stock or appearance only; not verified founding mating",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": "Differentiate multicolored lamé of original 2016 tricolor and blue-only lamé of 2021 Sapphire strain."
+    },
+    {
+      "id": "seirakuan-white-nishiki-sapphire-2021",
+      "batch": "07",
+      "name": "White Nishiki Lamé Miyuki Sapphire Line",
+      "original_japanese": "白錦ラメ幹之サファイア系",
+      "creator_attributed": "静楽庵 / Seirakuan",
+      "creation_year_source_claim": 2021,
+      "primary_source_url": "https://medakazukan.net/0748_sironisikimiyukisafaiya/",
+      "source_urls": [
+        "https://medakazukan.net/0748_sironisikimiyukisafaiya/"
+      ],
+      "source_record_number": "0748",
+      "reported_lineage_stages": [
+        "Seirakuan Sapphire-family stock",
+        "Selected white Nishiki mottled expression"
+      ],
+      "origin_evidence_tier": "B_family_selection_or_phenotype_relation",
+      "claim_scope": "historical associated stock or appearance only; not verified founding mating",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": "Related to, not automatically equal to, generic white and mottled lamé medaka of unrelated bloodlines."
+    },
+    {
+      "id": "seirakuan-reiwa-black-sapphire-2022",
+      "batch": "07",
+      "name": "Reiwa Black Lamé Miyuki Sapphire Line",
+      "original_japanese": "令和黒ラメ幹之サファイア系",
+      "creator_attributed": "静楽庵 / Seirakuan",
+      "creation_year_source_claim": 2022,
+      "primary_source_url": "https://medakazukan.net/0886_reiwakurolamemiyukisapphire/",
+      "source_urls": [
+        "https://medakazukan.net/0886_reiwakurolamemiyukisapphire/"
+      ],
+      "source_record_number": "0886",
+      "reported_lineage_stages": [
+        "Seirakuan 2020 Black Lamé Sapphire line",
+        "Seirakuan Reiwa semi-transparent colored-fin source phenotype",
+        "2022 Reiwa Sapphire selected composite"
+      ],
+      "origin_evidence_tier": "B_family_selection_or_phenotype_relation",
+      "claim_scope": "historical associated stock or appearance only; not verified founding mating",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": "The breeder's word 遺伝子 ('gene') is not proof of a sequenced allele, causal mutation, or dominance in commercial fish."
+    },
+    {
+      "id": "ohba-takayasu-kakiiro-yozakura-blue-lame-2021",
+      "batch": "07",
+      "name": "Persimmon Yozakura Blue Lamé",
+      "original_japanese": "柿色夜桜ブルーラメ",
+      "creator_attributed": "大場貴保 / Takayasu Ōba",
+      "creation_year_source_claim": 2021,
+      "primary_source_url": "https://medakazukan.net/0884_kakiiroyozakurabluelame/",
+      "source_urls": [
+        "https://medakazukan.net/0884_kakiiroyozakurabluelame/"
+      ],
+      "source_record_number": "0884",
+      "reported_lineage_stages": [
+        "Yozakura base stock",
+        "Persimmon-orange Yozakura selected subline",
+        "Blue-lamé recurrent selection (non-Sapphire family)"
+      ],
+      "origin_evidence_tier": "B_family_selection_or_phenotype_relation",
+      "claim_scope": "historical associated stock or appearance only; not verified founding mating",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": "Creator is 大場貴保 Takayasu Ōba, NOT 大場幸雄 Yukio Ōba (different prior-batch breeder). WEB Zukan defines 'blue lamé' here as phenotypically blue but not Seirakuan Sapphire bloodline."
+    },
+    {
+      "id": "mai-medaka-reckless-2021",
+      "batch": "07",
+      "name": "Reckless",
+      "original_japanese": "レクリス",
+      "creator_attributed": "舞めだか / Mai Medaka",
+      "creation_year_source_claim": 2021,
+      "primary_source_url": "https://medakazukan.net/0871_reckless/",
+      "source_urls": [
+        "https://medakazukan.net/0871_reckless/"
+      ],
+      "source_record_number": "0871",
+      "reported_lineage_stages": [],
+      "origin_evidence_tier": "C_phenotype_only_origins_unreported",
+      "claim_scope": "historical associated stock or appearance only; not verified founding mating",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": "Absence of breeding history is not a license to invent yellow Aurora × Hirenaga parents."
+    },
+    {
+      "id": "mai-medaka-icebreak-2022",
+      "batch": "07",
+      "name": "Ice Break",
+      "original_japanese": "アイスブレイク",
+      "creator_attributed": "舞めだか / Mai Medaka, Kumamoto",
+      "creation_year_source_claim": 2022,
+      "primary_source_url": "https://medakazukan.net/0888_icebreak/",
+      "source_urls": [
+        "https://medakazukan.net/0888_icebreak/"
+      ],
+      "source_record_number": "0888",
+      "reported_lineage_stages": [],
+      "origin_evidence_tier": "C_phenotype_only_origins_unreported",
+      "claim_scope": "historical associated stock or appearance only; not verified founding mating",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": "Hikari dorsal body reflection is not identical to the scattered individual blue-lamé spots."
+    },
+    {
+      "id": "aurora-black-sugita-2014",
+      "batch": "08",
+      "name": "Aurora Black",
+      "original_japanese": "オーロラブラック",
+      "creator_attributed": "杉田正洋 / Masahiro Sugita",
+      "creation_year_source_claim": 2014,
+      "primary_source_url": "https://medakazukan.net/0222_aurorablack/",
+      "source_urls": [
+        "https://medakazukan.net/0222_aurorablack/"
+      ],
+      "source_record_number": "0222",
+      "reported_lineage_stages": [],
+      "origin_evidence_tier": "C_phenotype_only_origins_unreported",
+      "claim_scope": "historical associated stock or appearance only; not verified founding mating",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": "Black rim is continuous scale-margin pigmentation, NOT independent mottled black blotches. The reported percentage is not an allele dominance ratio."
+    },
+    {
+      "id": "aurora-black-hikari-unattributed",
+      "batch": "08",
+      "name": "Aurora Black Hikari",
+      "original_japanese": "オーロラブラックヒカリ",
+      "creator_attributed": null,
+      "creation_year_source_claim": null,
+      "primary_source_url": "https://medakazukan.net/0223_aurorablackhikari/",
+      "source_urls": [
+        "https://medakazukan.net/0223_aurorablackhikari/"
+      ],
+      "source_record_number": "0223",
+      "reported_lineage_stages": [
+        "Aurora Black breeder phenotype family; Hikari individuals reported among the source population"
+      ],
+      "origin_evidence_tier": "B_family_selection_or_phenotype_relation",
+      "claim_scope": "historical associated stock or appearance only; not verified founding mating",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": "Do not auto-attribute the Hikari variation's creation to Sugita because he originated the base Aurora Black."
+    },
+    {
+      "id": "aurora-black-daruma-unattributed",
+      "batch": "08",
+      "name": "Aurora Black Daruma",
+      "original_japanese": "オーロラブラックダルマ",
+      "creator_attributed": null,
+      "creation_year_source_claim": null,
+      "primary_source_url": "https://medakazukan.net/0224_aurorablackdharma/",
+      "source_urls": [
+        "https://medakazukan.net/0224_aurorablackdharma/"
+      ],
+      "source_record_number": "0224",
+      "reported_lineage_stages": [],
+      "origin_evidence_tier": "C_phenotype_only_origins_unreported",
+      "claim_scope": "historical associated stock or appearance only; not verified founding mating",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": "Daruma body form can affect movement and reproduction; avoid treating it as a guaranteed welfare-neutral genetic variant or a separate founded strain."
+    },
+    {
+      "id": "oiran-kawato-2019",
+      "batch": "08",
+      "name": "Oiran",
+      "original_japanese": "花魁",
+      "creator_attributed": "川戸博貴 / Hiroki Kawato",
+      "creation_year_source_claim": 2019,
+      "primary_source_url": "https://medakazukan.net/0769_oiran/",
+      "source_urls": [
+        "https://medakazukan.net/0769_oiran/"
+      ],
+      "source_record_number": "0769",
+      "reported_lineage_stages": [],
+      "origin_evidence_tier": "C_phenotype_only_origins_unreported",
+      "claim_scope": "historical associated stock or appearance only; not verified founding mating",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": "The page mentions Benioiran/red derivative but does not document its sire/dam; not included as a separately authenticated line."
+    },
+    {
+      "id": "ginga-hangetsu-ikeya-undated",
+      "batch": "08",
+      "name": "Ginga Hangetsu (Silver Half Moon)",
+      "original_japanese": "銀河半月",
+      "creator_attributed": "池谷雄二 / Yuji Ikeya",
+      "creation_year_source_claim": null,
+      "primary_source_url": "https://medakazukan.net/0637_gingahangetu/",
+      "source_urls": [
+        "https://medakazukan.net/0637_gingahangetu/"
+      ],
+      "source_record_number": "0637",
+      "reported_lineage_stages": [],
+      "origin_evidence_tier": "C_phenotype_only_origins_unreported",
+      "claim_scope": "historical associated stock or appearance only; not verified founding mating",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": "The page uses Hangetsu for longfin Hikari silhouette; do not infer direct original Ginga × Hirenaga parents from name or body shape."
+    },
+    {
+      "id": "kaiji-tanikuni-undated",
+      "batch": "08",
+      "name": "Kaiji (Yellow-Finned Orochi Variant)",
+      "original_japanese": "カイジ / 改志",
+      "creator_attributed": "谷國昌博 / Masahiro Tanikuni",
+      "creation_year_source_claim": null,
+      "primary_source_url": "https://medakazukan.net/0755_kaiji/",
+      "source_urls": [
+        "https://medakazukan.net/0755_kaiji/"
+      ],
+      "source_record_number": "0755",
+      "reported_lineage_stages": [],
+      "origin_evidence_tier": "C_phenotype_only_origins_unreported",
+      "claim_scope": "historical associated stock or appearance only; not verified founding mating",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": "Kaiji is not an alias for the pre-existing Orochi catalog page; producer identity and yellow-fin morphology are distinct, but not a DNA marker."
+    },
+    {
+      "id": "black-pearl-taki-2009",
+      "batch": "08",
+      "name": "Black Pearl",
+      "original_japanese": "ブラックパール",
+      "creator_attributed": "滝晃司 / Koji Taki",
+      "creation_year_source_claim": 2009,
+      "primary_source_url": "https://medakazukan.net/0485_blackpearl/",
+      "source_urls": [
+        "https://medakazukan.net/0485_blackpearl/"
+      ],
+      "source_record_number": "0485",
+      "reported_lineage_stages": [],
+      "origin_evidence_tier": "C_phenotype_only_origins_unreported",
+      "claim_scope": "historical associated stock or appearance only; not verified founding mating",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": "The Small-Eye phenotype has specialist-reported vision/feeding difficulties; do not claim health benefits or a proven single recessive genotype from descriptive breeder language."
+    },
+    {
+      "id": "white-miyuki-hikari-taki-2010",
+      "batch": "08",
+      "name": "White Miyuki Hikari",
+      "original_japanese": "白幹之ヒカリ",
+      "creator_attributed": "滝晃司 / Koji Taki",
+      "creation_year_source_claim": 2010,
+      "primary_source_url": "https://medakazukan.net/0105_siromiyukihikari/",
+      "source_urls": [
+        "https://medakazukan.net/0105_siromiyukihikari/"
+      ],
+      "source_record_number": "0105",
+      "reported_lineage_stages": [
+        "White Miyuki (2007 origin) phenotype family",
+        "Taki-selected Hikari body expression (2010)"
+      ],
+      "origin_evidence_tier": "B_family_selection_or_phenotype_relation",
+      "claim_scope": "historical associated stock or appearance only; not verified founding mating",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": "Hikari body iridophore dorsal symmetry is distinct from Miyuki exterior shine, even when both appear in one fish."
+    },
+    {
+      "id": "white-miyuki-hikari-daruma-taki-2010",
+      "batch": "08",
+      "name": "White Miyuki Hikari Daruma",
+      "original_japanese": "白幹之ヒカリダルマ",
+      "creator_attributed": "滝晃司 / Koji Taki",
+      "creation_year_source_claim": 2010,
+      "primary_source_url": "https://medakazukan.net/0107_siromiyukihikaridharma/",
+      "source_urls": [
+        "https://medakazukan.net/0107_siromiyukihikaridharma/"
+      ],
+      "source_record_number": "0107",
+      "reported_lineage_stages": [
+        "White Miyuki Hikari phenotype family",
+        "Hikari Daruma body-form selection in 2010"
+      ],
+      "origin_evidence_tier": "B_family_selection_or_phenotype_relation",
+      "claim_scope": "historical associated stock or appearance only; not verified founding mating",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": "No source supports assuming White Miyuki Hikari (No.0105) fish were a direct named sire/dam cross of the Daruma variant."
+    },
+    {
+      "id": "tennyo-hangetsu-unattributed",
+      "batch": "08",
+      "name": "Tennyo Hangetsu",
+      "original_japanese": "天女半月",
+      "creator_attributed": null,
+      "creation_year_source_claim": null,
+      "primary_source_url": "https://medakazukan.net/0868_tennnyohangetu/",
+      "source_urls": [
+        "https://medakazukan.net/0868_tennnyohangetu/"
+      ],
+      "source_record_number": "0868",
+      "reported_lineage_stages": [
+        "Tennyo / Silky Hikari source family (Sugita 2013)",
+        "Subsequent fin-length selection, actual breeder not documented"
+      ],
+      "origin_evidence_tier": "B_family_selection_or_phenotype_relation",
+      "claim_scope": "historical associated stock or appearance only; not verified founding mating",
+      "commercial_genotype": "UNKNOWN",
+      "dominance": "UNKNOWN",
+      "photo_rights": "NOT_GRANTED",
+      "authenticated_standalone_bloodline": false,
+      "needs_alias_reconciliation": true,
+      "requires_independent_review": true,
+      "notes": "Do not assign Sugita as creator of Tennyo Hangetsu; source credits him ONLY for the 2013 base Tennyo."
+    }
+  ]
+}

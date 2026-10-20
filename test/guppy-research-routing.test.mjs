@@ -38,14 +38,14 @@ function guildFixture({publicVisible=true, forumName='🐠・guppy-research'}={}
     },
   };
   const guild={roles:{everyone},client:{user:{id:'bot'}},
-    channels:{cache:new Map([['category',category],['forum',forum]])}};
+    channels:{cache:new Map([['category',category],['forum',forum]]),async fetchActiveThreads(){return {threads:{size:0}};}}};
   return {guild,created};
 }
 
 test('a reviewed guppy strain is routed only into the existing public guppy forum with a verified receipt',async()=>{
   const {guild,created}=guildFixture();
   const out=await publishAquapediaCards(guild,approval);
-  assert.equal(out.posted,1);
+  assert.equal(out.posted,1,JSON.stringify(out));
   assert.equal(out.receipts.length,1);
   assert.equal(out.receipts[0].verified,true);
   assert.match(created[0].name,/GUP-001/);
@@ -75,6 +75,7 @@ test('guppy publishing fails closed for missing approvals, private forum or mixe
 test('guppy publisher refuses external or unregistered pages, unsupported taxa and images',async()=>{
   for(const patch of [
     {organismGroup:'shrimp'},
+    {id:'GUP-002'}, // A valid but different entry ID must not claim this article.
     {websiteUrl:'https://aquapedia.app/shrimpapedia/'},
     {websiteUrl:'https://example.net/guppypedia/entries/gup-001/'},
     {websiteUrl:'https://aquapedia.app/guppypedia/care/'},

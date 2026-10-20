@@ -147,7 +147,11 @@ export function createResearchService({ jarvis, aquapedia, store }) {
         confidence: result.confidence ?? null,
         duplicateOf: result.duplicateOf ?? null,
         files: written,
-        discordPublicationApproved: result.discordPublicationApproved === true,
+        discordPublicationApproved: status === 'completed' && result.discordPublicationApproved === true,
+        publicAudienceApproved: status === 'completed' && result.publicAudienceApproved === true,
+        publicShrimpResearch: status === 'completed' && result.publicShrimpResearch === true,
+        publicArowanaResearch: status === 'completed' && result.publicArowanaResearch === true,
+        publicGuppyResearch: status === 'completed' && result.publicGuppyResearch === true,
         cards: Array.isArray(result.cards) ? result.cards.slice(0, 30) : [],
       };
     },

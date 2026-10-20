@@ -70,6 +70,7 @@ const CORE_LAYOUT = [
       ['🐟・medaka-guides', 'Medaka strain, care, breeding, and identification guides.'],
       ['🦐・shrimp-guides', 'Freshwater shrimp care, grading, breeding, and identification guides.'],
       ['🩺・care-help', 'General freshwater aquarium husbandry and care help.'],
+      ['🐟・corydoras-guides', 'Corydoraspedia guides and source-linked identity, husbandry, breeding and evidence references. The public Corydoras research forum lives under Aquapedia — Species & Genetics.'],
       ['🔎・research-requests', 'Suggest medaka, shrimp, Corydoradinae, pleco, arowana and freshwater research questions for Aquapedia; do not share private breeder correspondence or copyrighted files.'],
       ['📖・sources-and-credits', 'How Aquapedia checks scientific evidence, species names, breeding claims and photo permissions; links and credited original sources instead of copied publications.'],
     ],

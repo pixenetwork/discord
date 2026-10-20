@@ -262,7 +262,7 @@ export async function publishAquapediaCards(guild, result) {
       || ((publicArowana || publicGuppy) && (!Array.isArray(card.photos) || card.photos.length !== 0))
       || !Array.isArray(card.sources) || !card.sources.some((source) => httpsUrl(typeof source === 'string' ? source : source?.url))
       || (publicArowana && !/^https:\/\/aquapedia\.app\/arowanapedia\/[a-z0-9-]+\/$/.test(String(card.websiteUrl ?? '')))
-      || (publicGuppy && !/^https:\/\/aquapedia\.app\/guppypedia\/(?:entries\/gup-[0-9]{3}|care|strains|genetics|breeding|food|health|endlers)\/$/.test(String(card.websiteUrl ?? '')))) {
+      || (publicGuppy && !/^https:\/\/aquapedia\.app\/guppypedia\/(?:entries\/gup-[0-9]{3}|care|strains|genetics|breeding|food|health|endlers)\/$/.test(String(card.websiteUrl ?? ''))))) {
       skipped += 1;
       continue;
     }

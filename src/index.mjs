@@ -10,7 +10,7 @@ import { createOrderService } from './orders.mjs';
 import { createGptController } from './gpt.mjs';
 import { createPaidOrderWebhookHandler } from './webhook-handler.mjs';
 import { handleInteraction, registerGuildCommands } from './commands.mjs';
-import { provisionTranslatedPublicationsForum, provisionShrimpPublicResearchForum, provisionArowanaPublicResearchForum } from './layout.mjs';
+import { provisionTranslatedPublicationsForum, provisionShrimpPublicResearchForum, provisionArowanaPublicResearchForum, provisionGuppyPublicResearchResources } from './layout.mjs';
 
 const config = loadConfig();
 assertDiscordConfig(config);
@@ -62,6 +62,8 @@ client.once(Events.ClientReady, async (readyClient) => {
     if (publicShrimp.status !== 'ready') console.warn(`Shrimpapedia public forum not provisioned: ${publicShrimp.status}`);
     const publicArowana = await provisionArowanaPublicResearchForum(guild).catch(() => ({ status: 'setup_unavailable' }));
     if (publicArowana.status !== 'ready') console.warn(`Arowanapedia public forum not provisioned: ${publicArowana.status}`);
+    const publicGuppy = await provisionGuppyPublicResearchResources(guild).catch(() => ({ status: 'setup_unavailable' }));
+    if (publicGuppy.status !== 'ready') console.warn(`Guppypedia public resources not provisioned: ${publicGuppy.status}`);
     await registerGuildCommands(guild);
     await gpt.register(guild);
     bootstrapComplete = true;

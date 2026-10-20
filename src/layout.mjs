@@ -69,6 +69,7 @@ const CORE_LAYOUT = [
       ['📚・aquapedia', 'Aquaphoria knowledge base highlights and Aquapedia updates.'],
       ['🐟・medaka-guides', 'Medaka strain, care, breeding, and identification guides.'],
       ['🦐・shrimp-guides', 'Freshwater shrimp care, grading, breeding, and identification guides.'],
+      ['🐠・guppy-guides', 'Guppypedia care, breeding, strain, genetics, feeding and health guides.'],
       ['🩺・care-help', 'General freshwater aquarium husbandry and care help.'],
     ],
     forums: [{
@@ -79,6 +80,10 @@ const CORE_LAYOUT = [
       name: '🐉・arowana-research',
       topic: 'Public Aquapedia arowana species, geographic origins, genetics, husbandry, breeders and conservation. Claims are evidence-labelled and wildlife collection localities are protected.',
       tags: ['Species', 'Genetics', 'Regional', 'Breeding', 'Conservation'].map((name) => ({ name, moderated: false })),
+    }, {
+      name: '🐠・guppy-research',
+      topic: 'Public Guppypedia source-labelled guppy traits and husbandry. Trade names do not establish a documented breeder pedigree. Endler lineage and species boundaries are explicit.',
+      tags: ['Strain', 'Care', 'Genetics', 'Breeding', 'Health', 'Species'].map((name) => ({ name, moderated: false })),
     }],
   },
   {
@@ -344,3 +349,23 @@ export async function provisionShrimpPublicResearchForum(guild) {
 export async function provisionArowanaPublicResearchForum(guild) {
   return provisionPublicAquapediaForum(guild, '🐉・arowana-research');
 }
+
+// Public guppy resources extend the existing Aquapedia category only.
+export async function provisionGuppyPublicResearchResources(guild) {
+  const result = await provisionPublicAquapediaForum(guild, '🐠・guppy-research');
+  if (result.status !== 'ready') return result;
+  const category = guild.channels.cache.get(result.categoryId);
+  const everyone = guild.roles.everyone;
+  if (!category || !category.permissionsFor?.(everyone)?.has(PermissionFlagsBits.ViewChannel)
+    || !category.permissionsFor?.(everyone)?.has(PermissionFlagsBits.ReadMessageHistory)) {
+    return { status: 'category_not_public' };
+  }
+  const text = await ensureTextChannel(guild, category, '🐠・guppy-guides',
+    'Public source-backed Guppypedia care, breeding, food, genetics and verified name guides.');
+  if (!text.permissionsFor?.(everyone)?.has(PermissionFlagsBits.ViewChannel)
+    || !text.permissionsFor?.(everyone)?.has(PermissionFlagsBits.ReadMessageHistory)) {
+    return { status: 'guides_not_public' };
+  }
+  return { ...result, guidesChannelId: text.id };
+}
+

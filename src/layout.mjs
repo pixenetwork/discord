@@ -82,8 +82,16 @@ const CORE_LAYOUT = [
       ['📚・aquapedia', 'Aquaphoria knowledge base highlights and Aquapedia updates.'],
       ['🐟・medaka-guides', 'Medaka strain, care, breeding, and identification guides.'],
       ['🦐・shrimp-guides', 'Freshwater shrimp care, grading, breeding, and identification guides.'],
+      ['🐠・guppy-guides', 'Public source-backed Guppypedia care, breeding, food, genetics and verified name guides.'],
       ['🩺・care-help', 'General freshwater aquarium husbandry and care help.'],
     ],
+    forums: [{
+      id: '1562195139353645146',
+      name: '🐠・guppy-research',
+      protectExisting: true,
+      topic: 'Public Guppypedia source-labelled guppy traits and husbandry. Trade names do not establish a documented breeder pedigree. Endler lineage and species boundaries are explicit.',
+      tags: ['Strain', 'Care', 'Genetics', 'Breeding', 'Health', 'Species'].map(name => ({ name, moderated: false })),
+    }],
   },
   {
     category: '🧬・AQUAPEDIA — SPECIES & GENETICS',
@@ -178,8 +186,7 @@ const CORE_LAYOUT = [
         topic: 'Aquapedia public Medaka Trip / メダカトリップ — issue number, subject, English reading guide, references and historical context. No republished copyrighted magazine scans.',
         tags: MAGAZINE_ISSUE_TAGS,
       },
-    ],
-  },
+    ],  },
   {
     category: '🌿・COMMUNITY',
     channels: [
@@ -468,7 +475,10 @@ export function publicationTagDefinitions() {
 }
 
 async function provisionPublicAquapediaForum(guild, name) {
-  const section = CORE_LAYOUT.find((entry) => entry.category === '🧬・AQUAPEDIA — SPECIES & GENETICS');
+  const categoryName = name === '🐠・guppy-research'
+    ? '📚・AQUAPEDIA'
+    : '🧬・AQUAPEDIA — SPECIES & GENETICS';
+  const section = CORE_LAYOUT.find((entry) => entry.category === categoryName);
   const spec = section?.forums?.find((entry) => entry.name === name);
   if (!spec) throw new Error('Aquapedia public research forum definition is missing');
   // Do not make an existing private category public or create a competing one.
@@ -496,7 +506,7 @@ async function provisionPublicAquapediaForum(guild, name) {
     || !existing.permissionsFor?.(everyone)?.has(PermissionFlagsBits.ReadMessageHistory))) {
     return { status: 'forum_not_public' };
   }
-  const channel = await ensureForumChannel(guild, category, spec, undefined, (name === '🦐・shrimp-research' ? 'Aquaphoria public shrimp research forum provisioning' : 'Aquaphoria public arowana research forum provisioning'));
+  const channel = await ensureForumChannel(guild, category, spec, undefined, 'Aquaphoria public ' + name + ' forum verification');
   if (!channel.permissionsFor?.(everyone)?.has(PermissionFlagsBits.ViewChannel)
     || !channel.permissionsFor?.(everyone)?.has(PermissionFlagsBits.ReadMessageHistory)) {
     return { status: 'forum_not_public' };
@@ -510,4 +520,23 @@ export async function provisionShrimpPublicResearchForum(guild) {
 
 export async function provisionArowanaPublicResearchForum(guild) {
   return provisionPublicAquapediaForum(guild, '🐉・arowana-research');
+}
+
+// Public guppy resources extend the existing Aquapedia category only.
+export async function provisionGuppyPublicResearchResources(guild) {
+  const result = await provisionPublicAquapediaForum(guild, '🐠・guppy-research');
+  if (result.status !== 'ready') return result;
+  const category = guild.channels.cache.get(result.categoryId);
+  const everyone = guild.roles.everyone;
+  if (!category || !category.permissionsFor?.(everyone)?.has(PermissionFlagsBits.ViewChannel)
+    || !category.permissionsFor?.(everyone)?.has(PermissionFlagsBits.ReadMessageHistory)) {
+    return { status: 'category_not_public' };
+  }
+  const text = await ensureTextChannel(guild, category, '🐠・guppy-guides',
+    'Public source-backed Guppypedia care, breeding, food, genetics and verified name guides.');
+  if (!text.permissionsFor?.(everyone)?.has(PermissionFlagsBits.ViewChannel)
+    || !text.permissionsFor?.(everyone)?.has(PermissionFlagsBits.ReadMessageHistory)) {
+    return { status: 'guides_not_public' };
+  }
+  return { ...result, guidesChannelId: text.id };
 }

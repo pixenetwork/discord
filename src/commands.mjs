@@ -7,11 +7,15 @@ import {
 import { calculateRetailBreakdown, centsToMoney, moneyToCents } from './pricing.mjs';
 import { ensureVendorWorkspace, provisionAquaphoriaLayout } from './layout.mjs';
 import { publishAquapediaCards, persistVerifiedReceipts } from './aquapedia-posts.mjs';
+import { createShrimpReleaseService } from './shrimp-release-service.mjs';
+const shrimpReleaseService = createShrimpReleaseService();
 import {
   getCanonicalStaffRole,
   isCanonicalStaff,
   revokeVendorAccess,
 } from './authorization.mjs';
+
+import { aquapediaDmCommand, aquapediaDmController } from './breeder-dm.mjs';
 
 const PRODUCT_CATEGORIES = [
   ['Live fish', 'live_fish'],
@@ -316,6 +320,19 @@ function commandDefinitions() {
       .addChoices({ name: 'Strain', value: 'strain' }, { name: 'Breeder', value: 'breeder' }))
     .addStringOption((option) => option.setName('name').setDescription('Strain or breeder name').setRequired(true).setMaxLength(120));
 
+  const researchQueue = new SlashCommandBuilder()
+    .setName('research-queue')
+    .setDescription('Owner-only view of the local Aquapedia research inbox')
+    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator);
+
+  const shrimpRelease = new SlashCommandBuilder()
+    .setName('shrimp-release')
+    .setDescription('Owner-only Shrimpapedia release with verified Discord receipts')
+    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
+    .addSubcommand((sub) => sub.setName('status').setDescription('Preview pinned 22-record release and saved receipt count'))
+    .addSubcommand((sub) => sub.setName('canary').setDescription('Owner approval: publish and verify one breeder post'))
+    .addSubcommand((sub) => sub.setName('finish').setDescription('Owner approval: publish remaining 21 after verified canary'));
+
   const order = new SlashCommandBuilder()
     .setName('order')
     .setDescription('Manage your Aquaphoria fulfillment tickets')
@@ -367,7 +384,7 @@ function commandDefinitions() {
         ))
       .addStringOption((option) => option.setName('details').setDescription('Tell us what you need help with').setRequired(true).setMaxLength(1000)));
 
-  return [aquaphoria, vendor, catalog, product, research, order, payout, ticket];
+  return [aquaphoria, vendor, catalog, product, research, researchQueue, shrimpRelease, order, payout, ticket, aquapediaDmCommand()];
 }
 
 async function requireVendor(interaction, store) {
@@ -673,6 +690,33 @@ async function handleProduct(interaction, deps) {
   return interaction.editReply(`✅ Your private product submission ticket is ready: <#${channel.id}>\nSubmission ID: \`${id}\``);
 }
 
+async function handleResearchQueue(interaction, deps) {
+  if (!isOwner(interaction, deps.config)) {
+    return interaction.reply({ content: 'Only the Aquaphoria owner can inspect the research queue.', ephemeral: true });
+  }
+  await interaction.deferReply({ ephemeral: true });
+  const report = await deps.store.listResearchJobs({ limit: 15 });
+  const totals = Object.entries(report.counts).map(([status, count]) => status + ': ' + count).join(', ') || 'empty';
+  const sanitize = (value, max = 70) => String(value ?? '').replace(/[\r\n\t]/g, ' ')
+    .replace(/[@`*_~|<>]/g, '').slice(0, max);
+  const lines = report.jobs.map((job) => {
+    const updatedMs = Date.parse(job.updatedAt ?? job.createdAt ?? '');
+    const stale = job.status === 'started' && Number.isFinite(updatedMs)
+      && Date.now() - updatedMs > 15 * 60 * 1000;
+    const status = stale ? 'started (stale; needs review)' : sanitize(job.status, 30);
+    const id = sanitize(job.id, 8);
+    return '`' + id + '` ' + status + ' — ' + sanitize(job.name || job.entityType || 'unnamed');
+  });
+  const uniqueLine = Number.isSafeInteger(report.distinctTopics)
+    ? report.distinctTopics + ' distinct topics; ' + report.repeatRequests + ' repeat requests.\n'
+    : '';
+  const message = '**Aquapedia local research inbox:** ' + report.total + ' total (' + totals + ')\n'
+    + uniqueLine
+    + (lines.join('\n') || 'No requests recorded.') + '\n'
+    + 'Read-only: stale jobs have not been retried or published. Jarvis handoff requires verified configuration.';
+  return interaction.editReply(message.slice(0, 1900));
+}
+
 async function handleResearch(interaction, deps) {
   const vendor = await deps.store.getVendorByDiscordUser(interaction.user.id);
   const staff = await isCanonicalStaff(interaction, deps.store);
@@ -775,6 +819,30 @@ async function handlePayout(interaction, deps) {
   });
 }
 
+async function handleShrimpRelease(interaction, deps) {
+  if (!isOwner(interaction, deps.config)) {
+    return interaction.reply({ content: 'Only the Aquaphoria owner can run Shrimpapedia releases.', ephemeral: true });
+  }
+  if (!interaction.guild?.id || interaction.guild.id !== deps.config.discord.guildId) {
+    return interaction.reply({ content: 'Shrimpapedia releases are restricted to the configured Aquaphoria server.', ephemeral: true });
+  }
+  const mode = interaction.options.getSubcommand(true);
+  await interaction.deferReply({ ephemeral: true });
+  const outcome = await shrimpReleaseService.run({
+    mode, guild: interaction.guild, store: deps.store, ownerApproved: true,
+  });
+  const tag = outcome.stage;
+  const count = outcome.verifiedCount ?? 0;
+  const body = tag === 'completed' ? '✅ All 22 Shrimpapedia posts have saved Discord message receipts.'
+    : tag === 'canary_verified' ? '✅ Canary verified; ' + count + '/22 message receipts saved. Run `/shrimp-release finish` to post the remaining records.'
+      : tag === 'not_started' ? '📖 The pinned 22-record Shrimpapedia snapshot is ready. No verified public receipts stored.'
+        : tag === 'blocked_canary_required' ? '⛔ Publish the one-post canary and save its verified receipt before attempting the rest.'
+          : tag === 'canary_unverified' ? '⚠️ Canary message could not be verified; inspect Discord before retrying.'
+            : tag === 'partial' ? '⚠️ Partial publish: ' + count + '/22 receipts saved; inspect missing/uncertain posts before retrying.'
+              : '⚠️ Shrimpapedia release state: ' + tag + '. No unsupported publication claims made.';
+  return interaction.editReply({ content: body.slice(0, 1800) });
+}
+
 async function handleTicket(interaction, deps) {
   const type = interaction.options.getString('type', true);
   const details = interaction.options.getString('details', true);
@@ -844,13 +912,16 @@ export function createCommandRouter(deps) {
     definitions: commandDefinitions().map((command) => command.toJSON()),
 
     async handle(interaction) {
-      if (!interaction.isChatInputCommand()) return;
       try {
+        if (await aquapediaDmController.handle(interaction, deps)) return;
+        if (!interaction.isChatInputCommand()) return;
         if (interaction.commandName === 'aquaphoria') return await handleSetup(interaction, deps);
         if (interaction.commandName === 'vendor') return await handleVendor(interaction, deps);
         if (interaction.commandName === 'catalog') return await handleCatalog(interaction, deps);
         if (interaction.commandName === 'product') return await handleProduct(interaction, deps);
         if (interaction.commandName === 'research') return await handleResearch(interaction, deps);
+        if (interaction.commandName === 'research-queue') return await handleResearchQueue(interaction, deps);
+        if (interaction.commandName === 'shrimp-release') return await handleShrimpRelease(interaction, deps);
         if (interaction.commandName === 'order') return await handleOrder(interaction, deps);
         if (interaction.commandName === 'payout') return await handlePayout(interaction, deps);
         if (interaction.commandName === 'ticket') return await handleTicket(interaction, deps);

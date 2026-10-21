@@ -220,3 +220,22 @@ test('moderator tag reorder preserves IDs without metadata writes',async()=>{
   assert.equal(f.edits.some(x=>x.name===target.name),false);
   assert.deepEqual(f.creations,[]);
 });
+
+test('new duplicate shrimp and arowana forums in the intro category fail closed before any writes', async () => {
+  const f = existingAquapediaLayoutFixture();
+  const intro = f.all.find(x => x.name === '📚・AQUAPEDIA');
+  for (const [name, id] of [
+    ['🦐・shrimp-research', '1562207090670305280'],
+    ['🐉・arowana-research', '1562207092239110264'],
+  ]) {
+    const canonical = f.all.find(x => x.name === name);
+    f.all.push({ ...canonical, id, parentId: intro.id, availableTags: canonical.availableTags.map(x => ({ ...x })) });
+  }
+  await assert.rejects(
+    () => provisionAquaphoriaLayout(f.guild, { ownerUserId: 'owner-user' }),
+    /collision|duplicate/i,
+  );
+  assert.deepEqual(f.creations, []);
+  assert.deepEqual(f.edits, []);
+  assert.deepEqual(f.permissionChanges, []);
+});

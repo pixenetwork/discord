@@ -129,8 +129,10 @@ test('canonical Aquapedia public layout matches three live category identities',
   assert.equal(intro.categoryId, '1557338241903099945');
   assert.equal(species.categoryId, '1561430495680667719');
   assert.equal(publications.categoryId, '1561430509328932955');
-  assert.equal(intro.channels.length, 4);
-  assert.equal(intro.forums, undefined);
+  assert.equal(intro.channels.length, 5);
+  assert.equal(intro.forums.length, 1);
+  assert.equal(intro.forums[0].name, '🐠・guppy-research');
+  assert.equal(intro.forums[0].id, '1562195139353645146');
   assert.deepEqual(species.channels, []);
   assert.deepEqual(publications.channels, []);
   assert.equal(species.forums.length, 6);

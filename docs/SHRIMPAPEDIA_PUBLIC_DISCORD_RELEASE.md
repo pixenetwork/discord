@@ -67,3 +67,65 @@ public content and review state. It does not log in, create channels or post.
    are independently verified. The website being live is not a Discord receipt.
 
 Current release status: **code prepared; Discord posts not yet verified live**.
+
+## Deterministic 22-record publication simulation (no Discord connection)
+
+After downloading the current Aquapedia breeder-card and competition-highlight
+JSON manifests to the **same authorized machine**, run:
+
+```sh
+node tools/verify-shrimp-public-batch.mjs <breeder-cards.json> <competition-highlights.json>
+node tools/verify-shrimp-batch-e2e.mjs <breeder-cards.json> <competition-highlights.json>
+```
+
+The second command builds an entirely **in-memory Discord guild/forum mock** from
+the actual source records. It tests an approval-closed rejection, one breeder
+canary, the remaining 21 records, bot-authored message-ID receipts, and a
+second full-batch pass that must edit exactly 22 existing threads with **zero
+new duplicate threads**. No Discord token, network credentials, or real bot
+process are accessed. The displayed receipt IDs are *synthetic* and must
+**never** be logged or represented as live Discord publication evidence.
+
+This test is necessary but not sufficient for live release. The production
+worker's exact launch path, authorized credential/state handoff, forum access,
+and real Discord readback receipts remain independent deployment gates.
+
+## Owner-controlled release command — October 19, 2026
+
+The bot now includes an owner-only, administrator-visible
+`/shrimp-release` command. It is **not** invoked at startup, from HTTP, or
+by background automation. Only the configured `AQUAPHORIA_OWNER_USER_ID`
+may execute it; rejected users cannot activate the release.
+
+**Inputs:** `data/shrimp-release/breeders.json` and
+`data/shrimp-release/competitions.json` are pinned to Aquapedia commit
+`2bade20e5a0e80b1c6786c0be6523a2cef92dda7`. The release loader
+verifies both SHA-256 checksums before assembling 14 breeder and 8 contest
+cards. The checked-in manifests retain `NOT_POSTED` / approval-closed
+source metadata and contain no rehosted breeder photographs.
+
+Supported owner actions within the **already running, single-instance bot**:
+
+1. `/shrimp-release status`: private count of actual stored message
+   receipts, no Discord post writes.
+2. `/shrimp-release canary`: explicit owner action approves exactly the
+   first breeder for public release. Publisher verifies the bot author,
+   source record ID, Discord thread ID and message ID, then saves a
+   canary receipt to the persistent store.
+3. `/shrimp-release finish`: explicit owner action may publish the
+   remaining 21 only when a verified canary receipt exists for the same
+   source revision **and** Discord guild. Stores verified receipts by
+   record ID, reports partial/unverified writes without declaring success.
+
+The record key is scoped by source commit and guild ID. Attempts inside
+the same Node process are serialized. Once all 22 receipts are stored,
+a repeat owner action is read-only. The underlying publisher updates
+matching bot-owned posts rather than creating duplicate threads.
+
+**Do not run these actions on a newly spawned competing bot.**
+The production service's privileged launcher, credential injection,
+persistent `DATA_DIR` and reliable rollback must first be verified.
+The code/repository deployment and the Discord publication are separate
+release phases. Real public posts are confirmed only by their Discord
+thread/message IDs and successful durable-store writes; simulation IDs
+do not count.

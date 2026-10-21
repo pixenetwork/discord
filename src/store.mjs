@@ -443,6 +443,44 @@ export function createStore({ dataDir }) {
       });
     },
 
+    async listResearchJobs({ limit = 15 } = {}) {
+      if (!Number.isSafeInteger(limit) || limit < 1 || limit > 50) {
+        throw new RangeError('Research list limit must be 1–50');
+      }
+      const state = await load();
+      const all = Object.values(state.researchJobs);
+      const counts = {};
+      for (const job of all) {
+        const status = String(job.status ?? 'unknown');
+        counts[status] = (counts[status] ?? 0) + 1;
+      }
+      // Count distinct requested topics across the *full* persisted inbox, not
+      // merely the page of latest jobs. This is advisory: no status is changed.
+      const grouped = new Map();
+      for (const job of all) {
+        const entityType = String(job.entityType ?? '').normalize('NFKC').trim().toLowerCase();
+        const normalizedName = String(job.name ?? '').normalize('NFKC').trim()
+          .replace(/\s+/g, ' ').toLowerCase();
+        const key = JSON.stringify([entityType, normalizedName]);
+        const current = grouped.get(key);
+        if (current) current.count += 1;
+        else grouped.set(key, { entityType, name: String(job.name ?? ''), count: 1 });
+      }
+      const topics = Array.from(grouped.values()).sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
+      const distinctTopics = topics.length;
+      const repeatRequests = all.length - distinctTopics;
+      all.sort((a, b) => String(b.updatedAt || b.createdAt || '').localeCompare(String(a.updatedAt || a.createdAt || '')));
+      const jobs = all.slice(0, limit).map(({ id, name, entityType, status, createdAt, updatedAt }) => ({
+        id, name, entityType, status, createdAt, updatedAt,
+      }));
+      return { total: all.length, counts, jobs, topics, distinctTopics, repeatRequests };
+    },
+
+    async getResearchJob(jobId) {
+      const state = await load();
+      return state.researchJobs[String(jobId)] ?? null;
+    },
+
     async recordResearchJob(job) {
       if (!job?.id) throw new Error('Research job id is required');
       return mutate((state) => {

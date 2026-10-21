@@ -1,16 +1,14 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { layoutDefinition } from '../src/layout.mjs';
+import { RESEARCH_FORUMS, RESEARCH_CATEGORY } from '../src/canonical-research-forums.mjs';
 
-test('the existing public Aquapedia category includes exactly one shared shrimp research forum', () => {
+test('general Aquapedia layout cannot re-create shrimp and arowana research forums', () => {
   const sections = layoutDefinition();
   const publicAquapedia = sections.filter(x => x.category === '📚・AQUAPEDIA');
   assert.equal(publicAquapedia.length, 1);
-  const forums = publicAquapedia[0].forums ?? [];
-  assert.deepEqual(forums.map(f => f.name), ['🦐・shrimp-research', '🐉・arowana-research', '🐠・guppy-research']);
-  assert.match(forums[1].topic, /source|evidence|research/i);
-  assert.match(forums[0].topic, /breeder/i);
-  assert.match(forums[0].topic, /competition/i);
-  assert.equal(publicAquapedia[0].vendorOnly, undefined);
-  assert.equal(publicAquapedia[0].staffOnly, undefined);
+  assert.deepEqual((publicAquapedia[0].forums ?? []).map(f => f.name), ['🐠・guppy-research']);
+  assert.equal(RESEARCH_CATEGORY.id, '1561430495680667719');
+  assert.equal(RESEARCH_FORUMS.shrimp.id, '1561189288090140743');
+  assert.equal(RESEARCH_FORUMS.arowana.id, '1561193084899819680');
 });

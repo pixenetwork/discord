@@ -1,5 +1,6 @@
 import { createServer } from 'node:http';
-import { Client, Events, GatewayIntentBits } from 'discord.js';
+import { Client, Events, GatewayIntentBits, Partials } from 'discord.js';
+import { createBreederInbox } from './breeder-inbox.mjs';
 import { loadConfig, assertDiscordConfig } from './config.mjs';
 import { createStore } from './store.mjs';
 import { createShopifyClient } from './shopify.mjs';
@@ -24,7 +25,9 @@ const orders = createOrderService({ config, store, shopify });
 const deps = Object.freeze({ config, store, shopify, catalog, collections, research, orders });
 const gpt = createGptController(deps);
 
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.DirectMessages], partials: [Partials.Channel] });
+const breederInbox = createBreederInbox({ recipientIds: ['1202839835849662465'], outputDir: 'C:\\Users\\duy\\aquapedia-ops-logs' });
+client.on(Events.MessageCreate, (message) => { void breederInbox(message).catch((error) => console.error('Breeder inbox capture failed:', error.message)); });
 // The supervisor monitors gateway liveness; full bootstrap readiness is checked separately.
 let bootstrapComplete = false;
 let bootstrapFailed = false;

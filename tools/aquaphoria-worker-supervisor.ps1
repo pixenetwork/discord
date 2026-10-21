@@ -14,6 +14,11 @@ if (-not $NodeExe) {
   $NodeExe = $node.Source
 }
 
+$envFile = Join-Path $WorkerDir '.env'
+if (-not (Test-Path -LiteralPath $envFile)) {
+  throw "Aquaphoria worker .env file is missing at the configured worker directory"
+}
+
 $entry = Join-Path $WorkerDir 'src\index.mjs'
 if (-not (Test-Path -LiteralPath $entry)) {
   throw "Aquaphoria worker entrypoint not found: $entry"
@@ -50,7 +55,7 @@ try {
       }
 
       $child = Start-Process -FilePath $NodeExe `
-        -ArgumentList @($entry) `
+        -ArgumentList @("--env-file=$envFile", $entry) `
         -WorkingDirectory $WorkerDir `
         -WindowStyle Hidden `
         -RedirectStandardOutput $stdoutLog `

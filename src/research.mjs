@@ -126,7 +126,9 @@ export function createResearchService({ jarvis, aquapedia, store }) {
 
       const result = await callJarvis(job);
       if (!result) {
-        const queued = await queueInAquapedia(job);
+        // The durable bot store is the fallback inbox when no verified Jarvis endpoint exists.
+        // Do not publish an unreviewed request to GitHub or claim automated research ran.
+        const queued = { path: null, url: null };
         await store.recordResearchJob({ ...job, status: 'queued', aquapediaPath: queued.path, aquapediaUrl: queued.url });
         return { status: 'queued', jobId: job.id, ...queued };
       }
@@ -147,7 +149,11 @@ export function createResearchService({ jarvis, aquapedia, store }) {
         confidence: result.confidence ?? null,
         duplicateOf: result.duplicateOf ?? null,
         files: written,
-        discordPublicationApproved: result.discordPublicationApproved === true,
+        discordPublicationApproved: status === 'completed' && result.discordPublicationApproved === true,
+        publicAudienceApproved: status === 'completed' && result.publicAudienceApproved === true,
+        publicShrimpResearch: status === 'completed' && result.publicShrimpResearch === true,
+        publicArowanaResearch: status === 'completed' && result.publicArowanaResearch === true,
+        publicGuppyResearch: status === 'completed' && result.publicGuppyResearch === true,
         cards: Array.isArray(result.cards) ? result.cards.slice(0, 30) : [],
       };
     },

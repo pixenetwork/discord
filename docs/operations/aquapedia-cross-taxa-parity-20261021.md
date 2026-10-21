@@ -25,3 +25,18 @@ Tracking issue: https://github.com/pixenetwork/discord/issues/54
 5. **Privacy/capacity:** preserve existing private breeder channels and all existing public forum IDs, photo/translation licenses, old message IDs, guild-wide thread headroom, and one scheduler.
 
 **This audit is not scientific verification, a completed AI council review, permission to publish new records, or proof of every forum message's accuracy.**
+
+## October 21, second source-and-alias pass (read-only)
+
+**IKGH primary source:** https://ikgh.org/wp-content/uploads/2023/05/IHS-Version-2023.pdf
+- Item 42, page 9 and Supplement 3, page 39: ten explicitly acknowledged base colours correspond to Guppypedia GUP-001–010.
+- Supplement 3, items 205 and 207, pages 40–43: 25 catalogued covering colours or named patterns correspond to GUP-011–035. The formal codes are fewer than 25 because the standard groups Half-/Three-quarter Black together; Snakeskin/Lace; Japan/Singa Blue; Blue/Red Grass.
+- Items 209–211, page 43: thirteen A1–A5, B1–B4, C1–C4 tail-shape codes correspond to GUP-036–048.
+- Original publication describes recognized show-category and phenotype terminology, **not genetically authenticated founder bloodlines**. Every mapped record remains editorial-review-required; 128 commercial Guppy variants GUP-049–176 stay `Trade label; lineage unverified`. The source does not support publishing 176 independent pedigrees.
+- The exact-name-and-ordinal `src/aquapedia-guppy-ihs-crosswalk.mjs` fails closed if a standardized name, route or number drifts; it returns `publicationAuthorized:false` always.
+
+**Pleco historical alias resolved:** site https://aquapedia.app/plecopedia/research/soromoni-stearleyi/ identifies `Pseudolithoxus stearleyi` (originally `Soromonichthys stearleyi`), DOI https://doi.org/10.1643/CI-10-008 and California Academy of Sciences Catalog of Fishes. Existing public Discord forum starter: https://discord.com/channels/1519337502379475095/1561147018473381900, titled `Soromonichthys stearleyi — Guiana Shield specialty`, with a later bot-authored research corroboration explicitly using the updated accepted name. One verified legacy alias thread is reused; still a draft, no new post.
+
+**Cory anchored sections verified:** https://aquapedia.app/corydoraspedia/lineages/ and https://aquapedia.app/corydoraspedia/breeding/ returned HTTP 200; each of the 8 lineage and 11 breeding fragment IDs was present in page HTML (19/19). They are sections, not 19 separately fetchable articles; existing 539 forum threads cover a wider species/CW scope, so exact-title matching alone must not guide posting.
+
+**Release status:** Draft PR; changes are source audit and read-only planning only. No new bot, new public threads, media reuse, Discord posts, runtime publisher modifications, permission changes or claims of editorial/source-rights clearance.

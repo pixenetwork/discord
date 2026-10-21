@@ -7,6 +7,11 @@
 const guppyStatuses=new Set(['Officially standardized phenotype','Trade label; lineage unverified']);
 const coryStatuses=new Set(['Pedigree or genetics under review','Keeper observation; not a universal target']);
 const cohorts=['guppy','pleco','corydoras'];
+const plecoHistoricalAlias=Object.freeze({
+ url:'/plecopedia/research/soromoni-stearleyi/',
+ siteTitle:'Pseudolithoxus stearleyi — formerly Soromonichthys',
+ existingForumTitle:'Soromonichthys stearleyi — Guiana Shield specialty'
+});
 const deny=reason=>{throw new Error('Untrusted cross-taxa record: '+reason)};
 const normalizedName=name=>String(name).normalize('NFKC').toLowerCase().replace(/[^\p{L}\p{N}]/gu,'');
 
@@ -40,7 +45,7 @@ export function classifyCrossTaxaRecord(entry){
 export function buildCrossTaxaCoverage(catalog,threadInventory={},options={}){
  if(!Array.isArray(catalog)||!threadInventory||typeof threadInventory!=='object')throw TypeError('Untrusted audit inputs');
  const counts={guppy:0,pleco:0,corydoras:0};
- const byGroup=Object.fromEntries(cohorts.map(group=>[group,{total:0,exactMatches:0,pendingReview:0,held:0,unmatched:0,matchedThreadIds:[]}]));
+ const byGroup=Object.fromEntries(cohorts.map(group=>[group,{total:0,exactMatches:0,aliasMatches:0,pendingReview:0,held:0,unmatched:0,matchedThreadIds:[]}]));
  const seenUrls=new Set(),indexes={};
  for(const group of cohorts){
   const threads=threadInventory[group]??[];
@@ -64,9 +69,16 @@ export function buildCrossTaxaCoverage(catalog,threadInventory={},options={}){
   counts[status.group]++;
   const row=byGroup[status.group];row.total++;
   if(status.decision==='review_required')row.pendingReview++;else row.held++;
-  const threadId=indexes[status.group].get(normalizedName(record.name));
-  if(threadId){row.exactMatches++;row.matchedThreadIds.push(threadId);}
-  else row.unmatched++;
+  const exact=indexes[status.group].get(normalizedName(record.name));
+  const alias=record.group==='pleco'&&record.url===plecoHistoricalAlias.url&&
+    record.name===plecoHistoricalAlias.siteTitle
+    ?indexes.pleco.get(normalizedName(plecoHistoricalAlias.existingForumTitle)):undefined;
+  if(exact&&alias&&exact!==alias)throw Error('Ambiguous Pleco alias: both historical and current threads exist');
+  const threadId=exact||alias;
+  if(threadId){
+   if(exact)row.exactMatches++;else row.aliasMatches++;
+   row.matchedThreadIds.push(threadId);
+  }else row.unmatched++;
  }
  const expected=options.expectedCounts;
  if(expected){

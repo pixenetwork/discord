@@ -705,7 +705,11 @@ async function handleResearchQueue(interaction, deps) {
       && Date.now() - updatedMs > 15 * 60 * 1000;
     const status = stale ? 'started (stale; needs review)' : sanitize(job.status, 30);
     const id = sanitize(job.id, 8);
-    return '`' + id + '` ' + status + ' — ' + sanitize(job.name || job.entityType || 'unnamed');
+    const proof = job.publicationEvidence;
+    const publishedNote = proof?.evidenceStatus === 'published_creator_pending'
+      ? ' (published; creator pending) ' + sanitize(proof.siteUrl, 160)
+      : '';
+    return '`' + id + '` ' + status + ' — ' + sanitize(job.name || job.entityType || 'unnamed') + publishedNote;
   });
   const uniqueLine = Number.isSafeInteger(report.distinctTopics)
     ? report.distinctTopics + ' distinct topics; ' + report.repeatRequests + ' repeat requests.\n'
@@ -713,7 +717,7 @@ async function handleResearchQueue(interaction, deps) {
   const message = '**Aquapedia local research inbox:** ' + report.total + ' total (' + totals + ')\n'
     + uniqueLine
     + (lines.join('\n') || 'No requests recorded.') + '\n'
-    + 'Read-only: stale jobs have not been retried or published. Jarvis handoff requires verified configuration.';
+    + 'Read-only: no job is retried or marked complete here. External publication proof does not verify creator or genealogy.';
   return interaction.editReply(message.slice(0, 1900));
 }
 

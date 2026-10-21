@@ -707,7 +707,11 @@ async function handleResearchQueue(interaction, deps) {
     const id = sanitize(job.id, 8);
     return '`' + id + '` ' + status + ' — ' + sanitize(job.name || job.entityType || 'unnamed');
   });
+  const uniqueLine = Number.isSafeInteger(report.distinctTopics)
+    ? report.distinctTopics + ' distinct topics; ' + report.repeatRequests + ' repeat requests.\n'
+    : '';
   const message = '**Aquapedia local research inbox:** ' + report.total + ' total (' + totals + ')\n'
+    + uniqueLine
     + (lines.join('\n') || 'No requests recorded.') + '\n'
     + 'Read-only: stale jobs have not been retried or published. Jarvis handoff requires verified configuration.';
   return interaction.editReply(message.slice(0, 1900));

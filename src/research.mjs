@@ -40,6 +40,7 @@ export function createResearchService({ jarvis, aquapedia, store }) {
 
     const existingResponse = await fetch(`${endpoint}?ref=${encodeURIComponent(aquapedia.branch)}`, {
       headers: githubHeaders(aquapedia.githubToken),
+      signal: AbortSignal.timeout(15_000),
     });
 
     let existingSha = null;
@@ -55,6 +56,7 @@ export function createResearchService({ jarvis, aquapedia, store }) {
     const response = await fetch(endpoint, {
       method: 'PUT',
       headers: githubHeaders(aquapedia.githubToken, true),
+      signal: AbortSignal.timeout(15_000),
       body: JSON.stringify({
         message,
         branch: aquapedia.branch,
@@ -79,6 +81,7 @@ export function createResearchService({ jarvis, aquapedia, store }) {
     if (!jarvis.researchEndpoint) return null;
     const response = await fetch(jarvis.researchEndpoint, {
       method: 'POST',
+      signal: AbortSignal.timeout(30_000),
       headers: {
         'Content-Type': 'application/json',
         ...(jarvis.apiKey ? { Authorization: `Bearer ${jarvis.apiKey}` } : {}),
@@ -124,38 +127,50 @@ export function createResearchService({ jarvis, aquapedia, store }) {
       };
       await store.recordResearchJob(job);
 
-      const result = await callJarvis(job);
-      if (!result) {
-        // The durable bot store is the fallback inbox when no verified Jarvis endpoint exists.
-        // Do not publish an unreviewed request to GitHub or claim automated research ran.
-        const queued = { path: null, url: null };
-        await store.recordResearchJob({ ...job, status: 'queued', aquapediaPath: queued.path, aquapediaUrl: queued.url });
-        return { status: 'queued', jobId: job.id, ...queued };
-      }
+      let failureStage = 'jarvis_handoff';
+      try {
+        const result = await callJarvis(job);
+        if (!result) {
+          // The durable bot store is the fallback inbox when no verified Jarvis endpoint exists.
+          // Do not publish an unreviewed request to GitHub or claim automated research ran.
+          const queued = { path: null, url: null };
+          await store.recordResearchJob({ ...job, status: 'queued', aquapediaPath: queued.path, aquapediaUrl: queued.url });
+          return { status: 'queued', jobId: job.id, ...queued };
+        }
 
-      const written = [];
-      for (const file of result.files ?? []) {
-        const path = safeAquapediaPath(file.path);
-        const url = await writeAquapediaFile(path, file.content, file.message || `research: add ${entityType} ${job.name}`);
-        written.push({ path, url });
-      }
+        const written = [];
+        failureStage = 'aquapedia_sync';
+        for (const file of result.files ?? []) {
+          const path = safeAquapediaPath(file.path);
+          const url = await writeAquapediaFile(path, file.content, file.message || `research: add ${entityType} ${job.name}`);
+          written.push({ path, url });
+        }
 
-      const status = result.status ?? (written.length ? 'completed' : 'queued');
-      await store.recordResearchJob({ ...job, status, resultSummary: result.summary ?? null, files: written });
-      return {
-        status,
-        jobId: job.id,
-        summary: result.summary ?? null,
-        confidence: result.confidence ?? null,
-        duplicateOf: result.duplicateOf ?? null,
-        files: written,
-        discordPublicationApproved: status === 'completed' && result.discordPublicationApproved === true,
-        publicAudienceApproved: status === 'completed' && result.publicAudienceApproved === true,
-        publicShrimpResearch: status === 'completed' && result.publicShrimpResearch === true,
-        publicArowanaResearch: status === 'completed' && result.publicArowanaResearch === true,
-        publicGuppyResearch: status === 'completed' && result.publicGuppyResearch === true,
-        cards: Array.isArray(result.cards) ? result.cards.slice(0, 30) : [],
-      };
+        const status = result.status ?? (written.length ? 'completed' : 'queued');
+        await store.recordResearchJob({ ...job, status, resultSummary: result.summary ?? null, files: written });
+        return {
+          status,
+          jobId: job.id,
+          summary: result.summary ?? null,
+          confidence: result.confidence ?? null,
+          duplicateOf: result.duplicateOf ?? null,
+          files: written,
+          discordPublicationApproved: status === 'completed' && result.discordPublicationApproved === true,
+          publicAudienceApproved: status === 'completed' && result.publicAudienceApproved === true,
+          publicShrimpResearch: status === 'completed' && result.publicShrimpResearch === true,
+          publicArowanaResearch: status === 'completed' && result.publicArowanaResearch === true,
+          publicGuppyResearch: status === 'completed' && result.publicGuppyResearch === true,
+          cards: Array.isArray(result.cards) ? result.cards.slice(0, 30) : [],
+        };
+      } catch (error) {
+        // Preserve the original request for human review; do not silently strand it
+        // as started or retry a potentially partial research/website write.
+        // Never persist exception text or secrets in this durable state.
+        await store.recordResearchJob({
+          ...job, status: 'needs_review', failureStage, reviewNeeded: true,
+        }).catch(() => undefined);
+        throw error;
+      }
     },
   });
 }

@@ -1,5 +1,6 @@
 import { mkdir, readFile, rename, writeFile } from 'node:fs/promises';
 import path from 'node:path';
+import { readPublicationEvidence, writePublicationEvidence } from './research-evidence-store.mjs';
 
 const EMPTY_STATE = Object.freeze({
   version: 2,
@@ -97,6 +98,7 @@ function saveTicket(state, ticket, now = new Date()) {
 
 export function createStore({ dataDir }) {
   const statePath = path.resolve(dataDir, 'aquaphoria-discord.json');
+  const evidenceDir = path.resolve(dataDir, 'research-publication-evidence');
   let writeQueue = Promise.resolve();
 
   async function load() {
@@ -443,6 +445,18 @@ export function createStore({ dataDir }) {
       });
     },
 
+    async getResearchPublicationEvidence(jobId) {
+      return readPublicationEvidence(evidenceDir, jobId);
+    },
+
+    async recordResearchPublicationEvidence(jobId, evidence) {
+      const job = await this.getResearchJob(jobId);
+      if (!job || job.status !== 'queued') {
+        throw new Error('Only an existing queued research job accepts external publication evidence');
+      }
+      return writePublicationEvidence(evidenceDir, jobId, evidence);
+    },
+
     async listResearchJobs({ limit = 15 } = {}) {
       if (!Number.isSafeInteger(limit) || limit < 1 || limit > 50) {
         throw new RangeError('Research list limit must be 1–50');
@@ -470,8 +484,13 @@ export function createStore({ dataDir }) {
       const distinctTopics = topics.length;
       const repeatRequests = all.length - distinctTopics;
       all.sort((a, b) => String(b.updatedAt || b.createdAt || '').localeCompare(String(a.updatedAt || a.createdAt || '')));
-      const jobs = all.slice(0, limit).map(({ id, name, entityType, status, createdAt, updatedAt }) => ({
-        id, name, entityType, status, createdAt, updatedAt,
+      const jobs = await Promise.all(all.slice(0, limit).map(async ({ id, name, entityType, status, createdAt, updatedAt }) => {
+        const proof = /^[0-9a-f-]{36}$/i.test(String(id))
+          ? await this.getResearchPublicationEvidence(id) : null;
+        return { id, name, entityType, status, createdAt, updatedAt,
+          ...(proof ? { publicationEvidence: { evidenceStatus: proof.evidenceStatus,
+            siteUrl: proof.siteUrl, discordThreadId: proof.discordThreadId } } : {}),
+        };
       }));
       return { total: all.length, counts, jobs, topics, distinctTopics, repeatRequests };
     },

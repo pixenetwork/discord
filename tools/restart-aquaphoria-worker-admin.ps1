@@ -95,7 +95,28 @@ for ($i = 0; $i -lt 30; $i++) {
   Start-Sleep -Seconds 1
 }
 if (-not $stopped) {
-  throw 'Original listener remains active after task stop; aborting to prevent a duplicate bot'
+  # Some Windows task stops leave the child Node process running. Recover
+  # only the *same* already-verified PID when its supervisor is demonstrably gone.
+  $remaining = @(Get-NetTCPConnection -State Listen -LocalPort 8790 -ErrorAction SilentlyContinue)
+  $taskStillStopped = Get-ScheduledTask -TaskName $TaskName -ErrorAction Stop
+  if (($taskStillStopped.State -ne 'Ready') -or ($remaining.Count -ne 1) -or ([int]$remaining[0].OwningProcess -ne $originalPid)) {
+    throw 'Listener or task state changed; refusing to stop an unrelated process'
+  }
+  $oldChild = Get-CimInstance Win32_Process -Filter "ProcessId=$originalPid" -ErrorAction Stop
+  if ((-not $oldChild) -or ($oldChild.Name -cne 'node.exe') -or ([int]$oldChild.ParentProcessId -ne [int]$child.ParentProcessId) -or (-not $oldChild.CommandLine) -or ($oldChild.CommandLine.IndexOf('src\index.mjs', [StringComparison]::OrdinalIgnoreCase) -lt 0)) {
+    throw 'Original orphan identity cannot be verified safely'
+  }
+  $oldParent = Get-CimInstance Win32_Process -Filter "ProcessId=$($child.ParentProcessId)" -ErrorAction SilentlyContinue
+  if ($oldParent) { throw 'Supervisor process still exists; refusing to kill its child' }
+  Stop-Process -Id $originalPid -Force -ErrorAction Stop
+  for ($i = 0; $i -lt 20; $i++) {
+    Start-Sleep -Seconds 1
+    if (@(Get-NetTCPConnection -State Listen -LocalPort 8790 -ErrorAction SilentlyContinue).Count -eq 0) {
+      $stopped = $true
+      break
+    }
+  }
+  if (-not $stopped) { throw 'Verified orphan did not release port; no replacement started' }
 }
 Start-ScheduledTask -TaskName $TaskName -ErrorAction Stop
 $booted = $false

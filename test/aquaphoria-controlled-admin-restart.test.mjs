@@ -34,3 +34,15 @@ test('research command verification uses Discord read-only API and requires queu
   assert.doesNotMatch(text,/method:\s*'(?:POST|PATCH|PUT|DELETE)'/);
   assert.doesNotMatch(text,/console\.log\(.*token/);
 });
+
+test('task stop can recover only the identical verified orphaned Node child, never an arbitrary listener',()=>{
+  const text=readFileSync(restartPath,'utf8');
+  assert.match(text,/if\s*\(-not\s*\$stopped\)\s*\{/);
+  assert.match(text,/Stop-Process\s+-Id\s+\$originalPid\s+-Force/);
+  assert.match(text,/Get-CimInstance\s+Win32_Process/);
+  assert.match(text,/\$child\.ParentProcessId/);
+  assert.match(text,/Get-ScheduledTask\s+-TaskName\s+\$TaskName/);
+  assert.match(text,/taskStillStopped|taskStopped/);
+  assert.match(text,/\$remaining\[0\]\.OwningProcess/);
+  assert.match(text,/if\s*\(-not\s*\$stopped\)/);
+});

@@ -443,6 +443,24 @@ export function createStore({ dataDir }) {
       });
     },
 
+    async listResearchJobs({ limit = 15 } = {}) {
+      if (!Number.isSafeInteger(limit) || limit < 1 || limit > 50) {
+        throw new RangeError('Research list limit must be 1–50');
+      }
+      const state = await load();
+      const all = Object.values(state.researchJobs);
+      const counts = {};
+      for (const job of all) {
+        const status = String(job.status ?? 'unknown');
+        counts[status] = (counts[status] ?? 0) + 1;
+      }
+      all.sort((a, b) => String(b.updatedAt || b.createdAt || '').localeCompare(String(a.updatedAt || a.createdAt || '')));
+      const jobs = all.slice(0, limit).map(({ id, name, entityType, status, createdAt, updatedAt }) => ({
+        id, name, entityType, status, createdAt, updatedAt,
+      }));
+      return { total: all.length, counts, jobs };
+    },
+
     async getResearchJob(jobId) {
       const state = await load();
       return state.researchJobs[String(jobId)] ?? null;

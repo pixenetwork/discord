@@ -45,6 +45,7 @@ export async function publishApprovedMedaka79({
     || typeof receiptStore?.loadPartial!=='function'
     || typeof discord?.getForumState!=='function'
     || typeof discord?.enumerateThreads!=='function'
+    || typeof discord?.enumerateThreadMessages!=='function'
     || typeof discord?.createThread!=='function'
     || typeof discord?.send!=='function'
     || typeof discord?.fetchMessage!=='function'
@@ -107,6 +108,19 @@ export async function publishApprovedMedaka79({
         throw new Error('Partial Medaka publication thread not verified in target forum');
       }
       messageIds=partial.messageIds.map(String);
+      // A Discord reply may have succeeded just before a crash or failed
+      // checkpoint write. Reconcile the entire thread before any retry.
+      const listed=await discord.enumerateThreadMessages(partial.threadId);
+      if(listed?.complete!==true || !Array.isArray(listed.messages)){
+        throw new Error('Complete partial Discord thread message history unavailable');
+      }
+      const knownIds=new Set(messageIds);
+      const actualBotMessages=listed.messages.filter(message=>
+        String(message?.author?.id)===String(discord.botId));
+      if(actualBotMessages.length!==knownIds.size
+        || actualBotMessages.some(message=>!knownIds.has(String(message.id)))){
+        throw new Error('Uncheckpointed Discord thread message; manual reconciliation required');
+      }
       const expected=[plan.starter,...plan.parts.map(part=>part.content)];
       for(let i=0;i<messageIds.length;i++){
         const existing=await discord.fetchMessage(partial.threadId,messageIds[i]);

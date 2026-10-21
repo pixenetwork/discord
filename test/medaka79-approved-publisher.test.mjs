@@ -17,7 +17,7 @@ const plan=buildMedaka79Index(JSON.parse(bytes),{rawSource:bytes});
 // ---------------------------------------------------------------------------
 function fixture({
   grant=true,complete=true,threads=null,alterReadback=false,
-  previousReceipt=false,partial=null,nullFetch=false,
+  previousReceipt=false,partial=null,nullFetch=false,extraUncheckpointedReply=false,
 }={}){
   const calls={created:0,sent:0,stored:0,locks:0,unlocks:0,partialSaves:0};
   const botId='995';
@@ -30,6 +30,9 @@ function fixture({
       records.set(String(mid),{id:String(mid),author:{id:botId},content:allContent[i]});
     });
   }
+  if(extraUncheckpointedReply){
+    records.set('7100',{id:'7100',author:{id:botId},content:plan.parts[2].content});
+  }
   const discord={
     botId,
     async getForumState(){return {
@@ -37,6 +40,7 @@ function fixture({
       publicView:true,readMessageHistory:true,botMayPost:true,
     };},
     async enumerateThreads(){return {complete,threads:threads??(partial?[{id:String(partial.threadId),name:plan.threadName}]:[])};},
+    async enumerateThreadMessages(){return {complete:true,messages:Array.from(records.values())};},
     async createThread(params){
       calls.created++;
       assert.equal(params.forumId,plan.forumId);
@@ -211,6 +215,16 @@ test('partial restart verifies existing Discord messages before sending more',as
   };
   await assert.rejects(request(fix),/partial|resume|readback|mismatch/i);
   assert.equal(fix.calls.sent,0,'do not post new replies before validating the checkpointed ones');
+  assert.equal(fix.calls.stored,0);
+});
+
+test('interrupted reply without checkpoint blocks retry instead of duplicating message',async()=>{
+  const fix=fixture({
+    partial:{jobId:plan.jobId,threadId:'6000',messageIds:['7001','7002','7003']},
+    extraUncheckpointedReply:true,
+  });
+  await assert.rejects(request(fix),/uncheckpointed|reconciliation|thread message/i);
+  assert.equal(fix.calls.sent,0,'uncheckpointed Discord reply must not be sent twice');
   assert.equal(fix.calls.stored,0);
 });
 

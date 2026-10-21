@@ -53,10 +53,12 @@ The existing managed runtime must provide, as independent trusted capabilities:
 - `lock.acquire(jobId)`: acquire the canonical cross-worker Aquapedia writer
   lock exclusively, return a release callback and reject concurrent writers.
 - `discord.getForumState`, `discord.enumerateThreads({active,archived})`,
-  `discord.createThread`, `discord.send`, `discord.fetchMessage`:
-  resolve the canonical guild/forum with public read-history permissions,
-  discover complete historical threads, publish via the already-approved bot,
-  then fetch **11 full authenticated messages**.
+  `discord.enumerateThreadMessages`, `discord.createThread`, `discord.send`,
+  `discord.fetchMessage`: resolve the canonical guild/forum with public
+  read-history permissions. Enumerate all active/archived forum threads and
+  **complete existing message history** of a resumed thread to detect replies
+  accepted before a failed checkpoint. Publish only through the existing bot
+  and fetch **11 full authenticated messages**.
 - `receiptStore.get(jobId)` and `receiptStore.save(receipt)`: use the
   existing atomic receipt ledger. Never report completed publication before
   all eleven message IDs pass authenticated Discord readback.

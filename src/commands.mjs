@@ -320,6 +320,11 @@ function commandDefinitions() {
       .addChoices({ name: 'Strain', value: 'strain' }, { name: 'Breeder', value: 'breeder' }))
     .addStringOption((option) => option.setName('name').setDescription('Strain or breeder name').setRequired(true).setMaxLength(120));
 
+  const researchQueue = new SlashCommandBuilder()
+    .setName('research-queue')
+    .setDescription('Owner-only view of the local Aquapedia research inbox')
+    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator);
+
   const shrimpRelease = new SlashCommandBuilder()
     .setName('shrimp-release')
     .setDescription('Owner-only Shrimpapedia release with verified Discord receipts')
@@ -379,7 +384,7 @@ function commandDefinitions() {
         ))
       .addStringOption((option) => option.setName('details').setDescription('Tell us what you need help with').setRequired(true).setMaxLength(1000)));
 
-  return [aquaphoria, vendor, catalog, product, research, shrimpRelease, order, payout, ticket, aquapediaDmCommand()];
+  return [aquaphoria, vendor, catalog, product, research, researchQueue, shrimpRelease, order, payout, ticket, aquapediaDmCommand()];
 }
 
 async function requireVendor(interaction, store) {
@@ -685,6 +690,29 @@ async function handleProduct(interaction, deps) {
   return interaction.editReply(`✅ Your private product submission ticket is ready: <#${channel.id}>\nSubmission ID: \`${id}\``);
 }
 
+async function handleResearchQueue(interaction, deps) {
+  if (!isOwner(interaction, deps.config)) {
+    return interaction.reply({ content: 'Only the Aquaphoria owner can inspect the research queue.', ephemeral: true });
+  }
+  await interaction.deferReply({ ephemeral: true });
+  const report = await deps.store.listResearchJobs({ limit: 15 });
+  const totals = Object.entries(report.counts).map(([status, count]) => status + ': ' + count).join(', ') || 'empty';
+  const sanitize = (value, max = 70) => String(value ?? '').replace(/[\r\n\t]/g, ' ')
+    .replace(/[@`*_~|<>]/g, '').slice(0, max);
+  const lines = report.jobs.map((job) => {
+    const updatedMs = Date.parse(job.updatedAt ?? job.createdAt ?? '');
+    const stale = job.status === 'started' && Number.isFinite(updatedMs)
+      && Date.now() - updatedMs > 15 * 60 * 1000;
+    const status = stale ? 'started (stale; needs review)' : sanitize(job.status, 30);
+    const id = sanitize(job.id, 8);
+    return '`' + id + '` ' + status + ' — ' + sanitize(job.name || job.entityType || 'unnamed');
+  });
+  const message = '**Aquapedia local research inbox:** ' + report.total + ' total (' + totals + ')\n'
+    + (lines.join('\n') || 'No requests recorded.') + '\n'
+    + 'Read-only: stale jobs have not been retried or published. Jarvis handoff requires verified configuration.';
+  return interaction.editReply(message.slice(0, 1900));
+}
+
 async function handleResearch(interaction, deps) {
   const vendor = await deps.store.getVendorByDiscordUser(interaction.user.id);
   const staff = await isCanonicalStaff(interaction, deps.store);
@@ -888,6 +916,7 @@ export function createCommandRouter(deps) {
         if (interaction.commandName === 'catalog') return await handleCatalog(interaction, deps);
         if (interaction.commandName === 'product') return await handleProduct(interaction, deps);
         if (interaction.commandName === 'research') return await handleResearch(interaction, deps);
+        if (interaction.commandName === 'research-queue') return await handleResearchQueue(interaction, deps);
         if (interaction.commandName === 'shrimp-release') return await handleShrimpRelease(interaction, deps);
         if (interaction.commandName === 'order') return await handleOrder(interaction, deps);
         if (interaction.commandName === 'payout') return await handlePayout(interaction, deps);

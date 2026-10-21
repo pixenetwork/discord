@@ -1,6 +1,6 @@
 import { createServer } from 'node:http';
 import { Client, Events, GatewayIntentBits, Partials } from 'discord.js';
-import { createBreederInbox } from './breeder-inbox.mjs';
+import { createBreederInbox, pruneBreederInbox } from './breeder-inbox.mjs';
 import { loadConfig, assertDiscordConfig } from './config.mjs';
 import { createStore } from './store.mjs';
 import { createShopifyClient } from './shopify.mjs';
@@ -28,6 +28,10 @@ const gpt = createGptController(deps);
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.DirectMessages], partials: [Partials.Channel] });
 const breederInbox = createBreederInbox({ recipientIds: (process.env.BREEDER_INBOX_ALLOWED_IDS ?? '').split(',').filter(Boolean), outputDir: process.env.BREEDER_INBOX_DIR || 'aquapedia-private-inbox' });
 client.on(Events.MessageCreate, (message) => { void breederInbox(message).catch((error) => console.error('Breeder inbox capture failed:', error.message)); });
+const inboxDir = process.env.BREEDER_INBOX_DIR || 'aquapedia-private-inbox';
+const inboxPrune = () => { void pruneBreederInbox({ outputDir: inboxDir }).catch((error) => console.error('Breeder inbox retention cleanup failed:', error.message)); };
+inboxPrune();
+setInterval(inboxPrune, 60 * 60 * 1000).unref();
 // The supervisor monitors gateway liveness; full bootstrap readiness is checked separately.
 let bootstrapComplete = false;
 let bootstrapFailed = false;

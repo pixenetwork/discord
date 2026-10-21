@@ -1,5 +1,13 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
+export async function pruneBreederInbox({ outputDir, now = Date.now }) {
+ const file=path.join(outputDir, 'breeder-inbox.json');
+ let records;
+ try { records=JSON.parse(await readFile(file,'utf8')); } catch(e) { if(e.code==='ENOENT') return 0; throw e; }
+ const keep=records.filter(r => Number(r.expiresAt)>now());
+ if(keep.length!==records.length) await writeFile(file, JSON.stringify(keep,null,2), {mode:0o600});
+ return records.length-keep.length;
+}
 export function createBreederInbox({ recipientIds = [], outputDir, now = Date.now, retentionDays = 30 }) {
  const allowed = new Set(recipientIds.map(String));
  return async function capture(message) {

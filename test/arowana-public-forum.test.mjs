@@ -6,8 +6,8 @@ import { publishAquapediaCards } from '../src/aquapedia-posts.mjs';
 function guildFixture(visible=true,activeCount=0){
  const created=[];
  const everyone={id:'everyone'};
- const category={id:'cat',type:4,name:'📚・AQUAPEDIA'};
- const forum={id:'arowana-forum',type:15,name:'🐉・arowana-research',parentId:'cat',
+ const category={id:'1561430495680667719',type:4,name:'🧬・AQUAPEDIA — SPECIES & GENETICS'};
+ const forum={id:'1561193084899819680',type:15,name:'🐉・arowana-research',parentId:category.id,
    permissionsFor(role){return {has(flag){return role===everyone && visible;}};},
    threads:{
      async fetchActive(){return {threads:new Map()};},

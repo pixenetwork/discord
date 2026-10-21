@@ -1,0 +1,86 @@
+{
+  "capturedAt": "2026-10-21T09:47:13.801Z",
+  "scope": "Existing public Aquaphoria Guppypedia topic forum; read only",
+  "botUserId": "1535522109571203152",
+  "guildActiveThreads": 898,
+  "guildActiveThreadsCapturedAt": "2026-10-21T09:47:13.801Z",
+  "threads": [
+    {
+      "key": "care",
+      "id": "1562195153211494521",
+      "name": "Guppypedia — Care and Water",
+      "parentId": "1562195139353645146",
+      "archived": false,
+      "locked": false,
+      "starterOwnedByBot": true,
+      "starterContent": "Aquapedia • Guppypedia • source-reviewed 2026-10-20\n**Guppypedia — Care and Water**\nHealthy guppies need a fully cycled aquarium, stable mineral-appropriate freshwater, gentle filtration and space for growing broods. Practical setup guidance is not a universal wild tolerance limit.\nAquapedia: https://aquapedia.app/guppypedia/care/\nSources: https://www.ifga.org/basiccare | https://www.merckvetmanual.com/exotic-and-laboratory-animals/aquarium-fish/management-of-aquarium-fish",
+      "starterMessageId": "1562195153211494521"
+    },
+    {
+      "key": "standards",
+      "id": "1562195154817917080",
+      "name": "Guppypedia — Show Tail Standards",
+      "parentId": "1562195139353645146",
+      "archived": false,
+      "locked": false,
+      "starterOwnedByBot": true,
+      "starterContent": "Aquapedia • Guppypedia • source-reviewed 2026-10-20\n**Guppypedia — Show Tail Standards**\nThe European IKGH 2023 standard recognizes 13 tail shapes; these are standard classes, not 13 independent bloodlines. Dumbo, ribbon and swallow are additional fin traits, not guaranteed genetic pedigrees.\nAquapedia: https://aquapedia.app/guppypedia/strains/\nSources: https://www.ikgh.org/wp-content/uploads/2023/05/IHS-Version-2023.pdf",
+      "starterMessageId": "1562195154817917080"
+    },
+    {
+      "key": "genetics",
+      "id": "1562195157028184178",
+      "name": "Guppypedia — Genetics and Lineage",
+      "parentId": "1562195139353645146",
+      "archived": false,
+      "locked": false,
+      "starterOwnedByBot": true,
+      "starterContent": "Aquapedia • Guppypedia • source-reviewed 2026-10-20\n**Guppypedia — Genetics and Lineage**\nPhenotype and trade names alone do not prove parentage, creator, or sex linkage. Treat official body-color categories, named breeder lines, and hybrids separately; do not invent pedigree arrows.\nAquapedia: https://aquapedia.app/guppypedia/genetics/\nSources: https://www.ikgh.org/wp-content/uploads/2023/05/IHS-Version-2023.pdf",
+      "starterMessageId": "1562195157028184178"
+    },
+    {
+      "key": "breeding",
+      "id": "1562195160442605688",
+      "name": "Guppypedia — Controlled Breeding",
+      "parentId": "1562195139353645146",
+      "archived": false,
+      "locked": false,
+      "starterOwnedByBot": true,
+      "starterContent": "Aquapedia • Guppypedia • source-reviewed 2026-10-20\n**Guppypedia — Controlled Breeding**\nUse separate line IDs and tanks, document both parents, generations and health, and separate young sexes before unwanted mating. Sperm storage makes purchased adult females unsuitable as assumed virgin founders.\nAquapedia: https://aquapedia.app/guppypedia/breeding/\nSources: https://doi.org/10.1016/j.exppara.2016.04.018",
+      "starterMessageId": "1562195160442605688"
+    },
+    {
+      "key": "food",
+      "id": "1562195162464125148",
+      "name": "Guppypedia — Food and Fry",
+      "parentId": "1562195139353645146",
+      "archived": false,
+      "locked": false,
+      "starterOwnedByBot": true,
+      "starterContent": "Aquapedia • Guppypedia • source-reviewed 2026-10-20\n**Guppypedia — Food and Fry**\nUse fine complete food for fry, stage-appropriate Artemia and varied supplements with clean water; do not equate product marketing or higher protein numbers with proven superior growth.\nAquapedia: https://aquapedia.app/guppypedia/food/\nSources: https://www.ifga.org/basiccare",
+      "starterMessageId": "1562195162464125148"
+    },
+    {
+      "key": "disease",
+      "id": "1562195164628389968",
+      "name": "Guppypedia — Disease Prevention",
+      "parentId": "1562195139353645146",
+      "archived": false,
+      "locked": false,
+      "starterOwnedByBot": true,
+      "starterContent": "Aquapedia • Guppypedia • source-reviewed 2026-10-20\n**Guppypedia — Disease Prevention**\nQuarantine new fish, test water, and identify the problem before treatments. Inbreeding has been associated with higher Gyrodactylus infection burden in controlled guppy research.\nAquapedia: https://aquapedia.app/guppypedia/health/\nSources: https://www.merckvetmanual.com/exotic-and-laboratory-animals/aquarium-fish/management-of-aquarium-fish | https://doi.org/10.1016/j.exppara.2016.04.018",
+      "starterMessageId": "1562195164628389968"
+    },
+    {
+      "key": "hybrid",
+      "id": "1562195167010619532",
+      "name": "Guppypedia — Endler and Hybrid Labels",
+      "parentId": "1562195139353645146",
+      "archived": false,
+      "locked": false,
+      "starterOwnedByBot": true,
+      "starterContent": "Aquapedia • Guppypedia • source-reviewed 2026-10-20\n**Guppypedia — Endler and Hybrid Labels**\nPoecilia wingei is a separate species and can hybridize with common guppies. A dealer label alone cannot establish a pure wild-origin line.\nAquapedia: https://aquapedia.app/guppypedia/endlers/\nSources: https://www.ikgh.org/wp-content/uploads/2023/05/IHS-Version-2023.pdf",
+      "starterMessageId": "1562195167010619532"
+    }
+  ]
+}

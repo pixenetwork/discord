@@ -11,7 +11,7 @@ import path from 'node:path';
 import {createHash} from 'node:crypto';
 import {REST,Routes,ChannelType,PermissionFlagsBits} from 'discord.js';
 import {renderAquapediaCard} from './aquapedia-post-card.mjs';
-import {requiredChannelKinds} from './aquapedia-article-destination-policy.mjs';
+import {requiredChannelKinds,articleWriteAction,ARTICLE_UPDATE_HEADING,normalizeAquapediaArticleName,acquireArticleWriterLock} from './aquapedia-article-destination-policy.mjs';
 
 const mode=process.argv.includes('--seed')?'seed':process.argv.includes('--apply')?'apply':'check';
 const base='https://aquapedia.app';
@@ -138,22 +138,28 @@ if(mode==='seed'){
   for(const x of currentCatalog){
    if(pagePath(x.url))catUrlToEntry.set(x.url,x);
   }
-  const cleanName=x=>String(x||'').normalize('NFKC').split(/[\/|â€”(ï¼ˆ]/)[0]
-   .replace(/[^\p{L}\p{N}]/gu,'').toLocaleLowerCase();
+  const cleanName=normalizeAquapediaArticleName;
   const dest=url=>{
     const x=catUrlToEntry.get(url);
-    if(url.startsWith('/shrimpapedia/')||x?.group==='shrimp')return shrimps.id;
+    if(url.startsWith('/shrimpapedia/'))return shrimps.id;
+    // Catalog labels must not override the URL's preflighted privacy class.
+    if(x?.group==='shrimp')throw Error('Catalog group and approved article route disagree '+url);
     if(x){
      const candidates=threads.filter(t=>cleanName(t.name)===cleanName(x.name));
-     if(candidates.length===1)return candidates[0].id;
+     if(candidates.length===1){
+      const forum=breederForums.find(f=>f.id===candidates[0].parent_id);
+      if(!forum)throw Error('Breeder research thread forum unavailable '+url);
+      // Forum threads inherit permissions from their parent forum.
+      privateDestination(forum);
+      return candidates[0].id;
+     }
     }
     return results.id;
   };
-  let lock;
+  let release;
   try{
-   lock=fs.openSync(lockFile,'wx');
-   fs.writeSync(lock,JSON.stringify({pid:process.pid,mode,started:new Date().toISOString()}));
-  }catch(e){throw Error('Existing sync publisher holds shared writer lock: '+e.code)}
+   release=acquireArticleWriterLock(fs,lockFile,{pid:process.pid,mode,started:new Date().toISOString()});
+  }catch(e){throw Error('Existing sync publisher holds shared writer lock: '+(e.code||e.message))}
   let posted=0,updated=0,unchanged=0,adopted=0;
   try{
    for(const url of changes.slice(0,cap)){
@@ -171,7 +177,7 @@ if(mode==='seed'){
      const mark='[AQUAPEDIA-ARTICLE-SYNC:'+key+']';
      const entry=catUrlToEntry.get(url);
      const summary=[
-       '**AQUAPEDIA â€” UPDATED RESEARCH ARTICLE**',
+       ARTICLE_UPDATE_HEADING,
        '**Article:** '+(entry?.name||item.title),
        '**Change:** The published research article content was updated since the last verified Discord sync.',
        '**Source evidence and updated report:** '+base+url,
@@ -184,9 +190,12 @@ if(mode==='seed'){
      const payload=renderAquapediaCard(summary,{channel:url.startsWith('/shrimpapedia/')?'shrimp':'research'});
      const channel=dest(url),old=state.receipts[key];
      let message=null;
-     if(old?.messageId&&old.channel===channel){
-       message=await rest.get(Routes.channelMessage(channel,old.messageId)).catch(()=>null);
-       if(message&&(message.author?.id!==me.id||!message.content?.includes(mark)))
+     if(old){
+       if(!old.messageId||old.channel!==channel)
+        throw Error('Prior article receipt channel mismatch; manual reconciliation required '+url);
+       // A deleted/inaccessible old message must not silently become a new post.
+       message=await rest.get(Routes.channelMessage(channel,old.messageId));
+       if(!message||message.author?.id!==me.id||!message.content?.includes(mark))
         throw Error('Old receipt author or message marker mismatch '+url);
      }
      if(!message){
@@ -195,10 +204,11 @@ if(mode==='seed'){
      }
      let action='unchanged';
      if(!message||message.content!==payload.content||message.embeds?.[0]?.title!==payload.embeds?.[0]?.title||message.embeds?.[0]?.description!==payload.embeds?.[0]?.description){
+       const existedBeforeWrite=Boolean(message);
        message=message
         ?await rest.patch(Routes.channelMessage(channel,message.id),{body:payload})
         :await rest.post(Routes.channelMessages(channel),{body:payload});
-       action=old?'updated':'posted';
+       action=articleWriteAction({previousReceipt:Boolean(old),existingMessage:existedBeforeWrite,changed:true});
      }
      if(!message||message.author?.id!==me.id||!message.content?.includes(mark)||(message.attachments||[]).length)
       throw Error('Discord write not acknowledged/readback failed '+url);
@@ -212,8 +222,7 @@ if(mode==='seed'){
      console.log('ARTICLE_VERIFIED '+JSON.stringify({url,action,channel,messageId:message.id}));
    }
   }finally{
-   if(lock!==undefined)fs.closeSync(lock);
-   fs.unlinkSync(lockFile);
+   release();
   }
   console.log('ARTICLE_APPLY_DONE '+JSON.stringify({scanned:paths.length,pendingBefore:changes.length,
    posted,updated,unchanged,adopted,remaining:Math.max(0,changes.length-cap),cap,postedTotal:state.totalPosted}));

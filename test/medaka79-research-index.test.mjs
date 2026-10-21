@@ -83,7 +83,7 @@ test('safe() strips Markdown link injection characters from display text',()=>{
   // buildMedaka79Index calls safe() which must sanitise ] and (.
   // If stripped correctly, the resulting label contains no ]( sequence.
   const result=buildMedaka79Index(altered);
-  const allContent=[result.starter,...result.parts.map(p=>p.content)].join('
+  const allContent=[result.starter,...result.parts.map(p=>p.content)].join('\n');
   assert.doesNotMatch(allContent,/\]\(/,'Markdown link injection characters must be stripped from display text (CWE-79)');
 });
 

@@ -188,7 +188,7 @@ test('tampered Discord readback never becomes a completion receipt',async()=>{
 test('signed source hash cannot authorize changed Discord message content',async()=>{
   const f=fixture();
   const changed=structuredClone(plan);
-  changed.parts[0].content+='
+  changed.parts[0].content+=' altered source-locked claim';
   await assert.rejects(request(f,{plan:changed}),/source-locked message content/i);
   assert.equal(f.calls.created,0);
   assert.equal(f.calls.stored,0);

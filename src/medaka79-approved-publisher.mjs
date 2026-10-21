@@ -90,10 +90,36 @@ export async function publishApprovedMedaka79({
 
     let thread;
     let messageIds;
-    if(partial?.threadId && Array.isArray(partial.messageIds) && partial.messageIds.length>=1){
-      // Resume path: reuse the existing partial thread rather than creating a duplicate.
-      thread={threadId:partial.threadId,starterId:partial.messageIds[0]};
+    if(partial){
+      // A checkpoint is not authorization to write into an arbitrary Discord thread.
+      // Fail closed rather than silently starting over with a corrupt partial receipt.
+      if(partial.jobId!==plan.jobId || !/^[0-9]+$/.test(String(partial.threadId??''))
+        || !Array.isArray(partial.messageIds) || partial.messageIds.length<1
+        || partial.messageIds.length>plan.parts.length+1
+        || partial.messageIds.some(id=>!/^[0-9]+$/.test(String(id)))
+        || new Set(partial.messageIds.map(String)).size!==partial.messageIds.length){
+        throw new Error('Invalid partial Medaka publication checkpoint; manual reconciliation required');
+      }
+      const knownThread=inventory.threads.find(t=>
+        String(t.id??t.threadId??'')===String(partial.threadId)
+        && t.name===plan.threadName);
+      if(!knownThread){
+        throw new Error('Partial Medaka publication thread not verified in target forum');
+      }
       messageIds=partial.messageIds.map(String);
+      const expected=[plan.starter,...plan.parts.map(part=>part.content)];
+      for(let i=0;i<messageIds.length;i++){
+        const existing=await discord.fetchMessage(partial.threadId,messageIds[i]);
+        if(!existing){
+          throw new Error('Discord message '+messageIds[i]+' could not be fetched after posting; partial state requires manual reconciliation');
+        }
+        if(String(existing.id)!==messageIds[i]
+          || String(existing.author?.id)!==String(discord.botId)
+          || existing.content!==expected[i]){
+          throw new Error('Partial Medaka publication readback mismatch; manual reconciliation required');
+        }
+      }
+      thread={threadId:String(partial.threadId),starterId:messageIds[0]};
     } else {
       // Fresh-start path: enforce the duplicate-thread guard before creating.
       if(inventory.threads.some(t=>t.name===plan.threadName

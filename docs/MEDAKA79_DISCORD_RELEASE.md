@@ -57,15 +57,18 @@ The existing managed runtime must provide, as independent trusted capabilities:
   resolve the canonical guild/forum with public read-history permissions,
   discover complete historical threads, publish via the already-approved bot,
   then fetch **11 full authenticated messages**.
-- `receiptStore.get(jobId)` and `receiptStore.save(receipt)`: use canonical
-  publication must be reconciled against real Discord IDs, never blindly retried.
-- `receiptStore.savePartial(state)` and `receiptStore.loadPartial(jobId)`: persist
-  and restore a durable partial-post checkpoint. The publisher writes a checkpoint
-  immediately after the thread is created and again after each successful reply.
-  On re-entry the publisher resumes into the existing thread using the saved IDs,
-  skipping the duplicate-thread guard for the already-known thread, so no duplicate
-  is ever created. Both methods are validated before the signed grant is consumed.
-  publication must be reconciled against real Discord IDs, never blindly retried.
+- `receiptStore.get(jobId)` and `receiptStore.save(receipt)`: use the
+  existing atomic receipt ledger. Never report completed publication before
+  all eleven message IDs pass authenticated Discord readback.
+- `receiptStore.savePartial(state)` and `receiptStore.loadPartial(jobId)`:
+  durably checkpoint the same job and known thread after successful writes.
+  Recovery must verify job ID, thread membership in the approved forum,
+  bot ownership, existing message IDs and exact source-locked content
+  **before sending any additional replies**. Invalid partial state fails closed.
+  A network timeout or process crash after Discord accepted a reply but
+  **before its checkpoint was saved** can leave an unrecorded message.
+  The trusted runtime must reconcile the entire thread's actual messages and
+  markers before resuming; never blindly retry an ambiguous write.
 
 All content is rebuilt from the checked-in 79-entry matrix and checked against
 the plan; the SHA-256 normalizes only Windows checkout CRLF line endings to

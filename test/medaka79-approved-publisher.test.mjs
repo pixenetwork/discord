@@ -16,7 +16,7 @@ const plan=buildMedaka79Index(JSON.parse(bytes),{rawSource:bytes});
 // nullFetch: if true, fetchMessage returns null for the first reply ID
 // ---------------------------------------------------------------------------
 function fixture({
-  grant=true,complete=true,threads=[],alterReadback=false,
+  grant=true,complete=true,threads=null,alterReadback=false,
   previousReceipt=false,partial=null,nullFetch=false,
 }={}){
   const calls={created:0,sent:0,stored:0,locks:0,unlocks:0,partialSaves:0};
@@ -36,7 +36,7 @@ function fixture({
       guildId:plan.guildId,forumId:plan.forumId,
       publicView:true,readMessageHistory:true,botMayPost:true,
     };},
-    async enumerateThreads(){return {complete,threads};},
+    async enumerateThreads(){return {complete,threads:threads??(partial?[{id:String(partial.threadId),name:plan.threadName}]:[])};},
     async createThread(params){
       calls.created++;
       assert.equal(params.forumId,plan.forumId);
@@ -192,6 +192,26 @@ test('signed source hash cannot authorize changed Discord message content',async
   await assert.rejects(request(f,{plan:changed}),/source-locked message content/i);
   assert.equal(f.calls.created,0);
   assert.equal(f.calls.stored,0);
+});
+
+test('partial restart refuses wrong publication identity before sending replies',async()=>{
+  const fix=fixture({partial:{jobId:'other-publication',threadId:'6000',messageIds:['7001']}});
+  await assert.rejects(request(fix),/partial|resume|publication/i);
+  assert.equal(fix.calls.sent,0,'wrong saved job must never authorize writes');
+  assert.equal(fix.calls.created,0);
+  assert.equal(fix.calls.stored,0);
+});
+
+test('partial restart verifies existing Discord messages before sending more',async()=>{
+  const fix=fixture({partial:{jobId:plan.jobId,threadId:'6000',messageIds:['7001','7002','7003']}});
+  const original=fix.discord.fetchMessage;
+  fix.discord.fetchMessage=async (...args)=>{
+    const msg=await original(...args);
+    return msg?.id==='7002'?{...msg,content:'tampered old reply'}:msg;
+  };
+  await assert.rejects(request(fix),/partial|resume|readback|mismatch/i);
+  assert.equal(fix.calls.sent,0,'do not post new replies before validating the checkpointed ones');
+  assert.equal(fix.calls.stored,0);
 });
 
 test('preexisting receipt blocks all new writes until separately verified',async()=>{

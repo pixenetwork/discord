@@ -27,3 +27,15 @@
 3. Pleco: 85 missing direct article backlinks after checking 167 existing bot-owned threads, with 30 of the 85 proposed targets archived; 82 already linked, no thread replication.
 
 Complete proposed content and hashes: `resources/aquapedia-cross-taxa-release-review-20261021.json`.
+
+## Live Discord duplicate-check preflight — October 21, 2026
+
+After deterministic review manifest commit `48a78df`, an additional **authenticated read-only REST audit** walked the **97 distinct public Discord threads** referenced by all 99 preview messages. It did not create/modify threads or messages:
+
+- Verified all **97/97** original thread starters belong to the existing Aquaphoria bot.
+- All **97/97** message windows were complete within the most recent 25 messages (starter visible in every sampled thread).
+- Proposed direct website links still absent **99/99** (4 Guppy index messages, 10 Cory source links, 85 Pleco backlinks). No partial links, no already fully linked proposals.
+- Existing archived-target count unchanged: **36 proposed messages** point to archived threads (30 Pleco and 6 Cory), and **0** targets were locked; all archived status checks matched the captured source manifests.
+- The user’s original runtime publisher is separate and healthy. This is **not** permission to post and does **not** constitute scientific claim verification, copyright/license clearance, or an approved publisher deployment.
+- New reusable `src/aquapedia-cross-taxa-live-preflight.mjs` and `tools/audit-aquapedia-cross-taxa-live-discord.mjs --audit` recheck source counts/labels, bot ownership, real thread parent/lock/archive state and presence of exact links. A changed starter or unsupported source fails closed; no --apply, no write API calls, no scheduler. A 25-message truncation is flagged as incomplete evidence.
+- The older Guppy snapshot was more than 16 hours old when the manifest was generated. The live per-target audit closes that *specific thread readback* gap for that timestamp only; any later authorized release must still repeat the preflight and separately obtain editorial/publishing approval and idempotent message receipts.

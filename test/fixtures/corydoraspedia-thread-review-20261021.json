@@ -1,0 +1,438 @@
+{
+  "capturedAt": "2026-10-22T01:19:01.002Z",
+  "source": "https://aquapedia.app/assets/catalog.json",
+  "forumId": "1560887812910350339",
+  "records": [
+    {
+      "name": "Black Venezuela",
+      "slug": "black-venezuela",
+      "url": "/corydoraspedia/lineages/#black-venezuela",
+      "type": "Selected morph / lineage",
+      "status": "Pedigree or genetics under review",
+      "candidates": [
+        {
+          "id": "1560888001083482275",
+          "name": "Black Venezuela / Black Cory",
+          "parentId": "1560887812910350339",
+          "archived": true,
+          "locked": false,
+          "starterOwnedByBot": true,
+          "recentMessageCount": 1,
+          "sourceLinkAlreadyPresent": false
+        },
+        {
+          "id": "1560887875828977812",
+          "name": "Osteogaster aenea",
+          "parentId": "1560887812910350339",
+          "archived": true,
+          "locked": false,
+          "starterOwnedByBot": true,
+          "recentMessageCount": 1,
+          "sourceLinkAlreadyPresent": false
+        }
+      ]
+    },
+    {
+      "name": "Blue Laser",
+      "slug": "blue-laser",
+      "url": "/corydoraspedia/lineages/#blue-laser",
+      "type": "Selected morph / lineage",
+      "status": "Pedigree or genetics under review",
+      "candidates": [
+        {
+          "id": "1560888001796509840",
+          "name": "Blue Laser (CW009-selected)",
+          "parentId": "1560887812910350339",
+          "archived": true,
+          "locked": false,
+          "starterOwnedByBot": true,
+          "recentMessageCount": 1,
+          "sourceLinkAlreadyPresent": false
+        },
+        {
+          "id": "1560887910176399402",
+          "name": "Osteogaster sp. CW009",
+          "parentId": "1560887812910350339",
+          "archived": true,
+          "locked": false,
+          "starterOwnedByBot": true,
+          "recentMessageCount": 1,
+          "sourceLinkAlreadyPresent": false
+        }
+      ]
+    },
+    {
+      "name": "Red Laser",
+      "slug": "red-laser",
+      "url": "/corydoraspedia/lineages/#red-laser",
+      "type": "Selected morph / lineage",
+      "status": "Pedigree or genetics under review",
+      "candidates": [
+        {
+          "id": "1560887912764022807",
+          "name": "Osteogaster sp. CW023",
+          "parentId": "1560887812910350339",
+          "archived": true,
+          "locked": false,
+          "starterOwnedByBot": true,
+          "recentMessageCount": 1,
+          "sourceLinkAlreadyPresent": false
+        }
+      ]
+    },
+    {
+      "name": "Albino Gold Laser",
+      "slug": "albino-gold-laser",
+      "url": "/corydoraspedia/lineages/#albino-gold-laser",
+      "type": "Selected morph / lineage",
+      "status": "Pedigree or genetics under review",
+      "candidates": [
+        {
+          "id": "1560889077572833371",
+          "name": "Albino Gold Laser",
+          "parentId": "1560887812910350339",
+          "archived": true,
+          "locked": false,
+          "starterOwnedByBot": true,
+          "recentMessageCount": 1,
+          "sourceLinkAlreadyPresent": false
+        },
+        {
+          "id": "1560887911166124063",
+          "name": "Osteogaster sp. CW010",
+          "parentId": "1560887812910350339",
+          "archived": true,
+          "locked": false,
+          "starterOwnedByBot": true,
+          "recentMessageCount": 1,
+          "sourceLinkAlreadyPresent": false
+        }
+      ]
+    },
+    {
+      "name": "Albino Sterbai",
+      "slug": "albino-sterbai",
+      "url": "/corydoraspedia/lineages/#albino-sterbai",
+      "type": "Selected morph / lineage",
+      "status": "Pedigree or genetics under review",
+      "candidates": [
+        {
+          "id": "1560889080882008127",
+          "name": "Albino Sterbai",
+          "parentId": "1560887812910350339",
+          "archived": true,
+          "locked": false,
+          "starterOwnedByBot": true,
+          "recentMessageCount": 1,
+          "sourceLinkAlreadyPresent": false
+        },
+        {
+          "id": "1560887818866270344",
+          "name": "Hoplisoma sterbai",
+          "parentId": "1560887812910350339",
+          "archived": true,
+          "locked": false,
+          "starterOwnedByBot": true,
+          "recentMessageCount": 1,
+          "sourceLinkAlreadyPresent": false
+        }
+      ]
+    },
+    {
+      "name": "Longfin Sterbai",
+      "slug": "longfin-sterbai",
+      "url": "/corydoraspedia/lineages/#longfin-sterbai",
+      "type": "Selected morph / lineage",
+      "status": "Pedigree or genetics under review",
+      "candidates": [
+        {
+          "id": "1560889081964134403",
+          "name": "Longfin Sterbai",
+          "parentId": "1560887812910350339",
+          "archived": true,
+          "locked": false,
+          "starterOwnedByBot": true,
+          "recentMessageCount": 1,
+          "sourceLinkAlreadyPresent": false
+        },
+        {
+          "id": "1560887818866270344",
+          "name": "Hoplisoma sterbai",
+          "parentId": "1560887812910350339",
+          "archived": true,
+          "locked": false,
+          "starterOwnedByBot": true,
+          "recentMessageCount": 1,
+          "sourceLinkAlreadyPresent": false
+        }
+      ]
+    },
+    {
+      "name": "Albino Bronze",
+      "slug": "albino-bronze",
+      "url": "/corydoraspedia/lineages/#albino-bronze",
+      "type": "Selected morph / lineage",
+      "status": "Pedigree or genetics under review",
+      "candidates": [
+        {
+          "id": "1560889083134214225",
+          "name": "Albino Bronze Cory",
+          "parentId": "1560887812910350339",
+          "archived": true,
+          "locked": false,
+          "starterOwnedByBot": true,
+          "recentMessageCount": 1,
+          "sourceLinkAlreadyPresent": false
+        },
+        {
+          "id": "1560887875828977812",
+          "name": "Osteogaster aenea",
+          "parentId": "1560887812910350339",
+          "archived": true,
+          "locked": false,
+          "starterOwnedByBot": true,
+          "recentMessageCount": 1,
+          "sourceLinkAlreadyPresent": false
+        }
+      ]
+    },
+    {
+      "name": "Longfin Bronze",
+      "slug": "longfin-bronze",
+      "url": "/corydoraspedia/lineages/#longfin-bronze",
+      "type": "Selected morph / lineage",
+      "status": "Pedigree or genetics under review",
+      "candidates": [
+        {
+          "id": "1560889083948044309",
+          "name": "Longfin Bronze Cory",
+          "parentId": "1560887812910350339",
+          "archived": true,
+          "locked": false,
+          "starterOwnedByBot": true,
+          "recentMessageCount": 1,
+          "sourceLinkAlreadyPresent": false
+        },
+        {
+          "id": "1560887875828977812",
+          "name": "Osteogaster aenea",
+          "parentId": "1560887812910350339",
+          "archived": true,
+          "locked": false,
+          "starterOwnedByBot": true,
+          "recentMessageCount": 1,
+          "sourceLinkAlreadyPresent": false
+        }
+      ]
+    },
+    {
+      "name": "Hoplisoma panda breeding report",
+      "slug": "hoplisoma-panda-breeding",
+      "url": "/corydoraspedia/breeding/#hoplisoma-panda",
+      "type": "Firsthand breeder history",
+      "status": "Keeper observation; not a universal target",
+      "candidates": [
+        {
+          "id": "1560887820451709019",
+          "name": "Hoplisoma panda",
+          "parentId": "1560887812910350339",
+          "archived": true,
+          "locked": false,
+          "starterOwnedByBot": true,
+          "recentMessageCount": 1,
+          "sourceLinkAlreadyPresent": false
+        }
+      ]
+    },
+    {
+      "name": "Hoplisoma sterbai breeding report",
+      "slug": "hoplisoma-sterbai-breeding",
+      "url": "/corydoraspedia/breeding/#hoplisoma-sterbai",
+      "type": "Firsthand breeder history",
+      "status": "Keeper observation; not a universal target",
+      "candidates": [
+        {
+          "id": "1560887818866270344",
+          "name": "Hoplisoma sterbai",
+          "parentId": "1560887812910350339",
+          "archived": true,
+          "locked": false,
+          "starterOwnedByBot": true,
+          "recentMessageCount": 1,
+          "sourceLinkAlreadyPresent": false
+        }
+      ]
+    },
+    {
+      "name": "Hoplisoma adolfoi breeding report",
+      "slug": "hoplisoma-adolfoi-breeding",
+      "url": "/corydoraspedia/breeding/#hoplisoma-adolfoi",
+      "type": "Firsthand breeder history",
+      "status": "Keeper observation; not a universal target",
+      "candidates": [
+        {
+          "id": "1560887821441437827",
+          "name": "Hoplisoma adolfoi",
+          "parentId": "1560887812910350339",
+          "archived": true,
+          "locked": false,
+          "starterOwnedByBot": true,
+          "recentMessageCount": 1,
+          "sourceLinkAlreadyPresent": false
+        }
+      ]
+    },
+    {
+      "name": "Hoplisoma duplicareum breeding report",
+      "slug": "hoplisoma-duplicareum-breeding",
+      "url": "/corydoraspedia/breeding/#hoplisoma-duplicareum",
+      "type": "Firsthand breeder history",
+      "status": "Keeper observation; not a universal target",
+      "candidates": [
+        {
+          "id": "1560887822452527187",
+          "name": "Hoplisoma duplicareum",
+          "parentId": "1560887812910350339",
+          "archived": true,
+          "locked": false,
+          "starterOwnedByBot": true,
+          "recentMessageCount": 1,
+          "sourceLinkAlreadyPresent": false
+        }
+      ]
+    },
+    {
+      "name": "Hoplisoma burgessi breeding report",
+      "slug": "hoplisoma-burgessi-breeding",
+      "url": "/corydoraspedia/breeding/#hoplisoma-burgessi",
+      "type": "Firsthand breeder history",
+      "status": "Keeper observation; not a universal target",
+      "candidates": [
+        {
+          "id": "1560942081436942398",
+          "name": "Hoplisoma burgessi",
+          "parentId": "1560887812910350339",
+          "archived": false,
+          "locked": false,
+          "starterOwnedByBot": true,
+          "recentMessageCount": 1,
+          "sourceLinkAlreadyPresent": false
+        }
+      ]
+    },
+    {
+      "name": "Hoplisoma davidsandsi breeding report",
+      "slug": "hoplisoma-davidsandsi-breeding",
+      "url": "/corydoraspedia/breeding/#hoplisoma-davidsandsi",
+      "type": "Firsthand breeder history",
+      "status": "Keeper observation; not a universal target",
+      "candidates": [
+        {
+          "id": "1560953415230824582",
+          "name": "Hoplisoma davidsandsi",
+          "parentId": "1560887812910350339",
+          "archived": false,
+          "locked": false,
+          "starterOwnedByBot": true,
+          "recentMessageCount": 1,
+          "sourceLinkAlreadyPresent": false
+        }
+      ]
+    },
+    {
+      "name": "Hoplisoma metae breeding report",
+      "slug": "hoplisoma-metae-breeding",
+      "url": "/corydoraspedia/breeding/#hoplisoma-metae",
+      "type": "Firsthand breeder history",
+      "status": "Keeper observation; not a universal target",
+      "candidates": [
+        {
+          "id": "1560887870728831078",
+          "name": "Hoplisoma metae",
+          "parentId": "1560887812910350339",
+          "archived": true,
+          "locked": false,
+          "starterOwnedByBot": true,
+          "recentMessageCount": 1,
+          "sourceLinkAlreadyPresent": false
+        }
+      ]
+    },
+    {
+      "name": "Hoplisoma nattereri breeding report",
+      "slug": "hoplisoma-nattereri-breeding",
+      "url": "/corydoraspedia/breeding/#hoplisoma-nattereri",
+      "type": "Firsthand breeder history",
+      "status": "Keeper observation; not a universal target",
+      "candidates": [
+        {
+          "id": "1560963836872360040",
+          "name": "Hoplisoma nattereri",
+          "parentId": "1560887812910350339",
+          "archived": false,
+          "locked": false,
+          "starterOwnedByBot": true,
+          "recentMessageCount": 1,
+          "sourceLinkAlreadyPresent": false
+        }
+      ]
+    },
+    {
+      "name": "Hoplisoma xinguense breeding report",
+      "slug": "hoplisoma-xinguense-breeding",
+      "url": "/corydoraspedia/breeding/#hoplisoma-xinguense",
+      "type": "Firsthand breeder history",
+      "status": "Keeper observation; not a universal target",
+      "candidates": [
+        {
+          "id": "1560966748222656554",
+          "name": "Hoplisoma xinguense",
+          "parentId": "1560887812910350339",
+          "archived": false,
+          "locked": false,
+          "starterOwnedByBot": true,
+          "recentMessageCount": 1,
+          "sourceLinkAlreadyPresent": false
+        }
+      ]
+    },
+    {
+      "name": "Brochis splendens breeding report",
+      "slug": "brochis-splendens-breeding",
+      "url": "/corydoraspedia/breeding/#brochis-splendens",
+      "type": "Firsthand breeder history",
+      "status": "Keeper observation; not a universal target",
+      "candidates": [
+        {
+          "id": "1560887915066691665",
+          "name": "Brochis splendens",
+          "parentId": "1560887812910350339",
+          "archived": true,
+          "locked": false,
+          "starterOwnedByBot": true,
+          "recentMessageCount": 1,
+          "sourceLinkAlreadyPresent": false
+        }
+      ]
+    },
+    {
+      "name": "Hoplisoma weitzmani breeding report",
+      "slug": "hoplisoma-weitzmani-breeding",
+      "url": "/corydoraspedia/breeding/#hoplisoma-weitzmani",
+      "type": "Firsthand breeder history",
+      "status": "Keeper observation; not a universal target",
+      "candidates": [
+        {
+          "id": "1560887823932989441",
+          "name": "Hoplisoma weitzmanii",
+          "parentId": "1560887812910350339",
+          "archived": true,
+          "locked": false,
+          "starterOwnedByBot": true,
+          "recentMessageCount": 1,
+          "sourceLinkAlreadyPresent": false
+        }
+      ]
+    }
+  ]
+}

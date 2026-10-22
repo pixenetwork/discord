@@ -1,0 +1,1338 @@
+[
+  {
+    "name": "L046 — Zebra Pleco",
+    "slug": "l046",
+    "url": "/plecopedia/research/l046/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L098 — Historical Zebra Pleco identifier",
+    "slug": "l098",
+    "url": "/plecopedia/research/l098/",
+    "group": "pleco",
+    "type": "Pleco · L-number",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L066 — Hypancistrus seideli",
+    "slug": "l066",
+    "url": "/plecopedia/research/l066/",
+    "group": "pleco",
+    "type": "Pleco · L-number",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L236 — Hypancistrus seideli",
+    "slug": "l236",
+    "url": "/plecopedia/research/l236/",
+    "group": "pleco",
+    "type": "Pleco · L-number",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L287 — Hypancistrus seideli",
+    "slug": "l287",
+    "url": "/plecopedia/research/l287/",
+    "group": "pleco",
+    "type": "Pleco · L-number",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L333 — Hypancistrus seideli (King Tiger)",
+    "slug": "l333",
+    "url": "/plecopedia/research/l333/",
+    "group": "pleco",
+    "type": "Pleco · L-number",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L399 — Hypancistrus seideli",
+    "slug": "l399",
+    "url": "/plecopedia/research/l399/",
+    "group": "pleco",
+    "type": "Pleco · L-number",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L400 — Hypancistrus seideli",
+    "slug": "l400",
+    "url": "/plecopedia/research/l400/",
+    "group": "pleco",
+    "type": "Pleco · L-number",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L174 — Hypancistrus yudja (Ozelot)",
+    "slug": "l174",
+    "url": "/plecopedia/research/l174/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L200 — Baryancistrus demantoides (Green Phantom)",
+    "slug": "l200-demantoides",
+    "url": "/plecopedia/research/l200-demantoides/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L200 — Hemiancistrus subviridis (Green Phantom)",
+    "slug": "l200-subviridis",
+    "url": "/plecopedia/research/l200-subviridis/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L018 / L085 / L177 — Gold Nugget",
+    "slug": "l018",
+    "url": "/plecopedia/research/l018/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L260 — Queen Arabesque",
+    "slug": "l260",
+    "url": "/plecopedia/research/l260/",
+    "group": "pleco",
+    "type": "Pleco · L-number",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L183 — Starlight Bristlenose",
+    "slug": "l183",
+    "url": "/plecopedia/research/l183/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "Ancistrus captive morph — Super Red",
+    "slug": "morph-super-red",
+    "url": "/plecopedia/research/morph-super-red/",
+    "group": "pleco",
+    "type": "Pleco · Captive morph",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "Ancistrus captive morph — Albino",
+    "slug": "morph-albino",
+    "url": "/plecopedia/research/morph-albino/",
+    "group": "pleco",
+    "type": "Pleco · Captive morph",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "Ancistrus captive morph — Longfin",
+    "slug": "morph-longfin",
+    "url": "/plecopedia/research/morph-longfin/",
+    "group": "pleco",
+    "type": "Pleco · Captive morph",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "Ancistrus captive morph — Calico",
+    "slug": "morph-calico",
+    "url": "/plecopedia/research/morph-calico/",
+    "group": "pleco",
+    "type": "Pleco · Captive morph",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "Panaque / Panaqolus — Wood & diet evidence",
+    "slug": "wood-ecology",
+    "url": "/plecopedia/research/wood-ecology/",
+    "group": "pleco",
+    "type": "Pleco · Breeding",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "Breeder history — Ingo Seidel",
+    "slug": "ingo-seidel",
+    "url": "/plecopedia/research/ingo-seidel/",
+    "group": "pleco",
+    "type": "Pleco · Breeder history",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L-number / LDA — Identity & provenance guide",
+    "slug": "taxonomy-primer",
+    "url": "/plecopedia/research/taxonomy-primer/",
+    "group": "pleco",
+    "type": "Pleco · Taxonomy",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L134 — Leopard Frog Pleco",
+    "slug": "l134",
+    "url": "/plecopedia/research/l134/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L047 — Mango / Magnum Pleco",
+    "slug": "l047",
+    "url": "/plecopedia/research/l047/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L034 — Medusa Pleco",
+    "slug": "l034",
+    "url": "/plecopedia/research/l034/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L255 — Spotted Medusa Pleco",
+    "slug": "l255",
+    "url": "/plecopedia/research/l255/",
+    "group": "pleco",
+    "type": "Pleco · L-number",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L029 — Galaxy / Vampire Pleco",
+    "slug": "l029",
+    "url": "/plecopedia/research/l029/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L007 — Leopard Vampire Pleco",
+    "slug": "l007",
+    "url": "/plecopedia/research/l007/",
+    "group": "pleco",
+    "type": "Pleco · L-number",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L102 — Snowball Pleco",
+    "slug": "l102",
+    "url": "/plecopedia/research/l102/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L114 — Leopard Cactus Pleco",
+    "slug": "l114",
+    "url": "/plecopedia/research/l114/",
+    "group": "pleco",
+    "type": "Pleco · L-number",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L104 / L162 / LDA022 — Clown Pleco",
+    "slug": "l104",
+    "url": "/plecopedia/research/l104/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L162 — Historical Clown Pleco alias",
+    "slug": "l162",
+    "url": "/plecopedia/research/l162/",
+    "group": "pleco",
+    "type": "Pleco · L-number",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L014 — Sunshine / Goldie Pleco",
+    "slug": "l014",
+    "url": "/plecopedia/research/l014/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L190 — Royal Pleco",
+    "slug": "l190",
+    "url": "/plecopedia/research/l190/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L204 — Flash / Flash Panaque",
+    "slug": "l204",
+    "url": "/plecopedia/research/l204/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L075 / L124 / L301 — Sabaji Pleco",
+    "slug": "l075",
+    "url": "/plecopedia/research/l075/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L199 — Hypancistrus furunculus",
+    "slug": "l199",
+    "url": "/plecopedia/research/l199/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L052 / L168 — Butterfly Pleco locality debate",
+    "slug": "l052-l168",
+    "url": "/plecopedia/research/l052-l168/",
+    "group": "pleco",
+    "type": "Pleco · Taxonomy",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L203 — Titanic Pleco",
+    "slug": "l203",
+    "url": "/plecopedia/research/l203/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L129 — Hypancistrus debilittera",
+    "slug": "l129",
+    "url": "/plecopedia/research/l129/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L201 — Snowball-type unresolved identity",
+    "slug": "l201",
+    "url": "/plecopedia/research/l201/",
+    "group": "pleco",
+    "type": "Pleco · Taxonomy",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "Breeder field report — Karsten S. / L183",
+    "slug": "breeder-karsten-l183",
+    "url": "/plecopedia/research/breeder-karsten-l183/",
+    "group": "pleco",
+    "type": "Pleco · Breeder history",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L002 — Tiger Panaqolus (provisional)",
+    "slug": "l002",
+    "url": "/plecopedia/research/l002/",
+    "group": "pleco",
+    "type": "Pleco · L-number",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L024 — Pseudacanthicus pitanga",
+    "slug": "l024",
+    "url": "/plecopedia/research/l024/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L025 — Scarlet Cactus / Pseudacanthicus pirarara",
+    "slug": "l025",
+    "url": "/plecopedia/research/l025/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L027 — Panaque armbrusteri (Tapajós)",
+    "slug": "l027",
+    "url": "/plecopedia/research/l027/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L027a / L027 Xingu — provisional Royal Panaque",
+    "slug": "l027x",
+    "url": "/plecopedia/research/l027x/",
+    "group": "pleco",
+    "type": "Pleco · Taxonomy",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L030 / L016 — Spectracanthicus punctatissimus",
+    "slug": "l030",
+    "url": "/plecopedia/research/l030/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L031 — Parancistrus nudiventris",
+    "slug": "l031",
+    "url": "/plecopedia/research/l031/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L037 — Hypostomus faveolus",
+    "slug": "l037",
+    "url": "/plecopedia/research/l037/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L041 — Guyanancistrus brevispinis",
+    "slug": "l041",
+    "url": "/plecopedia/research/l041/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L056 — Golden Broad-headed label is WRONG",
+    "slug": "l056",
+    "url": "/plecopedia/research/l056/",
+    "group": "pleco",
+    "type": "Pleco · Taxonomy",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L067 — Pseudancistrus asurini",
+    "slug": "l067",
+    "url": "/plecopedia/research/l067/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L017 — Wolverine / Pseudancistrus historical mix-up",
+    "slug": "l017",
+    "url": "/plecopedia/research/l017/",
+    "group": "pleco",
+    "type": "Pleco · Taxonomy",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L020 — Spectracanthicus zuanoni",
+    "slug": "l020",
+    "url": "/plecopedia/research/l020/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L073 — historical alias of L004",
+    "slug": "l073",
+    "url": "/plecopedia/research/l073/",
+    "group": "pleco",
+    "type": "Pleco · L-number",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L074 — historical alias of L002",
+    "slug": "l074",
+    "url": "/plecopedia/research/l074/",
+    "group": "pleco",
+    "type": "Pleco · L-number",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L081 — Gold Nugget trade crosswalk (caution)",
+    "slug": "l081",
+    "url": "/plecopedia/research/l081/",
+    "group": "pleco",
+    "type": "Pleco · Taxonomy",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L082 — Scobinancistrus raonii",
+    "slug": "l082",
+    "url": "/plecopedia/research/l082/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L086 — Spectracanthicus tocantinensis",
+    "slug": "l086",
+    "url": "/plecopedia/research/l086/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L091 — Three Beacon Pleco",
+    "slug": "l091",
+    "url": "/plecopedia/research/l091/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L096 / L160 — Spiny Monster Cactus Pleco",
+    "slug": "l096",
+    "url": "/plecopedia/research/l096/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L239 — Blue Panaque is actually Baryancistrus",
+    "slug": "l239",
+    "url": "/plecopedia/research/l239/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "Breeder report — Christophe Girardet L025 spawn",
+    "slug": "breeder-christophe-l025",
+    "url": "/plecopedia/research/breeder-christophe-l025/",
+    "group": "pleco",
+    "type": "Pleco · Breeder history",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L027 Tocantins — provisional Panaque population",
+    "slug": "l027-toc",
+    "url": "/plecopedia/research/l027-toc/",
+    "group": "pleco",
+    "type": "Pleco · Taxonomy",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L001 — Gold Spot Sailfin Pleco",
+    "slug": "l001",
+    "url": "/plecopedia/research/l001/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L022 — L001 Gold Spot trade alias",
+    "slug": "l022",
+    "url": "/plecopedia/research/l022/",
+    "group": "pleco",
+    "type": "Pleco · L-number",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L021 — Common Sailfin / Amazon Pleco",
+    "slug": "l021",
+    "url": "/plecopedia/research/l021/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L023 — Historical alias of L021",
+    "slug": "l023",
+    "url": "/plecopedia/research/l023/",
+    "group": "pleco",
+    "type": "Pleco · L-number",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "Pterygoplichthys pardalis vs disjunctivus — ID and invasion",
+    "slug": "sailfin-invasion",
+    "url": "/plecopedia/research/sailfin-invasion/",
+    "group": "pleco",
+    "type": "Pleco · Conservation",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L059 — Ancistrus hoplogenys, not L183",
+    "slug": "l059",
+    "url": "/plecopedia/research/l059/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L128 — Blue Phantom, unresolved Hemiancistrus",
+    "slug": "l128",
+    "url": "/plecopedia/research/l128/",
+    "group": "pleco",
+    "type": "Pleco · L-number",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L015 — Candy Stripe / Peckoltia vittata",
+    "slug": "l015",
+    "url": "/plecopedia/research/l015/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L398 — Tanke Tiger Pleco, described species",
+    "slug": "l398",
+    "url": "/plecopedia/research/l398/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L397 — Tangerine Tiger, not L398",
+    "slug": "l397",
+    "url": "/plecopedia/research/l397/",
+    "group": "pleco",
+    "type": "Pleco · L-number",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L306 / LDA064 — Panaqolus claustellifer",
+    "slug": "l306",
+    "url": "/plecopedia/research/l306/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L212 — Hopliancistrus tricornis",
+    "slug": "l212",
+    "url": "/plecopedia/research/l212/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L144 — The original lost Paraguay bristlenose",
+    "slug": "l144-original",
+    "url": "/plecopedia/research/l144-original/",
+    "group": "pleco",
+    "type": "Pleco · Taxonomy",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "Ancistrus Lemon / Blue-eye yellow captive line — false L144",
+    "slug": "morph-lemon",
+    "url": "/plecopedia/research/morph-lemon/",
+    "group": "pleco",
+    "type": "Pleco · Captive morph",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L600 — Unofficial commercial label for Leopard Cactus",
+    "slug": "l600",
+    "url": "/plecopedia/research/l600/",
+    "group": "pleco",
+    "type": "Pleco · Taxonomy",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L427 — Jatapu Leopard Cactus form",
+    "slug": "l427",
+    "url": "/plecopedia/research/l427/",
+    "group": "pleco",
+    "type": "Pleco · L-number",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "Pseudacanthicus nyktos — described 2024 Xingu species",
+    "slug": "p-nyktos",
+    "url": "/plecopedia/research/p-nyktos/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "Breeder report — Marina Parha & George J. Reclos L046",
+    "slug": "breeder-parha-l046",
+    "url": "/plecopedia/research/breeder-parha-l046/",
+    "group": "pleco",
+    "type": "Pleco · Breeder history",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "Breeder history — Andreas Tanke & L398 (2008)",
+    "slug": "breeder-andreas-tanke-l398",
+    "url": "/plecopedia/research/breeder-andreas-tanke-l398/",
+    "group": "pleco",
+    "type": "Pleco · Breeder history",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "Panaqolus nix — wild color plasticity, not a fixed morph",
+    "slug": "panaqolus-nix",
+    "url": "/plecopedia/research/panaqolus-nix/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L004 — Angelicus Hypancistrus index",
+    "slug": "l004",
+    "url": "/plecopedia/research/l004/",
+    "group": "pleco",
+    "type": "Pleco · L-number",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L005 — Angelicus developmental trade alias",
+    "slug": "l005",
+    "url": "/plecopedia/research/l005/",
+    "group": "pleco",
+    "type": "Pleco · L-number",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L028 — Portel/Guamá Angelicus geographic form",
+    "slug": "l028",
+    "url": "/plecopedia/research/l028/",
+    "group": "pleco",
+    "type": "Pleco · L-number",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L011 — Xingu Red Fin Thresher",
+    "slug": "l011",
+    "url": "/plecopedia/research/l011/",
+    "group": "pleco",
+    "type": "Pleco · Taxonomy",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L035 — Araguaia Red Fin Thresher",
+    "slug": "l035",
+    "url": "/plecopedia/research/l035/",
+    "group": "pleco",
+    "type": "Pleco · L-number",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L108 — Napo Red Fin Thresher",
+    "slug": "l108",
+    "url": "/plecopedia/research/l108/",
+    "group": "pleco",
+    "type": "Pleco · L-number",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L116 — Trombetas Red Fin Thresher",
+    "slug": "l116",
+    "url": "/plecopedia/research/l116/",
+    "group": "pleco",
+    "type": "Pleco · L-number",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L131 — Tapajós Red Fin Thresher",
+    "slug": "l131",
+    "url": "/plecopedia/research/l131/",
+    "group": "pleco",
+    "type": "Pleco · L-number",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L153 — Apure Red Fin Thresher",
+    "slug": "l153",
+    "url": "/plecopedia/research/l153/",
+    "group": "pleco",
+    "type": "Pleco · L-number",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L083 — Xingu sailfin taxonomic conflict",
+    "slug": "l083",
+    "url": "/plecopedia/research/l083/",
+    "group": "pleco",
+    "type": "Pleco · Taxonomy",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L165 — Pterygoplichthys gibbiceps",
+    "slug": "l165",
+    "url": "/plecopedia/research/l165/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L191 — White Tail / Green Royal Panaque provisional",
+    "slug": "l191",
+    "url": "/plecopedia/research/l191/",
+    "group": "pleco",
+    "type": "Pleco · L-number",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L330 — Watermelon Royal locality population",
+    "slug": "l330",
+    "url": "/plecopedia/research/l330/",
+    "group": "pleco",
+    "type": "Pleco · L-number",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L418 — Shampupa Royal Panaque titan",
+    "slug": "l418",
+    "url": "/plecopedia/research/l418/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L106 — Spotted Orange Seam Pleco",
+    "slug": "l106",
+    "url": "/plecopedia/research/l106/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L122 — Orange Seam relative, provisional",
+    "slug": "l122",
+    "url": "/plecopedia/research/l122/",
+    "group": "pleco",
+    "type": "Pleco · Taxonomy",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "Peckoltia amjikin — 2025 taxonomic correction",
+    "slug": "p-amjikin",
+    "url": "/plecopedia/research/p-amjikin/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "Breeder field note — apistomaster, F1 L134 (2010)",
+    "slug": "breeder-apistomaster-l134",
+    "url": "/plecopedia/research/breeder-apistomaster-l134/",
+    "group": "pleco",
+    "type": "Pleco · Breeder history",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "Breeder field note — davej L134 spawn (2011)",
+    "slug": "breeder-davej-l134",
+    "url": "/plecopedia/research/breeder-davej-l134/",
+    "group": "pleco",
+    "type": "Pleco · Breeder history",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "Controlled research — L333 King Tiger breeding trial",
+    "slug": "study-l333-captive",
+    "url": "/plecopedia/research/study-l333-captive/",
+    "group": "pleco",
+    "type": "Pleco · Breeding",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L274 — Baryancistrus isaaci (formally described)",
+    "slug": "bary-isaaci",
+    "url": "/plecopedia/research/bary-isaaci/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L384 — Baryancistrus quilombola (formally described)",
+    "slug": "bary-quilombola",
+    "url": "/plecopedia/research/bary-quilombola/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L274 — Historical Baryancistrus trade alias",
+    "slug": "l274-alias",
+    "url": "/plecopedia/research/l274-alias/",
+    "group": "pleco",
+    "type": "Pleco · L-number",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L384 — Historical Baryancistrus trade alias",
+    "slug": "l384-alias",
+    "url": "/plecopedia/research/l384-alias/",
+    "group": "pleco",
+    "type": "Pleco · L-number",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "Baryancistrus hadrostomus — Jari River",
+    "slug": "bary-hadrostomus",
+    "url": "/plecopedia/research/bary-hadrostomus/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "Baryancistrus micropunctatus — Jari River",
+    "slug": "bary-micropunctatus",
+    "url": "/plecopedia/research/bary-micropunctatus/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "Baryancistrus longipinnis — Tocantins",
+    "slug": "bary-longipinnis",
+    "url": "/plecopedia/research/bary-longipinnis/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L026 — Baryancistrus niveatus",
+    "slug": "bary-niveatus",
+    "url": "/plecopedia/research/bary-niveatus/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "Peckoltia wernekei — Ventuari (2016)",
+    "slug": "peckol-wernekei",
+    "url": "/plecopedia/research/peckol-wernekei/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "Peckoltia lujani — Orinoco (2015)",
+    "slug": "peckol-lujani",
+    "url": "/plecopedia/research/peckol-lujani/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "Peckoltia greedoi — 2015 saddled species",
+    "slug": "peckol-greedoi",
+    "url": "/plecopedia/research/peckol-greedoi/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "Peckoltia cavatica — Rupununi",
+    "slug": "peckol-cavatica",
+    "url": "/plecopedia/research/peckol-cavatica/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "Hypancistrus contradens — not official L201a",
+    "slug": "hyp-contradens",
+    "url": "/plecopedia/research/hyp-contradens/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "Hypancistrus lunaorum — small spot diagnosis",
+    "slug": "hyp-lunaorum",
+    "url": "/plecopedia/research/hyp-lunaorum/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "LDA08 — Ancistrus claro",
+    "slug": "anc-claro",
+    "url": "/plecopedia/research/anc-claro/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L126 — Lithoxancistrus orinoco",
+    "slug": "l126-lithox",
+    "url": "/plecopedia/research/l126-lithox/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "Guyanancistrus nassauensis — Nassau mountain dwarf",
+    "slug": "guyan-nassauensis",
+    "url": "/plecopedia/research/guyan-nassauensis/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "Guyanancistrus brownsbergensis — Brownsberg",
+    "slug": "guyan-brownsberg",
+    "url": "/plecopedia/research/guyan-brownsberg/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "Guyanancistrus teretirostris — Parú de Oeste",
+    "slug": "guyan-teretirostris",
+    "url": "/plecopedia/research/guyan-teretirostris/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "Guyanancistrus tenuis — Mapaoni Jari",
+    "slug": "guyan-tenuis",
+    "url": "/plecopedia/research/guyan-tenuis/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "Guyanancistrus megastictus — Alama Maroni",
+    "slug": "guyan-megastictus",
+    "url": "/plecopedia/research/guyan-megastictus/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L267 — Ancistrus yanesha, formerly trade L267",
+    "slug": "anc-yanesha",
+    "url": "/plecopedia/research/anc-yanesha/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L267 — Historical trade code for Ancistrus yanesha",
+    "slug": "anc-l267-alias",
+    "url": "/plecopedia/research/anc-l267-alias/",
+    "group": "pleco",
+    "type": "Pleco · L-number",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "Hypancistrus parkateje — Tocantins 2025",
+    "slug": "hyp-parkateje",
+    "url": "/plecopedia/research/hyp-parkateje/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L159 — Ancistrus luzia, formal 2022 description",
+    "slug": "anc-luzia",
+    "url": "/plecopedia/research/anc-luzia/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "Ancistrus leoni — flattened 2019 species",
+    "slug": "anc-leoni",
+    "url": "/plecopedia/research/anc-leoni/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "Ancistrus kellerae — densely yellow-dotted",
+    "slug": "anc-kellerae",
+    "url": "/plecopedia/research/anc-kellerae/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "Ancistrus patronus — named paternal-care reference",
+    "slug": "anc-patronus",
+    "url": "/plecopedia/research/anc-patronus/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "Ancistrus amaris — wide-jawed 2019 species",
+    "slug": "anc-amaris",
+    "url": "/plecopedia/research/anc-amaris/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "Ancistrus yutajae — wide-jawed 2019 species",
+    "slug": "anc-yutajae",
+    "url": "/plecopedia/research/anc-yutajae/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "Ancistrus saudades — Proto-Berbice population split",
+    "slug": "anc-saudades",
+    "url": "/plecopedia/research/anc-saudades/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "Hypancistrus phantasma — archival Rio Uaupés",
+    "slug": "hyp-phantasma",
+    "url": "/plecopedia/research/hyp-phantasma/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "Hypancistrus margaritatus — Takutu spot pattern",
+    "slug": "hyp-margaritatus",
+    "url": "/plecopedia/research/hyp-margaritatus/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "Hypancistrus vandragti — former Micracanthicus",
+    "slug": "hyp-vandragti",
+    "url": "/plecopedia/research/hyp-vandragti/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "Pseudolithoxus stearleyi — formerly Soromonichthys",
+    "slug": "soromoni-stearleyi",
+    "url": "/plecopedia/research/soromoni-stearleyi/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "Ancistrus maldonadoi — 2020 Madre de Dios",
+    "slug": "anc-maldonadoi",
+    "url": "/plecopedia/research/anc-maldonadoi/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "Ancistrus greeni — redescription 2020",
+    "slug": "anc-greeni",
+    "url": "/plecopedia/research/anc-greeni/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "Ancistrus parecis — adipose-free Tapajós",
+    "slug": "anc-parecis",
+    "url": "/plecopedia/research/anc-parecis/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "Ancistrus verecundus — upper Madeira",
+    "slug": "anc-verecundus",
+    "url": "/plecopedia/research/anc-verecundus/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "Panaqolus gnomus — upper Marañón dwarf",
+    "slug": "pana-gnomus",
+    "url": "/plecopedia/research/pana-gnomus/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L329 — Panaqolus nocturnus",
+    "slug": "pana-nocturnus",
+    "url": "/plecopedia/research/pana-nocturnus/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "Pseudoqolus koko — originally Panaqolus koko",
+    "slug": "pana-koko",
+    "url": "/plecopedia/research/pana-koko/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "Chaetostoma sacramento — 2024 ornate rubbernose",
+    "slug": "chaeto-sacramento",
+    "url": "/plecopedia/research/chaeto-sacramento/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L455 — Chaetostoma sacramento historical form",
+    "slug": "l455-chaeto",
+    "url": "/plecopedia/research/l455-chaeto/",
+    "group": "pleco",
+    "type": "Pleco · L-number",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L456 — Chaetostoma sacramento historical form",
+    "slug": "l456-chaeto",
+    "url": "/plecopedia/research/l456-chaeto/",
+    "group": "pleco",
+    "type": "Pleco · L-number",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "L457 — Chaetostoma sacramento historical form",
+    "slug": "l457-chaeto",
+    "url": "/plecopedia/research/l457-chaeto/",
+    "group": "pleco",
+    "type": "Pleco · L-number",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "Panaqolus orcesi — Napo basin 2024",
+    "slug": "pana-orcesi",
+    "url": "/plecopedia/research/pana-orcesi/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "Panaqolus pantostiktos — Tigre basin 2024",
+    "slug": "pana-pantostiktos",
+    "url": "/plecopedia/research/pana-pantostiktos/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "Pseudancistrus zawadzkii — Tapajós 2014",
+    "slug": "pseudo-zawadzkii",
+    "url": "/plecopedia/research/pseudo-zawadzkii/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "Pseudancistrus barbatus — Guiana Shield group",
+    "slug": "pseudo-barbatus",
+    "url": "/plecopedia/research/pseudo-barbatus/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "Pseudancistrus corantijniensis — Corantijn",
+    "slug": "pseudo-corantijniensis",
+    "url": "/plecopedia/research/pseudo-corantijniensis/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "Pseudancistrus depressus — Guiana Shield group",
+    "slug": "pseudo-depressus",
+    "url": "/plecopedia/research/pseudo-depressus/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "Pseudancistrus nigrescens — barbatus group",
+    "slug": "pseudo-nigrescens",
+    "url": "/plecopedia/research/pseudo-nigrescens/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "Lasiancistrus tentaculatus — Orinoco",
+    "slug": "lasi-tentaculatus",
+    "url": "/plecopedia/research/lasi-tentaculatus/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "Lasiancistrus saetiger — Rio Guamá",
+    "slug": "lasi-saetiger",
+    "url": "/plecopedia/research/lasi-saetiger/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "Lasiancistrus schomburgkii — synonym-rich taxon",
+    "slug": "lasi-schomburgkii",
+    "url": "/plecopedia/research/lasi-schomburgkii/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "Lasiancistrus caucanus — trans-Andean group",
+    "slug": "lasi-caucanus",
+    "url": "/plecopedia/research/lasi-caucanus/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "Lasiancistrus guacharote — Lake Maracaibo",
+    "slug": "lasi-guacharote",
+    "url": "/plecopedia/research/lasi-guacharote/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "Lasiancistrus heteracanthus — type of genus",
+    "slug": "lasi-heteracanthus",
+    "url": "/plecopedia/research/lasi-heteracanthus/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "Panaqolus changae — Itaya/Momón barred dwarf",
+    "slug": "pana-changae",
+    "url": "/plecopedia/research/pana-changae/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "Panaqolus purusiensis — Purus barred dwarf",
+    "slug": "pana-purusiensis",
+    "url": "/plecopedia/research/pana-purusiensis/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "Pseudacanthicus major — giant Tocantins cactus",
+    "slug": "pseudoac-major",
+    "url": "/plecopedia/research/pseudoac-major/",
+    "group": "pleco",
+    "type": "Pleco · Named species",
+    "status": "Research draft — independent review pending"
+  },
+  {
+    "name": "Pseudancistrus sidereus — generic-placement dispute",
+    "slug": "pseudo-sidereus",
+    "url": "/plecopedia/research/pseudo-sidereus/",
+    "group": "pleco",
+    "type": "Pleco · Taxonomy",
+    "status": "Research draft — independent review pending"
+  }
+]

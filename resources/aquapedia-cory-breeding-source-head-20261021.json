@@ -1,0 +1,83 @@
+{
+  "capturedAt": "2026-10-22T03:26:18.436Z",
+  "method": "HTTP HEAD ONLY, no PDF/content download",
+  "checked": 10,
+  "reachableByHead": 10,
+  "sourceLinks": [
+    {
+      "url": "https://tfcb.org/wp-content/uploads/2018/05/May-June-2018-web-FINAL.pdf",
+      "status": 200,
+      "finalUrl": "https://tfcb.org/wp-content/uploads/2018/05/May-June-2018-web-FINAL.pdf",
+      "headAccessible": true,
+      "error": null
+    },
+    {
+      "url": "https://www.pvas.com/post/corydoras-sterbai",
+      "status": 200,
+      "finalUrl": "https://www.pvas.com/post/corydoras-sterbai",
+      "headAccessible": true,
+      "error": null
+    },
+    {
+      "url": "https://www.scotcat.com/articles/article1.html",
+      "status": 200,
+      "finalUrl": "https://www.scotcat.com/articles/article1.html",
+      "headAccessible": true,
+      "error": null
+    },
+    {
+      "url": "https://www.scotcat.com/articles/article12.html",
+      "status": 200,
+      "finalUrl": "https://www.scotcat.com/articles/article12.html",
+      "headAccessible": true,
+      "error": null
+    },
+    {
+      "url": "https://www.scotcat.com/articles/article128.htm",
+      "status": 200,
+      "finalUrl": "https://www.scotcat.com/articles/article128.htm",
+      "headAccessible": true,
+      "error": null
+    },
+    {
+      "url": "https://www.scotcat.com/articles/article13.html",
+      "status": 200,
+      "finalUrl": "https://www.scotcat.com/articles/article13.html",
+      "headAccessible": true,
+      "error": null
+    },
+    {
+      "url": "https://www.scotcat.com/articles/article16.html",
+      "status": 200,
+      "finalUrl": "https://www.scotcat.com/articles/article16.html",
+      "headAccessible": true,
+      "error": null
+    },
+    {
+      "url": "https://www.scotcat.com/articles/article3.html",
+      "status": 200,
+      "finalUrl": "https://www.scotcat.com/articles/article3.html",
+      "headAccessible": true,
+      "error": null
+    },
+    {
+      "url": "https://www.scotcat.com/articles/article54.htm",
+      "status": 200,
+      "finalUrl": "https://www.scotcat.com/articles/article54.htm",
+      "headAccessible": true,
+      "error": null
+    },
+    {
+      "url": "https://www.scotcat.com/articles/article88.htm",
+      "status": 200,
+      "finalUrl": "https://www.scotcat.com/articles/article88.htm",
+      "headAccessible": true,
+      "error": null
+    }
+  ],
+  "claimVerified": false,
+  "contentVerified": false,
+  "rightsVerified": false,
+  "discordWrites": 0,
+  "publicationAuthorized": false
+}

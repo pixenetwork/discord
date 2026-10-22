@@ -39,3 +39,15 @@ After deterministic review manifest commit `48a78df`, an additional **authentica
 - The user’s original runtime publisher is separate and healthy. This is **not** permission to post and does **not** constitute scientific claim verification, copyright/license clearance, or an approved publisher deployment.
 - New reusable `src/aquapedia-cross-taxa-live-preflight.mjs` and `tools/audit-aquapedia-cross-taxa-live-discord.mjs --audit` recheck source counts/labels, bot ownership, real thread parent/lock/archive state and presence of exact links. A changed starter or unsupported source fails closed; no --apply, no write API calls, no scheduler. A 25-message truncation is flagged as incomplete evidence.
 - The older Guppy snapshot was more than 16 hours old when the manifest was generated. The live per-target audit closes that *specific thread readback* gap for that timestamp only; any later authorized release must still repeat the preflight and separately obtain editorial/publishing approval and idempotent message receipts.
+
+## Public source citation-presence and original-reference link check — October 21
+
+This pass audited the content linked from the **99 proposed review messages** without publishing anything.
+
+- Parsed the live HTML from **134 unique HTTP-200 Aquapedia pages**, corresponding to **143 distinct proposed public source URLs** (48 Guppy entry URLs, 10 Cory anchored keeper-report sections, 85 Pleco article URLs).
+- **143/143** of those scoped URLs exposed at least one explicit third-party citation link, across **32 distinct external hostnames**. Internal Aquapedia links, Discord redirects and Cloudflare analytics were excluded from source counts.
+- The ten Cory keeper-report citations were extracted from their **individual article/anchor blocks**, not from a common bibliography elsewhere on the same page.
+- A separate **HTTP HEAD-only** check found **10/10** of those original Cory report URLs accessible (200). The check did not download their PDFs or reuse their content.
+- Full evidence: `resources/aquapedia-cross-taxa-citation-presence-20261021.json` and `resources/aquapedia-cory-breeding-source-head-20261021.json`. Regeneration scripts enforce source URL counts and are read-only.
+- **Do not upgrade source-presence to factual verification.** Guppy source `IKGH 2023` establishes recognized show phenotypes, not genotype/pedigree. Cory keeper accounts do not establish universal care targets. Pleco literature/retailer/hobby links have different evidentiary strengths and each contested claim still requires editorial review. Image/media rights remain unverified for every cohort.
+- No Discord messages, forum threads, bot configuration, scheduler, or publisher checkpoints changed. `publicationAuthorized:false` still applies to all proposed outputs.

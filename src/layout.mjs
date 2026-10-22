@@ -1,4 +1,5 @@
 import { ChannelType, PermissionFlagsBits } from 'discord.js';
+import { resolveCanonicalResearchForum } from './canonical-research-forums.mjs';
 
 const PUBLICATION_TAGS = [
   'Japanese',
@@ -72,15 +73,9 @@ const CORE_LAYOUT = [
       ['🐠・guppy-guides', 'Guppypedia care, breeding, strain, genetics, feeding and health guides.'],
       ['🩺・care-help', 'General freshwater aquarium husbandry and care help.'],
     ],
+    // Established shrimp and arowana forums live in the Species & Genetics category.
+    // Only Guppy was created inside the general Aquapedia public category.
     forums: [{
-      name: '🦐・shrimp-research',
-      topic: 'Public source-backed ornamental shrimp breeder and competition research. Each breeder or event gets its own thread; award entrant is not automatically strain inventor.',
-      tags: ['Breeder', 'Competition', 'Lineage', 'Genetics', 'Husbandry'].map((name) => ({ name, moderated: false })),
-    }, {
-      name: '🐉・arowana-research',
-      topic: 'Public Aquapedia arowana species, geographic origins, genetics, husbandry, breeders and conservation. Claims are evidence-labelled and wildlife collection localities are protected.',
-      tags: ['Species', 'Genetics', 'Regional', 'Breeding', 'Conservation'].map((name) => ({ name, moderated: false })),
-    }, {
       name: '🐠・guppy-research',
       topic: 'Public Guppypedia source-labelled guppy traits and husbandry. Trade names do not establish a documented breeder pedigree. Endler lineage and species boundaries are explicit.',
       tags: ['Strain', 'Care', 'Genetics', 'Breeding', 'Health', 'Species'].map((name) => ({ name, moderated: false })),
@@ -343,11 +338,11 @@ async function provisionPublicAquapediaForum(guild, name) {
 }
 
 export async function provisionShrimpPublicResearchForum(guild) {
-  return provisionPublicAquapediaForum(guild, '🦐・shrimp-research');
+  return resolveCanonicalResearchForum(guild, 'shrimp');
 }
 
 export async function provisionArowanaPublicResearchForum(guild) {
-  return provisionPublicAquapediaForum(guild, '🐉・arowana-research');
+  return resolveCanonicalResearchForum(guild, 'arowana');
 }
 
 // Public guppy resources extend the existing Aquapedia category only.

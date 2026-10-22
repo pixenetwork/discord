@@ -1,11 +1,10 @@
 import { probePublicThreadCapacity } from './thread-capacity.mjs';
 import { ChannelType, PermissionFlagsBits } from 'discord.js';
+import { resolveCanonicalResearchForum } from './canonical-research-forums.mjs';
 
 // Source-backed, permission-gated Aquapedia messages for *existing* breeder forums.
 const CATEGORY_NAME = '🔬・BREEDER RESEARCH';
 const PUBLIC_CATEGORY_NAME = '📚・AQUAPEDIA';
-const PUBLIC_FORUM_NAME = '🦐・shrimp-research';
-const PUBLIC_AROWANA_FORUM_NAME = '🐉・arowana-research';
 const PUBLIC_GUPPY_FORUM_NAME = '🐠・guppy-research';
 const ALLOWED_RIGHTS = new Set(['owner_owned', 'licensed', 'permission_granted', 'public_domain', 'cc0']);
 const MAX_RECORDS = 30;
@@ -231,11 +230,21 @@ export async function publishAquapediaCards(guild, result) {
   const botId = guild?.client?.user?.id;
   if (!botId) return { posted: 0, reason: 'bot_identity_missing' };
   const channels = [...(guild?.channels?.cache?.values?.() ?? [])];
-  const category = channels.find((c) => c.type === ChannelType.GuildCategory && c.name === (publicResearch ? PUBLIC_CATEGORY_NAME : CATEGORY_NAME));
+  // Shrimp/Arowana must use the existing source-receipted Species & Genetics forums,
+  // not the empty same-named copies under the general Aquapedia category.
+  const canonical = publicShrimp ? resolveCanonicalResearchForum(guild, 'shrimp')
+    : publicArowana ? resolveCanonicalResearchForum(guild, 'arowana') : null;
+  if (canonical && canonical.status !== 'ready') {
+    return { posted: 0, reason: 'canonical_research_destination_' + canonical.status };
+  }
+  const category = channels.find((c) => c.type === ChannelType.GuildCategory
+    && (canonical ? c.id === canonical.categoryId
+      : c.name === (publicResearch ? PUBLIC_CATEGORY_NAME : CATEGORY_NAME)));
   if (!category) return { posted: 0, reason: 'research_category_not_found' };
   const forums = channels.filter((c) => c.type === ChannelType.GuildForum && c.parentId === category.id);
   if (!forums.length) return { posted: 0, reason: 'research_forums_not_found' };
-  const publicForum = publicResearch ? forums.find((c) => c.name === (publicShrimp ? PUBLIC_FORUM_NAME : publicArowana ? PUBLIC_AROWANA_FORUM_NAME : PUBLIC_GUPPY_FORUM_NAME)) : null;
+  const publicForum = canonical ? forums.find((c) => c.id === canonical.channelId)
+    : publicGuppy ? forums.find((c) => c.name === PUBLIC_GUPPY_FORUM_NAME) : null;
   if (publicResearch) {
     const everyone = guild?.roles?.everyone;
     if (!publicForum || !everyone || (!publicForum.permissionsFor?.(everyone)?.has(PermissionFlagsBits.ViewChannel)

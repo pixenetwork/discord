@@ -1,0 +1,1854 @@
+{
+  "title": "Aquapedia 3 taxa release REVIEW ONLY — NOT POSTED",
+  "sourceCatalogUrl": "https://aquapedia.app/assets/catalog.json",
+  "sourceCatalogRecords": 853,
+  "auditTime": "2026-10-22T02:19:35.497Z",
+  "codeControl": "Draft PR #60: review only, never an authenticated release receipt",
+  "sourceRecords": 362,
+  "snapshotFreshness": {
+    "guppy": {
+      "capturedAt": "2026-10-21T09:47:13.801Z",
+      "ageMinutes": 992,
+      "fresh": false
+    },
+    "cory": {
+      "capturedAt": "2026-10-22T01:19:01.002Z",
+      "ageMinutes": 60,
+      "fresh": true
+    },
+    "pleco": {
+      "capturedAt": "2026-10-22T01:29:26.489Z",
+      "ageMinutes": 50,
+      "fresh": true
+    }
+  },
+  "counts": {
+    "guppy": 4,
+    "corydoras": 10,
+    "pleco": 85,
+    "proposedMessages": 99,
+    "activeTargets": 63,
+    "archivedTargets": 36,
+    "guppyTradeHeld": 128,
+    "coryAmbiguousHeld": 7,
+    "coryNamingHeld": 2,
+    "plecoAlreadyLinked": 82
+  },
+  "proposals": [
+    {
+      "group": "guppy",
+      "kind": "show-phenotype-index",
+      "id": "guppy:show-phenotype-index:index-base-1",
+      "existingThreadId": "1562195157028184178",
+      "archived": false,
+      "content": "[NOT POSTED]\n**REVIEW PREVIEW — Guppy body/base colors (10)**\nIKGH 2023 phenotype terminology only. Not a verified pedigree, genotype, breeder origin or approval to publish.\n• [GUP-001 — Wild grey](https://aquapedia.app/guppypedia/entries/gup-001/) [195]\n• [GUP-002 — Gold base](https://aquapedia.app/guppypedia/entries/gup-002/) [196]\n• [GUP-003 — Blond base](https://aquapedia.app/guppypedia/entries/gup-003/) [197]\n• [GUP-004 — Blue base](https://aquapedia.app/guppypedia/entries/gup-004/) [198]\n• [GUP-005 — Pink base](https://aquapedia.app/guppypedia/entries/gup-005/) [199]\n• [GUP-006 — Albino (RREA) base](https://aquapedia.app/guppypedia/entries/gup-006/) [200]\n• [GUP-007 — White base](https://aquapedia.app/guppypedia/entries/gup-007/) [201]\n• [GUP-008 — Silver base](https://aquapedia.app/guppypedia/entries/gup-008/) [202]\n• [GUP-009 — Cream base](https://aquapedia.app/guppypedia/entries/gup-009/) [203]\n• [GUP-010 — Lutino (WREA) base](https://aquapedia.app/guppypedia/entries/gup-010/) [203a]\nPrimary show-standard source: https://ikgh.org/wp-content/uploads/2023/05/IHS-Version-2023.pdf",
+      "sourceUrls": [
+        "https://aquapedia.app/guppypedia/entries/gup-001/",
+        "https://aquapedia.app/guppypedia/entries/gup-002/",
+        "https://aquapedia.app/guppypedia/entries/gup-003/",
+        "https://aquapedia.app/guppypedia/entries/gup-004/",
+        "https://aquapedia.app/guppypedia/entries/gup-005/",
+        "https://aquapedia.app/guppypedia/entries/gup-006/",
+        "https://aquapedia.app/guppypedia/entries/gup-007/",
+        "https://aquapedia.app/guppypedia/entries/gup-008/",
+        "https://aquapedia.app/guppypedia/entries/gup-009/",
+        "https://aquapedia.app/guppypedia/entries/gup-010/"
+      ],
+      "sha256": "84815d2e1c681b54b57a39f619a241d5a92fae9c60fb089c7b182fab9c567ce5",
+      "receiptKey": "ebbab8ec844eecb9fca5155f6427c5cfe0ac5d8b61a2f9d31d0b1bd98bb1ffcc",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "guppy",
+      "kind": "show-phenotype-index",
+      "id": "guppy:show-phenotype-index:index-cover-2",
+      "existingThreadId": "1562195157028184178",
+      "archived": false,
+      "content": "[NOT POSTED]\n**REVIEW PREVIEW — Guppy colors and patterns (25)**\nIKGH 2023 phenotype terminology only. Not a verified pedigree, genotype, breeder origin or approval to publish.\n• [GUP-011 — Red cover](https://aquapedia.app/guppypedia/entries/gup-011/) [205.1]\n• [GUP-012 — Blue cover](https://aquapedia.app/guppypedia/entries/gup-012/) [205.2]\n• [GUP-013 — Green cover](https://aquapedia.app/guppypedia/entries/gup-013/) [205.3]\n• [GUP-014 — Yellow cover](https://aquapedia.app/guppypedia/entries/gup-014/) [205.4]\n• [GUP-015 — White cover](https://aquapedia.app/guppypedia/entries/gup-015/) [205.5]\n• [GUP-016 — Black cover](https://aquapedia.app/guppypedia/entries/gup-016/) [205.6]\n• [GUP-017 — Neon](https://aquapedia.app/guppypedia/entries/gup-017/) [205.7]\n• [GUP-018 — Moscow](https://aquapedia.app/guppypedia/entries/gup-018/) [205.8]\n• [GUP-019 — Metallic](https://aquapedia.app/guppypedia/entries/gup-019/) [205.9]\n• [GUP-020 — Half-black](https://aquapedia.app/guppypedia/entries/gup-020/) [205.10]\n• [GUP-021 — Three-quarter black](https://aquapedia.app/guppypedia/entries/gup-021/) [205.10]\n• [GUP-022 — Snakeskin](https://aquapedia.app/guppypedia/entries/gup-022/) [205.11]\n• [GUP-023 — Lace / Filigree](https://aquapedia.app/guppypedia/entries/gup-023/) [205.11]\n• [GUP-024 — Viennese Emerald](https://aquapedia.app/guppypedia/entries/gup-024/) [205.12]\n• [GUP-025 — One single color](https://aquapedia.app/guppypedia/entries/gup-025/) [205.13]\n• [GUP-026 — Two-tone](https://aquapedia.app/guppypedia/entries/gup-026/) [205.14]\n• [GUP-027 — Multicolor](https://aquapedia.app/guppypedia/entries/gup-027/) [205.15]\n• [GUP-028 — Mosaic](https://aquapedia.app/guppypedia/entries/gup-028/) [205.16]\n• [GUP-029 — Galaxy](https://aquapedia.app/guppypedia/entries/gup-029/) [205.17]\nPrimary show-standard source: https://ikgh.org/wp-content/uploads/2023/05/IHS-Version-2023.pdf",
+      "sourceUrls": [
+        "https://aquapedia.app/guppypedia/entries/gup-011/",
+        "https://aquapedia.app/guppypedia/entries/gup-012/",
+        "https://aquapedia.app/guppypedia/entries/gup-013/",
+        "https://aquapedia.app/guppypedia/entries/gup-014/",
+        "https://aquapedia.app/guppypedia/entries/gup-015/",
+        "https://aquapedia.app/guppypedia/entries/gup-016/",
+        "https://aquapedia.app/guppypedia/entries/gup-017/",
+        "https://aquapedia.app/guppypedia/entries/gup-018/",
+        "https://aquapedia.app/guppypedia/entries/gup-019/",
+        "https://aquapedia.app/guppypedia/entries/gup-020/",
+        "https://aquapedia.app/guppypedia/entries/gup-021/",
+        "https://aquapedia.app/guppypedia/entries/gup-022/",
+        "https://aquapedia.app/guppypedia/entries/gup-023/",
+        "https://aquapedia.app/guppypedia/entries/gup-024/",
+        "https://aquapedia.app/guppypedia/entries/gup-025/",
+        "https://aquapedia.app/guppypedia/entries/gup-026/",
+        "https://aquapedia.app/guppypedia/entries/gup-027/",
+        "https://aquapedia.app/guppypedia/entries/gup-028/",
+        "https://aquapedia.app/guppypedia/entries/gup-029/"
+      ],
+      "sha256": "b05410e23fc1e2417e8ec6b33b148112a13bc39b30fb5882e728a106e79d3c44",
+      "receiptKey": "d9c1590eca110ac99c52056a1fd1977034413c232dfbac8f7c23186563cce4e0",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "guppy",
+      "kind": "show-phenotype-index",
+      "id": "guppy:show-phenotype-index:index-cover-3",
+      "existingThreadId": "1562195157028184178",
+      "archived": false,
+      "content": "[NOT POSTED]\n**REVIEW PREVIEW — Guppy colors and patterns (25)**\nIKGH 2023 phenotype terminology only. Not a verified pedigree, genotype, breeder origin or approval to publish.\n• [GUP-030 — Japan Blue](https://aquapedia.app/guppypedia/entries/gup-030/) [205.18]\n• [GUP-031 — Singa Blue](https://aquapedia.app/guppypedia/entries/gup-031/) [205.18]\n• [GUP-032 — Blue Grass](https://aquapedia.app/guppypedia/entries/gup-032/) [205.19]\n• [GUP-033 — Red Grass](https://aquapedia.app/guppypedia/entries/gup-033/) [205.19]\n• [GUP-034 — Santa Maria](https://aquapedia.app/guppypedia/entries/gup-034/) [205.20]\n• [GUP-035 — Pink Moscow / Panda](https://aquapedia.app/guppypedia/entries/gup-035/) [207]\nPrimary show-standard source: https://ikgh.org/wp-content/uploads/2023/05/IHS-Version-2023.pdf",
+      "sourceUrls": [
+        "https://aquapedia.app/guppypedia/entries/gup-030/",
+        "https://aquapedia.app/guppypedia/entries/gup-031/",
+        "https://aquapedia.app/guppypedia/entries/gup-032/",
+        "https://aquapedia.app/guppypedia/entries/gup-033/",
+        "https://aquapedia.app/guppypedia/entries/gup-034/",
+        "https://aquapedia.app/guppypedia/entries/gup-035/"
+      ],
+      "sha256": "1ce9f4d3e24515eb325929215c4b0687e3e5d32c0a74aa65de5f555b1ec1f2db",
+      "receiptKey": "83eb3f98f2218facbdfce76c5773e7b3255a8e8ad2c3d9d3468bdff1bdaac33f",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "guppy",
+      "kind": "show-phenotype-index",
+      "id": "guppy:show-phenotype-index:index-tail-4",
+      "existingThreadId": "1562195154817917080",
+      "archived": false,
+      "content": "[NOT POSTED]\n**REVIEW PREVIEW — Guppy tail forms (13)**\nIKGH 2023 phenotype terminology only. Not a verified pedigree, genotype, breeder origin or approval to publish.\n• [GUP-036 — Fan Tail](https://aquapedia.app/guppypedia/entries/gup-036/) [A1]\n• [GUP-037 — Triangle Tail / Delta](https://aquapedia.app/guppypedia/entries/gup-037/) [A2]\n• [GUP-038 — Veil Tail](https://aquapedia.app/guppypedia/entries/gup-038/) [A3]\n• [GUP-039 — Flag Tail](https://aquapedia.app/guppypedia/entries/gup-039/) [A4]\n• [GUP-040 — Halfmoon Tail](https://aquapedia.app/guppypedia/entries/gup-040/) [A5]\n• [GUP-041 — Double Swordtail](https://aquapedia.app/guppypedia/entries/gup-041/) [B1]\n• [GUP-042 — Top Swordtail](https://aquapedia.app/guppypedia/entries/gup-042/) [B2]\n• [GUP-043 — Bottom Swordtail](https://aquapedia.app/guppypedia/entries/gup-043/) [B3]\n• [GUP-044 — Lyre Tail](https://aquapedia.app/guppypedia/entries/gup-044/) [B4]\n• [GUP-045 — Spade Tail](https://aquapedia.app/guppypedia/entries/gup-045/) [C1]\n• [GUP-046 — Spear Tail](https://aquapedia.app/guppypedia/entries/gup-046/) [C2]\n• [GUP-047 — Round Tail](https://aquapedia.app/guppypedia/entries/gup-047/) [C3]\n• [GUP-048 — Needle / Pin Tail](https://aquapedia.app/guppypedia/entries/gup-048/) [C4]\nPrimary show-standard source: https://ikgh.org/wp-content/uploads/2023/05/IHS-Version-2023.pdf",
+      "sourceUrls": [
+        "https://aquapedia.app/guppypedia/entries/gup-036/",
+        "https://aquapedia.app/guppypedia/entries/gup-037/",
+        "https://aquapedia.app/guppypedia/entries/gup-038/",
+        "https://aquapedia.app/guppypedia/entries/gup-039/",
+        "https://aquapedia.app/guppypedia/entries/gup-040/",
+        "https://aquapedia.app/guppypedia/entries/gup-041/",
+        "https://aquapedia.app/guppypedia/entries/gup-042/",
+        "https://aquapedia.app/guppypedia/entries/gup-043/",
+        "https://aquapedia.app/guppypedia/entries/gup-044/",
+        "https://aquapedia.app/guppypedia/entries/gup-045/",
+        "https://aquapedia.app/guppypedia/entries/gup-046/",
+        "https://aquapedia.app/guppypedia/entries/gup-047/",
+        "https://aquapedia.app/guppypedia/entries/gup-048/"
+      ],
+      "sha256": "06441449056719c3e3fba53aa6e7e389006c8fc2ecc0bf551666f27552adf6b4",
+      "receiptKey": "507465f4c8a02e05bfe8797ec31ceda52fb48f32d328e7068d3eb99b897d119a",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "corydoras",
+      "kind": "research-section-backlink",
+      "id": "corydoras:research-section-backlink:hoplisoma-panda-breeding",
+      "existingThreadId": "1560887820451709019",
+      "archived": true,
+      "content": "**Corydoraspedia section link — EDITORIAL DRAFT, NOT POSTED**\nEvidence section: https://aquapedia.app/corydoraspedia/breeding/#hoplisoma-panda\nResearch status: Keeper observation; not a universal target\nLinked observations are not universal care targets and not evidence of founding parentage.\nPlease cross-check the original citations and rights before publication.",
+      "sourceUrls": [
+        "https://aquapedia.app/corydoraspedia/breeding/#hoplisoma-panda"
+      ],
+      "sha256": "1f439d30be6ea7f2f8bb558bc392fe655f3277015bd91a5160baf1523069c4f6",
+      "receiptKey": "d2d3274c127140a396cbf6772352e84900486fc50eba79db209375a4cbdd5766",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "corydoras",
+      "kind": "research-section-backlink",
+      "id": "corydoras:research-section-backlink:hoplisoma-sterbai-breeding",
+      "existingThreadId": "1560887818866270344",
+      "archived": true,
+      "content": "**Corydoraspedia section link — EDITORIAL DRAFT, NOT POSTED**\nEvidence section: https://aquapedia.app/corydoraspedia/breeding/#hoplisoma-sterbai\nResearch status: Keeper observation; not a universal target\nLinked observations are not universal care targets and not evidence of founding parentage.\nPlease cross-check the original citations and rights before publication.",
+      "sourceUrls": [
+        "https://aquapedia.app/corydoraspedia/breeding/#hoplisoma-sterbai"
+      ],
+      "sha256": "46f68e1957e69a03a9de557e9b78ff0fae93a6e018f34ba6578afe5d3b2711b3",
+      "receiptKey": "650266ba59962c2d10229537f8d8768229881ce6ba8009dc15c54d0a28b0dd81",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "corydoras",
+      "kind": "research-section-backlink",
+      "id": "corydoras:research-section-backlink:hoplisoma-adolfoi-breeding",
+      "existingThreadId": "1560887821441437827",
+      "archived": true,
+      "content": "**Corydoraspedia section link — EDITORIAL DRAFT, NOT POSTED**\nEvidence section: https://aquapedia.app/corydoraspedia/breeding/#hoplisoma-adolfoi\nResearch status: Keeper observation; not a universal target\nLinked observations are not universal care targets and not evidence of founding parentage.\nPlease cross-check the original citations and rights before publication.",
+      "sourceUrls": [
+        "https://aquapedia.app/corydoraspedia/breeding/#hoplisoma-adolfoi"
+      ],
+      "sha256": "f95e2a63af18933b9153bdcc47b25855a330b4838d8cf0b6b0d9e5e893b343b3",
+      "receiptKey": "0cd875189d34f0e8e64fe8a5aeb3f9570ecea16cf41d523e1503bfce1805ae9e",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "corydoras",
+      "kind": "research-section-backlink",
+      "id": "corydoras:research-section-backlink:hoplisoma-duplicareum-breeding",
+      "existingThreadId": "1560887822452527187",
+      "archived": true,
+      "content": "**Corydoraspedia section link — EDITORIAL DRAFT, NOT POSTED**\nEvidence section: https://aquapedia.app/corydoraspedia/breeding/#hoplisoma-duplicareum\nResearch status: Keeper observation; not a universal target\nLinked observations are not universal care targets and not evidence of founding parentage.\nPlease cross-check the original citations and rights before publication.",
+      "sourceUrls": [
+        "https://aquapedia.app/corydoraspedia/breeding/#hoplisoma-duplicareum"
+      ],
+      "sha256": "30f6ddb20298310d9f36a8286475f76dac74d3118aa435657983fbfff93180cb",
+      "receiptKey": "a9a596f576e0d08c21cf101635f138c80e36f01cf69969b384ca29cf4b1f314a",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "corydoras",
+      "kind": "research-section-backlink",
+      "id": "corydoras:research-section-backlink:hoplisoma-burgessi-breeding",
+      "existingThreadId": "1560942081436942398",
+      "archived": false,
+      "content": "**Corydoraspedia section link — EDITORIAL DRAFT, NOT POSTED**\nEvidence section: https://aquapedia.app/corydoraspedia/breeding/#hoplisoma-burgessi\nResearch status: Keeper observation; not a universal target\nLinked observations are not universal care targets and not evidence of founding parentage.\nPlease cross-check the original citations and rights before publication.",
+      "sourceUrls": [
+        "https://aquapedia.app/corydoraspedia/breeding/#hoplisoma-burgessi"
+      ],
+      "sha256": "17be0e2b16e025104dd222d84c00cc998e5682eb55788b2e22cbdd2b7f7478e9",
+      "receiptKey": "f124b6ccd80af2d661012eacfa372542036bd31793fccf5a05eb0f7706f7d2c4",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "corydoras",
+      "kind": "research-section-backlink",
+      "id": "corydoras:research-section-backlink:hoplisoma-davidsandsi-breeding",
+      "existingThreadId": "1560953415230824582",
+      "archived": false,
+      "content": "**Corydoraspedia section link — EDITORIAL DRAFT, NOT POSTED**\nEvidence section: https://aquapedia.app/corydoraspedia/breeding/#hoplisoma-davidsandsi\nResearch status: Keeper observation; not a universal target\nLinked observations are not universal care targets and not evidence of founding parentage.\nPlease cross-check the original citations and rights before publication.",
+      "sourceUrls": [
+        "https://aquapedia.app/corydoraspedia/breeding/#hoplisoma-davidsandsi"
+      ],
+      "sha256": "1c15428398018782491c4ec892b1b9f3664c8fa747980f58c249befa927fad6a",
+      "receiptKey": "908ade75485850f3acecde3b76ec4850734e8906769b56f1e4bea22db4bccb9f",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "corydoras",
+      "kind": "research-section-backlink",
+      "id": "corydoras:research-section-backlink:hoplisoma-metae-breeding",
+      "existingThreadId": "1560887870728831078",
+      "archived": true,
+      "content": "**Corydoraspedia section link — EDITORIAL DRAFT, NOT POSTED**\nEvidence section: https://aquapedia.app/corydoraspedia/breeding/#hoplisoma-metae\nResearch status: Keeper observation; not a universal target\nLinked observations are not universal care targets and not evidence of founding parentage.\nPlease cross-check the original citations and rights before publication.",
+      "sourceUrls": [
+        "https://aquapedia.app/corydoraspedia/breeding/#hoplisoma-metae"
+      ],
+      "sha256": "63a4e676ce0298e51ae74732e60fcfb4421dfa8ef6556b22b07bf9f4fc52da25",
+      "receiptKey": "2004d1ec8f7861c50a634b19c4805c230282d16a384b465228c03c3903f675df",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "corydoras",
+      "kind": "research-section-backlink",
+      "id": "corydoras:research-section-backlink:hoplisoma-nattereri-breeding",
+      "existingThreadId": "1560963836872360040",
+      "archived": false,
+      "content": "**Corydoraspedia section link — EDITORIAL DRAFT, NOT POSTED**\nEvidence section: https://aquapedia.app/corydoraspedia/breeding/#hoplisoma-nattereri\nResearch status: Keeper observation; not a universal target\nLinked observations are not universal care targets and not evidence of founding parentage.\nPlease cross-check the original citations and rights before publication.",
+      "sourceUrls": [
+        "https://aquapedia.app/corydoraspedia/breeding/#hoplisoma-nattereri"
+      ],
+      "sha256": "7ab6a5befe8685aeb198ff952d0feccb93eb50a07538f4b438c759570d85446d",
+      "receiptKey": "2cc2807c83fd5eb7eca095c33ee55dda4fb650af9f19792d650bfafc3d7ea8fe",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "corydoras",
+      "kind": "research-section-backlink",
+      "id": "corydoras:research-section-backlink:hoplisoma-xinguense-breeding",
+      "existingThreadId": "1560966748222656554",
+      "archived": false,
+      "content": "**Corydoraspedia section link — EDITORIAL DRAFT, NOT POSTED**\nEvidence section: https://aquapedia.app/corydoraspedia/breeding/#hoplisoma-xinguense\nResearch status: Keeper observation; not a universal target\nLinked observations are not universal care targets and not evidence of founding parentage.\nPlease cross-check the original citations and rights before publication.",
+      "sourceUrls": [
+        "https://aquapedia.app/corydoraspedia/breeding/#hoplisoma-xinguense"
+      ],
+      "sha256": "c7bee074da3b8e8748c42ccb8b3d1e5e6d9216a273a79a8a3f9e46b59801e282",
+      "receiptKey": "adb4d2ad45dfdbc8f5660932269d879ff56aa147881ccb3cc02d26010f915234",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "corydoras",
+      "kind": "research-section-backlink",
+      "id": "corydoras:research-section-backlink:brochis-splendens-breeding",
+      "existingThreadId": "1560887915066691665",
+      "archived": true,
+      "content": "**Corydoraspedia section link — EDITORIAL DRAFT, NOT POSTED**\nEvidence section: https://aquapedia.app/corydoraspedia/breeding/#brochis-splendens\nResearch status: Keeper observation; not a universal target\nLinked observations are not universal care targets and not evidence of founding parentage.\nPlease cross-check the original citations and rights before publication.",
+      "sourceUrls": [
+        "https://aquapedia.app/corydoraspedia/breeding/#brochis-splendens"
+      ],
+      "sha256": "fdd2ea0de7ae8fcf7b149e54c8c799af69328393158e06735db7d55a2f0e864e",
+      "receiptKey": "cda49845ec88ae3720aeb504834aa2853658b3b065a109845496137b4aae032f",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:anc-claro",
+      "existingThreadId": "1561139086432010261",
+      "archived": false,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/anc-claro/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/anc-claro/"
+      ],
+      "sha256": "37ee03c6b99b54a070e428d36e27ea89cbef8e0d8b505dec22f3ed4108e27d4c",
+      "receiptKey": "eb3d5cca53ab950b8bc4f057bf34d5039c12b91d0c3ca142a0478855bc85fc72",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:anc-l267-alias",
+      "existingThreadId": "1561146970599587851",
+      "archived": false,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/anc-l267-alias/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/anc-l267-alias/"
+      ],
+      "sha256": "f3cb0d3f779c8890abac9b85265c09f9c9b702c2bb808a5619d95882ad19a873",
+      "receiptKey": "bdfa25943ffee58299cab18c5c5e6bb5dbceec8f97298b46f16941adc39b0616",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:anc-leoni",
+      "existingThreadId": "1561146978644136089",
+      "archived": false,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/anc-leoni/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/anc-leoni/"
+      ],
+      "sha256": "05155f1b5864af17d7b2242d27cdc8d117a8495551aa5df0579ae8c2854e86b3",
+      "receiptKey": "34be244a235935ce71bc291a800d32aaf97263f9ac63d8e2052837c090525d38",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:anc-patronus",
+      "existingThreadId": "1561146984935465023",
+      "archived": false,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/anc-patronus/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/anc-patronus/"
+      ],
+      "sha256": "348daa230ab4b4cd50493be79687b14416c53f114ddaf03f55d9f777b351961c",
+      "receiptKey": "de1b4c7ebdb52398a131a09951f5071ba9c450ef2f4ac48f001c603703c8bae9",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:anc-yanesha",
+      "existingThreadId": "1561146967290150964",
+      "archived": false,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/anc-yanesha/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/anc-yanesha/"
+      ],
+      "sha256": "f330efe48b5fc473dd44ef5049713a8da6583de6d5329258a5122e9c48e8175d",
+      "receiptKey": "fd2a9e9a68d5fcb1dc001299070fbbf22b4cfc5744abfd3fdd88be60206585d6",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:bary-hadrostomus",
+      "existingThreadId": "1561139039829229641",
+      "archived": false,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/bary-hadrostomus/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/bary-hadrostomus/"
+      ],
+      "sha256": "8d3509aceed8565d413ea7fff69aabefc07abb584f1a8782b0552826a4edf954",
+      "receiptKey": "47973207c24a57a49453363b24fdc2e0b882135f22b88f311456cf21c92f2692",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:bary-micropunctatus",
+      "existingThreadId": "1561139043067101295",
+      "archived": false,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/bary-micropunctatus/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/bary-micropunctatus/"
+      ],
+      "sha256": "9037f1a2d2e37cfa995feb033ab96838b62d3eb6d25455cbd5c304fbfdb0e930",
+      "receiptKey": "492efbf524106fd0ef079f94344343d85f2360e70823061162cac21647a4e3e1",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:bary-niveatus",
+      "existingThreadId": "1561139048737935521",
+      "archived": false,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/bary-niveatus/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/bary-niveatus/"
+      ],
+      "sha256": "9f001e5c90363cfb85d98f58f9abe303916c35a3a79a2e15c51e94e05ee3cff7",
+      "receiptKey": "eba8f5cc324c1fcd324b25681590ed1cb1c26fb1aaa067c3b8a1414b5e1226d3",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:breeder-andreas-tanke-l398",
+      "existingThreadId": "1560966177549844531",
+      "archived": false,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/breeder-andreas-tanke-l398/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/breeder-andreas-tanke-l398/"
+      ],
+      "sha256": "d828e21c4dbed86859962e10003368059b316010f3d656b2a94e717a08f54a15",
+      "receiptKey": "eea9cf92902aefd63c77937839904ba8252e711a640d3990ac2ee38c05e9cd17",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:breeder-apistomaster-l134",
+      "existingThreadId": "1561136971076862066",
+      "archived": false,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/breeder-apistomaster-l134/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/breeder-apistomaster-l134/"
+      ],
+      "sha256": "61c70f35653e653673e87b63671afa02db40747da9c2ba937adab5a5ad8ba988",
+      "receiptKey": "51f4003b23ac1bbe11f138efe28790b89c871361df0ed784b26150f3e3cc5b47",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:breeder-christophe-l025",
+      "existingThreadId": "1560955934845440142",
+      "archived": false,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/breeder-christophe-l025/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/breeder-christophe-l025/"
+      ],
+      "sha256": "2edb72c933d1c38a82f85ab2dd3540578c4cfb5071e6680472e6a1420361a15a",
+      "receiptKey": "dd72065fcee6fd7849f3c1f08a6276432f80e9ef030b2e8b4021bab2c8a32c59",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:breeder-davej-l134",
+      "existingThreadId": "1561136974897742007",
+      "archived": false,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/breeder-davej-l134/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/breeder-davej-l134/"
+      ],
+      "sha256": "6c15127d9a47bcbe613f27283c3db5f22354baed971bb61c00ba122f0c18157e",
+      "receiptKey": "53cbf0c8dd5a0600cb6f1af7bd4b17710ed036fa40a5ae6f04721a19fa7944c6",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:breeder-karsten-l183",
+      "existingThreadId": "1560944606336782417",
+      "archived": true,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/breeder-karsten-l183/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/breeder-karsten-l183/"
+      ],
+      "sha256": "da8b9f158646bf08932877b5fa68232cebcbb8e214441b6f68d3f8af9457d898",
+      "receiptKey": "1264bdc1f9dc5313bf1048e102bf99c7c18ab956bcb70dcbcdca78af2289dad5",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:breeder-parha-l046",
+      "existingThreadId": "1560966174827749438",
+      "archived": false,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/breeder-parha-l046/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/breeder-parha-l046/"
+      ],
+      "sha256": "33264515adb7d18d0d56dc76143da8e2d1e713cb5ce9e3096aacece87c908468",
+      "receiptKey": "85912c4140311f23a1fe25b105df813a5856773df5a6098b31c864205ef7df99",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:hyp-contradens",
+      "existingThreadId": "1561139081063174268",
+      "archived": false,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/hyp-contradens/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/hyp-contradens/"
+      ],
+      "sha256": "12a44c545b4252f6e05f8871a67ee9df99e05477f508d2ef42462a064d66e485",
+      "receiptKey": "c4b7d734042ced41f25442fc4d9ef662bb5194f5411ca63fe7b79ce2fab6a536",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:hyp-margaritatus",
+      "existingThreadId": "1561147013100470355",
+      "archived": false,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/hyp-margaritatus/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/hyp-margaritatus/"
+      ],
+      "sha256": "df98c7c223d52cdf9ac2d32c847477f99e23a0d6108548c5afecb5c3b542ab2b",
+      "receiptKey": "67b0b0d24222e1ba996ea4cc51f3ebdb229ac88cd080f1dd6a376e08ba710e7d",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:hyp-parkateje",
+      "existingThreadId": "1561146973275426817",
+      "archived": false,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/hyp-parkateje/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/hyp-parkateje/"
+      ],
+      "sha256": "9257d8dc5e33cce4ea3433a99297a2745d8c33382ea080acdc5eb832b4150e90",
+      "receiptKey": "38fd8b40add50b2486ad60dc9747986d3839fdd4fb3b45d9e437a361ae7021d2",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:hyp-phantasma",
+      "existingThreadId": "1561147010076123231",
+      "archived": false,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/hyp-phantasma/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/hyp-phantasma/"
+      ],
+      "sha256": "09c535441b25be8b25668eeeb4b7547938db69199e631a507769c174ddf39fe0",
+      "receiptKey": "b963aa101909d87c1d6c1f879d15c0277fa5b85fee7e675cc9a3d4a8938b6f28",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:hyp-vandragti",
+      "existingThreadId": "1561147015482839093",
+      "archived": false,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/hyp-vandragti/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/hyp-vandragti/"
+      ],
+      "sha256": "5752e6b8dc12d293f9c6a8ec9954ad79a860e9b1096dd26e46e5b680c5c0ba72",
+      "receiptKey": "d720279bfb726d7e260280714296e2299faa6dd5f601d7685b5869f34cc4a279",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:l001",
+      "existingThreadId": "1560964908160393288",
+      "archived": false,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/l001/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l001/"
+      ],
+      "sha256": "76bc4afc14fe2d1b39758d06547950ecfd1099294f92a9af0332dc2e5afa0535",
+      "receiptKey": "98955206eb6cc7b1e011b909035de914c96e521661711045cfa3e731cfeca85c",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:l007",
+      "existingThreadId": "1560943342492057603",
+      "archived": true,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/l007/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l007/"
+      ],
+      "sha256": "d1765ba884b888e0758cb44a58dd461478b552328929a19fa8c9d69fef231f4e",
+      "receiptKey": "45eb4bc40764c88e65af38af10c328c4cf4335ea08e72f326a4325d546cbe79e",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:l011",
+      "existingThreadId": "1561136913623023750",
+      "archived": false,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/l011/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l011/"
+      ],
+      "sha256": "e42378b251a0ef5736794d7b92000b649db11df9ed54bd6ef55979dd68e2405f",
+      "receiptKey": "ba066c23b5614e6f9d814bb0d1c58c587a243086ddbab2f11309e347ba73a550",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:l014",
+      "existingThreadId": "1560943431881195653",
+      "archived": true,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/l014/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l014/"
+      ],
+      "sha256": "6392212b357806473dd70e84f2d094c05ac56ac47b617dd200d83e36bf040ed9",
+      "receiptKey": "75e8ac029ace0f9ff216b7d5e7153eac4146c8e0deeb7a8988c790b673079ed9",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:l015",
+      "existingThreadId": "1560964994890334320",
+      "archived": false,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/l015/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l015/"
+      ],
+      "sha256": "2dd71d85f2d0efee93535af897b0e291acbf28e1ad551883aa3c46b1d7d148c3",
+      "receiptKey": "89514695143b126f538cdebb37d23c1551cdaca674088d15c0557a3a496a39c1",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:l017",
+      "existingThreadId": "1560954763015888960",
+      "archived": false,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/l017/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l017/"
+      ],
+      "sha256": "b4f3f676b6046d31c68458d332202a16f7f31435b61dcd9bca32ad7d582de50d",
+      "receiptKey": "4d57429a5a78b526f9302d58eb9f22793f354aaba0b899c437fde1d87c470434",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:l018",
+      "existingThreadId": "1560931485324804169",
+      "archived": true,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/l018/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l018/"
+      ],
+      "sha256": "ced7306477f071ab2cecb31d0fabd0790e2af16d300d3808f98ab86d3b2b5e41",
+      "receiptKey": "5bf563b67970c1cfd0dbca4dbd04492efa287918882d8b405e9cd0ea18312c67",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:l020",
+      "existingThreadId": "1560954765528141928",
+      "archived": false,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/l020/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l020/"
+      ],
+      "sha256": "2d0cbffb9ad726131ef86f1bde35e7729e2467c3d9afb1e9653067a3e76cb3c7",
+      "receiptKey": "860e0e5094a6811f7dd5181ac44a98ea9b7e9171df4a3b05be8fd5f619f1cf7f",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:l021",
+      "existingThreadId": "1560964913432891403",
+      "archived": false,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/l021/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l021/"
+      ],
+      "sha256": "b547ffc655433339f82eb9578a231fd46f7ad2c7a51c2cd2e4c37027c81d0ed3",
+      "receiptKey": "d2ca72ff3b5f8375d736c192e523c04dc0da48c4d2200194091db78ad743d09f",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:l022",
+      "existingThreadId": "1560964910861516922",
+      "archived": false,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/l022/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l022/"
+      ],
+      "sha256": "1c1dc0131db565447ecd1d5ed752e0c26290162a54a9cb57572c1c5688f796c9",
+      "receiptKey": "87300debfda2078ae3aad961524435fb94672279bedadb76c449fc9662782f0b",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:l024",
+      "existingThreadId": "1560954626130448407",
+      "archived": true,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/l024/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l024/"
+      ],
+      "sha256": "2db253d55124625c4e2593946e0f6895bb21052db25b1379106631a49b5b2156",
+      "receiptKey": "156147d63a196b42757d42d5f90446071602526a01d785ad67672116e6e0f6f8",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:l025",
+      "existingThreadId": "1560954629502668895",
+      "archived": true,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/l025/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l025/"
+      ],
+      "sha256": "bfbd87ebe1e5cca27db26fa0fcf4742b1143e164f7690341d7c959b0993bcdd2",
+      "receiptKey": "5497d2a6c30f523cfc959a429cfb6e41a15a8e37a5e493b23fb4f11eda83ccf3",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:l027-toc",
+      "existingThreadId": "1560955937609486347",
+      "archived": false,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/l027-toc/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l027-toc/"
+      ],
+      "sha256": "cca8c6353f269560b6503eee642cdf718679cb90e979136bd772a783d59e4aca",
+      "receiptKey": "e7d52e2bb4dcc1635776bf0027cde383ea4fffe57a68993f2280d4967915f17a",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:l027",
+      "existingThreadId": "1560954632816164926",
+      "archived": true,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/l027/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l027/"
+      ],
+      "sha256": "83f4e14f6d5b4194cc8e643aafb6d32af5837f4360d9b328e6e555296fa66475",
+      "receiptKey": "7a302685773e2a4f73b277e072afac83018e8dfaa7e025b55a93e75d513d519c",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:l027x",
+      "existingThreadId": "1560954635525689449",
+      "archived": true,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/l027x/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l027x/"
+      ],
+      "sha256": "c88b1ef2400e36d429d03c128566c5e02f9d3e733d660430734b221f9b3d0099",
+      "receiptKey": "49ded8f9c60119a0857b359707ff8326a875d73b1524807542483a796242b7d3",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:l029",
+      "existingThreadId": "1560943339757375612",
+      "archived": true,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/l029/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l029/"
+      ],
+      "sha256": "2c4b8befce4cc7743000c3f6055bb504112d42b9962eda656d068a01bdae1d50",
+      "receiptKey": "3e6131ecd1f93a657891c67584d87e89b208e5481ffb4141d9758c23e8c77900",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:l030",
+      "existingThreadId": "1560954673203253329",
+      "archived": true,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/l030/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l030/"
+      ],
+      "sha256": "53aa4ef79aa31f31c79cefd1cb8984d137182419f2c05029d2c60ea396718b1c",
+      "receiptKey": "32ecd0ba47ab4ca2af686ca5b4e8df13287307619923623c88664c7873e35d51",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:l031",
+      "existingThreadId": "1560954676302712835",
+      "archived": true,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/l031/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l031/"
+      ],
+      "sha256": "4a56a0a6194b46541f8cd21283eff9dd905ca590aa52f63a8a1f61b10de5d9a5",
+      "receiptKey": "e032d9b0fa940d565d3bb00bd39e3a7098606b7120707f3a688d61a480f5762d",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:l035",
+      "existingThreadId": "1561136916047470605",
+      "archived": false,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/l035/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l035/"
+      ],
+      "sha256": "57d384149ee71f06d4a67dd76986108e6e66d18a1813e3db4b05c71a63bc0883",
+      "receiptKey": "14510c9896edd5c36027c35befbd558cc8fe9b5a835b87bebdb9abb251c26dcd",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:l037",
+      "existingThreadId": "1560954716446396517",
+      "archived": true,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/l037/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l037/"
+      ],
+      "sha256": "8d1dd69b84a2cf55b243fd326d510b2dbbe7550b0a33ce810c92636f05365291",
+      "receiptKey": "0ebca26ee804e33586211eeba61431765eab9b6edafccee9c570f367bf41c6d1",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:l041",
+      "existingThreadId": "1560954719055253645",
+      "archived": true,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/l041/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l041/"
+      ],
+      "sha256": "aca3cb0ab90c2ad5e97d8c71de86f7ab70a97c47701ff8e518de30afe04fa821",
+      "receiptKey": "e3d63e5f71b6bd26def3a854468d908d506697f2decc2f860b9677035dab2fe9",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:l046",
+      "existingThreadId": "1560931436960415758",
+      "archived": true,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/l046/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l046/"
+      ],
+      "sha256": "881e2cda9befdfddc7c824fe26c0f0872b1c5fed7b073584e70aa9dcc86abff7",
+      "receiptKey": "0777b66596f5a707cb9ddbfef30851c90823d41cd78881a0283e4d20a7e73955",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:l052-l168",
+      "existingThreadId": "1560944594177228811",
+      "archived": true,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/l052-l168/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l052-l168/"
+      ],
+      "sha256": "3b21028a87d288764f1eea719707c775a2b65acbab169bceba69473868369465",
+      "receiptKey": "b040cf28494e98df63e5a83fcdef62c370987a40d642feaff297237b73404cdb",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:l056",
+      "existingThreadId": "1560954721672630424",
+      "archived": false,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/l056/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l056/"
+      ],
+      "sha256": "ea85a3e416f1fd1e0b73f6a505eccea93e046ca8d40afd86988596ca5e1c30e5",
+      "receiptKey": "02ff7dbb348a05ebf3f3fe6eb0e003ebc49abfa00a8b581e75faea3935f4d292",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:l059",
+      "existingThreadId": "1560964958735568938",
+      "archived": false,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/l059/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l059/"
+      ],
+      "sha256": "ff676b9094fc62728580bf0a63df646d00cf6eb85567d5bacaad660d9e0223f6",
+      "receiptKey": "a87e25ba603c4d984e8b3ac2ee213b166b7dda6cca8012962c18ba9e1e6d03fa",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:l066",
+      "existingThreadId": "1560931443146752052",
+      "archived": true,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/l066/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l066/"
+      ],
+      "sha256": "b648a6acbd5da2ed66ced7a0438bad9f8ce84f1c3dcd8e9150227abdd1245908",
+      "receiptKey": "26ef11b45bb2cb3396d45104860ef44943081da3473a0f2b649ff5e3e9b4d07b",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:l067",
+      "existingThreadId": "1560954724717428840",
+      "archived": false,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/l067/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l067/"
+      ],
+      "sha256": "e28062789e5e3f04d1d538c68ed8e5daf2e0bec99ba549d66954b01d476bd79a",
+      "receiptKey": "789810464ad77d7539e1764014e9e92adc22cc7b2acd4da21e6cac871bc6c778",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:l073",
+      "existingThreadId": "1560954805260783679",
+      "archived": false,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/l073/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l073/"
+      ],
+      "sha256": "8871aa5b2e47f2592db5aee5e68fda83416e7405194bda76f66f36b4739ae602",
+      "receiptKey": "357b381a7f7547a93885596511ddbe850485b6ce5d69d244558b96db0d8cb3dd",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:l075",
+      "existingThreadId": "1560944554021097516",
+      "archived": true,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/l075/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l075/"
+      ],
+      "sha256": "990abf1601cfa0c6f598663a3fbfcab88ae8e87912b7217f1975f60cb07ffe72",
+      "receiptKey": "63b9cdfa68de0ea39ebc9f8bdf8f73b1e49fdcd2f8dbe22b099615dffbcd4312",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:l081",
+      "existingThreadId": "1560955889723248703",
+      "archived": false,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/l081/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l081/"
+      ],
+      "sha256": "82f52c3f0be78f8ee53e92c4ed4cf739c3ea7c9e48a004d177abd5c8b2f80eb9",
+      "receiptKey": "5803424dff16ced61ba03227ab0a8b9dd34aea3d98a520215e2624887a5451fe",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:l082",
+      "existingThreadId": "1560955892772503694",
+      "archived": false,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/l082/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l082/"
+      ],
+      "sha256": "61366f215e655d7d962dfcb35ec671ddbdea3623c50a3417a8297db38eb251d2",
+      "receiptKey": "234da4f6ea65c8452ef372c9c09bbd88346611f96eab0b38b35ce99c82ddb9c3",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:l083",
+      "existingThreadId": "1561136932631879834",
+      "archived": false,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/l083/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l083/"
+      ],
+      "sha256": "e599133ba4df8006a7202de93d3ccbc22ddc6af4760dc686f66fb2bf63bb3a79",
+      "receiptKey": "f5936fb4d75652a9e6424fffd2b7fb5762c4540d31d980b9ef3076c86664832d",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:l086",
+      "existingThreadId": "1560955895754530897",
+      "archived": false,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/l086/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l086/"
+      ],
+      "sha256": "f5a9a2ff3f792144858abc00f2691b9bd81a968aad4876da5ad0e34df1746e14",
+      "receiptKey": "64afee6778d1a7cd990631e3670e67d9da8283b1ed6d9a4fd7f6ddbb287de134",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:l091",
+      "existingThreadId": "1560955900531970110",
+      "archived": false,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/l091/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l091/"
+      ],
+      "sha256": "287c833e5bdc26b24b9d553de019ca8c25292e58330ddcd8bed03836fd48e011",
+      "receiptKey": "a553caf5d2c5a56987deebe117b7b7a8d99e37ed94740a781d5321507e92447c",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:l096",
+      "existingThreadId": "1560955929631924276",
+      "archived": false,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/l096/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l096/"
+      ],
+      "sha256": "b88436dcaa3a517ae067fa3bc655e3327c6bdede7deec6717790574135767ac9",
+      "receiptKey": "03af2cc42bfe7dad122b173b0883f3f7664a06db3080d3ef3f4f885839f7ffe7",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:l098",
+      "existingThreadId": "1560931440177451129",
+      "archived": true,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/l098/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l098/"
+      ],
+      "sha256": "9c243db949777251ea0836b650a6733f6463887d468fa03570c703cd51144459",
+      "receiptKey": "11dee78761685105ae1a393c1acf9c3c07035d8ac10fdfb34a4596e5a4339db6",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:l104",
+      "existingThreadId": "1560943425220644925",
+      "archived": true,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/l104/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l104/"
+      ],
+      "sha256": "81cde716bd09a1fe9219c2ebbedd8427789530095054118702c95d41135c6020",
+      "receiptKey": "004c7d5846469f0616a0ba7d176558de62fbc335bdc690871fd121d5934fb155",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:l106",
+      "existingThreadId": "1561136963262877840",
+      "archived": false,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/l106/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l106/"
+      ],
+      "sha256": "a99eda8da9b2a0e0dfecff79b829cf0effed9fd3b4018f56ce0e384f518a618d",
+      "receiptKey": "b9f794705d91d3ec00c4becf56c86d293f2cf7b9ed5601bc7287133680d1cf3c",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:l126-lithox",
+      "existingThreadId": "1561139089388867645",
+      "archived": false,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/l126-lithox/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l126-lithox/"
+      ],
+      "sha256": "dfc80422e7ce9ccbb81a4141b5c2533711efa5e3b83f654e19139439ad96e391",
+      "receiptKey": "d4dae7780a13fd9c4f1d788213f650c98b45cff493b1eafbdeca6d1ef618e73b",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:l128",
+      "existingThreadId": "1560964961583243306",
+      "archived": false,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/l128/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l128/"
+      ],
+      "sha256": "6610da15fabaebd82ad34b6f7db4625d17b2146569a58a19a822b952cf57c426",
+      "receiptKey": "d5fae26273ca06ef4d5f56371b32414c83201d51dc2203ab9865e9fda74b41c3",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:l129",
+      "existingThreadId": "1560944600603172915",
+      "archived": true,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/l129/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l129/"
+      ],
+      "sha256": "b59e1f4f3c0e11026c1667e39f51554c71504b35a951c4aad557f03807d6dadd",
+      "receiptKey": "35c917557116c9151150dc7d9abf3f59270f283f2b386949952fa284dc4800d6",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:l134",
+      "existingThreadId": "1560943291636383796",
+      "archived": true,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/l134/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l134/"
+      ],
+      "sha256": "5b8c635a6147449ec829c07adeb5b12e6e3b82a35156c442edc6da35857804d6",
+      "receiptKey": "459908e61f23ea13a7f9b7f09db44aed3431d275819bf511d67b4dc42b0145df",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:l162",
+      "existingThreadId": "1560943428101996667",
+      "archived": true,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/l162/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l162/"
+      ],
+      "sha256": "849e7f8f71fe5ba47cb393d97ea7f8af4c6649d0617c7bcc23a2e797a7ceb7cf",
+      "receiptKey": "b41f84d48ff4d151de8ced42d8640a92846869e34b2322fdd43f2886e9504934",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:l190",
+      "existingThreadId": "1560943465146089493",
+      "archived": true,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/l190/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l190/"
+      ],
+      "sha256": "d0d44f967f122b230b3e928bc02c38307f89533724d6cfca741bb034879ef2f5",
+      "receiptKey": "80566a5e4bdd3cdffe5c232f4c8ac1c42d0681501880f5b8e5ccb87cb04ff43b",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:l191",
+      "existingThreadId": "1561136953322377221",
+      "archived": false,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/l191/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l191/"
+      ],
+      "sha256": "4c8ddcc9c2cd6c9b9622236ab19a41c95a801d704b1abc28a529f33526c1ff62",
+      "receiptKey": "0a419d3c5d82e294634f6e6f804d54513973681ed568316620e9d6b6574d0e52",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:l201",
+      "existingThreadId": "1560944603572600843",
+      "archived": true,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/l201/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l201/"
+      ],
+      "sha256": "5b4cb5bfee4ba2d33162923de5516a2821c0bcf272a394f09882d7f25d6fd06f",
+      "receiptKey": "35a13e21efc80f7f42bab0db23f89ddb22cff0638b5ff901dd441eb833512a5f",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:l204",
+      "existingThreadId": "1560944551248666787",
+      "archived": true,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/l204/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l204/"
+      ],
+      "sha256": "e23a10fe43d95fdd41e1fbc95a011c1e4716d44bc63cf35159a17789476f3e1c",
+      "receiptKey": "776a55aa03e786d5fd9206f7ddc690280bdf3cbd5c41f06d28d1d2e73afaf4c9",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:l236",
+      "existingThreadId": "1560931446275711040",
+      "archived": true,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/l236/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l236/"
+      ],
+      "sha256": "9fcee981b1ba5c8d08756c6973d49cf073ed321e425bbfb6a553c308a093d182",
+      "receiptKey": "89ad84031521c72d9935edbf2be484c2c3b6bea8aee8c45b52b7aae231e606eb",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:l239",
+      "existingThreadId": "1560955932400427049",
+      "archived": false,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/l239/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l239/"
+      ],
+      "sha256": "1ee7e4af94f214ca2a5921a0fb376bec460561faaaccf6fa13679a3ce17f57b9",
+      "receiptKey": "cbd4f17dd9266aceaee80aa48ee7a1555f46f021167fc98931b1a690fd06df96",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:l287",
+      "existingThreadId": "1560931449245274134",
+      "archived": true,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/l287/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l287/"
+      ],
+      "sha256": "6fa347721c086303d678004a3a99622872a2bc80c634f98c9ea6ba7363ed5441",
+      "receiptKey": "b850b8fab2bb6dcae0c30d1e3620e4eef5663aa63f18cd4e7910f820652ce81a",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:l306",
+      "existingThreadId": "1560965006005112833",
+      "archived": false,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/l306/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l306/"
+      ],
+      "sha256": "3855fc224e09b3513c93c091a930ffd566d0b8a2bbd098f61e9c5ff18c0e9639",
+      "receiptKey": "831bbc17262d4ae5a1e41c6cb22f1ec0d3490f246e20b3a5ed7cf4a576994112",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:l330",
+      "existingThreadId": "1561136957474742346",
+      "archived": false,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/l330/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l330/"
+      ],
+      "sha256": "6c39fbc6ec47eca2d4a0c2792d2108ef38268f8d1685598e94b10ab179713062",
+      "receiptKey": "6a2da46947cb4945191e5eac3724f5d3237f9ce4744b7b0f48f6a33a87af6cde",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:l333",
+      "existingThreadId": "1560931452529672213",
+      "archived": true,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/l333/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l333/"
+      ],
+      "sha256": "2c353bb9d08187a303c1a92d3d27d8756e8a7160664d3c8569ac85d54c0d845e",
+      "receiptKey": "e556b3eed3b705616a5d426b450c523433c8f5cb4e822c4551f6aa78e49ecdfa",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:l397",
+      "existingThreadId": "1560965001416679475",
+      "archived": false,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/l397/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l397/"
+      ],
+      "sha256": "a969661017a02ee65bce660f8d52f07fa026067f92be468ef9cef6b10e0a28b8",
+      "receiptKey": "c83562632f05ad596ad9358748d511d9f826316a519e13a02a6dc35b36168d24",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:l398",
+      "existingThreadId": "1560964997721489449",
+      "archived": false,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/l398/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l398/"
+      ],
+      "sha256": "74d61a4cdf82c2870b111f6161fc02c5bbcdf25014f575f69d03bcb36c1eb64e",
+      "receiptKey": "449d2f91306729dd8b70e2c4199cd3a6a5d9ea6048aad3d768619ce8ba6339c3",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:l399",
+      "existingThreadId": "1560931455566086145",
+      "archived": true,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/l399/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l399/"
+      ],
+      "sha256": "92b9648305c558e6150e2e5cb25bd1c0046f1e3850636a23381828378b85a27e",
+      "receiptKey": "ba6e66da5df7a9a6f427463788fbfeb792631f342185cc3e9372d24cfcfe7843",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:l400",
+      "existingThreadId": "1560931458195918920",
+      "archived": true,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/l400/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l400/"
+      ],
+      "sha256": "5f9a24f172ffe843bbd7467178a7c439a9b901dab7113756f2e0958165fe6ad9",
+      "receiptKey": "4d5a88ad588cb45c709f6294a86a2179de891c62e504949fb68ec74aa31a0272",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:l418",
+      "existingThreadId": "1561136961001889893",
+      "archived": false,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/l418/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l418/"
+      ],
+      "sha256": "b784de07f9938620c3600da332cc5aedea3b6f6f70450919cb39a62f1385624b",
+      "receiptKey": "c474d5a7b3491b60f732ceb4127f7009568a062bc4aaa4c5295f0305a137ae59",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:pana-changae",
+      "existingThreadId": "1561174473669873706",
+      "archived": false,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/pana-changae/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/pana-changae/"
+      ],
+      "sha256": "312c7bdf770ae52343dbd15d86e1886fd595fc3d160cfeb4a979e72bf8f29a18",
+      "receiptKey": "fb8679cf89cb4996e1f1be6501b4af3289cb81480d2df7f8477523227d8cc87f",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:pana-koko",
+      "existingThreadId": "1561147053097230420",
+      "archived": false,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/pana-koko/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/pana-koko/"
+      ],
+      "sha256": "a344fba7f7fe7dc94a2b6c20be0ac1d58073522ba8fb87869aa79a9d00ed5439",
+      "receiptKey": "2407edf2d8519dfd3976e468327188cc113349ca5d3605ada0c37ea8466b63d4",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:pana-nocturnus",
+      "existingThreadId": "1561147036588318821",
+      "archived": false,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/pana-nocturnus/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/pana-nocturnus/"
+      ],
+      "sha256": "705e987f881a840dadfe82109243965d4cd057dd3f647bb2693def12eb496da4",
+      "receiptKey": "b55f71c9370295189bd8eff7e6d262f22b7480f0fe1f87bc7f827fc1eda49452",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:pana-orcesi",
+      "existingThreadId": "1561174414156890224",
+      "archived": false,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/pana-orcesi/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/pana-orcesi/"
+      ],
+      "sha256": "2762fba3e9491afcceccb8fa15dfc3e336b4b304f0fd66b6ca6e38b7afe646ff",
+      "receiptKey": "6a240352220f6972501e3ee500a23e8bcb6e5a238c04047c337443d52caf0b1b",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:pana-pantostiktos",
+      "existingThreadId": "1561174416778465311",
+      "archived": false,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/pana-pantostiktos/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/pana-pantostiktos/"
+      ],
+      "sha256": "8c17610c66607b3c66d079b2922f691d076817839e0eae51ebe7244179e5c783",
+      "receiptKey": "7e79cc4af02504590832d97cf5a18822d3dbb86ab1ddce39e2e879428d42c9e8",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:peckol-lujani",
+      "existingThreadId": "1561139054697775215",
+      "archived": false,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/peckol-lujani/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/peckol-lujani/"
+      ],
+      "sha256": "d9aadb497497fa09828188d763f30b6be4dacb7686a359d568c604cdbeeda7f6",
+      "receiptKey": "dca7a077912665699bed2566e1afbac54a1b7476ce65d93e08ddeb8f1e05a610",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:pseudo-sidereus",
+      "existingThreadId": "1561174493689548871",
+      "archived": false,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/pseudo-sidereus/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/pseudo-sidereus/"
+      ],
+      "sha256": "fbefa352501bb405b64cd2f987eb65fa09bd14b73d5130ca1d7577dee9976f55",
+      "receiptKey": "19d8e0a963735bb5a92b574e774e5c356c65c6e020b25abc23cfc31ff6b16e5c",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    },
+    {
+      "group": "pleco",
+      "kind": "research-article-backlink",
+      "id": "pleco:research-article-backlink:study-l333-captive",
+      "existingThreadId": "1561136979171610685",
+      "archived": false,
+      "content": "**Plecopedia source link — EDITORIAL REVIEW DRAFT, NOT POSTED**\nMatching research entry: https://aquapedia.app/plecopedia/research/study-l333-captive/\nResearch status: Research draft — independent review pending.\nThe research record is not proof of a breeding origin, identified founder line, or verified aquarium specimen.\nCheck its original references and media rights before an authorized existing-thread update.",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/study-l333-captive/"
+      ],
+      "sha256": "0ca68bcc7f13dd4febbe8a8faa4765dd5918be863dedd1c71b7d49f9d452bcf1",
+      "receiptKey": "57148a6733429aa41aeab402e8548656fed12675ce8da0481cb051d458e7961d",
+      "targetKind": "existing-thread",
+      "approval": "not-granted",
+      "publicationAuthorized": false
+    }
+  ],
+  "releaseEligibility": "BLOCKED_REVIEW_ONLY",
+  "publicationAuthorized": false,
+  "discordWrites": 0,
+  "newThreadsToCreate": 0,
+  "editorialHolds": {
+    "guppyTrade": 128,
+    "coryAmbiguous": [
+      {
+        "slug": "black-venezuela",
+        "sourceUrl": "https://aquapedia.app/corydoraspedia/lineages/#black-venezuela",
+        "candidates": [
+          {
+            "id": "1560888001083482275",
+            "name": "Black Venezuela / Black Cory",
+            "archived": true,
+            "locked": false,
+            "threadUrl": "https://discord.com/channels/1519337502379475095/1560888001083482275"
+          },
+          {
+            "id": "1560887875828977812",
+            "name": "Osteogaster aenea",
+            "archived": true,
+            "locked": false,
+            "threadUrl": "https://discord.com/channels/1519337502379475095/1560887875828977812"
+          }
+        ],
+        "reason": "multiple related morph/taxon candidates; editorial routing required"
+      },
+      {
+        "slug": "blue-laser",
+        "sourceUrl": "https://aquapedia.app/corydoraspedia/lineages/#blue-laser",
+        "candidates": [
+          {
+            "id": "1560888001796509840",
+            "name": "Blue Laser (CW009-selected)",
+            "archived": true,
+            "locked": false,
+            "threadUrl": "https://discord.com/channels/1519337502379475095/1560888001796509840"
+          },
+          {
+            "id": "1560887910176399402",
+            "name": "Osteogaster sp. CW009",
+            "archived": true,
+            "locked": false,
+            "threadUrl": "https://discord.com/channels/1519337502379475095/1560887910176399402"
+          }
+        ],
+        "reason": "multiple related morph/taxon candidates; editorial routing required"
+      },
+      {
+        "slug": "albino-gold-laser",
+        "sourceUrl": "https://aquapedia.app/corydoraspedia/lineages/#albino-gold-laser",
+        "candidates": [
+          {
+            "id": "1560889077572833371",
+            "name": "Albino Gold Laser",
+            "archived": true,
+            "locked": false,
+            "threadUrl": "https://discord.com/channels/1519337502379475095/1560889077572833371"
+          },
+          {
+            "id": "1560887911166124063",
+            "name": "Osteogaster sp. CW010",
+            "archived": true,
+            "locked": false,
+            "threadUrl": "https://discord.com/channels/1519337502379475095/1560887911166124063"
+          }
+        ],
+        "reason": "multiple related morph/taxon candidates; editorial routing required"
+      },
+      {
+        "slug": "albino-sterbai",
+        "sourceUrl": "https://aquapedia.app/corydoraspedia/lineages/#albino-sterbai",
+        "candidates": [
+          {
+            "id": "1560889080882008127",
+            "name": "Albino Sterbai",
+            "archived": true,
+            "locked": false,
+            "threadUrl": "https://discord.com/channels/1519337502379475095/1560889080882008127"
+          },
+          {
+            "id": "1560887818866270344",
+            "name": "Hoplisoma sterbai",
+            "archived": true,
+            "locked": false,
+            "threadUrl": "https://discord.com/channels/1519337502379475095/1560887818866270344"
+          }
+        ],
+        "reason": "multiple related morph/taxon candidates; editorial routing required"
+      },
+      {
+        "slug": "longfin-sterbai",
+        "sourceUrl": "https://aquapedia.app/corydoraspedia/lineages/#longfin-sterbai",
+        "candidates": [
+          {
+            "id": "1560889081964134403",
+            "name": "Longfin Sterbai",
+            "archived": true,
+            "locked": false,
+            "threadUrl": "https://discord.com/channels/1519337502379475095/1560889081964134403"
+          },
+          {
+            "id": "1560887818866270344",
+            "name": "Hoplisoma sterbai",
+            "archived": true,
+            "locked": false,
+            "threadUrl": "https://discord.com/channels/1519337502379475095/1560887818866270344"
+          }
+        ],
+        "reason": "multiple related morph/taxon candidates; editorial routing required"
+      },
+      {
+        "slug": "albino-bronze",
+        "sourceUrl": "https://aquapedia.app/corydoraspedia/lineages/#albino-bronze",
+        "candidates": [
+          {
+            "id": "1560889083134214225",
+            "name": "Albino Bronze Cory",
+            "archived": true,
+            "locked": false,
+            "threadUrl": "https://discord.com/channels/1519337502379475095/1560889083134214225"
+          },
+          {
+            "id": "1560887875828977812",
+            "name": "Osteogaster aenea",
+            "archived": true,
+            "locked": false,
+            "threadUrl": "https://discord.com/channels/1519337502379475095/1560887875828977812"
+          }
+        ],
+        "reason": "multiple related morph/taxon candidates; editorial routing required"
+      },
+      {
+        "slug": "longfin-bronze",
+        "sourceUrl": "https://aquapedia.app/corydoraspedia/lineages/#longfin-bronze",
+        "candidates": [
+          {
+            "id": "1560889083948044309",
+            "name": "Longfin Bronze Cory",
+            "archived": true,
+            "locked": false,
+            "threadUrl": "https://discord.com/channels/1519337502379475095/1560889083948044309"
+          },
+          {
+            "id": "1560887875828977812",
+            "name": "Osteogaster aenea",
+            "archived": true,
+            "locked": false,
+            "threadUrl": "https://discord.com/channels/1519337502379475095/1560887875828977812"
+          }
+        ],
+        "reason": "multiple related morph/taxon candidates; editorial routing required"
+      }
+    ],
+    "coryNaming": [
+      {
+        "slug": "red-laser",
+        "sourceUrl": "https://aquapedia.app/corydoraspedia/lineages/#red-laser",
+        "candidates": [
+          {
+            "id": "1560887912764022807",
+            "name": "Osteogaster sp. CW023",
+            "archived": true,
+            "locked": false,
+            "threadUrl": "https://discord.com/channels/1519337502379475095/1560887912764022807"
+          }
+        ],
+        "reason": "Named Red Laser selected line vs CW023 taxon thread; lineage-to-species equivalence not established"
+      },
+      {
+        "slug": "hoplisoma-weitzmani-breeding",
+        "sourceUrl": "https://aquapedia.app/corydoraspedia/breeding/#hoplisoma-weitzmani",
+        "candidates": [
+          {
+            "id": "1560887823932989441",
+            "name": "Hoplisoma weitzmanii",
+            "archived": true,
+            "locked": false,
+            "threadUrl": "https://discord.com/channels/1519337502379475095/1560887823932989441"
+          }
+        ],
+        "reason": "Source name Hoplisoma weitzmani differs from forum Hoplisoma weitzmanii; confirm nomenclature"
+      }
+    ]
+  },
+  "generatedForAuditAt": "2026-10-22T02:19:35.497Z"
+}

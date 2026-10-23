@@ -38,5 +38,55 @@ test('duplicate research targets fail rather than silently choosing the wrong fo
 });
 
 test('pin uses Discord current channel pins route',()=>{
- assert.equal(pinRoute('hub','message'),'/channels/hub/pins/message');
+ assert.equal(pinRoute('hub','message'),'/channels/hub/messages/pins/message');
+});
+
+test('desynchronized public child visibility is not inherited from a private category',()=>{
+ const hiddenParent=channels.map(c=>c.id==='cat'?{...c,permission_overwrites:[{id:GUILD,deny:'1024',allow:'0'}]}:c);
+ const result=buildAquapediaDirectory({guildId:GUILD,channels:hiddenParent,roles});
+ assert.ok(result.targetIds.includes('genes'));
+ assert.equal(result.hubId,'hub');
+});
+
+test('publisher reuses an old pinned directory even after over 100 newer messages',async()=>{
+ const {findDirectoryIndexPosts}=await import('../src/aquapedia-directory.mjs');
+ const requests=[];
+ const found=await findDirectoryIndexPosts(async(method,url)=>{
+   requests.push(url);
+   if(url.includes('/messages/pins?'))return {items:[{pinned_at:'2026-10-17T12:00:00.000Z',message:{id:'canonical',content:DIRECTORY_MARKER}}],has_more:false};
+   if(url.endsWith('/messages?limit=100'))return Array.from({length:100},(_,i)=>({id:String(i),content:'newer'}));
+   throw Error('Unexpected URL '+url);
+ },'hub');
+ assert.deepEqual(found.map(x=>x.id),['canonical']);
+ assert.ok(requests.some(u=>u.includes('/messages/pins?limit=50')));
+});
+
+test('publisher scans every pinned page and finds the canonical directory',async()=>{
+ const {findDirectoryIndexPosts}=await import('../src/aquapedia-directory.mjs');
+ const requests=[];
+ const found=await findDirectoryIndexPosts(async(method,url)=>{
+   requests.push(url);
+   if(url.includes('/messages/pins?limit=50&before='))return {items:[{pinned_at:'2026-10-16T00:00:00Z',message:{id:'canonical',content:DIRECTORY_MARKER}}],has_more:false};
+   if(url.includes('/messages/pins?'))return {items:[{pinned_at:'2026-10-17T00:00:00Z',message:{id:'other',content:'other'}}],has_more:true};
+   if(url.endsWith('/messages?limit=100'))return [];
+   throw Error('unexpected URL');
+ },'hub');
+ assert.deepEqual(found.map(x=>x.id),['canonical']);
+ assert.ok(requests.some(u=>u.includes('before=')));
+});
+
+test('publisher refuses to post when history is too deep to prove uniqueness',async()=>{
+ const {findDirectoryIndexPosts}=await import('../src/aquapedia-directory.mjs');
+ await assert.rejects(findDirectoryIndexPosts(async(method,url)=>{
+   if(url.includes('/messages/pins?'))return {items:[],has_more:false};
+   return Array.from({length:100},(_,i)=>({id:String(i),content:'other'}));
+ },'hub'),/history|older|complete|unknown/i);
+});
+
+test('publisher rejects duplicate canonical indices across pins and history',async()=>{
+ const {findDirectoryIndexPosts}=await import('../src/aquapedia-directory.mjs');
+ await assert.rejects(findDirectoryIndexPosts(async(method,url)=>{
+   if(url.includes('/messages/pins?'))return {items:[{pinned_at:'2026-10-17T00:00:00Z',message:{id:'one',content:DIRECTORY_MARKER}}],has_more:false};
+   return [{id:'two',content:DIRECTORY_MARKER}];
+ },'hub'),/duplicate/i);
 });

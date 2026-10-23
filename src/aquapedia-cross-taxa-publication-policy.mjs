@@ -43,11 +43,11 @@ function buildForumIndex(group,threads){
  for(const thread of threads){
   if(!thread||typeof thread.name!=='string'||!thread.name.trim()||
      typeof thread.id!=='string'||!/^\d+$/.test(thread.id))
-   deny('untrusted thread in '+group);
-  if(used.has(thread.id))deny('duplicate Discord thread ID in '+group);
+   throw new Error('Untrusted thread in '+group);
+  if(used.has(thread.id))throw new Error('Duplicate Discord thread ID in '+group);
   used.add(thread.id);
   const key=normalizedName(thread.name);
-  if(index.has(key))deny('duplicate forum title in '+group+': '+thread.name);
+  if(index.has(key))throw new Error('Duplicate forum title in '+group+': '+thread.name);
   index.set(key,thread.id);
  }
  return index;

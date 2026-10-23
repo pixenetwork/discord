@@ -1,10 +1,12 @@
-# Aquapedia cross-taxa review — after one verified Guppy canary
+# Aquapedia cross-taxa review — historical state after one Guppy canary
+
+> **HISTORICAL SNAPSHOT: superseded by four independently receipt-verified Guppy source-index messages.** The 98 pending proposals and 62 active items below describe the state **after the first Guppy canary only**. For latest reviewed status use [Guppy all-48 live receipt summary](aquapedia-guppy-all-48-ikgh-live-20261022.md), `resources/aquapedia-guppy-all-48-live-release-20261022.json`, and `node tools/report-aquapedia-guppy-all-48.mjs`. As of that later verified receipt: **95 proposals remain, 59 active and 36 archived** (10 Corydoras and 85 Pleco); all 48 IKGH-standard Guppy source links have been posted in four bot-owned messages. Neither version is permission to publish any held research.
 
 **Editorial/workflow review only. No Discord posts, edits, unarchive operations, bot restarts, or production permissions granted.**
 
 The original `resources/aquapedia-cross-taxa-release-review-20261021.json` **must stay unchanged** as a historical 99-proposal snapshot. The original `resources/aquapedia-cross-taxa-active-review-20261022.json` is likewise a **pre-canary 63-active / 36-archived snapshot**, not a current publishing queue.
 
-## Current reconciled candidate counts
+## Historical post-first-canary candidate counts (superseded)
 
 - **1 Guppy source-index message already published** to an existing bot-owned thread, with independent readback and durable receipt: [view actual Discord message](https://discord.com/channels/1519337502379475095/1562195157028184178/1562987115036278834). It links GUP-001–010; no breeder/pedigree/genotype claim was verified.
 - **98 proposed messages remain**: **62 active-thread review candidates** (**3 Guppy, 4 Corydoras, 55 Pleco**) and **36 archived-thread holds** (**6 Corydoras, 30 Pleco**). This reflects the proposal receipts; it is not 98 unique fish species or 98 authorized posts.

@@ -6,6 +6,7 @@
 import fs from 'node:fs';
 import {REST,Routes} from 'discord.js';
 import {auditCrossTaxaLiveTargets} from '../src/aquapedia-cross-taxa-live-preflight.mjs';
+import {serializeSafeCrossTaxaPreflight} from '../src/aquapedia-cross-taxa-safe-report.mjs';
 if(process.argv.length!==3||process.argv[2]!=='--audit')
  throw Error('READ_ONLY command: require exact --audit; no --apply support');
 const token=process.env.DISCORD_TOKEN;
@@ -54,4 +55,6 @@ const observed=await auditCrossTaxaLiveTargets(manifest,{
   return out.map(p=>({id:p.id,authorId:p.author?.id,content:p.content??''}));
  }
 });
-console.log('CROSS_TAXA_LIVE_PREFLIGHT '+JSON.stringify({...observed,liveCatalogCount:catalog.length,action:'READ_ONLY'}));
+// The serializer rejects arbitrary Discord-origin text and control characters.
+const serialized=serializeSafeCrossTaxaPreflight(observed,catalog.length);
+process.stdout.write('CROSS_TAXA_LIVE_PREFLIGHT '+serialized+'\n');

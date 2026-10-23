@@ -1,5 +1,6 @@
 import { createServer } from 'node:http';
-import { Client, Events, GatewayIntentBits } from 'discord.js';
+import { Client, Events, GatewayIntentBits, Partials } from 'discord.js';
+import { createBreederInbox, pruneBreederInbox } from './breeder-inbox.mjs';
 import { loadConfig, assertDiscordConfig } from './config.mjs';
 import { createStore } from './store.mjs';
 import { createShopifyClient } from './shopify.mjs';
@@ -24,7 +25,14 @@ const orders = createOrderService({ config, store, shopify });
 const deps = Object.freeze({ config, store, shopify, catalog, collections, research, orders });
 const gpt = createGptController(deps);
 
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.DirectMessages], partials: [Partials.Channel] });
+const breederInboxDir = process.env.BREEDER_INBOX_DIR || `${config.runtime.dataDir}/breeder-inbox`;
+const breederInbox = createBreederInbox({ recipientIds: (process.env.BREEDER_INBOX_ALLOWED_IDS ?? '').split(',').map(id => id.trim()).filter(Boolean), outputDir: breederInboxDir });
+client.on(Events.MessageCreate, (message) => { void breederInbox(message).catch((error) => console.error('Breeder inbox capture failed:', error.message)); });
+const inboxDir = breederInboxDir;
+const inboxPrune = () => { void pruneBreederInbox({ outputDir: inboxDir }).catch((error) => console.error('Breeder inbox retention cleanup failed:', error.message)); };
+inboxPrune();
+setInterval(inboxPrune, 60 * 60 * 1000).unref();
 // The supervisor monitors gateway liveness; full bootstrap readiness is checked separately.
 let bootstrapComplete = false;
 let bootstrapFailed = false;

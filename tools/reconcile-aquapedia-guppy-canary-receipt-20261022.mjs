@@ -26,4 +26,4 @@ const dest='resources/aquapedia-cross-taxa-post-canary-review-20261022.json';
 if(fs.existsSync(dest))throw new Error('Review reconciliation already exists');
 fs.writeFileSync(dest,JSON.stringify(final,null,2)+'\n',{flag:'wx'});
 // The durable receipt file owns the detailed data; never log raw external URLs.
-process.stdout.write('CROSS_TAXA_POST_CANARY_RECONCILED: receipt file created; source-only review remains blocked\\n');
+console.log('CROSS_TAXA_POST_CANARY_RECONCILED: receipt file created; review only');

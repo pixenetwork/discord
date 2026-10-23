@@ -1,0 +1,1228 @@
+{
+  "schema": "aquapedia.pleco-active-55-editorial-review.v1",
+  "as_of": "2026-10-23",
+  "scope": "55 active, previously unposted Pleco existing-thread backlink proposals",
+  "snapshots": {
+    "proposal_path": "resources/aquapedia-cross-taxa-release-review-20261021.json",
+    "proposal_blob_sha": "5dfc3cbb7259278f2b47466de0c3f25acc48c0e8",
+    "citation_path": "resources/aquapedia-cross-taxa-citation-presence-20261021.json",
+    "citation_blob_sha": "339e0aef5031793078fe88b0d237da3ad001f446",
+    "source_head_path": "resources/aquapedia-external-source-head-20261022.json",
+    "source_head_blob_sha": "589e31dec00c7775a7e12d5aa117469cc7800e20"
+  },
+  "counts": {
+    "total": 55,
+    "doi_link_present": 29,
+    "other_reachable": 23,
+    "restricted": 3
+  },
+  "policy": {
+    "publication_authorized": false,
+    "source_claims_verified": 0,
+    "photo_rights_approved": 0,
+    "discord_writes": 0,
+    "new_threads_to_create": 0
+  },
+  "caveats": [
+    "DOI presence is only a citation format and does not mean the original paper supports the proposed fish claim",
+    "HTTP HEAD reachability is access metadata, not a scientific-content, image license, or publication approval",
+    "Prior 403/HEAD restrictions remain to be reviewed via lawful access; no protected content copied",
+    "Existing thread ID is only a historical mapped destination; verify exact live bot ownership, permission, dedupe and archive state before any posting"
+  ],
+  "rows": [
+    {
+      "proposal_id": "pleco:research-article-backlink:anc-l267-alias",
+      "site_url": "https://aquapedia.app/plecopedia/research/anc-l267-alias/",
+      "existing_thread_id": "1561146970599587851",
+      "receipt_key": "bdfa25943ffee58299cab18c5c5e6bb5dbceec8f97298b46f16941adc39b0616",
+      "archived": false,
+      "editorial_lane": "DOI_LINK_PRESENT_CLAIM_UNVERIFIED",
+      "evidence": [
+        {
+          "url": "https://doi.org/10.1111/jfb.15637",
+          "head_outcome": "http_status"
+        },
+        {
+          "url": "https://www.ig-bssw.org/l-267-als-ancistrus-yanesha-beschrieben/?lang=en",
+          "head_outcome": "reachable_head"
+        }
+      ],
+      "source_claim_verified": false,
+      "rights_approved": false,
+      "post_authorized": false,
+      "current_live_thread_readback_required": true
+    },
+    {
+      "proposal_id": "pleco:research-article-backlink:anc-leoni",
+      "site_url": "https://aquapedia.app/plecopedia/research/anc-leoni/",
+      "existing_thread_id": "1561146978644136089",
+      "receipt_key": "34be244a235935ce71bc291a800d32aaf97263f9ac63d8e2052837c090525d38",
+      "archived": false,
+      "editorial_lane": "DOI_LINK_PRESENT_CLAIM_UNVERIFIED",
+      "evidence": [
+        {
+          "url": "https://doi.org/10.11646/zootaxa.4552.1.1",
+          "head_outcome": "reachable_head"
+        },
+        {
+          "url": "https://doi.org/10.5281/zenodo.5932331",
+          "head_outcome": "http_status"
+        }
+      ],
+      "source_claim_verified": false,
+      "rights_approved": false,
+      "post_authorized": false,
+      "current_live_thread_readback_required": true
+    },
+    {
+      "proposal_id": "pleco:research-article-backlink:anc-patronus",
+      "site_url": "https://aquapedia.app/plecopedia/research/anc-patronus/",
+      "existing_thread_id": "1561146984935465023",
+      "receipt_key": "de1b4c7ebdb52398a131a09951f5071ba9c450ef2f4ac48f001c603703c8bae9",
+      "archived": false,
+      "editorial_lane": "DOI_LINK_PRESENT_CLAIM_UNVERIFIED",
+      "evidence": [
+        {
+          "url": "https://doi.org/10.11646/zootaxa.4552.1.1",
+          "head_outcome": "reachable_head"
+        },
+        {
+          "url": "https://www.fieldmuseum.org/about/press/six-new-species-hideously-adorable-tentacle-nosed-catfish-discovered-amazon",
+          "head_outcome": "reachable_head"
+        }
+      ],
+      "source_claim_verified": false,
+      "rights_approved": false,
+      "post_authorized": false,
+      "current_live_thread_readback_required": true
+    },
+    {
+      "proposal_id": "pleco:research-article-backlink:anc-yanesha",
+      "site_url": "https://aquapedia.app/plecopedia/research/anc-yanesha/",
+      "existing_thread_id": "1561146967290150964",
+      "receipt_key": "fd2a9e9a68d5fcb1dc001299070fbbf22b4cfc5744abfd3fdd88be60206585d6",
+      "archived": false,
+      "editorial_lane": "DOI_LINK_PRESENT_CLAIM_UNVERIFIED",
+      "evidence": [
+        {
+          "url": "https://doi.org/10.1111/jfb.15637",
+          "head_outcome": "http_status"
+        },
+        {
+          "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=77546",
+          "head_outcome": "reachable_head"
+        }
+      ],
+      "source_claim_verified": false,
+      "rights_approved": false,
+      "post_authorized": false,
+      "current_live_thread_readback_required": true
+    },
+    {
+      "proposal_id": "pleco:research-article-backlink:bary-hadrostomus",
+      "site_url": "https://aquapedia.app/plecopedia/research/bary-hadrostomus/",
+      "existing_thread_id": "1561139039829229641",
+      "receipt_key": "47973207c24a57a49453363b24fdc2e0b882135f22b88f311456cf21c92f2692",
+      "archived": false,
+      "editorial_lane": "DOI_LINK_PRESENT_CLAIM_UNVERIFIED",
+      "evidence": [
+        {
+          "url": "https://doi.org/10.1643/CI-19-201",
+          "head_outcome": "reachable_head"
+        },
+        {
+          "url": "https://www.ni.bio.br/1982-0224-2025-0066/",
+          "head_outcome": "reachable_head"
+        }
+      ],
+      "source_claim_verified": false,
+      "rights_approved": false,
+      "post_authorized": false,
+      "current_live_thread_readback_required": true
+    },
+    {
+      "proposal_id": "pleco:research-article-backlink:bary-micropunctatus",
+      "site_url": "https://aquapedia.app/plecopedia/research/bary-micropunctatus/",
+      "existing_thread_id": "1561139043067101295",
+      "receipt_key": "492efbf524106fd0ef079f94344343d85f2360e70823061162cac21647a4e3e1",
+      "archived": false,
+      "editorial_lane": "DOI_LINK_PRESENT_CLAIM_UNVERIFIED",
+      "evidence": [
+        {
+          "url": "https://doi.org/10.1643/CI-19-201",
+          "head_outcome": "reachable_head"
+        },
+        {
+          "url": "https://www.ni.bio.br/1982-0224-2025-0066/",
+          "head_outcome": "reachable_head"
+        }
+      ],
+      "source_claim_verified": false,
+      "rights_approved": false,
+      "post_authorized": false,
+      "current_live_thread_readback_required": true
+    },
+    {
+      "proposal_id": "pleco:research-article-backlink:breeder-andreas-tanke-l398",
+      "site_url": "https://aquapedia.app/plecopedia/research/breeder-andreas-tanke-l398/",
+      "existing_thread_id": "1560966177549844531",
+      "receipt_key": "eea9cf92902aefd63c77937839904ba8252e711a640d3990ac2ee38c05e9cd17",
+      "archived": false,
+      "editorial_lane": "DOI_LINK_PRESENT_CLAIM_UNVERIFIED",
+      "evidence": [
+        {
+          "url": "https://doi.org/10.1371/journal.pone.0165388",
+          "head_outcome": "reachable_head"
+        },
+        {
+          "url": "https://en.amazonoco.de/project/panaqolus-tankei-l-398-origin-and-breeding/",
+          "head_outcome": "reachable_head"
+        }
+      ],
+      "source_claim_verified": false,
+      "rights_approved": false,
+      "post_authorized": false,
+      "current_live_thread_readback_required": true
+    },
+    {
+      "proposal_id": "pleco:research-article-backlink:hyp-contradens",
+      "site_url": "https://aquapedia.app/plecopedia/research/hyp-contradens/",
+      "existing_thread_id": "1561139081063174268",
+      "receipt_key": "c4b7d734042ced41f25442fc4d9ef662bb5194f5411ca63fe7b79ce2fab6a536",
+      "archived": false,
+      "editorial_lane": "DOI_LINK_PRESENT_CLAIM_UNVERIFIED",
+      "evidence": [
+        {
+          "url": "https://catfishcodex.com/page-one/hypancistrus/hypancistrus-contradens/",
+          "head_outcome": "reachable_head"
+        },
+        {
+          "url": "https://doi.org/10.1643/0045-8511(2007)7[62:fnhslf]2.0.co;2",
+          "head_outcome": "reachable_head"
+        }
+      ],
+      "source_claim_verified": false,
+      "rights_approved": false,
+      "post_authorized": false,
+      "current_live_thread_readback_required": true
+    },
+    {
+      "proposal_id": "pleco:research-article-backlink:hyp-margaritatus",
+      "site_url": "https://aquapedia.app/plecopedia/research/hyp-margaritatus/",
+      "existing_thread_id": "1561147013100470355",
+      "receipt_key": "67b0b0d24222e1ba996ea4cc51f3ebdb229ac88cd080f1dd6a376e08ba710e7d",
+      "archived": false,
+      "editorial_lane": "DOI_LINK_PRESENT_CLAIM_UNVERIFIED",
+      "evidence": [
+        {
+          "url": "https://doi.org/10.3897/zookeys.552.5956",
+          "head_outcome": "reachable_head"
+        },
+        {
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4740853/",
+          "head_outcome": "reachable_head"
+        }
+      ],
+      "source_claim_verified": false,
+      "rights_approved": false,
+      "post_authorized": false,
+      "current_live_thread_readback_required": true
+    },
+    {
+      "proposal_id": "pleco:research-article-backlink:hyp-parkateje",
+      "site_url": "https://aquapedia.app/plecopedia/research/hyp-parkateje/",
+      "existing_thread_id": "1561146973275426817",
+      "receipt_key": "38fd8b40add50b2486ad60dc9747986d3839fdd4fb3b45d9e437a361ae7021d2",
+      "archived": false,
+      "editorial_lane": "DOI_LINK_PRESENT_CLAIM_UNVERIFIED",
+      "evidence": [
+        {
+          "url": "https://doi.org/10.1111/jfb.15971",
+          "head_outcome": "http_status"
+        },
+        {
+          "url": "https://repositorio.museu-goeldi.br/server/api/core/bitstreams/fa4ff8d2-72ce-4784-8714-140b6e5f32cd/content",
+          "head_outcome": "reachable_head"
+        }
+      ],
+      "source_claim_verified": false,
+      "rights_approved": false,
+      "post_authorized": false,
+      "current_live_thread_readback_required": true
+    },
+    {
+      "proposal_id": "pleco:research-article-backlink:hyp-phantasma",
+      "site_url": "https://aquapedia.app/plecopedia/research/hyp-phantasma/",
+      "existing_thread_id": "1561147010076123231",
+      "receipt_key": "b963aa101909d87c1d6c1f879d15c0277fa5b85fee7e675cc9a3d4a8938b6f28",
+      "archived": false,
+      "editorial_lane": "DOI_LINK_PRESENT_CLAIM_UNVERIFIED",
+      "evidence": [
+        {
+          "url": "https://doi.org/10.3897/zookeys.552.5956",
+          "head_outcome": "reachable_head"
+        },
+        {
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4740853/",
+          "head_outcome": "reachable_head"
+        }
+      ],
+      "source_claim_verified": false,
+      "rights_approved": false,
+      "post_authorized": false,
+      "current_live_thread_readback_required": true
+    },
+    {
+      "proposal_id": "pleco:research-article-backlink:hyp-vandragti",
+      "site_url": "https://aquapedia.app/plecopedia/research/hyp-vandragti/",
+      "existing_thread_id": "1561147015482839093",
+      "receipt_key": "d720279bfb726d7e260280714296e2299faa6dd5f601d7685b5869f34cc4a279",
+      "archived": false,
+      "editorial_lane": "DOI_LINK_PRESENT_CLAIM_UNVERIFIED",
+      "evidence": [
+        {
+          "url": "https://doi.org/10.1643/CI-10-008",
+          "head_outcome": "reachable_head"
+        },
+        {
+          "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=71886",
+          "head_outcome": "reachable_head"
+        }
+      ],
+      "source_claim_verified": false,
+      "rights_approved": false,
+      "post_authorized": false,
+      "current_live_thread_readback_required": true
+    },
+    {
+      "proposal_id": "pleco:research-article-backlink:l001",
+      "site_url": "https://aquapedia.app/plecopedia/research/l001/",
+      "existing_thread_id": "1560964908160393288",
+      "receipt_key": "98955206eb6cc7b1e011b909035de914c96e521661711045cfa3e731cfeca85c",
+      "archived": false,
+      "editorial_lane": "DOI_LINK_PRESENT_CLAIM_UNVERIFIED",
+      "evidence": [
+        {
+          "url": "https://doi.org/10.5962/bhl.part.82074",
+          "head_outcome": "http_status"
+        },
+        {
+          "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=58211",
+          "head_outcome": "reachable_head"
+        }
+      ],
+      "source_claim_verified": false,
+      "rights_approved": false,
+      "post_authorized": false,
+      "current_live_thread_readback_required": true
+    },
+    {
+      "proposal_id": "pleco:research-article-backlink:l015",
+      "site_url": "https://aquapedia.app/plecopedia/research/l015/",
+      "existing_thread_id": "1560964994890334320",
+      "receipt_key": "89514695143b126f538cdebb37d23c1551cdaca674088d15c0557a3a496a39c1",
+      "archived": false,
+      "editorial_lane": "DOI_LINK_PRESENT_CLAIM_UNVERIFIED",
+      "evidence": [
+        {
+          "url": "https://aquainfo.nl/en/l-numbers-and-lda-numbers-the-explanation/",
+          "head_outcome": "reachable_head"
+        },
+        {
+          "url": "https://doi.org/10.11646/zootaxa.2534.1.3",
+          "head_outcome": "reachable_head"
+        }
+      ],
+      "source_claim_verified": false,
+      "rights_approved": false,
+      "post_authorized": false,
+      "current_live_thread_readback_required": true
+    },
+    {
+      "proposal_id": "pleco:research-article-backlink:l020",
+      "site_url": "https://aquapedia.app/plecopedia/research/l020/",
+      "existing_thread_id": "1560954765528141928",
+      "receipt_key": "860e0e5094a6811f7dd5181ac44a98ea9b7e9171df4a3b05be8fd5f619f1cf7f",
+      "archived": false,
+      "editorial_lane": "DOI_LINK_PRESENT_CLAIM_UNVERIFIED",
+      "evidence": [
+        {
+          "url": "https://doi.org/10.1590/s1679-62252014000100001",
+          "head_outcome": "reachable_head"
+        },
+        {
+          "url": "https://www.planetcatfish.com/common/common_names.php?language=English&letter=l",
+          "head_outcome": "http_status"
+        }
+      ],
+      "source_claim_verified": false,
+      "rights_approved": false,
+      "post_authorized": false,
+      "current_live_thread_readback_required": true
+    },
+    {
+      "proposal_id": "pleco:research-article-backlink:l081",
+      "site_url": "https://aquapedia.app/plecopedia/research/l081/",
+      "existing_thread_id": "1560955889723248703",
+      "receipt_key": "5803424dff16ced61ba03227ab0a8b9dd34aea3d98a520215e2624887a5451fe",
+      "archived": false,
+      "editorial_lane": "DOI_LINK_PRESENT_CLAIM_UNVERIFIED",
+      "evidence": [
+        {
+          "url": "https://doi.org/10.1590/S1679-62252011000200001",
+          "head_outcome": "reachable_head"
+        },
+        {
+          "url": "https://www.planetcatfish.com/common/common_names.php?language=English&letter=l",
+          "head_outcome": "http_status"
+        }
+      ],
+      "source_claim_verified": false,
+      "rights_approved": false,
+      "post_authorized": false,
+      "current_live_thread_readback_required": true
+    },
+    {
+      "proposal_id": "pleco:research-article-backlink:l083",
+      "site_url": "https://aquapedia.app/plecopedia/research/l083/",
+      "existing_thread_id": "1561136932631879834",
+      "receipt_key": "f5936fb4d75652a9e6424fffd2b7fb5762c4540d31d980b9ef3076c86664832d",
+      "archived": false,
+      "editorial_lane": "DOI_LINK_PRESENT_CLAIM_UNVERIFIED",
+      "evidence": [
+        {
+          "url": "https://doi.org/10.5962/bhl.part.82074",
+          "head_outcome": "http_status"
+        },
+        {
+          "url": "https://www.suedamerikafans.de/en/pterygoplichthys-gibbiceps-pterygoplichthys-xinguensis-l165-l83-wer-ist-wer/",
+          "head_outcome": "reachable_head"
+        }
+      ],
+      "source_claim_verified": false,
+      "rights_approved": false,
+      "post_authorized": false,
+      "current_live_thread_readback_required": true
+    },
+    {
+      "proposal_id": "pleco:research-article-backlink:l086",
+      "site_url": "https://aquapedia.app/plecopedia/research/l086/",
+      "existing_thread_id": "1560955895754530897",
+      "receipt_key": "64afee6778d1a7cd990631e3670e67d9da8283b1ed6d9a4fd7f6ddbb287de134",
+      "archived": false,
+      "editorial_lane": "DOI_LINK_PRESENT_CLAIM_UNVERIFIED",
+      "evidence": [
+        {
+          "url": "https://doi.org/10.1590/s1679-62252014000100001",
+          "head_outcome": "reachable_head"
+        },
+        {
+          "url": "https://www.planetcatfish.com/common/common_names.php?language=English&letter=l",
+          "head_outcome": "http_status"
+        }
+      ],
+      "source_claim_verified": false,
+      "rights_approved": false,
+      "post_authorized": false,
+      "current_live_thread_readback_required": true
+    },
+    {
+      "proposal_id": "pleco:research-article-backlink:l106",
+      "site_url": "https://aquapedia.app/plecopedia/research/l106/",
+      "existing_thread_id": "1561136963262877840",
+      "receipt_key": "b9f794705d91d3ec00c4becf56c86d293f2cf7b9ed5601bc7287133680d1cf3c",
+      "archived": false,
+      "editorial_lane": "DOI_LINK_PRESENT_CLAIM_UNVERIFIED",
+      "evidence": [
+        {
+          "url": "https://doi.org/10.1590/S1679-62252005000400012",
+          "head_outcome": "reachable_head"
+        },
+        {
+          "url": "https://www.seriouslyfish.com/species/hemiancistrus-guahiborum",
+          "head_outcome": "reachable_head"
+        }
+      ],
+      "source_claim_verified": false,
+      "rights_approved": false,
+      "post_authorized": false,
+      "current_live_thread_readback_required": true
+    },
+    {
+      "proposal_id": "pleco:research-article-backlink:l191",
+      "site_url": "https://aquapedia.app/plecopedia/research/l191/",
+      "existing_thread_id": "1561136953322377221",
+      "receipt_key": "0a419d3c5d82e294634f6e6f804d54513973681ed568316620e9d6b6574d0e52",
+      "archived": false,
+      "editorial_lane": "DOI_LINK_PRESENT_CLAIM_UNVERIFIED",
+      "evidence": [
+        {
+          "url": "https://doi.org/10.1643/ci-09-185",
+          "head_outcome": "reachable_head"
+        },
+        {
+          "url": "https://www.aquariumglaser.de/en/fisharchive/panaque-from-colombia-l190-l191-l330/",
+          "head_outcome": "reachable_head"
+        }
+      ],
+      "source_claim_verified": false,
+      "rights_approved": false,
+      "post_authorized": false,
+      "current_live_thread_readback_required": true
+    },
+    {
+      "proposal_id": "pleco:research-article-backlink:l239",
+      "site_url": "https://aquapedia.app/plecopedia/research/l239/",
+      "existing_thread_id": "1560955932400427049",
+      "receipt_key": "cbd4f17dd9266aceaee80aa48ee7a1555f46f021167fc98931b1a690fd06df96",
+      "archived": false,
+      "editorial_lane": "DOI_LINK_PRESENT_CLAIM_UNVERIFIED",
+      "evidence": [
+        {
+          "url": "https://doi.org/10.1643/ci-07-187",
+          "head_outcome": "reachable_head"
+        },
+        {
+          "url": "https://www.ig-bssw.org/again-and-again-l-56/?lang=en",
+          "head_outcome": "reachable_head"
+        }
+      ],
+      "source_claim_verified": false,
+      "rights_approved": false,
+      "post_authorized": false,
+      "current_live_thread_readback_required": true
+    },
+    {
+      "proposal_id": "pleco:research-article-backlink:l306",
+      "site_url": "https://aquapedia.app/plecopedia/research/l306/",
+      "existing_thread_id": "1560965006005112833",
+      "receipt_key": "831bbc17262d4ae5a1e41c6cb22f1ec0d3490f246e20b3a5ed7cf4a576994112",
+      "archived": false,
+      "editorial_lane": "DOI_LINK_PRESENT_CLAIM_UNVERIFIED",
+      "evidence": [
+        {
+          "url": "https://doi.org/10.5281/zenodo.19115497",
+          "head_outcome": "http_status"
+        },
+        {
+          "url": "https://www.suedamerikafans.de/en/datz-012017-wels-presseschau/",
+          "head_outcome": "reachable_head"
+        }
+      ],
+      "source_claim_verified": false,
+      "rights_approved": false,
+      "post_authorized": false,
+      "current_live_thread_readback_required": true
+    },
+    {
+      "proposal_id": "pleco:research-article-backlink:l418",
+      "site_url": "https://aquapedia.app/plecopedia/research/l418/",
+      "existing_thread_id": "1561136961001889893",
+      "receipt_key": "c474d5a7b3491b60f732ceb4127f7009568a062bc4aaa4c5295f0305a137ae59",
+      "archived": false,
+      "editorial_lane": "DOI_LINK_PRESENT_CLAIM_UNVERIFIED",
+      "evidence": [
+        {
+          "url": "https://doi.org/10.1643/ci-09-185",
+          "head_outcome": "reachable_head"
+        },
+        {
+          "url": "https://planetcatfish.com/common/species.php?species_id=803",
+          "head_outcome": "http_status"
+        }
+      ],
+      "source_claim_verified": false,
+      "rights_approved": false,
+      "post_authorized": false,
+      "current_live_thread_readback_required": true
+    },
+    {
+      "proposal_id": "pleco:research-article-backlink:pana-changae",
+      "site_url": "https://aquapedia.app/plecopedia/research/pana-changae/",
+      "existing_thread_id": "1561174473669873706",
+      "receipt_key": "fb8679cf89cb4996e1f1be6501b4af3289cb81480d2df7f8477523227d8cc87f",
+      "archived": false,
+      "editorial_lane": "DOI_LINK_PRESENT_CLAIM_UNVERIFIED",
+      "evidence": [
+        {
+          "url": "https://auburn.edu/~armbrjw/Panaque_changae.pdf",
+          "head_outcome": "reachable_head"
+        },
+        {
+          "url": "https://doi.org/10.1590/s1679-62252014000100006",
+          "head_outcome": "reachable_head"
+        }
+      ],
+      "source_claim_verified": false,
+      "rights_approved": false,
+      "post_authorized": false,
+      "current_live_thread_readback_required": true
+    },
+    {
+      "proposal_id": "pleco:research-article-backlink:pana-orcesi",
+      "site_url": "https://aquapedia.app/plecopedia/research/pana-orcesi/",
+      "existing_thread_id": "1561174414156890224",
+      "receipt_key": "6a240352220f6972501e3ee500a23e8bcb6e5a238c04047c337443d52caf0b1b",
+      "archived": false,
+      "editorial_lane": "DOI_LINK_PRESENT_CLAIM_UNVERIFIED",
+      "evidence": [
+        {
+          "url": "https://doi.org/10.11646/zootaxa.5463.1.7",
+          "head_outcome": "reachable_head"
+        },
+        {
+          "url": "https://doi.org/10.5281/zenodo.11645868",
+          "head_outcome": "http_status"
+        }
+      ],
+      "source_claim_verified": false,
+      "rights_approved": false,
+      "post_authorized": false,
+      "current_live_thread_readback_required": true
+    },
+    {
+      "proposal_id": "pleco:research-article-backlink:pana-pantostiktos",
+      "site_url": "https://aquapedia.app/plecopedia/research/pana-pantostiktos/",
+      "existing_thread_id": "1561174416778465311",
+      "receipt_key": "7e79cc4af02504590832d97cf5a18822d3dbb86ab1ddce39e2e879428d42c9e8",
+      "archived": false,
+      "editorial_lane": "DOI_LINK_PRESENT_CLAIM_UNVERIFIED",
+      "evidence": [
+        {
+          "url": "https://doi.org/10.11646/zootaxa.5463.1.7",
+          "head_outcome": "reachable_head"
+        },
+        {
+          "url": "https://doi.org/10.5281/zenodo.11645870",
+          "head_outcome": "http_status"
+        }
+      ],
+      "source_claim_verified": false,
+      "rights_approved": false,
+      "post_authorized": false,
+      "current_live_thread_readback_required": true
+    },
+    {
+      "proposal_id": "pleco:research-article-backlink:peckol-lujani",
+      "site_url": "https://aquapedia.app/plecopedia/research/peckol-lujani/",
+      "existing_thread_id": "1561139054697775215",
+      "receipt_key": "dca7a077912665699bed2566e1afbac54a1b7476ce65d93e08ddeb8f1e05a610",
+      "archived": false,
+      "editorial_lane": "DOI_LINK_PRESENT_CLAIM_UNVERIFIED",
+      "evidence": [
+        {
+          "url": "https://doi.org/10.3897/zookeys.480.6540",
+          "head_outcome": "reachable_head"
+        },
+        {
+          "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=73654",
+          "head_outcome": "http_status"
+        }
+      ],
+      "source_claim_verified": false,
+      "rights_approved": false,
+      "post_authorized": false,
+      "current_live_thread_readback_required": true
+    },
+    {
+      "proposal_id": "pleco:research-article-backlink:pseudo-sidereus",
+      "site_url": "https://aquapedia.app/plecopedia/research/pseudo-sidereus/",
+      "existing_thread_id": "1561174493689548871",
+      "receipt_key": "19d8e0a963735bb5a92b574e774e5c356c65c6e020b25abc23cfc31ff6b16e5c",
+      "archived": false,
+      "editorial_lane": "DOI_LINK_PRESENT_CLAIM_UNVERIFIED",
+      "evidence": [
+        {
+          "url": "https://doi.org/10.11646/zootaxa.628.1.1",
+          "head_outcome": "reachable_head"
+        },
+        {
+          "url": "https://www.utsc.utoronto.ca/~lovejoy/pdfpubs/2015/LujanN_MolecPhylo&Evo_2015.pdf",
+          "head_outcome": "reachable_head"
+        }
+      ],
+      "source_claim_verified": false,
+      "rights_approved": false,
+      "post_authorized": false,
+      "current_live_thread_readback_required": true
+    },
+    {
+      "proposal_id": "pleco:research-article-backlink:study-l333-captive",
+      "site_url": "https://aquapedia.app/plecopedia/research/study-l333-captive/",
+      "existing_thread_id": "1561136979171610685",
+      "receipt_key": "57148a6733429aa41aeab402e8548656fed12675ce8da0481cb051d458e7961d",
+      "archived": false,
+      "editorial_lane": "DOI_LINK_PRESENT_CLAIM_UNVERIFIED",
+      "evidence": [
+        {
+          "url": "https://doi.org/10.1007/s10499-024-01720-z",
+          "head_outcome": "reachable_head"
+        },
+        {
+          "url": "https://www.ni.bio.br/1982-0224-2024-0080/",
+          "head_outcome": "reachable_head"
+        }
+      ],
+      "source_claim_verified": false,
+      "rights_approved": false,
+      "post_authorized": false,
+      "current_live_thread_readback_required": true
+    },
+    {
+      "proposal_id": "pleco:research-article-backlink:anc-claro",
+      "site_url": "https://aquapedia.app/plecopedia/research/anc-claro/",
+      "existing_thread_id": "1561139086432010261",
+      "receipt_key": "eb3d5cca53ab950b8bc4f057bf34d5039c12b91d0c3ca142a0478855bc85fc72",
+      "archived": false,
+      "editorial_lane": "OTHER_REACHABLE_LINK_CLAIM_UNVERIFIED",
+      "evidence": [
+        {
+          "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=65318",
+          "head_outcome": "http_status"
+        },
+        {
+          "url": "https://www.scotcat.com/loricariidae/ancistrus_claro.htm",
+          "head_outcome": "reachable_head"
+        }
+      ],
+      "source_claim_verified": false,
+      "rights_approved": false,
+      "post_authorized": false,
+      "current_live_thread_readback_required": true
+    },
+    {
+      "proposal_id": "pleco:research-article-backlink:bary-niveatus",
+      "site_url": "https://aquapedia.app/plecopedia/research/bary-niveatus/",
+      "existing_thread_id": "1561139048737935521",
+      "receipt_key": "eba8f5cc324c1fcd324b25681590ed1cb1c26fb1aaa067c3b8a1414b5e1226d3",
+      "archived": false,
+      "editorial_lane": "OTHER_REACHABLE_LINK_CLAIM_UNVERIFIED",
+      "evidence": [
+        {
+          "url": "https://aquainfo.nl/en/l-numbers-and-lda-numbers-the-explanation/",
+          "head_outcome": "reachable_head"
+        },
+        {
+          "url": "https://www.ni.bio.br/1982-0224-2025-0066/",
+          "head_outcome": "reachable_head"
+        }
+      ],
+      "source_claim_verified": false,
+      "rights_approved": false,
+      "post_authorized": false,
+      "current_live_thread_readback_required": true
+    },
+    {
+      "proposal_id": "pleco:research-article-backlink:breeder-parha-l046",
+      "site_url": "https://aquapedia.app/plecopedia/research/breeder-parha-l046/",
+      "existing_thread_id": "1560966174827749438",
+      "receipt_key": "85912c4140311f23a1fe25b105df813a5856773df5a6098b31c864205ef7df99",
+      "archived": false,
+      "editorial_lane": "OTHER_REACHABLE_LINK_CLAIM_UNVERIFIED",
+      "evidence": [
+        {
+          "url": "https://aquainfo.nl/en/keeping-and-breeding-hypancistrus-zebra-l046-part-2-breeding/",
+          "head_outcome": "reachable_head"
+        }
+      ],
+      "source_claim_verified": false,
+      "rights_approved": false,
+      "post_authorized": false,
+      "current_live_thread_readback_required": true
+    },
+    {
+      "proposal_id": "pleco:research-article-backlink:l011",
+      "site_url": "https://aquapedia.app/plecopedia/research/l011/",
+      "existing_thread_id": "1561136913623023750",
+      "receipt_key": "ba066c23b5614e6f9d814bb0d1c58c587a243086ddbab2f11309e347ba73a550",
+      "archived": false,
+      "editorial_lane": "OTHER_REACHABLE_LINK_CLAIM_UNVERIFIED",
+      "evidence": [
+        {
+          "url": "https://www.aquariumglaser.de/en/tag/aphanotorulus-en/",
+          "head_outcome": "reachable_head"
+        },
+        {
+          "url": "https://www.seriouslyfish.com/species/squaliforma-cf-emarginata",
+          "head_outcome": "reachable_head"
+        }
+      ],
+      "source_claim_verified": false,
+      "rights_approved": false,
+      "post_authorized": false,
+      "current_live_thread_readback_required": true
+    },
+    {
+      "proposal_id": "pleco:research-article-backlink:l017",
+      "site_url": "https://aquapedia.app/plecopedia/research/l017/",
+      "existing_thread_id": "1560954763015888960",
+      "receipt_key": "4d57429a5a78b526f9302d58eb9f22793f354aaba0b899c437fde1d87c470434",
+      "archived": false,
+      "editorial_lane": "OTHER_REACHABLE_LINK_CLAIM_UNVERIFIED",
+      "evidence": [
+        {
+          "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0244894",
+          "head_outcome": "reachable_head"
+        },
+        {
+          "url": "https://www.planetcatfish.com/common/common_names.php?language=English&letter=l",
+          "head_outcome": "http_status"
+        }
+      ],
+      "source_claim_verified": false,
+      "rights_approved": false,
+      "post_authorized": false,
+      "current_live_thread_readback_required": true
+    },
+    {
+      "proposal_id": "pleco:research-article-backlink:l021",
+      "site_url": "https://aquapedia.app/plecopedia/research/l021/",
+      "existing_thread_id": "1560964913432891403",
+      "receipt_key": "d2ca72ff3b5f8375d736c192e523c04dc0da48c4d2200194091db78ad743d09f",
+      "archived": false,
+      "editorial_lane": "OTHER_REACHABLE_LINK_CLAIM_UNVERIFIED",
+      "evidence": [
+        {
+          "url": "https://www.alr-journal.org/articles/alr/full_html/2025/01/alr240111/alr240111.html",
+          "head_outcome": "http_status"
+        },
+        {
+          "url": "https://www.scotcat.com/loricariidae/pterygoplichthys_pardalis.htm",
+          "head_outcome": "reachable_head"
+        }
+      ],
+      "source_claim_verified": false,
+      "rights_approved": false,
+      "post_authorized": false,
+      "current_live_thread_readback_required": true
+    },
+    {
+      "proposal_id": "pleco:research-article-backlink:l022",
+      "site_url": "https://aquapedia.app/plecopedia/research/l022/",
+      "existing_thread_id": "1560964910861516922",
+      "receipt_key": "87300debfda2078ae3aad961524435fb94672279bedadb76c449fc9662782f0b",
+      "archived": false,
+      "editorial_lane": "OTHER_REACHABLE_LINK_CLAIM_UNVERIFIED",
+      "evidence": [
+        {
+          "url": "https://aquainfo.nl/en/l-numbers-and-lda-numbers-the-explanation/",
+          "head_outcome": "reachable_head"
+        },
+        {
+          "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=58211",
+          "head_outcome": "reachable_head"
+        }
+      ],
+      "source_claim_verified": false,
+      "rights_approved": false,
+      "post_authorized": false,
+      "current_live_thread_readback_required": true
+    },
+    {
+      "proposal_id": "pleco:research-article-backlink:l027-toc",
+      "site_url": "https://aquapedia.app/plecopedia/research/l027-toc/",
+      "existing_thread_id": "1560955937609486347",
+      "receipt_key": "e7d52e2bb4dcc1635776bf0027cde383ea4fffe57a68993f2280d4967915f17a",
+      "archived": false,
+      "editorial_lane": "OTHER_REACHABLE_LINK_CLAIM_UNVERIFIED",
+      "evidence": [
+        {
+          "url": "https://www.esf.edu/biology/faculty/documents/71.LujanHidalgoStewart2010Panaque.pdf",
+          "head_outcome": "reachable_head"
+        },
+        {
+          "url": "https://www.planetcatfish.com/common/common_names.php?language=English&letter=l",
+          "head_outcome": "http_status"
+        }
+      ],
+      "source_claim_verified": false,
+      "rights_approved": false,
+      "post_authorized": false,
+      "current_live_thread_readback_required": true
+    },
+    {
+      "proposal_id": "pleco:research-article-backlink:l035",
+      "site_url": "https://aquapedia.app/plecopedia/research/l035/",
+      "existing_thread_id": "1561136916047470605",
+      "receipt_key": "14510c9896edd5c36027c35befbd558cc8fe9b5a835b87bebdb9abb251c26dcd",
+      "archived": false,
+      "editorial_lane": "OTHER_REACHABLE_LINK_CLAIM_UNVERIFIED",
+      "evidence": [
+        {
+          "url": "https://www.aquariumglaser.de/en/tag/aphanotorulus-en/",
+          "head_outcome": "reachable_head"
+        },
+        {
+          "url": "https://www.seriouslyfish.com/species/squaliforma-cf-emarginata",
+          "head_outcome": "reachable_head"
+        }
+      ],
+      "source_claim_verified": false,
+      "rights_approved": false,
+      "post_authorized": false,
+      "current_live_thread_readback_required": true
+    },
+    {
+      "proposal_id": "pleco:research-article-backlink:l056",
+      "site_url": "https://aquapedia.app/plecopedia/research/l056/",
+      "existing_thread_id": "1560954721672630424",
+      "receipt_key": "02ff7dbb348a05ebf3f3fe6eb0e003ebc49abfa00a8b581e75faea3935f4d292",
+      "archived": false,
+      "editorial_lane": "OTHER_REACHABLE_LINK_CLAIM_UNVERIFIED",
+      "evidence": [
+        {
+          "url": "https://www.ig-bssw.org/again-and-again-l-56/?lang=en",
+          "head_outcome": "reachable_head"
+        },
+        {
+          "url": "https://www.planetcatfish.com/common/common_names.php?language=English&letter=l",
+          "head_outcome": "http_status"
+        }
+      ],
+      "source_claim_verified": false,
+      "rights_approved": false,
+      "post_authorized": false,
+      "current_live_thread_readback_required": true
+    },
+    {
+      "proposal_id": "pleco:research-article-backlink:l059",
+      "site_url": "https://aquapedia.app/plecopedia/research/l059/",
+      "existing_thread_id": "1560964958735568938",
+      "receipt_key": "a87e25ba603c4d984e8b3ac2ee213b166b7dda6cca8012962c18ba9e1e6d03fa",
+      "archived": false,
+      "editorial_lane": "OTHER_REACHABLE_LINK_CLAIM_UNVERIFIED",
+      "evidence": [
+        {
+          "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=4946",
+          "head_outcome": "reachable_head"
+        },
+        {
+          "url": "https://www.scotcat.com/factsheets/ancistrus_dolichopterus.htm",
+          "head_outcome": "reachable_head"
+        }
+      ],
+      "source_claim_verified": false,
+      "rights_approved": false,
+      "post_authorized": false,
+      "current_live_thread_readback_required": true
+    },
+    {
+      "proposal_id": "pleco:research-article-backlink:l067",
+      "site_url": "https://aquapedia.app/plecopedia/research/l067/",
+      "existing_thread_id": "1560954724717428840",
+      "receipt_key": "789810464ad77d7539e1764014e9e92adc22cc7b2acd4da21e6cac871bc6c778",
+      "archived": false,
+      "editorial_lane": "OTHER_REACHABLE_LINK_CLAIM_UNVERIFIED",
+      "evidence": [
+        {
+          "url": "https://pubmed.ncbi.nlm.nih.gov/25709528/",
+          "head_outcome": "reachable_head"
+        },
+        {
+          "url": "https://www.planetcatfish.com/common/common_names.php?language=English&letter=l",
+          "head_outcome": "http_status"
+        }
+      ],
+      "source_claim_verified": false,
+      "rights_approved": false,
+      "post_authorized": false,
+      "current_live_thread_readback_required": true
+    },
+    {
+      "proposal_id": "pleco:research-article-backlink:l073",
+      "site_url": "https://aquapedia.app/plecopedia/research/l073/",
+      "existing_thread_id": "1560954805260783679",
+      "receipt_key": "357b381a7f7547a93885596511ddbe850485b6ce5d69d244558b96db0d8cb3dd",
+      "archived": false,
+      "editorial_lane": "OTHER_REACHABLE_LINK_CLAIM_UNVERIFIED",
+      "evidence": [
+        {
+          "url": "https://aquainfo.nl/en/l-numbers-and-lda-numbers-the-explanation/",
+          "head_outcome": "reachable_head"
+        },
+        {
+          "url": "https://www.planetcatfish.com/common/common_names.php?language=English&letter=l",
+          "head_outcome": "http_status"
+        }
+      ],
+      "source_claim_verified": false,
+      "rights_approved": false,
+      "post_authorized": false,
+      "current_live_thread_readback_required": true
+    },
+    {
+      "proposal_id": "pleco:research-article-backlink:l082",
+      "site_url": "https://aquapedia.app/plecopedia/research/l082/",
+      "existing_thread_id": "1560955892772503694",
+      "receipt_key": "234da4f6ea65c8452ef372c9c09bbd88346611f96eab0b38b35ce99c82ddb9c3",
+      "archived": false,
+      "editorial_lane": "OTHER_REACHABLE_LINK_CLAIM_UNVERIFIED",
+      "evidence": [
+        {
+          "url": "https://www.ni.bio.br/1982-0224-2023-0038/",
+          "head_outcome": "reachable_head"
+        },
+        {
+          "url": "https://www.planetcatfish.com/common/common_names.php?language=English&letter=l",
+          "head_outcome": "http_status"
+        }
+      ],
+      "source_claim_verified": false,
+      "rights_approved": false,
+      "post_authorized": false,
+      "current_live_thread_readback_required": true
+    },
+    {
+      "proposal_id": "pleco:research-article-backlink:l091",
+      "site_url": "https://aquapedia.app/plecopedia/research/l091/",
+      "existing_thread_id": "1560955900531970110",
+      "receipt_key": "a553caf5d2c5a56987deebe117b7b7a8d99e37ed94740a781d5321507e92447c",
+      "archived": false,
+      "editorial_lane": "OTHER_REACHABLE_LINK_CLAIM_UNVERIFIED",
+      "evidence": [
+        {
+          "url": "https://www.planetcatfish.com/common/common_names.php?language=English&letter=l",
+          "head_outcome": "http_status"
+        },
+        {
+          "url": "https://www.scotcat.com/loricariidae/leporacanthicus_triactis.htm",
+          "head_outcome": "reachable_head"
+        }
+      ],
+      "source_claim_verified": false,
+      "rights_approved": false,
+      "post_authorized": false,
+      "current_live_thread_readback_required": true
+    },
+    {
+      "proposal_id": "pleco:research-article-backlink:l096",
+      "site_url": "https://aquapedia.app/plecopedia/research/l096/",
+      "existing_thread_id": "1560955929631924276",
+      "receipt_key": "03af2cc42bfe7dad122b173b0883f3f7664a06db3080d3ef3f4f885839f7ffe7",
+      "archived": false,
+      "editorial_lane": "OTHER_REACHABLE_LINK_CLAIM_UNVERIFIED",
+      "evidence": [
+        {
+          "url": "https://planetcatfish.com/common/species.php?species_id=85",
+          "head_outcome": "http_status"
+        },
+        {
+          "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=5335",
+          "head_outcome": "reachable_head"
+        }
+      ],
+      "source_claim_verified": false,
+      "rights_approved": false,
+      "post_authorized": false,
+      "current_live_thread_readback_required": true
+    },
+    {
+      "proposal_id": "pleco:research-article-backlink:l126-lithox",
+      "site_url": "https://aquapedia.app/plecopedia/research/l126-lithox/",
+      "existing_thread_id": "1561139089388867645",
+      "receipt_key": "d4dae7780a13fd9c4f1d788213f650c98b45cff493b1eafbdeca6d1ef618e73b",
+      "archived": false,
+      "editorial_lane": "OTHER_REACHABLE_LINK_CLAIM_UNVERIFIED",
+      "evidence": [
+        {
+          "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=6069",
+          "head_outcome": "http_status"
+        },
+        {
+          "url": "https://www.suedamerikafans.de/en/wels-datenbank/welsart/?art=214",
+          "head_outcome": "reachable_head"
+        }
+      ],
+      "source_claim_verified": false,
+      "rights_approved": false,
+      "post_authorized": false,
+      "current_live_thread_readback_required": true
+    },
+    {
+      "proposal_id": "pleco:research-article-backlink:l128",
+      "site_url": "https://aquapedia.app/plecopedia/research/l128/",
+      "existing_thread_id": "1560964961583243306",
+      "receipt_key": "d5fae26273ca06ef4d5f56371b32414c83201d51dc2203ab9865e9fda74b41c3",
+      "archived": false,
+      "editorial_lane": "OTHER_REACHABLE_LINK_CLAIM_UNVERIFIED",
+      "evidence": [
+        {
+          "url": "https://www.faunatropica.eu/animals/fish/loricariidae/hemiancistrus-sp-l128/",
+          "head_outcome": "reachable_head"
+        },
+        {
+          "url": "https://www.practicalfishkeeping.co.uk/features/keeping-and-breeding-the-green-phantom-plec/",
+          "head_outcome": "reachable_head"
+        }
+      ],
+      "source_claim_verified": false,
+      "rights_approved": false,
+      "post_authorized": false,
+      "current_live_thread_readback_required": true
+    },
+    {
+      "proposal_id": "pleco:research-article-backlink:l330",
+      "site_url": "https://aquapedia.app/plecopedia/research/l330/",
+      "existing_thread_id": "1561136957474742346",
+      "receipt_key": "6a2da46947cb4945191e5eac3724f5d3237f9ce4744b7b0f48f6a33a87af6cde",
+      "archived": false,
+      "editorial_lane": "OTHER_REACHABLE_LINK_CLAIM_UNVERIFIED",
+      "evidence": [
+        {
+          "url": "https://www.aquariumglaser.de/en/fisharchive/panaque-from-colombia-l190-l191-l330/",
+          "head_outcome": "reachable_head"
+        },
+        {
+          "url": "https://www.tfhmagazine.com/articles/freshwater/royal-plecos-full-article",
+          "head_outcome": "reachable_head"
+        }
+      ],
+      "source_claim_verified": false,
+      "rights_approved": false,
+      "post_authorized": false,
+      "current_live_thread_readback_required": true
+    },
+    {
+      "proposal_id": "pleco:research-article-backlink:l397",
+      "site_url": "https://aquapedia.app/plecopedia/research/l397/",
+      "existing_thread_id": "1560965001416679475",
+      "receipt_key": "c83562632f05ad596ad9358748d511d9f826316a519e13a02a6dc35b36168d24",
+      "archived": false,
+      "editorial_lane": "OTHER_REACHABLE_LINK_CLAIM_UNVERIFIED",
+      "evidence": [
+        {
+          "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0165388",
+          "head_outcome": "reachable_head"
+        },
+        {
+          "url": "https://www.planetcatfish.com/Panaqolus%20sp(L397)",
+          "head_outcome": "http_status"
+        }
+      ],
+      "source_claim_verified": false,
+      "rights_approved": false,
+      "post_authorized": false,
+      "current_live_thread_readback_required": true
+    },
+    {
+      "proposal_id": "pleco:research-article-backlink:l398",
+      "site_url": "https://aquapedia.app/plecopedia/research/l398/",
+      "existing_thread_id": "1560964997721489449",
+      "receipt_key": "449d2f91306729dd8b70e2c4199cd3a6a5d9ea6048aad3d768619ce8ba6339c3",
+      "archived": false,
+      "editorial_lane": "OTHER_REACHABLE_LINK_CLAIM_UNVERIFIED",
+      "evidence": [
+        {
+          "url": "https://en.amazonoco.de/project/panaqolus-tankei-l-398-origin-and-breeding/",
+          "head_outcome": "reachable_head"
+        },
+        {
+          "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0165388",
+          "head_outcome": "reachable_head"
+        }
+      ],
+      "source_claim_verified": false,
+      "rights_approved": false,
+      "post_authorized": false,
+      "current_live_thread_readback_required": true
+    },
+    {
+      "proposal_id": "pleco:research-article-backlink:pana-koko",
+      "site_url": "https://aquapedia.app/plecopedia/research/pana-koko/",
+      "existing_thread_id": "1561147053097230420",
+      "receipt_key": "2407edf2d8519dfd3976e468327188cc113349ca5d3605ada0c37ea8466b63d4",
+      "archived": false,
+      "editorial_lane": "OTHER_REACHABLE_LINK_CLAIM_UNVERIFIED",
+      "evidence": [
+        {
+          "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=72287",
+          "head_outcome": "http_status"
+        },
+        {
+          "url": "https://www.sfi-cybium.fr/sites/default/files/pdfs-cybium/11-FischMuller%5BGuianas%5D%20colour.pdf",
+          "head_outcome": "reachable_head"
+        }
+      ],
+      "source_claim_verified": false,
+      "rights_approved": false,
+      "post_authorized": false,
+      "current_live_thread_readback_required": true
+    },
+    {
+      "proposal_id": "pleco:research-article-backlink:pana-nocturnus",
+      "site_url": "https://aquapedia.app/plecopedia/research/pana-nocturnus/",
+      "existing_thread_id": "1561147036588318821",
+      "receipt_key": "b55f71c9370295189bd8eff7e6d262f22b7480f0fe1f87bc7f827fc1eda49452",
+      "archived": false,
+      "editorial_lane": "OTHER_REACHABLE_LINK_CLAIM_UNVERIFIED",
+      "evidence": [
+        {
+          "url": "https://planetcatfish.com/panaqolus_nocturnus",
+          "head_outcome": "http_status"
+        },
+        {
+          "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=62021",
+          "head_outcome": "reachable_head"
+        }
+      ],
+      "source_claim_verified": false,
+      "rights_approved": false,
+      "post_authorized": false,
+      "current_live_thread_readback_required": true
+    },
+    {
+      "proposal_id": "pleco:research-article-backlink:breeder-apistomaster-l134",
+      "site_url": "https://aquapedia.app/plecopedia/research/breeder-apistomaster-l134/",
+      "existing_thread_id": "1561136971076862066",
+      "receipt_key": "51f4003b23ac1bbe11f138efe28790b89c871361df0ed784b26150f3e3cc5b47",
+      "archived": false,
+      "editorial_lane": "RESTRICTED_SOURCE_ACCESS",
+      "evidence": [
+        {
+          "url": "https://www.planetcatfish.com/forum/viewtopic.php?t=29601",
+          "head_outcome": "http_status"
+        }
+      ],
+      "source_claim_verified": false,
+      "rights_approved": false,
+      "post_authorized": false,
+      "current_live_thread_readback_required": true
+    },
+    {
+      "proposal_id": "pleco:research-article-backlink:breeder-christophe-l025",
+      "site_url": "https://aquapedia.app/plecopedia/research/breeder-christophe-l025/",
+      "existing_thread_id": "1560955934845440142",
+      "receipt_key": "dd72065fcee6fd7849f3c1f08a6276432f80e9ef030b2e8b4021bab2c8a32c59",
+      "archived": false,
+      "editorial_lane": "RESTRICTED_SOURCE_ACCESS",
+      "evidence": [
+        {
+          "url": "https://planetcatfish.com/shanesworld/shanesworld.php?article_id=405",
+          "head_outcome": "http_status"
+        }
+      ],
+      "source_claim_verified": false,
+      "rights_approved": false,
+      "post_authorized": false,
+      "current_live_thread_readback_required": true
+    },
+    {
+      "proposal_id": "pleco:research-article-backlink:breeder-davej-l134",
+      "site_url": "https://aquapedia.app/plecopedia/research/breeder-davej-l134/",
+      "existing_thread_id": "1561136974897742007",
+      "receipt_key": "53cbf0c8dd5a0600cb6f1af7bd4b17710ed036fa40a5ae6f04721a19fa7944c6",
+      "archived": false,
+      "editorial_lane": "RESTRICTED_SOURCE_ACCESS",
+      "evidence": [
+        {
+          "url": "https://planetcatfish.com/forum/viewtopic.php?t=32922",
+          "head_outcome": "http_status"
+        }
+      ],
+      "source_claim_verified": false,
+      "rights_approved": false,
+      "post_authorized": false,
+      "current_live_thread_readback_required": true
+    }
+  ]
+}

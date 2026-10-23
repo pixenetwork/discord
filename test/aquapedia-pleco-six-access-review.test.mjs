@@ -40,10 +40,14 @@ test('independent evidence must not silently approve claims, photo rights or pub
  assert.equal(gate.discord_writes,0);
  assert.equal(gate.source_urls_replaced,0);
  assert.equal(review.counts.taxonomy_partially_corroborated,2);
- assert.equal(review.counts.independent_breeder_self_reports_found,1);
+ assert.equal(review.counts.independent_breeder_self_reports_found,2);
+ assert.equal(review.counts.indexed_primary_breeder_reports_partially_corroborated,1);
  const originalForumOnly=review.records.filter(r=>r.status==='ORIGINAL_FORUM_REQUIRES_ACCESS');
- assert.deepEqual(originalForumOnly.map(r=>r.slug).sort(),
-  ['breeder-davej-l134','breeder-karsten-l183']);
+ assert.deepEqual(originalForumOnly.map(r=>r.slug),['breeder-davej-l134']);
+ const karsten=review.records.find(r=>r.slug==='breeder-karsten-l183');
+ assert.equal(karsten.status,'ORIGINAL_FORUM_PUBLIC_SEARCH_EXCERPT_WITH_IDENTITY_CAUTION');
+ assert.ok(karsten.unverified.some(x=>x.includes('L181')));
+ assert.ok(karsten.alternatives.some(x=>x.url.includes('l-welse.com')));
  const taxonomic=review.records.filter(r=>r.slug==='l025'||r.slug==='l037');
  assert.ok(taxonomic.every(x=>x.unverified.length>0));
  assert.ok(review.records.find(x=>x.slug==='l037').unverified.some(x=>x.includes('17162021')));

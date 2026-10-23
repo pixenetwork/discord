@@ -83,6 +83,4 @@ const report=[
 const reportFile='docs/operations/aquapedia-cross-taxa-release-matrix-20261021.md';
 if(fs.existsSync(reportFile))throw Error('Matrix doc already exists; manual version bump required');
 fs.writeFileSync(reportFile,report,{encoding:'utf8',flag:'wx'});
-console.log('RELEASE_REVIEW_MATRIX '+JSON.stringify({sourceRecords:all.length,proposals:matrix.proposals.length,counts,
- snapshotFreshness:matrix.snapshotFreshness,artifact:output,
- blocked:!matrix.publicationAuthorized,writes:matrix.discordWrites}));
+console.log('RELEASE_REVIEW_MATRIX: immutable review-only artifacts created');

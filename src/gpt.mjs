@@ -197,6 +197,7 @@ async function ensureVendorFromTool(interaction, deps, args) {
   const layout = await provisionAquaphoriaLayout(interaction.guild, {
     ownerUserId: deps.config.discord.ownerUserId,
     store: deps.store,
+    includePublicMagazines: false,
   });
   let vendor = await deps.store.upsertVendor({ id, discordUserId: userId, displayName, catalogSlug: id, active: true });
   const workspace = await ensureVendorWorkspace(interaction.guild, {

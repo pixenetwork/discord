@@ -15,4 +15,4 @@ const path='resources/aquapedia-cross-taxa-post-cory-review-20261022.json';
 if(fs.existsSync(path))throw new Error('Existing report cannot overwrite');
 fs.writeFileSync(path,JSON.stringify(full,null,2)+'\n',{flag:'wx'});
 // Detailed source IDs/URLs remain only in the atomic evidence ledger, not logs.
-process.stdout.write('CORY_FOUR_LIVE_RECONCILED: receipt file created; no release granted\\n');
+console.log('CORY_FOUR_LIVE_RECONCILED: receipt file created; no release granted');

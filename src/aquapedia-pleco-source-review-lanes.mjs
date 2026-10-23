@@ -44,7 +44,8 @@ export function classifyPlecoSourceReview(manifest,citations,head){
   seen.add(p.id);
   const url=p.sourceUrls[0], evidence=urls.get(url);
   if(!evidence)stop('no source evidence for '+p.id);
-  const restrictedByHead=evidence.links.every(link=>checks.get(link)?.outcome!=='reachable_head');
+  if(evidence.links.some(link=>!checks.has(link)))stop('incomplete citation HEAD coverage');
+  const restrictedByHead=evidence.links.every(link=>checks.get(link).outcome!=='reachable_head');
   if(restricted.has(url)!==restrictedByHead)
    stop('stale or contradictory source-head evidence');
   return {

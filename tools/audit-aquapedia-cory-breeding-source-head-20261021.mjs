@@ -7,7 +7,7 @@ const ledger=JSON.parse(fs.readFileSync('resources/aquapedia-cross-taxa-citation
 const cory=ledger.records.filter(row=>row.url.startsWith('https://aquapedia.app/corydoraspedia/'));
 if(cory.length!==10||cory.some(row=>row.sourceScope!=='anchor-local'||row.links.length!==1))
  throw Error('Cory evidence changed; refuse stale HEAD audit');
-const urls=[...new Set(cory.flatMap(row=>row.links))].sort();
+const urls=[...new Set(cory.flatMap(row=>row.links))].sort((a,b)=>a.localeCompare(b));
 if(urls.length!==10)throw Error('Expected 10 original report links');
 const result=[];let cursor=0;
 await Promise.all(Array.from({length:3},async()=>{

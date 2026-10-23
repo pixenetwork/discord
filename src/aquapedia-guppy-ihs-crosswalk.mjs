@@ -52,6 +52,33 @@ export function mapIkghGuppyTrait(record){
  };
 }
 
+/**
+ * Trade names are strictly source-intake labels, not IKGH provenance.
+ * Preserve the exact frozen GUP-049...176 contiguous type ranges.
+ */
+function expectedUnverifiedTradeType(n){
+ if(n>=49&&n<=70)return 'Guppy documented commercial line';
+ if(n>=71&&n<=140)return 'Guppy documented hobby label';
+ if(n>=141&&n<=146)return 'Guppy documented trade trait';
+ if(n>=147&&n<=171)return 'Guppy documented seller label';
+ if(n>=172&&n<=176)return 'Guppy separate-species or hybrid-related label';
+ return null;
+}
+
+function validateCohortRecord(record,seen){
+ const status=classifyCrossTaxaRecord(record);
+ if(status.group!=='guppy')reject('non-Guppy in cohort');
+ if(seen.has(record.url))reject('duplicate route '+record.url);
+ seen.add(record.url);
+ if(status.decision==='hold_unverified_trade'){
+  const m=/^\/guppypedia\/entries\/gup-(\d{3})\/$/.exec(record.url);
+  const type=expectedUnverifiedTradeType(Number(m?.[1]));
+  if(!type||record.type!==type)reject('trade label path or type is not confirmed');
+  return {kind:'trade'};
+ }
+ return mapIkghGuppyTrait(record);
+}
+
 /** Validate all 48 source-recognized labels and optionally all 128 trade entries.
  * This does not claim the IKGH validates particular specimens or market names. */
 export function auditIkghGuppyCohort(records,{expectFullCohort=false}={}){
@@ -59,24 +86,12 @@ export function auditIkghGuppyCohort(records,{expectFullCohort=false}={}){
  const seen=new Set(),matched=[];
  const counts={base:0,cover:0,tail:0,trade:0};
  for(const record of records){
-  const status=classifyCrossTaxaRecord(record);
-  if(status.group!=='guppy')reject('non-Guppy in cohort');
-  if(seen.has(record.url))reject('duplicate route '+record.url);
-  seen.add(record.url);
-  if(status.decision==='hold_unverified_trade'){
-   const m=/^\/guppypedia\/entries\/gup-(\d{3})\/$/.exec(record.url);
-   const n=Number(m?.[1]);
-   const expectedType=n>=49&&n<=70?'Guppy documented commercial line':
-     n<=140?'Guppy documented hobby label':n<=146?'Guppy documented trade trait':
-     n<=171?'Guppy documented seller label':n<=176?'Guppy separate-species or hybrid-related label':null;
-   if(n<49||n>176||record.type!==expectedType)reject('trade label path or type is not confirmed');
-   counts.trade++;
-   continue;
-  }
-  const x=mapIkghGuppyTrait(record);
-  counts[x.kind]++;matched.push(x);
+  const entry=validateCohortRecord(record,seen);
+  counts[entry.kind]++;
+  if(entry.kind!=='trade')matched.push(entry);
  }
  if(counts.base!==10||counts.cover!==25||counts.tail!==13)reject('not all 48 IHS entries present');
- if(expectFullCohort&&(records.length!==176||counts.trade!==128))reject('expected exactly 128 held trade entries');
+ if(expectFullCohort&&(records.length!==176||counts.trade!==128))
+  reject('expected exactly 128 held trade entries');
  return {total:records.length,counts,tradeHeld:counts.trade,records:matched,publicationAuthorized:false};
 }

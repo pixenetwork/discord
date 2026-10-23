@@ -35,3 +35,74 @@ node tools/medaka79-index-plan.mjs --json
 ## Receipts and rollback
 
 Expected runtime ledger location: `data/aquapedia-medaka79-research-index-receipt-20261019.json` (created only by the publisher following actual Discord readback; never commit raw bot credentials or fabricate a receipt). If a partial publish occurs, stop new writes, preserve actual IDs, and reconcile existing messages before resuming. If a source-record correction is needed, publish an attributed correction; do not silently rewrite claimed parentage.
+
+
+## Verified one-writer runtime protocol (prepared, NOT activated)
+
+`src/medaka79-approved-publisher.mjs` exports `publishApprovedMedaka79` for
+the **existing signed Jarvis/HostOps publisher**, once that trusted runtime
+integrates it. It is intentionally not a standalone token-bearing script,
+automatic scheduler, bot slash command or unaudited new publisher.
+
+The existing managed runtime must provide, as independent trusted capabilities:
+
+- `authorizer.verifySignedApproval(job)`: verify issuer and signature, scope,
+  expiry/replay and required approved guild/forum/source hash; return a scoped
+  verified grant containing the publisher approval and public-audience approval.
+  User chat text and bare booleans alone are not a signature.
+- `lock.acquire(jobId)`: acquire the canonical cross-worker Aquapedia writer
+  lock exclusively, return a release callback and reject concurrent writers.
+- `discord.getForumState`, `discord.enumerateThreads({active,archived})`,
+  `discord.enumerateThreadMessages`, `discord.createThread`, `discord.send`,
+  `discord.fetchMessage`: resolve the canonical guild/forum with public
+  read-history permissions. Enumerate all active/archived forum threads and
+  **complete existing message history** of a resumed thread to detect replies
+  accepted before a failed checkpoint. Publish only through the existing bot
+  and fetch **11 full authenticated messages**.
+- `receiptStore.get(jobId)` and `receiptStore.save(receipt)`: use the
+  existing atomic receipt ledger. Never report completed publication before
+  all eleven message IDs pass authenticated Discord readback.
+- `receiptStore.savePartial(state)` and `receiptStore.loadPartial(jobId)`:
+  durably checkpoint the same job and known thread after successful writes.
+  Recovery must verify job ID, thread membership in the approved forum,
+  bot ownership, existing message IDs and exact source-locked content
+  **before sending any additional replies**. Invalid partial state fails closed.
+  A network timeout or process crash after Discord accepted a reply but
+  **before its checkpoint was saved** can leave an unrecorded message.
+  The trusted runtime must reconcile the entire thread's actual messages and
+  markers before resuming; never blindly retry an ambiguous write.
+
+All content is rebuilt from the checked-in 79-entry matrix and checked against
+the plan; the SHA-256 normalizes only Windows checkout CRLF line endings to
+the Git LF canonical bytes. The publisher checks that every proposed message
+equals the source-locked plan. Every Discord message requests
+`flags:4096` (**SuppressEmbeds**) to avoid accidental third-party image
+
+Source-record URL validation now rejects query strings (`?`) and hash fragments
+(`#`) on allowed specialist research hosts, preventing injection of unexpected
+text into Discord post bodies (CWE-74). Display text in `name` and
+`creator_attributed` fields is sanitised by stripping `]` and `(` in addition
+to the existing set, preventing Markdown hyperlink injection in rendered message
+content (CWE-79). A `null` return from `fetchMessage` is surfaced as a specific
+named fetch-failure error before entering `verifyMedaka79PublishedMessages`,
+making partial-publication diagnostics unambiguous. All injected runtime adapter
+capabilities — including `savePartial` and `loadPartial` — are validated before
+the signed authorization grant is consumed, so a misconfigured runtime fails
+immediately without spending a one-use approval token.
+link previews, and `allowedMentions: {parse:[]}`.
+
+**No runtime binding or live publishing is activated by this PR.** The existing
+running bot was observed on an older dirty checkout, and legacy HostOps V2
+is disabled. Do not restart/hot-swap that bot, change ACLs or revive V2 merely
+to force a Discord publish.
+
+Validation for this module:
+```bash
+node --check src/medaka79-approved-publisher.mjs
+node --test test/medaka79-approved-publisher.test.mjs test/medaka79-research-index.test.mjs
+```
+Tests use a deliberately inert fake Discord gateway. They prove no posting
+without signed-job validation; full thread enumeration, one-writer lock,
+duplicate-thread checks, exact 11-message readback and durable receipt;
+content-tamper rejection, image-preview suppression, source-hash cross-OS
+stability and fail-closed partial posting.

@@ -1,5 +1,7 @@
 # Aquapedia cross-taxa review — historical state after one Guppy canary
 
+> **CURRENT AFTER CORY RECEIPTS — October 22:** Four additional, independently readback-verified source-only Corydoraspedia report links have now been posted. The Guppy-only **95 pending / 59 active** state described below is therefore **historical**. The current reviewed queue is **91 pending, 55 active Plecopedia backlinks and 36 archived Cory/Pleco holds**. Use the non-writing `node tools/read-aquapedia-cross-taxa-current-queue.mjs --queue` reporter and `resources/aquapedia-cross-taxa-post-cory-review-20261022.json`. The 91 are NOT editorially approved for automatic publication.
+
 > **HISTORICAL SNAPSHOT: superseded by four independently receipt-verified Guppy source-index messages.** The 98 pending proposals and 62 active items below describe the state **after the first Guppy canary only**. For latest reviewed status use [Guppy all-48 live receipt summary](aquapedia-guppy-all-48-ikgh-live-20261022.md), `resources/aquapedia-guppy-all-48-live-release-20261022.json`, and the **pure read-only** `node tools/read-aquapedia-cross-taxa-current-queue.mjs --queue`. As of that later verified receipt: **95 proposals remain, 59 active and 36 archived** (10 Corydoras and 85 Pleco); all 48 IKGH-standard Guppy source links have been posted in four bot-owned messages. Neither version is permission to publish any held research.
 
 **Editorial/workflow review only. No Discord posts, edits, unarchive operations, bot restarts, or production permissions granted.**

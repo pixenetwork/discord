@@ -6,11 +6,11 @@ import fs from 'node:fs';
 import {stageCrossTaxaActiveBatch} from '../src/aquapedia-cross-taxa-active-staging.mjs';
 const manifest=JSON.parse(fs.readFileSync('resources/aquapedia-cross-taxa-release-review-20261021.json','utf8'));
 const res=await fetch('https://aquapedia.app/assets/catalog.json',{signal:AbortSignal.timeout(18000)});
-if(!res.ok)throw Error('Public source HTTP '+res.status);
+if(!res.ok)throw new Error('Public source HTTP '+res.status);
 const live=await res.json();
 const counts=Object.fromEntries(['guppy','corydoras','pleco'].map(group=>[group,live.filter(x=>x.group===group).length]));
 if(live.length<853||counts.guppy!==176||counts.corydoras!==19||counts.pleco!==167)
- throw Error('Live source cohort changed since frozen review');
+ throw new Error('Live source cohort changed since frozen review');
 const active=stageCrossTaxaActiveBatch(manifest);
 const minimal=x=>({id:x.id,group:x.group,threadId:x.existingThreadId,
  sourceUrls:x.sourceUrls,contentSha256:x.sha256,receiptKey:x.receiptKey,
@@ -29,7 +29,7 @@ const record={
  archived:active.archived.map(minimal)
 };
 const path='resources/aquapedia-cross-taxa-active-review-20261022.json';
-if(fs.existsSync(path))throw Error('Existing stage file, refuse overwrite');
+if(fs.existsSync(path))throw new Error('Existing stage file, refuse overwrite');
 fs.writeFileSync(path,JSON.stringify(record,null,2)+'\n',{flag:'wx'});
 const doc=[
  '# Aquapedia active-thread-only cross-taxa release preparation (not published)',
@@ -52,6 +52,7 @@ const doc=[
  ''
 ];
 const md='docs/operations/aquapedia-cross-taxa-active-review-20261022.md';
-if(fs.existsSync(md))throw Error('Existing active-review document');
+if(fs.existsSync(md))throw new Error('Existing active-review document');
 fs.writeFileSync(md,doc.join('\n')+'\n',{flag:'wx'});
-console.log('ACTIVE_CROSS_TAXA_REVIEW '+JSON.stringify({sourceCatalog:live.length,active:active.activeProposalCount,archived:active.archivedHeld,batches:active.batches.map(x=>x.items.length),byGroup:active.byGroup,canPublish:false,discordWrites:0}));
+// The write-once local review artifacts contain detail; console output is fixed, non-tainted.
+console.log('ACTIVE_CROSS_TAXA_REVIEW: historic unapproved review-only artifact created');

@@ -2,7 +2,7 @@
 
 This is a **source-access triage for human reviewers**, not an authorization to publish to Discord or a validation of an article's biological claims.
 
-The 55 previously unposted Plecopedia backlink proposals in the historic [99-proposal manifest](../../resources/aquapedia-cross-taxa-release-review-20261021.json) have been matched with the existing [143-citation URL snapshot](../../resources/aquapedia-cross-taxa-citation-presence-20261021.json) and [109 HEAD results](../../resources/aquapedia-external-source-head-20261022.json). Their **immutable source Git blobs, 55 existing Discord thread IDs, proposal IDs, receipt keys, individual citation URLs, and per-source HEAD observations** are pinned in [the editorial queue](../../resources/aquapedia-pleco-active-55-editorial-review-20261023.json).
+The 55 previously unposted Plecopedia backlink proposals in the historic [99-proposal manifest](../../resources/aquapedia-cross-taxa-release-review-20261021.json) have been matched with the existing [143-citation URL snapshot](../../resources/aquapedia-cross-taxa-citation-presence-20261021.json) and [109 HEAD results](../../resources/aquapedia-external-source-head-20261022.json). Their **three source paths (versioned in the same Git tree), 55 existing Discord thread IDs, proposal IDs, receipt keys, individual citation URLs, and per-source HEAD observations** are pinned in [the editorial queue](../../resources/aquapedia-pleco-active-55-editorial-review-20261023.json).
 
 | Research-review lane | Active, existing Discord thread candidates | Editorial action |
 |---|---:|---|
@@ -23,5 +23,7 @@ All 55 are **unpublished proposals**; the historical first four Guppy standardiz
 ### L037 correction already staged elsewhere
 
 [The original 2008 species article on SciELO](https://www.scielo.br/j/ni/a/GHTtrjmKNLNRgB9tPVKC8HS/?lang=en) confirms valid *Hypostomus faveolus*. The historic Zenodo ID 17162021 resolves via Zenodo's API to the **canonical treatment 17162022**. [Aquapedia draft PR #246](https://github.com/pixenetwork/aquapedia/pull/246) now cites the original DOI `10.1590/S1679-62252008000300012` and canonical DOI `10.5281/zenodo.17162022`, with the research page still noindexed. This source correction does **not** update live production or grant photo rights. It should be checked on fresh live page/Discord readback *after* an authorized deployment; the old third-party 403 access snapshot remains historically true.
+
+The Git tree fixes the contents of all three referenced source files at each checked-out commit. The regression test compares all 55 records directly to those files rather than duplicating raw Git blob IDs as metadata (which a security scanner mistook for hard-coded credentials). No source observations, receipt keys, or authorization fields were removed.
 
 Read-only tests: `node --test test/aquapedia-pleco-active-55-editorial-review.test.mjs` and `npm test`. No source articles or images are copied into this repository; the editorial file holds link metadata and rights/claim flags only.

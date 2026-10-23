@@ -4,11 +4,8 @@
   "scope": "55 active, previously unposted Pleco existing-thread backlink proposals",
   "snapshots": {
     "proposal_path": "resources/aquapedia-cross-taxa-release-review-20261021.json",
-    "proposal_blob_sha": "5dfc3cbb7259278f2b47466de0c3f25acc48c0e8",
     "citation_path": "resources/aquapedia-cross-taxa-citation-presence-20261021.json",
-    "citation_blob_sha": "339e0aef5031793078fe88b0d237da3ad001f446",
-    "source_head_path": "resources/aquapedia-external-source-head-20261022.json",
-    "source_head_blob_sha": "589e31dec00c7775a7e12d5aa117469cc7800e20"
+    "source_head_path": "resources/aquapedia-external-source-head-20261022.json"
   },
   "counts": {
     "total": 55,

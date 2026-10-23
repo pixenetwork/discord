@@ -63,12 +63,22 @@
       "slug": "breeder-karsten-l183",
       "original": "https://www.planetcatfish.com/forum/viewtopic.php?t=24178",
       "claim_type": "FIRST_PERSON_BREEDING_HISTORY",
-      "status": "ORIGINAL_FORUM_REQUIRES_ACCESS",
-      "alternatives": [],
+      "status": "ORIGINAL_FORUM_PUBLIC_SEARCH_EXCERPT_WITH_IDENTITY_CAUTION",
+      "alternatives": [
+        {
+          "url": "https://www.l-welse.com/forum/showthread.php?t=10780",
+          "supports": "Same public keeper account in 2006 discusses uncertainty distinguishing L183 versus L181/L249 in some of his fish; raises species identity caution, not a positive pedigree"
+        },
+        {
+          "url": "https://www.planetcatfish.com/forum/viewtopic.php?t=24178",
+          "supports": "Search-indexed 2008 first-person post by Karsten S. reports first spawns near 15 months / 12 cm and another post describes one tank pH ~6, KH ~1, 28°C and various cave materials; live bot access still HTTP 403"
+        }
+      ],
       "unverified": [
-        "15-month maturity claim and keeper identification",
-        "Reported pH, KH and temperature",
-        "Cave material anecdote"
+        "Identification of the particular 2008 breeder fish as L183 rather than another similar Ancistrus without voucher evidence",
+        "Whether the earlier 2006 identity uncertainty relates to the exact 2008 fish cohort",
+        "Independent control of spawning age, chemistry and cavity materials; never publish as a universal species husbandry prescription",
+        "Full thread content, reuse permission, and animal-photo copyright"
       ]
     },
     {
@@ -126,8 +136,9 @@
     "review_records": 6,
     "primary_breeder_accounts_unverified": 4,
     "taxonomy_partially_corroborated": 2,
-    "independent_breeder_self_reports_found": 1,
-    "all_original_link_holds_remaining": 6
+    "independent_breeder_self_reports_found": 2,
+    "all_original_link_holds_remaining": 6,
+    "indexed_primary_breeder_reports_partially_corroborated": 1
   },
   "release": {
     "claim_level_approved": 0,
@@ -136,5 +147,5 @@
     "discord_writes": 0,
     "source_urls_replaced": 0
   },
-  "warning": "Public citations provide narrower corroboration only. A public post does not establish pedigree, genetics, animal identity, reuse licenses or a safe generalized husbandry recommendation."
+  "warning": "A public indexed forum excerpt may corroborate an attributed keeper statement but is not an authenticated full-thread readback, verified fish ID, licensed image or species-wide care rule."
 }

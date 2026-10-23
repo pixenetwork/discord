@@ -37,55 +37,74 @@ export function classifyCrossTaxaRecord(entry){
  return {group:'corydoras',kind:'anchor',decision:'hold_anchor'};
 }
 
+function buildForumIndex(group,threads){
+ if(!Array.isArray(threads))throw new TypeError('Untrusted thread inventory '+group);
+ const index=new Map(),used=new Set();
+ for(const thread of threads){
+  if(!thread||typeof thread.name!=='string'||!thread.name.trim()||
+     typeof thread.id!=='string'||!/^\d+$/.test(thread.id))
+   deny('untrusted thread in '+group);
+  if(used.has(thread.id))deny('duplicate Discord thread ID in '+group);
+  used.add(thread.id);
+  const key=normalizedName(thread.name);
+  if(index.has(key))deny('duplicate forum title in '+group+': '+thread.name);
+  index.set(key,thread.id);
+ }
+ return index;
+}
+
+function resolveExistingThread(record,indexes){
+ const exact=indexes[record.group].get(normalizedName(record.name));
+ const alias=record.group==='pleco'&&record.url===plecoHistoricalAlias.url&&
+   record.name===plecoHistoricalAlias.siteTitle
+   ?indexes.pleco.get(normalizedName(plecoHistoricalAlias.existingForumTitle)):undefined;
+ if(exact&&alias&&exact!==alias)
+  deny('Ambiguous Pleco alias: both historical and current threads exist');
+ return {threadId:exact||alias,exact:Boolean(exact)};
+}
+
+function appendCoverageRecord(record,indexes,seenUrls,counts,byGroup){
+ const status=classifyCrossTaxaRecord(record);
+ if(seenUrls.has(record.url))deny('duplicated catalog route '+record.url);
+ seenUrls.add(record.url);
+ counts[status.group]++;
+ const row=byGroup[status.group];
+ row.total++;
+ if(status.decision==='review_required')row.pendingReview++;
+ else row.held++;
+ const {threadId,exact}=resolveExistingThread(record,indexes);
+ if(!threadId){row.unmatched++;return;}
+ if(exact)row.exactMatches++;
+ else row.aliasMatches++;
+ row.matchedThreadIds.push(threadId);
+}
+
+function checkExpectedTotals(counts,expected){
+ if(!expected)return;
+ for(const group of cohorts){
+  if(!Number.isSafeInteger(expected[group])||expected[group]!==counts[group])
+   deny('Cohort count mismatch '+group+': expected '+expected[group]+', got '+counts[group]);
+ }
+}
+
 /**
  * Offline/read-only plan; the thread inventory must have been independently
  * captured from active AND archived Discord threads. No approximate matching,
  * automatic thread creation, source permission, or mutable source checkpoint.
  */
 export function buildCrossTaxaCoverage(catalog,threadInventory={},options={}){
- if(!Array.isArray(catalog)||!threadInventory||typeof threadInventory!=='object')throw TypeError('Untrusted audit inputs');
+ if(!Array.isArray(catalog)||!threadInventory||typeof threadInventory!=='object')
+  throw new TypeError('Untrusted audit inputs');
  const counts={guppy:0,pleco:0,corydoras:0};
- const byGroup=Object.fromEntries(cohorts.map(group=>[group,{total:0,exactMatches:0,aliasMatches:0,pendingReview:0,held:0,unmatched:0,matchedThreadIds:[]}]));
- const seenUrls=new Set(),indexes={};
- for(const group of cohorts){
-  const threads=threadInventory[group]??[];
-  if(!Array.isArray(threads))throw TypeError('Untrusted thread inventory '+group);
-  const idx=new Map(),usedIds=new Set();
-  for(const thread of threads){
-   if(!thread||typeof thread.name!=='string'||!thread.name.trim()||typeof thread.id!=='string'||!/^[0-9]+$/.test(thread.id))
-    throw Error('Untrusted thread in '+group);
-   if(usedIds.has(thread.id))throw Error('Duplicate Discord thread ID in '+group);
-   usedIds.add(thread.id);
-   const key=normalizedName(thread.name);
-   if(idx.has(key))throw Error('Duplicate forum title in '+group+': '+thread.name);
-   idx.set(key,thread.id);
-  }
-  indexes[group]=idx;
- }
- for(const record of catalog){
-  const status=classifyCrossTaxaRecord(record);
-  if(seenUrls.has(record.url))deny('duplicated catalog route '+record.url);
-  seenUrls.add(record.url);
-  counts[status.group]++;
-  const row=byGroup[status.group];row.total++;
-  if(status.decision==='review_required')row.pendingReview++;else row.held++;
-  const exact=indexes[status.group].get(normalizedName(record.name));
-  const alias=record.group==='pleco'&&record.url===plecoHistoricalAlias.url&&
-    record.name===plecoHistoricalAlias.siteTitle
-    ?indexes.pleco.get(normalizedName(plecoHistoricalAlias.existingForumTitle)):undefined;
-  if(exact&&alias&&exact!==alias)throw Error('Ambiguous Pleco alias: both historical and current threads exist');
-  const threadId=exact||alias;
-  if(threadId){
-   if(exact)row.exactMatches++;else row.aliasMatches++;
-   row.matchedThreadIds.push(threadId);
-  }else row.unmatched++;
- }
- const expected=options.expectedCounts;
- if(expected){
-  for(const group of cohorts){
-   if(!Number.isSafeInteger(expected[group])||expected[group]!==counts[group])throw Error('Cohort count mismatch '+group+': expected '+expected[group]+', got '+counts[group]);
-  }
- }
+ const byGroup=Object.fromEntries(cohorts.map(group=>[
+  group,{total:0,exactMatches:0,aliasMatches:0,pendingReview:0,held:0,unmatched:0,matchedThreadIds:[]}
+ ]));
+ const indexes=Object.fromEntries(cohorts.map(group=>[
+  group,buildForumIndex(group,threadInventory[group]??[])
+ ]));
+ const seenUrls=new Set();
+ for(const record of catalog)appendCoverageRecord(record,indexes,seenUrls,counts,byGroup);
+ checkExpectedTotals(counts,options.expectedCounts);
  const n=options.guildActiveThreads;
  return {
   total:catalog.length,byGroup,publicationAuthorized:false,newThreadsToCreate:0,

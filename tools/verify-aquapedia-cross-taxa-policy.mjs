@@ -54,10 +54,4 @@ if(guppyPagesVerified!==48)throw Error('Not all Guppy standard pages inspected')
 const pleco=await load('/plecopedia/research/soromoni-stearleyi/');
 if(!pleco.includes('Pseudolithoxus stearleyi')||!pleco.includes('10.1643/CI-10-008'))
  throw Error('Pleco original diagnosis/source evidence missing');
-console.log('CROSS_TAXA_SOURCE_AUDIT '+JSON.stringify({
- catalogTotal:catalog.length,excludedTotal:plan.total,
- cohorts:Object.fromEntries(Object.entries(plan.byGroup).map(([group,v])=>[group,{records:v.total,held:v.held,reviewRequired:v.pendingReview}])),
- guppySourceCodes:standards.counts,guppyIkghPagesVerified:guppyPagesVerified,
- coryPagesChecked:parentPaths.length,coryAnchorsChecked,plecoAliasPageChecked:true,
- writes:0,publicationAuthorized:false
-}));
+console.log('CROSS_TAXA_SOURCE_AUDIT: pinned checks complete; publication blocked');

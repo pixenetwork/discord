@@ -38,6 +38,6 @@ export function collectAquapediaCitationLinks(pageUrl,html){
   out.add(url.href);
  }
  return {url:pageUrl,sourceScope:parsed.hash?'anchor-local':'full-public-article',
-  links:[...out].sort(),externalCitationCount:out.size,
+  links:[...out].sort((a,b)=>a.localeCompare(b)),externalCitationCount:out.size,
   claimVerified:false,mediaRightsVerified:false};
 }

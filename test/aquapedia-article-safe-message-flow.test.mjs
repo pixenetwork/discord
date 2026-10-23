@@ -63,3 +63,27 @@ test('author mismatch stops without PATCH or POST',async()=>{
  await assert.rejects(h.run(),/author or message marker mismatch/);
  assert.equal(h.calls.patch.length,0);assert.equal(h.calls.post.length,0);
 });
+
+test('recorded receipt with mismatched destination channel fails closed',async()=>{
+ const h=harness(async()=>existing);
+ h.state.receipts[key].channel='different-channel';
+ const before=JSON.stringify(h.state);
+ await assert.rejects(h.run(),/channel mismatch/);
+ assert.deepEqual(h.calls,{get:[],post:[],patch:[]});
+ assert.equal(JSON.stringify(h.state),before);
+});
+test('recorded receipt without message ID fails closed',async()=>{
+ const h=harness(async()=>existing);
+ delete h.state.receipts[key].messageId;
+ const before=JSON.stringify(h.state);
+ await assert.rejects(h.run(),/missing message ID/);
+ assert.deepEqual(h.calls,{get:[],post:[],patch:[]});
+ assert.equal(JSON.stringify(h.state),before);
+});
+test('recorded receipt GET null fails closed rather than searching recent posts',async()=>{
+ const h=harness(async()=>null);
+ const before=JSON.stringify(h.state);
+ await assert.rejects(h.run(),/Old receipt missing/);
+ assert.deepEqual(h.calls,{get:['msg:legacy-123'],post:[],patch:[]});
+ assert.equal(JSON.stringify(h.state),before);
+});

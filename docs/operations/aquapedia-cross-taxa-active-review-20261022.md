@@ -1,3 +1,5 @@
+> **Historical pre-canary snapshot — not the current pending queue.** The 63 active candidates listed below include a Guppy GUP-001–010 source index **already published and receipt-verified**. For the current 62 active / 36 archived, 98-proposal review queue, use [`aquapedia-cross-taxa-post-canary-review-20261022.md`](aquapedia-cross-taxa-post-canary-review-20261022.md) and `node tools/report-aquapedia-cross-taxa-post-canary.mjs --queue`. Original snapshot preserved for auditability; do not repost the completed canary.
+
 # Aquapedia active-thread-only cross-taxa release preparation (not published)
 
 > **REVIEW REQUIRED**. These records are not scientifically cleared or authorized to post. The original canonical bot is unchanged.

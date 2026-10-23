@@ -1,3 +1,5 @@
+> **CURRENT AFTER FIVE PLECO SOURCE-ONLY POSTS — October 23, 2026:** Five further existing-thread Plecopedia research links are verified live and receipt-backed. The prior **91 pending / 55 active** snapshot below is now **historical**, not the active release queue. There are **86 unapproved research proposals left: 50 active Pleco and 36 archived Cory/Pleco**. See docs/operations/aquapedia-pleco-five-source-links-live-20261023.md and the read-only 	ools/read-aquapedia-cross-taxa-current-queue.mjs --queue. No remaining biological claims or archived releases have been approved.
+
 # Aquapedia cross-category progress — October 22, 2026
 
 **Live and verified:** Four IKGH 2023 Guppypedia index messages covering GUP-001–048, and four existing-thread Corydoraspedia breeding-report *source links*.

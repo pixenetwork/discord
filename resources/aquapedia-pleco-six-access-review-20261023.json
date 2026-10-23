@@ -110,7 +110,7 @@
       "slug": "l037",
       "original": "https://doi.org/10.5281/zenodo.17162021",
       "claim_type": "SCIENTIFIC_SPECIES_IDENTIFICATION_AND_CODE_ALIAS",
-      "status": "TAXONOMY_CORROBORATED_ORIGINAL_ZENODO_LINK_NEEDS_MANUAL_VALIDATION",
+      "status": "CANONICAL_TAXONOMY_CITATIONS_STAGED_NOT_RELEASED",
       "alternatives": [
         {
           "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=70588",
@@ -126,10 +126,22 @@
         }
       ],
       "unverified": [
-        "The currently linked Zenodo identifier 17162021 could not be verified; Plazi reports a different treatment identifier 17162022, and the primary article DOI is 10.1590/S1679-62252008000300012",
-        "Specimen-level identifications or captive inheritance",
+        "Newly canonicalized citations are staged only; the live public L037 research page and historical Discord source-access ledger must be rechecked after governed deployment",
+        "Specimen-level identifications, captive inheritance and breeder lineages",
         "Any photographic reuse rights"
-      ]
+      ],
+      "canonicalization": {
+        "historical_snapshot_source": "https://doi.org/10.5281/zenodo.17162021",
+        "zenodo_request_record_id": "17162021",
+        "canonical_zenodo_record_id": "17162022",
+        "canonical_doi": "https://doi.org/10.5281/zenodo.17162022",
+        "original_publication_doi": "https://doi.org/10.1590/S1679-62252008000300012",
+        "original_publication_text": "https://www.scielo.br/j/ni/a/GHTtrjmKNLNRgB9tPVKC8HS/?lang=en",
+        "evidence": "Direct Zenodo API readback for both numeric IDs returned canonical 17162022; primary 2008 SciELO article and Plazi treatment agree",
+        "staged_fix": "pixenetwork/aquapedia PR #246 commit 9bd1103ceb0591e017a8cec8801a09da183aa9eb",
+        "live_site_deployed": false,
+        "photo_or_claim_release_granted": false
+      }
     }
   ],
   "counts": {
@@ -147,5 +159,5 @@
     "discord_writes": 0,
     "source_urls_replaced": 0
   },
-  "warning": "A public indexed forum excerpt may corroborate an attributed keeper statement but is not an authenticated full-thread readback, verified fish ID, licensed image or species-wide care rule."
+  "warning": "Source identifiers for L037 have been validated and corrected only in staged site PR #246; the original six access holds remain for live verification, source-to-claim review and licensing."
 }

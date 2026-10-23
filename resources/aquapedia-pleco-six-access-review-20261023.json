@@ -1,0 +1,140 @@
+{
+  "schema": "aquapedia.pleco-six-access-review.v1",
+  "date": "2026-10-23",
+  "method": "Manual source/claim triage using public primary taxonomic catalogs, publisher abstracts, index metadata and first-person breeder posts; no restricted original PlanetCatfish article copied",
+  "source_snapshot": "resources/aquapedia-external-source-head-20261022.json",
+  "scope": "Six research pages with no HEAD-reachable citation in prior snapshot",
+  "records": [
+    {
+      "slug": "breeder-apistomaster-l134",
+      "original": "https://www.planetcatfish.com/forum/viewtopic.php?t=29601",
+      "claim_type": "FIRST_PERSON_BREEDING_HISTORY",
+      "status": "PARTIAL_INDEPENDENT_PUBLIC_SELF_REPORT",
+      "alternatives": [
+        {
+          "url": "https://apistogramma.com/forum/threads/l134-and-l333-pleco-special.10082/",
+          "supports": "Original breeder's 2010 post describes F1 stock around 2.5 years and attempts to breed them; not a controlled age-to-maturity estimate"
+        },
+        {
+          "url": "https://apistogramma.com/forum/threads/f1-leopard-frog-plecos-for-sale.8947/",
+          "supports": "Breeder describes some F1 females spawning with older wild males; verify exact spawning counts and timing against original 2010 discussion"
+        },
+        {
+          "url": "https://apistogramma.com/forum/threads/2011-f1-fancy-plecos-from-apistomaster.11199/",
+          "supports": "Breeder's 2011 post explicitly reports F1 L134 spawn as young as age two"
+        }
+      ],
+      "unverified": [
+        "Exact reported 15-versus-25 fry batch comparison",
+        "Full April 2010 PlanetCatfish original",
+        "Independent identification/genetic parentage of individual fish"
+      ]
+    },
+    {
+      "slug": "breeder-christophe-l025",
+      "original": "https://planetcatfish.com/shanesworld/shanesworld.php?article_id=405",
+      "claim_type": "FIRST_PERSON_BREEDING_HISTORY",
+      "status": "INDEX_METADATA_ONLY",
+      "alternatives": [
+        {
+          "url": "https://www.planetcatfish.com/core/articles.php?section=shanesworld",
+          "supports": "PlanetCatfish Shane's World index lists 'Spawning Pseudacanthicus sp. L025, the scarlet cactus pleco' dated May 14 2009"
+        }
+      ],
+      "unverified": [
+        "Details of 1,600-L tank, egg disturbance and rearing mortality",
+        "Identity of named author from full primary article",
+        "All breeding-care generalizations"
+      ]
+    },
+    {
+      "slug": "breeder-davej-l134",
+      "original": "https://planetcatfish.com/forum/viewtopic.php?t=32922",
+      "claim_type": "FIRST_PERSON_BREEDING_HISTORY",
+      "status": "ORIGINAL_FORUM_REQUIRES_ACCESS",
+      "alternatives": [],
+      "unverified": [
+        "2010 seller and provenance chain",
+        "Cave and spawning chronology",
+        "First-clutch count 26 and fry growth observations"
+      ]
+    },
+    {
+      "slug": "breeder-karsten-l183",
+      "original": "https://www.planetcatfish.com/forum/viewtopic.php?t=24178",
+      "claim_type": "FIRST_PERSON_BREEDING_HISTORY",
+      "status": "ORIGINAL_FORUM_REQUIRES_ACCESS",
+      "alternatives": [],
+      "unverified": [
+        "15-month maturity claim and keeper identification",
+        "Reported pH, KH and temperature",
+        "Cave material anecdote"
+      ]
+    },
+    {
+      "slug": "l025",
+      "original": "https://doi.org/10.1111/jfb.13184",
+      "claim_type": "SCIENTIFIC_SPECIES_IDENTIFICATION_PLUS_UNVERIFIED_BREEDER_HISTORY",
+      "status": "TAXONOMY_AND_DIAGNOSIS_CORROBORATED_BREEDER_UNVERIFIED",
+      "alternatives": [
+        {
+          "url": "https://pubmed.ncbi.nlm.nih.gov/27774597/",
+          "supports": "Journal of Fish Biology species description identifier DOI 10.1111/jfb.13184, first online 2016"
+        },
+        {
+          "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=74559",
+          "supports": "Eschmeyer's Catalog of Fishes lists Pseudacanthicus pirarara as a valid Xingu species described by Chamon & Sousa 2016"
+        },
+        {
+          "url": "https://onlinelibrary.wiley.com/doi/abs/10.1111/jfb.13184",
+          "supports": "Publisher abstract characterizes diagnostic dark blotches and red/orange unbranched fin rays"
+        }
+      ],
+      "unverified": [
+        "Specific captive egg and survival narrative originally sourced to PlanetCatfish article",
+        "Species assignment for any photographed aquarium specimen",
+        "Permissions to copy photos or full paper"
+      ]
+    },
+    {
+      "slug": "l037",
+      "original": "https://doi.org/10.5281/zenodo.17162021",
+      "claim_type": "SCIENTIFIC_SPECIES_IDENTIFICATION_AND_CODE_ALIAS",
+      "status": "TAXONOMY_CORROBORATED_ORIGINAL_ZENODO_LINK_NEEDS_MANUAL_VALIDATION",
+      "alternatives": [
+        {
+          "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=70588",
+          "supports": "Eschmeyer's Catalog recognizes Hypostomus faveolus Zawadzki, Birindelli & Lima 2008 as valid"
+        },
+        {
+          "url": "https://www.biodiversitylibrary.org/part/109484",
+          "supports": "Bibliographic record for original 2008 published description"
+        },
+        {
+          "url": "https://treatment.plazi.org/GgServer/html/039187CC5C0FBF2F577DA001AC71FD49",
+          "supports": "Original taxonomic treatment supports pale-spotted diagnosis and historical L037/L037a and L161 designation"
+        }
+      ],
+      "unverified": [
+        "The currently linked Zenodo identifier 17162021 could not be verified; Plazi reports a different treatment identifier 17162022, and the primary article DOI is 10.1590/S1679-62252008000300012",
+        "Specimen-level identifications or captive inheritance",
+        "Any photographic reuse rights"
+      ]
+    }
+  ],
+  "counts": {
+    "review_records": 6,
+    "primary_breeder_accounts_unverified": 4,
+    "taxonomy_partially_corroborated": 2,
+    "independent_breeder_self_reports_found": 1,
+    "all_original_link_holds_remaining": 6
+  },
+  "release": {
+    "claim_level_approved": 0,
+    "external_photo_rights_approved": 0,
+    "publishing_authorized": false,
+    "discord_writes": 0,
+    "source_urls_replaced": 0
+  },
+  "warning": "Public citations provide narrower corroboration only. A public post does not establish pedigree, genetics, animal identity, reuse licenses or a safe generalized husbandry recommendation."
+}

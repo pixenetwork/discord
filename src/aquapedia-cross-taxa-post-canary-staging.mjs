@@ -6,6 +6,7 @@
  */
 import {stageCrossTaxaActiveBatch} from './aquapedia-cross-taxa-active-staging.mjs';
 import {reconcileSourceOnlyCanary} from './aquapedia-cross-taxa-canary-reconciliation.mjs';
+import {reconcileAllGuppyShowIndexes} from './aquapedia-guppy-final-index-reconciliation.mjs';
 
 const stop=why=>{throw Error('Post-canary review: '+why)};
 const groupOrder=['guppy','corydoras','pleco'];
@@ -66,5 +67,64 @@ export function stageCrossTaxaPostCanary(manifest,guppyCatalog,receipt){
   discordWrites:0,
   newThreadsToCreate:0,
   nextAction:'fresh Discord/source/permissions readback and independent rights-science review through authorized single writer'
+ };
+}
+
+/**
+ * Reconcile ALL FOUR Guppy receipts already publicly read back by the
+ * existing owner bot. Return pending review items only; never post or write.
+ * The earlier 98-item single-canary view remains historical.
+ */
+export function stageCrossTaxaAfterAllGuppyIndexes(manifest,guppyCatalog,baseReceipt,remainingReceipt){
+ const first=stageCrossTaxaPostCanary(manifest,guppyCatalog,baseReceipt);
+ const complete=reconcileAllGuppyShowIndexes(guppyCatalog,baseReceipt,remainingReceipt,manifest);
+ const original=manifest.proposals.filter(p=>p.group==='guppy');
+ const later=original.filter(p=>p.id!==first.completedProposalId);
+ const topics=remainingReceipt.topics;
+ if(original.length!==4||later.length!==3||topics.length!==3)
+  stop('unexpected number of previously reported Guppy index entries');
+ // Match each previously planned source list and parent forum to the actual
+ // immutable message receipts, not merely to an asserted release count.
+ for(let i=0;i<topics.length;i++){
+  const p=later[i],r=topics[i];
+  if(p.existingThreadId!==r.threadId||
+     p.sourceUrls.join('|')!==r.sourceUrls.join('|')||
+     !p.id.startsWith('guppy:show-phenotype-index:'))
+   stop('published Guppy receipt does not correspond to a frozen proposal');
+ }
+ const active=first.batches.flatMap(b=>b.items).filter(p=>p.group!=='guppy');
+ const held=first.archived;
+ if(complete.pendingCrossTaxaProposals!==95||complete.pendingActive!==59||
+    complete.pendingArchived!==36||active.length!==59||held.length!==36||
+    active.some(p=>p.group==='guppy')||held.some(p=>p.group==='guppy')||
+    active.filter(p=>p.group==='corydoras').length!==4||
+    active.filter(p=>p.group==='pleco').length!==55)
+  stop('Guppy publication ledger or remaining cohort count drift');
+ const receipts=new Set([...active,...held].map(p=>p.receiptKey));
+ if(receipts.size!==95)stop('duplicate pending receipt keys');
+ const batches=[];
+ for(let offset=0;offset<active.length;offset+=12){
+  batches.push({
+   index:batches.length+1,items:active.slice(offset,offset+12),
+   canPublish:false,requiresFreshPreflight:true,
+   requiresAuthenticatedOwnerApproval:true,requiresIndependentSourceReview:true,
+   requiresSingleWriterLock:true,requiresBotReadback:true,requiresDurableReceipt:true
+  });
+ }
+ if(batches.length!==5||batches.at(-1).items.length!==11)
+  stop('pending batching no longer matches fixed 12-item cap');
+ return {
+  schema:'aquapedia.cross-taxa.all-guppy-indexes-review.v1',
+  historicProposals:99,
+  guppyIndexMessagesVerifiedByStoredReceipts:4,
+  guppyShowStandardSourceEntries:48,
+  heldUnverifiedGuppyTradeLabels:128,
+  pendingCount:95,activeCount:59,archivedHeld:36,
+  byGroup:{guppy:0,corydoras:10,pleco:85},
+  activeByGroup:{guppy:0,corydoras:4,pleco:55},
+  batches,archived:held,
+  publicationAuthorized:false,canPublish:false,discordWrites:0,
+  newThreadsToCreate:0,requiresFreshLiveReadback:true,
+  warning:'Stored receipts are historical proof, not a fresh source or posting authorization.'
  };
 }

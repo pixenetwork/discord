@@ -7,7 +7,7 @@ import fs from 'node:fs';
 import {collectAquapediaCitationLinks} from '../src/aquapedia-source-citation-audit.mjs';
 const manifest=JSON.parse(fs.readFileSync('resources/aquapedia-cross-taxa-release-review-20261021.json','utf8'));
 if(manifest.publicationAuthorized||manifest.proposals.length!==99)throw Error('Untrusted release manifest');
-const rows=[...new Set(manifest.proposals.flatMap(p=>p.sourceUrls))].sort();
+const rows=[...new Set(manifest.proposals.flatMap(p=>p.sourceUrls))].sort((a,b)=>a.localeCompare(b));
 if(rows.length!==143)throw Error('Source URL coverage drift');
 const mainPage=u=>u.split('#')[0];
 const pages=[...new Set(rows.map(mainPage))];

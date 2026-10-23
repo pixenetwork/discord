@@ -50,5 +50,13 @@ test('independent evidence must not silently approve claims, photo rights or pub
  assert.ok(karsten.alternatives.some(x=>x.url.includes('l-welse.com')));
  const taxonomic=review.records.filter(r=>r.slug==='l025'||r.slug==='l037');
  assert.ok(taxonomic.every(x=>x.unverified.length>0));
- assert.ok(review.records.find(x=>x.slug==='l037').unverified.some(x=>x.includes('17162021')));
+ const l037=review.records.find(x=>x.slug==='l037');
+ assert.equal(l037.status,'CANONICAL_TAXONOMY_CITATIONS_STAGED_NOT_RELEASED');
+ assert.equal(l037.canonicalization.zenodo_request_record_id,'17162021');
+ assert.equal(l037.canonicalization.canonical_zenodo_record_id,'17162022');
+ assert.equal(l037.canonicalization.canonical_doi,'https://doi.org/10.5281/zenodo.17162022');
+ assert.equal(l037.canonicalization.original_publication_doi,'https://doi.org/10.1590/S1679-62252008000300012');
+ assert.equal(l037.canonicalization.live_site_deployed,false);
+ assert.equal(l037.canonicalization.photo_or_claim_release_granted,false);
+ assert.ok(l037.unverified.some(x=>x.includes('staged only')));
 });

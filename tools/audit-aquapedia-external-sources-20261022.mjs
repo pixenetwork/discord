@@ -5,7 +5,7 @@
 import fs from 'node:fs';
 import {summarizeCitationHeadAccessibility} from '../src/aquapedia-external-source-health.mjs';
 const source=JSON.parse(fs.readFileSync('resources/aquapedia-cross-taxa-citation-presence-20261021.json','utf8'));
-const urls=[...new Set(source.records.flatMap(x=>x.links))].sort();
+const urls=[...new Set(source.records.flatMap(x=>x.links))].sort((a,b)=>a.localeCompare(b));
 if(urls.length!==109)throw Error('Public source inventory count changed');
 const output=[];let i=0;
 await Promise.all(Array.from({length:5},async()=>{

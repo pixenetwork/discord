@@ -1,3 +1,5 @@
+> **CURRENT AFTER SEVEN TAXONOMY SOURCE POSTS (Oct 23):** The earlier **86 pending / 50 active** release count is historical. Seven additional individual, bot-readback-verified taxonomy source links are live. **Current pending = 79 total (43 active Pleco, 36 archived Cory/Pleco)**. See docs/operations/aquapedia-pleco-seven-taxonomy-live-20261023.md and read-only 	ools/read-aquapedia-cross-taxa-current-queue.mjs. No other research claims or archived threads have blanket publication approval.
+
 > **CURRENT AFTER FIVE PLECO SOURCE-ONLY POSTS — October 23, 2026:** Five further existing-thread Plecopedia research links are verified live and receipt-backed. The prior **91 pending / 55 active** snapshot below is now **historical**, not the active release queue. There are **86 unapproved research proposals left: 50 active Pleco and 36 archived Cory/Pleco**. See docs/operations/aquapedia-pleco-five-source-links-live-20261023.md and the read-only 	ools/read-aquapedia-cross-taxa-current-queue.mjs --queue. No remaining biological claims or archived releases have been approved.
 
 # Aquapedia cross-category progress — October 22, 2026

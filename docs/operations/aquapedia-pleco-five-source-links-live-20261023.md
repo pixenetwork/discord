@@ -1,3 +1,5 @@
+> **CURRENT AFTER SEVEN TAXONOMY SOURCE POSTS (Oct 23):** The earlier **86 pending / 50 active** release count is historical. Seven additional individual, bot-readback-verified taxonomy source links are live. **Current pending = 79 total (43 active Pleco, 36 archived Cory/Pleco)**. See docs/operations/aquapedia-pleco-seven-taxonomy-live-20261023.md and read-only 	ools/read-aquapedia-cross-taxa-current-queue.mjs. No other research claims or archived threads have blanket publication approval.
+
 # Plecopedia — five verified provisional research directory links (23 October 2026)
 
 **Actual public Discord posts from the existing Aquaphoria bot:** Five research-source backlinks have been added in pre-existing original, bot-owned, public, unarchived and unlocked Pleco threads. Each message was retrieved from Discord after publishing, verified for exact content/author and zero media attachments, and given a durable receipt on the Main PC. Repeat executions of all five returned **adopted**, not posted, for the same IDs.

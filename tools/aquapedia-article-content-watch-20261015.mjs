@@ -184,10 +184,14 @@ if(mode==='seed'){
      const payload=renderAquapediaCard(summary,{channel:url.startsWith('/shrimpapedia/')?'shrimp':'research'});
      const channel=dest(url),old=state.receipts[key];
      let message=null;
-     if(old?.messageId&&old.channel===channel){
-       message=await rest.get(Routes.channelMessage(channel,old.messageId)); // Preserve old receipt, fail closed on all GET failures.
-       if(message&&(message.author?.id!==me.id||!message.content?.includes(mark)))
-        throw Error('Old receipt author or message marker mismatch '+url);
+     if(old){
+       // A recorded receipt is authoritative. Never reinterpret missing metadata,
+       // a moved destination, or an API error as permission to create a new post.
+       if(!old.messageId||old.channel!==channel)
+        throw Error('Old receipt missing message ID or channel mismatch '+url);
+       message=await rest.get(Routes.channelMessage(channel,old.messageId));
+       if(!message||message.author?.id!==me.id||!message.content?.includes(mark))
+        throw Error('Old receipt missing, author or message marker mismatch '+url);
      }
      if(!message){
        const recent=await rest.get(Routes.channelMessages(channel),{query:new URLSearchParams({limit:'100'})});

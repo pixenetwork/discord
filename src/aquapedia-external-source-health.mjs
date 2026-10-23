@@ -29,7 +29,7 @@ export function summarizeCitationHeadAccessibility(source,externalHeads){
   if(accessible)hasReachable++;
   else affectedUrls.push(row.url);
  }
- affectedUrls.sort();
+ affectedUrls.sort((a,b)=>a.localeCompare(b));
  const reachable=[...results.values()].filter(x=>x.outcome==='reachable_head').length;
  return {
   refTotals:{checked:results.size,reachableByHead:reachable,inaccessibleByHead:results.size-reachable},

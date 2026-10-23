@@ -49,7 +49,13 @@ test('review lanes prioritize DOI-format links but never treat reachability as s
  assert.deepEqual(counts,{doi_link_present:29,other_reachable:23,restricted:3});
  assert.deepEqual(review.counts,{total:55,...counts});
  assert.deepEqual(review.policy,{publication_authorized:false,source_claims_verified:0,photo_rights_approved:0,discord_writes:0,new_threads_to_create:0});
- for(const hash of [review.snapshots.proposal_blob_sha,review.snapshots.citation_blob_sha,review.snapshots.source_head_blob_sha])
-  assert.match(hash,/^[a-f0-9]{40}$/);
+ assert.deepEqual(review.snapshots,{
+  proposal_path:'resources/aquapedia-cross-taxa-release-review-20261021.json',
+  citation_path:'resources/aquapedia-cross-taxa-citation-presence-20261021.json',
+  source_head_path:'resources/aquapedia-external-source-head-20261022.json'
+ });
+ // Source contents are checked row-for-row above. The Git tree itself pins the
+ // three source blobs without copying high-entropy object identifiers into data.
+ assert.ok(!Object.keys(review.snapshots).some(key=>key.endsWith('_sha')));
  assert.ok(review.caveats.some(x=>x.includes('not mean')));
 });

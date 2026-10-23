@@ -67,9 +67,4 @@ lines.push('## Supporting external references, with limitations',
 const dest='docs/operations/corydoraspedia-section-link-preview-20261021.md';
 if(fs.existsSync(dest))throw Error('Destination exists; cannot overwrite');
 fs.writeFileSync(dest,lines.join('\n')+'\n',{encoding:'utf8',flag:'wx'});
-console.log('CORY_SECTION_PREVIEW_VERIFIED '+JSON.stringify({
- catalogTotal:all.length,reviewRecords:plan.total,drafts:plan.drafts.length,ambiguous:plan.ambiguous.length,
- namingOrLineageReview:plan.namingOrLineageReview.length,archivedDraftTargets:plan.drafts.filter(x=>x.archived).length,
- maxPreviewLength:Math.max(...plan.drafts.map(x=>x.content.length)),
- discordWrites:plan.discordWrites,publicationAuthorized:plan.publicationAuthorized
-}));
+console.log('CORY_SECTION_PREVIEW_VERIFIED: review-only artifact created');

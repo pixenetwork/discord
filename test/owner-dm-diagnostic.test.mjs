@@ -18,6 +18,7 @@ const msg = (authorId, content, extras = {}) => ({
 test('valid owner required, command can register in guild', () => {
   assert.throws(() => createOwnerDmDiagnostic({ ownerUserId: 'nope' }), /Valid owner/);
   assert.equal(ownerDmDiagnosticCommand().toJSON().name, 'aq-dm-test');
+  assert.equal(ownerDmDiagnosticCommand().toJSON().default_member_permissions, '8'); // Administrator visibility restriction
 });
 
 test('DM diagnostic ignores other authors, bots, guild traffic, and unrelated text', async () => {

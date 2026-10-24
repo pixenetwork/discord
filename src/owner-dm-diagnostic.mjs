@@ -1,10 +1,11 @@
-import { SlashCommandBuilder } from 'discord.js';
+import { PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
 
 // An intentionally content-free, owner-only diagnostic. Never stores inbound text.
 export function ownerDmDiagnosticCommand() {
   return new SlashCommandBuilder()
     .setName('aq-dm-test')
-    .setDescription('Owner-only Discord direct message delivery test');
+    .setDescription('Owner-only Discord direct message delivery test')
+    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator);
 }
 
 function safeDiscordErrorCode(error) {

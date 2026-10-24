@@ -1,24 +1,31 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {spawnSync} from 'node:child_process';
-test('public current queue is read-only, excludes four verified Cory links and counts 76',()=>{
+test('current receipt-only queue excludes 21 released Cory/Pleco messages: 74 pending',()=>{
  const cwd=new URL('..',import.meta.url).pathname.replace(/^\/(?=[A-Za-z]:)/,'');
  const cmd=spawnSync(process.execPath,['tools/read-aquapedia-cross-taxa-current-queue.mjs'],{cwd,encoding:'utf8'});
  assert.equal(cmd.status,0,cmd.stderr);
- const out=JSON.parse(cmd.stdout);
- assert.equal(out.pendingCount,76);
- assert.equal(out.activeCount,40);
- assert.equal(out.archivedHeld,36);
- assert.equal(out.verifiedGuppySourceLinks,48);
- assert.equal(out.verifiedCoryWorkingReportLinks,4);
- assert.deepEqual(out.byGroup,{corydoras:6,pleco:70});
- assert.equal(out.publicationAuthorized,false);
- assert.equal(out.discordWrites,0);
- assert.ok(out.activeBatches.every(x=>x.canPublish===false));
+ const r=JSON.parse(cmd.stdout);
+ assert.equal(r.pendingCount,74);
+ assert.equal(r.activeCount,38);
+ assert.equal(r.archivedHeld,36);
+ assert.equal(r.verifiedGuppySourceLinks,48);
+ assert.equal(r.verifiedCoryWorkingReportLinks,4);
+ assert.equal(r.verifiedPlecoResearchSourceLinks,17);
+ assert.deepEqual(r.byGroup,{corydoras:6,pleco:68});
+ assert.equal(r.publicationAuthorized,false);
+ assert.equal(r.discordWrites,0);
+ assert.ok(r.activeBatches.every(x=>!x.canPublish));
 });
-test('unapproved apply argument is rejected rather than activating a publisher',()=>{
+test('read-only report rejects write/apply and retains 36 archived hold entries',()=>{
  const cwd=new URL('..',import.meta.url).pathname.replace(/^\/(?=[A-Za-z]:)/,'');
- const cmd=spawnSync(process.execPath,['tools/read-aquapedia-cross-taxa-current-queue.mjs','--apply'],{cwd,encoding:'utf8'});
- assert.notEqual(cmd.status,0);
- assert.match(cmd.stderr,/only optional --queue|Only optional --queue/);
+ const bad=spawnSync(process.execPath,['tools/read-aquapedia-cross-taxa-current-queue.mjs','--apply'],{cwd,encoding:'utf8'});
+ assert.notEqual(bad.status,0);
+ assert.match(bad.stderr,/Only optional --queue/);
+ const run=spawnSync(process.execPath,['tools/read-aquapedia-cross-taxa-current-queue.mjs','--queue'],{cwd,encoding:'utf8'});
+ assert.equal(run.status,0,run.stderr);
+ const result=JSON.parse(run.stdout);
+ assert.equal(result.archived.length,36);
+ assert.equal(result.activeBatches.reduce((sum,x)=>sum+x.count,0),38);
+ assert.ok(result.archived.every(x=>x.publicationAuthorized===false));
 });

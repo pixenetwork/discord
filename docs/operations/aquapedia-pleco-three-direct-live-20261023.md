@@ -1,3 +1,5 @@
+> **LATEST AFTER TWO NOMENCLATURE LINKS (October 23, 2026):** Two independently receipt-verified Plecopedia naming-history references are now public; the 76-pending/40-active counts below are historical. The current read-only backlog is **74 pending = 38 active Pleco + 36 archived Cory/Pleco holds**. See `docs/operations/aquapedia-pleco-two-nomenclature-live-20261023.md` and `tools/read-aquapedia-cross-taxa-current-queue.mjs`. No new scientific pedigrees or permission grants.
+
 # Plecopedia — three original descriptions published as source-only links (October 23, 2026)
 
 **Live verified:** Three source-only directory posts were created using the existing Aquaphoria bot, exclusively in their pre-existing bot-owned, public, active Plecopedia research threads. Each passed exact Discord API author/content readback, was saved to a durable on-host receipt, then rechecked successfully with **action: adopted** rather than duplicating the post.

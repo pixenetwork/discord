@@ -27,3 +27,11 @@ test('default research-results route does not need irrelevant breeder forum chec
  const dest=mk(entries,[],forums,cleanName,()=>{throw Error('unselected forum')},shrimps,results);
  assert.equal(dest(route),'research-results');
 });
+
+test('mislabeled Medaka catalog record cannot bypass shrimp destination privacy check',()=>{
+ const wronglyGrouped=new Map([[route,{name:'Rinkou',group:'shrimp'}]]);
+ const dest=mk(wronglyGrouped,[],forums,cleanName,c=>{
+  if(c.id==='shrimp-guides')throw Error('PRIVACY_BLOCK shrimp-guides');
+ },shrimps,results);
+ assert.throws(()=>dest(route),/PRIVACY_BLOCK/);
+});

@@ -13,6 +13,7 @@ import {REST,Routes,ChannelType,PermissionFlagsBits} from 'discord.js';
 import {renderAquapediaCard} from './aquapedia-post-card.mjs';
 import {requiredChannelKinds} from './aquapedia-article-destination-policy.mjs';
 import {resolveArticleReceiptChannel} from './aquapedia-article-receipt-channel.mjs';
+import {assertTrackedRouteCoverage} from './aquapedia-article-route-integrity.mjs';
 
 const mode=process.argv.includes('--seed')?'seed':process.argv.includes('--apply')?'apply':'check';
 const base='https://aquapedia.app';
@@ -144,6 +145,9 @@ if(mode==='seed'){
  const checkpointSnapshot=fs.readFileSync(file,'utf8');
  const state=JSON.parse(checkpointSnapshot);
  if(state.version!==1)throw Error('Unsupported article checkpoint');
+ // Every previously published article must still be scanned; catalog shrinkage
+ // above the coarse route count floor cannot silently retire old receipts.
+ assertTrackedRouteCoverage(paths,state.pages);
  const announcedCatalogPages=new Set(Object.values(old.receipts||{}).filter(x=>x.source&&x.id&&x.channel&&x.verifiedAt).map(x=>x.source));
  const changes=paths.filter(x=>!state.pages[x]||state.pages[x].digest!==now[x].digest);
  const alreadyAnnouncedNew=changes.filter(x=>!state.pages[x]&&announcedCatalogPages.has(x)).length;

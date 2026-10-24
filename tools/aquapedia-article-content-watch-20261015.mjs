@@ -43,10 +43,51 @@ function pagePath(v){
   && !/\.\.|[?#<>"']/g.test(v)&&v.endsWith('/')?v:null;
 }
 function meaningful(main){
- return main.replace(/<!--[^]*?-->/g,'')
-  .replace(/<script\b[^>]*>[^]*?<\/script>/gi,'')
-  .replace(/<style\b[^>]*>[^]*?<\/style>/gi,'')
-  .replace(/\s+/g,' ').trim();
+ // This is a digest normalizer, not a general-purpose HTML sanitizer.
+ // Do not render its output. A scanner avoids overlapping replacement
+ // patterns and recognizes whitespace in valid closing raw-text tags.
+ const lower=main.toLowerCase();
+ const kept=[];
+ let cursor=0,spanStart=0;
+ while(cursor<main.length){
+  const lt=main.indexOf('<',cursor);
+  if(lt<0)break;
+  let skipEnd=-1;
+  if(main.startsWith('<!--',lt)){
+   const close=main.indexOf('-->',lt+4);
+   if(close>=0)skipEnd=close+3;
+  }else{
+   for(const name of ['script','style']){
+    if(!lower.startsWith('<'+name,lt))continue;
+    const boundary=lower[lt+name.length+1]||'';
+    if(boundary!=='>'&&boundary!=='/'&&!/\s/.test(boundary))continue;
+    let openingEnd=-1,quote=null;
+    for(let j=lt+name.length+1;j<main.length;j++){
+     const ch=main[j];
+     if(quote){if(ch===quote)quote=null}
+     else if(ch==='"'||ch==="'")quote=ch;
+     else if(ch==='>'){openingEnd=j;break}
+    }
+    if(openingEnd<0)continue;
+    const closePrefix='</'+name;
+    let close=lower.indexOf(closePrefix,openingEnd+1);
+    while(close>=0){
+     let k=close+closePrefix.length;
+     while(k<main.length&&/\s/.test(main[k]))k++;
+     if(main[k]==='>'){skipEnd=k+1;break}
+     close=lower.indexOf(closePrefix,close+closePrefix.length);
+    }
+    if(skipEnd>=0)break;
+   }
+  }
+  if(skipEnd>=0){
+   kept.push(main.slice(spanStart,lt));
+   spanStart=skipEnd;
+   cursor=skipEnd;
+  }else cursor=lt+1;
+ }
+ kept.push(main.slice(spanStart));
+ return kept.join('').replace(/\s+/g,' ').trim();
 }
 async function getPage(url){
  const resp=await fetch(base+url+'?article_audit='+Date.now(),{

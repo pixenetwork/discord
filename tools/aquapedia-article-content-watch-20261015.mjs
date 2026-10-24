@@ -323,13 +323,13 @@ if(mode==='seed'){
       throw Error('Discord independent readback mismatch '+url);
      message=confirmed;
      state.pages[url]=item;
-     state.receipts[key]={key,url,channel,messageId:message.id,digest:item.digest,
+     state.receipts[key]={key,url,channel:targetChannel,messageId:message.id,digest:item.digest,
       action,lastVerified:new Date().toISOString()};
      state.totalPosted+=action==='unchanged'?0:1;
      state.lastScan=new Date().toISOString();
      saveAtomically(state);
      if(action==='posted')posted++;else if(action==='updated')updated++;else unchanged++;
-     console.log('ARTICLE_VERIFIED '+JSON.stringify({url,action,channel,messageId:message.id}));
+     console.log('ARTICLE_VERIFIED '+JSON.stringify({url,action,channel:targetChannel,messageId:message.id}));
    }
   }finally{
    if(lock!==undefined){

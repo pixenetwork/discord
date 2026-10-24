@@ -11,7 +11,7 @@ import path from 'node:path';
 import {createHash,randomUUID} from 'node:crypto';
 import {REST,Routes,ChannelType,PermissionFlagsBits} from 'discord.js';
 import {renderAquapediaCard} from './aquapedia-post-card.mjs';
-import {requiredChannelKinds} from './aquapedia-article-destination-policy.mjs';
+import {requiredChannelKinds,channelWriteCandidates} from './aquapedia-article-destination-policy.mjs';
 import {resolveArticleReceiptChannel} from './aquapedia-article-receipt-channel.mjs';
 import {assertTrackedRouteCoverage} from './aquapedia-article-route-integrity.mjs';
 
@@ -186,7 +186,8 @@ if(mode==='seed'){
   // Guard only destinations used by THIS batch. Shrimp-guides is in the
   // public AQUAPEDIA category; never weaken its private-only publication gate.
   // Medaka-only updates must not be blocked by the unused shrimp destination.
-  for(const kind of requiredChannelKinds(changes,cap)){
+  const writeCandidates=channelWriteCandidates(changes,cap,state.pages,announcedCatalogPages);
+  for(const kind of requiredChannelKinds(writeCandidates,cap)){
    privateDestination(kind==='shrimp'?shrimps:results);
   }
   const breederForums=channels.filter(x=>x.type===ChannelType.GuildForum&&x.parent_id===breeder.id);

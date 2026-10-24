@@ -12,6 +12,7 @@ import {createHash,randomUUID} from 'node:crypto';
 import {REST,Routes,ChannelType,PermissionFlagsBits} from 'discord.js';
 import {renderAquapediaCard} from './aquapedia-post-card.mjs';
 import {requiredChannelKinds} from './aquapedia-article-destination-policy.mjs';
+import {resolveArticleReceiptChannel} from './aquapedia-article-receipt-channel.mjs';
 
 const mode=process.argv.includes('--seed')?'seed':process.argv.includes('--apply')?'apply':'check';
 const base='https://aquapedia.app';
@@ -211,6 +212,13 @@ if(mode==='seed'){
     }
     return results.id;
   };
+  const resolveArchivedReceiptChannel=(receipt,proposedChannel,entry)=>
+   resolveArticleReceiptChannel({
+    receipt,proposedChannel,defaultChannel:results.id,entry,guild,breederForums,
+    getChannel:id=>rest.get(Routes.channel(id)),
+    privateDestination,cleanName,
+    allowedThreadTypes:[ChannelType.PublicThread,ChannelType.PrivateThread],
+   });
   let lock;
   try{
    lock=fs.openSync(lockFile,'wx');
@@ -257,25 +265,30 @@ if(mode==='seed'){
      if(summary.length>1800)throw Error('Discord message oversize '+url);
      const payload=renderAquapediaCard(summary,{channel:url.startsWith('/shrimpapedia/')?'shrimp':'research'});
      const channel=dest(url),old=state.receipts[key];
+     if(old&&old.channel!==channel)
+      await resolveArchivedReceiptChannel(old,channel,entry);
+     // Historical receipts retain their original channel only if an archived
+     // guild thread passed the private-forum and article-identity checks.
+     const targetChannel=old?.channel||channel;
      let message=null;
      if(old){
        // A recorded receipt is authoritative. Never reinterpret missing metadata,
        // a moved destination, or an API error as permission to create a new post.
-       if(!old.messageId||old.channel!==channel)
+       if(!old.messageId||old.channel!==targetChannel)
         throw Error('Old receipt missing message ID or channel mismatch '+url);
-       message=await rest.get(Routes.channelMessage(channel,old.messageId));
+       message=await rest.get(Routes.channelMessage(targetChannel,old.messageId));
        if(!message||message.author?.id!==me.id||!message.content?.includes(mark))
         throw Error('Old receipt missing, author or message marker mismatch '+url);
      }
      if(!message){
-       const recent=await rest.get(Routes.channelMessages(channel),{query:new URLSearchParams({limit:'100'})});
+       const recent=await rest.get(Routes.channelMessages(targetChannel),{query:new URLSearchParams({limit:'100'})});
        message=(recent||[]).find(v=>v.author?.id===me.id&&v.content?.includes(mark))||null;
      }
      if(!old){
        // Persist first-write intent before any external PATCH or POST.
        // If Discord accepts a write but readback/crash fails, the next run
        // sees this pending receipt and refuses a blind replacement post.
-       state.receipts[key]={key,url,channel,messageId:message?.id||null,
+       state.receipts[key]={key,url,channel:targetChannel,messageId:message?.id||null,
         status:'pending',preparedAt:new Date().toISOString()};
        saveAtomically(state);
      }
@@ -295,16 +308,16 @@ if(mode==='seed'){
      if(!message||message.content!==payload.content||!sameCard(message)){
        const previous=message;
        message=previous
-        ?await rest.patch(Routes.channelMessage(channel,previous.id),{body:payload})
-        :await rest.post(Routes.channelMessages(channel),{body:payload});
+        ?await rest.patch(Routes.channelMessage(targetChannel,previous.id),{body:payload})
+        :await rest.post(Routes.channelMessages(targetChannel),{body:payload});
        action=previous?'updated':'posted';
      }
      if(!message?.id||(old&&message.id!==old.messageId))
       throw Error('Discord write changed or omitted existing receipt ID '+url);
      // A PATCH/POST response is not independent readback. Fetch the persisted
      // message and validate the entire source-linked card before checkpointing.
-     const confirmed=action==='unchanged'?message:await rest.get(Routes.channelMessage(channel,message.id));
-     if(!confirmed||confirmed.id!==message.id||confirmed.channel_id!==channel
+     const confirmed=action==='unchanged'?message:await rest.get(Routes.channelMessage(targetChannel,message.id));
+     if(!confirmed||confirmed.id!==message.id||confirmed.channel_id!==targetChannel
       ||confirmed.author?.id!==me.id||confirmed.content!==payload.content
       ||(confirmed.attachments||[]).length||!sameCard(confirmed))
       throw Error('Discord independent readback mismatch '+url);

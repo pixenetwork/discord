@@ -1,6 +1,7 @@
 import { createServer } from 'node:http';
 import { Client, Events, GatewayIntentBits, Partials } from 'discord.js';
 import { createBreederInbox, pruneBreederInbox } from './breeder-inbox.mjs';
+import { createOwnerDmDiagnostic } from './owner-dm-diagnostic.mjs';
 import { loadConfig, assertDiscordConfig } from './config.mjs';
 import { createStore } from './store.mjs';
 import { createShopifyClient } from './shopify.mjs';
@@ -28,7 +29,16 @@ const gpt = createGptController(deps);
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.DirectMessages], partials: [Partials.Channel] });
 const breederInboxDir = process.env.BREEDER_INBOX_DIR || `${config.runtime.dataDir}/breeder-inbox`;
 const breederInbox = createBreederInbox({ recipientIds: (process.env.BREEDER_INBOX_ALLOWED_IDS ?? '').split(',').map(id => id.trim()).filter(Boolean), outputDir: breederInboxDir });
-client.on(Events.MessageCreate, (message) => { void breederInbox(message).catch((error) => console.error('Breeder inbox capture failed:', error.message)); });
+const ownerDmDiagnostic = createOwnerDmDiagnostic({
+  ownerUserId: config.discord.ownerUserId,
+  onStatus: (status, code) => console.log(`Owner DM diagnostic: ${status}${code ? ' code=' + code : ''}`),
+});
+client.on(Events.MessageCreate, (message) => {
+  void (async () => {
+    if (await ownerDmDiagnostic.handleIncoming(message)) return;
+    await breederInbox(message);
+  })().catch((error) => console.error('DM routing failed:', error.message));
+});
 const inboxDir = breederInboxDir;
 const inboxPrune = () => { void pruneBreederInbox({ outputDir: inboxDir }).catch((error) => console.error('Breeder inbox retention cleanup failed:', error.message)); };
 inboxPrune();
@@ -84,6 +94,7 @@ client.once(Events.ClientReady, async (readyClient) => {
 
 client.on(Events.InteractionCreate, (interaction) => {
   void (async () => {
+    if (await ownerDmDiagnostic.handleCommand(interaction)) return;
     const handledByGpt = await gpt.handle(interaction);
     if (!handledByGpt) await handleInteraction(interaction, deps);
   })().catch((error) => logBotError(`Interaction routing failed: ${error.stack ?? error.message}`));

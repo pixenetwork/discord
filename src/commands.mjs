@@ -16,6 +16,7 @@ import {
 } from './authorization.mjs';
 
 import { aquapediaDmCommand, aquapediaDmController } from './breeder-dm.mjs';
+import { ownerDmDiagnosticCommand } from './owner-dm-diagnostic.mjs';
 
 const PRODUCT_CATEGORIES = [
   ['Live fish', 'live_fish'],
@@ -384,7 +385,7 @@ function commandDefinitions() {
         ))
       .addStringOption((option) => option.setName('details').setDescription('Tell us what you need help with').setRequired(true).setMaxLength(1000)));
 
-  return [aquaphoria, vendor, catalog, product, research, researchQueue, shrimpRelease, order, payout, ticket, aquapediaDmCommand()];
+  return [aquaphoria, vendor, catalog, product, research, researchQueue, shrimpRelease, order, payout, ticket, aquapediaDmCommand(), ownerDmDiagnosticCommand()];
 }
 
 async function requireVendor(interaction, store) {

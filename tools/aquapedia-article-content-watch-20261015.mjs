@@ -152,7 +152,7 @@ if(mode==='seed'){
  if(mode==='apply'&&changes.length){
   const guild=process.env.AQUAPHORIA_GUILD_ID,token=process.env.DISCORD_TOKEN;
   if(!guild||!token)throw Error('Existing private Aquaphoria bot auth required');
-  const rest=new REST({version:'10'}).setToken(token);
+  const rest=new REST({version:'10',retries:0}).setToken(token); // Never retry ambiguous message POSTs.
   const [me,channels,active]=await Promise.all([
    rest.get(Routes.user('@me')),rest.get(Routes.guildChannels(guild)),
    rest.get(Routes.guildActiveThreads(guild))
@@ -172,13 +172,11 @@ if(mode==='seed'){
   const privateDestination=c=>{
     const everyone=BigInt(c.permission_overwrites?.find(x=>x.id===guild)?.allow||0);
     const deny=BigInt(c.permission_overwrites?.find(x=>x.id===guild)?.deny||0);
-    const parent=channels.find(x=>x.id===c.parent_id);
-    const parentDeny=BigInt(parent?.permission_overwrites?.find(x=>x.id===guild)?.deny||0);
-    const parentAllow=BigInt(parent?.permission_overwrites?.find(x=>x.id===guild)?.allow||0);
     const bit=PermissionFlagsBits.ViewChannel;
     if(everyone&bit)throw Error('PRIVACY_BLOCK explicit public destination '+c.name);
-    if(!(deny&bit)&&(!(parentDeny&bit)||(parentAllow&bit)))
-      throw Error('PRIVACY_BLOCK destination not proven private '+c.name);
+    // Discord child permissions are synced, not inherited. Parent-only denies
+    // do not prove the destination itself has remained private.
+    if(!(deny&bit))throw Error('PRIVACY_BLOCK destination lacks explicit deny '+c.name);
   };
   // Guard only destinations used by THIS batch. Shrimp-guides is in the
   // public AQUAPEDIA category; never weaken its private-only publication gate.

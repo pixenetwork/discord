@@ -67,3 +67,23 @@ test('new article POST must be independently fetched before a receipt can be sav
  assert.deepEqual(h.calls.gets,['recent','msg:existing-123']);
  assert.equal(h.calls.posts,1);
 });
+
+test('readback from a different Discord channel is rejected',async()=>{
+ const h=makeHarness({confirmed:{...updated,channel_id:'wrong-channel'}});
+ await assert.rejects(h.run(),/readback mismatch/);
+ assert.equal(h.calls.posts,0);
+ assert.equal(JSON.stringify(h.state),h.before);
+});
+test('readback with stale evidence field is rejected',async()=>{
+ const stale={...updated,embeds:[{...payload.embeds[0],fields:[{name:'Evidence',value:'outdated evidence',inline:false}]}]};
+ const h=makeHarness({confirmed:stale});
+ await assert.rejects(h.run(),/readback mismatch/);
+ assert.equal(h.calls.posts,0);
+ assert.equal(JSON.stringify(h.state),h.before);
+});
+test('readback with wrong bot identity is rejected',async()=>{
+ const h=makeHarness({confirmed:{...updated,author:{id:'untrusted-bot'}}});
+ await assert.rejects(h.run(),/readback mismatch/);
+ assert.equal(h.calls.posts,0);
+ assert.equal(JSON.stringify(h.state),h.before);
+});

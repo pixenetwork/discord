@@ -7,7 +7,7 @@ const to=text.indexOf('state.pages[url]=item;',from);
 assert.ok(from>=0 && to>from,'find actual guarded Discord write block');
 const snippet=text.slice(from,to);
 const AsyncFunction=Object.getPrototypeOf(async function(){}).constructor;
-const action=new AsyncFunction('rest','Routes','state','key','url','dest','me','mark','payload',snippet+' return {message,action};');
+const action=new AsyncFunction('rest','Routes','state','key','url','dest','me','mark','payload','resolveArchivedReceiptChannel',snippet+' return {message,action};');
 const url='/medakapedia/strains/rinkou/';
 const key='article-v1-unchanged-key';
 const mark='[AQUAPEDIA-ARTICLE-SYNC:'+key+']';
@@ -32,7 +32,7 @@ function harness(get,extra={}){
   },
  };
  const state={receipts:{[key]:{messageId:existing.id,channel}}};
- return {calls,state,run:()=>action(rest,{channelMessage:(c,id)=>'msg:'+id,channelMessages:c=>'recent'},state,key,url,()=>channel,{id:'bot-1'},mark,payload)};
+ return {calls,state,run:()=>action(rest,{channelMessage:(c,id)=>'msg:'+id,channelMessages:c=>'recent'},state,key,url,()=>channel,{id:'bot-1'},mark,payload,async()=>{throw Error('Old receipt missing message ID or channel mismatch')})};
 }
 for(const s of [403,404,429,500,503]){
  test('existing receipt '+s+' keeps writer and receipt unchanged',async()=>{

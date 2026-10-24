@@ -12,14 +12,24 @@ const url='/medakapedia/strains/rinkou/';
 const key='article-v1-unchanged-key';
 const mark='[AQUAPEDIA-ARTICLE-SYNC:'+key+']';
 const channel='12345';
-const existing={id:'legacy-123',author:{id:'bot-1'},content:'old content '+mark,embeds:[{title:'old',description:'old'}],attachments:[]};
+const existing={id:'legacy-123',channel_id:channel,author:{id:'bot-1'},content:'old content '+mark,embeds:[{title:'old',description:'old'}],attachments:[]};
 const payload={content:'new content '+mark,embeds:[{title:'new',description:'new'}]};
 function harness(get,extra={}){
  const calls={get:[],post:[],patch:[]};
+ // Model persisted Discord state: subsequent GET must return the PATCHed card.
+ let persisted=null;
  const rest={
-  get:async(route,opts)=>{calls.get.push(route);return get(route,opts);},
-  patch:async(route,opts)=>{calls.patch.push(route);return extra.patchReturn||{...existing,...opts.body};},
-  post:async(route,opts)=>{calls.post.push(route);return {...existing,id:'new-post',...opts.body};},
+  get:async(route,opts)=>{calls.get.push(route);return persisted||get(route,opts);},
+  patch:async(route,opts)=>{
+   calls.patch.push(route);
+   persisted=extra.patchReturn||{...existing,...opts.body};
+   return persisted;
+  },
+  post:async(route,opts)=>{
+   calls.post.push(route);
+   persisted={...existing,id:'new-post',...opts.body};
+   return persisted;
+  },
  };
  const state={receipts:{[key]:{messageId:existing.id,channel}}};
  return {calls,state,run:()=>action(rest,{channelMessage:(c,id)=>'msg:'+id,channelMessages:c=>'recent'},state,key,url,()=>channel,{id:'bot-1'},mark,payload)};

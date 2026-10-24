@@ -61,3 +61,9 @@ The article writer scans the site and evaluates its two persisted inputs **befor
 Red/green tests in `test/aquapedia-article-checkpoint-race.test.mjs` simulate a changed article checkpoint and a changed metadata baseline. They each failed before the new fence, then passed. The existing exclusive lock fault test was adjusted to inject both snapshots and still ensures foreign lock `EEXIST` cannot be unlinked.
 
 This fence is separate from the HTTP scan-failure gate and the first-POST pending receipt gate. All must remain operative when the reviewed script is deployed through the one existing scheduled publisher.
+
+## Dependency advisory review (2026-10-23)
+
+A read-only `npm audit --omit=dev --audit-level=high` on the isolated Work PC checkout found one high-severity transitive `undici@6.29.0` advisory (GHSA-xjj6-f33q-929c, excessive content-encodings DoS) and an overlapping moderate advisory (GHSA-4qv8-2p9j-2685, EventSource memory DoS). Only the `node_modules/undici` lockfile entry was upgraded to `6.29.1` via `npm audit fix --package-lock-only`; no production binaries or service dependencies were updated. A clean `npm ci --ignore-scripts --no-audit --no-fund` installed `undici@6.29.1` under both `discord.js` and `@discordjs/rest`. Subsequent `npm audit --omit=dev --audit-level=high` reported **zero known advisories**, and the full Node test suite passed. This is a package-advisory result, not a substitute for source-security review.
+
+The reviewed patch must be deployed with a fresh lockfile-based dependency installation under the existing governed release lane; simply copying publisher scripts does **not** update the existing live bot's modules.

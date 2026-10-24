@@ -79,3 +79,23 @@ An automated independent Codex review of prior HEAD `b49ee47` identified three p
 A previously verified public `shrimp-guides` channel stays **blocked**; don't modify channel ACLs or silently reroute shrimp content as part of this patch. Normal live article queue remains zero. Any real archived-thread update still requires the existing authenticated writer lane, Discord PATCH/GET readback, and operator handling if Discord disallows edits while archived. This draft was not exercised against a live archived write.
 
 The three fixes and their tests supersede prior review SHA; the independent Aegis/Cerberus/Doctor release gate remains open, and a new Codex review must inspect the latest exact head.
+
+## Review follow-up: article inventory shrink and no-write adoptions — 2026-10-24
+
+An additional independent read-only Codex CLI review of prior head `39f6b35` reported:
+
+- **P1**: routes already publicly announced/verified by the metadata publisher take the receipt-only adoption branch and do **not** make a Discord write, but the batch privacy preflight previously included them anyway. `channelWriteCandidates(changes,cap,state.pages,announcedCatalogPages)` now limits preflight to only possible Discord writes among the **first capped batch**; it never pulls later routes forward. New and revised tracked pages still require private destination checks.
+- **P2**: section-root landing pages, e.g. `/shrimpapedia/`, were valid tracked article paths but the destination preflight rejected them. The policy now uses the same path validity grammar as `pagePath` and accepts section roots and Unicode route names while rejecting `..`, query strings, and invalid root sections.
+
+Independently, an actual Main PC baseline (526 metadata routes and 526 article checkpoints) was used to simulate dropping 150 previously tracked routes: 376 remained, which passed the original coarse 200-route floor. The new `assertTrackedRouteCoverage(paths,state.pages)` fail-closes if **any previously tracked page** is absent from metadata inventory, preventing silent omission. Removing a published route therefore requires a separate governed retirement/reconciliation process, not a silent checkpoint truncation.
+
+New TDD regressions demonstrate the original failures, pass after correction and explicitly cover the two reviewed issues, all 526 tracked routes, loss of 150 routes, metadata receipt-only shrimp adoption, cap preservation, and root/Unicode route support. This check runs in ordinary `--check` mode before calculating publishable updates. Existing checkpoint and metadata files are not overwritten.
+
+### Two currently pending genuine shrimp article updates
+
+After this correction, the Main PC **read-only, exact-candidate** article scan returned `scanned=526,changes=2,newPages=0` for:
+
+- `/shrimpapedia/breeders/`
+- `/shrimpapedia/breeders/flip-aquatics-robert-lupton/`
+
+Both URLs already have metadata receipts **and** existing article checkpoints; they are **revisions, not receipt-only adoptions**, so `channelWriteCandidates` correctly identifies both as requiring actual private Discord writes. The configured `shrimp-guides` channel has **no explicit @everyone ViewChannel deny** and is intentionally refused by the article publisher. The appropriate response is to retain both as pending and resolve destination privacy/authorization through Jarvis, **never skip the ACL gate or redirect to a public channel**. No private/public channel permissions were changed and no `--apply` was run. Previous historical statements of zero pending are superseded by this live read-only scan; recheck current state at release time.

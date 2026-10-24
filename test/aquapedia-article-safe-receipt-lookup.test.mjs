@@ -3,10 +3,10 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 const file = new URL('../tools/aquapedia-article-content-watch-20261015.mjs', import.meta.url);
 const content = fs.readFileSync(file, 'utf8');
-const expression = content.match(/message=await rest\.get\(Routes\.channelMessage\(channel,old\.messageId\)\);/);
+const expression = content.match(/message=await rest\.get\(Routes\.channelMessage\(targetChannel,old\.messageId\)\);/);
 assert.ok(expression, 'candidate must contain fail-closed retrieval');
 const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
-const getMessage = new AsyncFunction('rest','Routes','channel','old','let message=null; '+expression[0]+'; return message;');
+const getMessage = new AsyncFunction('rest','Routes','targetChannel','old','let message=null; '+expression[0]+'; return message;');
 for (const status of [403,404,429,500,503]) {
  test('recorded receipt GET HTTP '+status+' fails closed', async()=>{
    let posts=0,patches=0;

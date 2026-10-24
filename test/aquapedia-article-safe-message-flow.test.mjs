@@ -5,7 +5,7 @@ const text=fs.readFileSync(new URL('../tools/aquapedia-article-content-watch-202
 const from=text.indexOf('const channel=dest(url),old=state.receipts[key];');
 const to=text.indexOf('state.pages[url]=item;',from);
 assert.ok(from>=0 && to>from,'find actual guarded Discord write block');
-const snippet=text.slice(from,to).replaceAll('const channel=dest(url),old=state.receipts[key];','const channel=dest(url),old=state.receipts[key];');
+const snippet=text.slice(from,to);
 const AsyncFunction=Object.getPrototypeOf(async function(){}).constructor;
 const action=new AsyncFunction('rest','Routes','state','key','url','dest','me','mark','payload',snippet+' return {message,action};');
 const url='/medakapedia/strains/rinkou/';

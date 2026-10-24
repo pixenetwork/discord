@@ -10,7 +10,7 @@ const productionOptions=new Function('return '+configMatch[1])();
 
 test('locked Discord REST implementation performs only one POST after AbortError',async()=>{
  let postAttempts=0;
- const rest=new REST({...productionOptions,makeRequest:async()=>{
+ const rest=new REST({...productionOptions,hashSweepInterval:0,handlerSweepInterval:0,makeRequest:async()=>{
   postAttempts++;
   const error=new Error('simulated network timeout');
   error.name='AbortError';
@@ -20,5 +20,5 @@ test('locked Discord REST implementation performs only one POST after AbortError
   await assert.rejects(()=>rest.post('/channels/123456789012345678/messages',{body:{content:'test'}}),/simulated network timeout/);
   assert.equal(rest.options.retries,0);
   assert.equal(postAttempts,1,'ambiguous create-message timeout must not trigger another POST');
- }finally{rest.destroy()}
+ }finally{assert.equal(rest.options.retries,0)}
 });

@@ -162,7 +162,13 @@ if(mode==='seed'){
   try{
    lock=fs.openSync(lockFile,'wx');
    fs.writeSync(lock,JSON.stringify({pid:process.pid,mode,started:new Date().toISOString()}));
-  }catch(e){throw Error('Existing sync publisher holds shared writer lock: '+e.code)}
+  }catch(e){
+   // If ownership metadata fails after exclusive creation, release only OUR lock.
+   if(lock!==undefined){
+    try{fs.closeSync(lock)}finally{fs.unlinkSync(lockFile)}
+   }
+   throw Error('Existing sync publisher could not acquire or record writer lock: '+(e.code||e.message));
+  }
   let posted=0,updated=0,unchanged=0,adopted=0;
   try{
    for(const url of changes.slice(0,cap)){
@@ -246,8 +252,9 @@ if(mode==='seed'){
      console.log('ARTICLE_VERIFIED '+JSON.stringify({url,action,channel,messageId:message.id}));
    }
   }finally{
-   if(lock!==undefined)fs.closeSync(lock);
-   fs.unlinkSync(lockFile);
+   if(lock!==undefined){
+    try{fs.closeSync(lock)}finally{fs.unlinkSync(lockFile)}
+   }
   }
   console.log('ARTICLE_APPLY_DONE '+JSON.stringify({scanned:paths.length,pendingBefore:changes.length,
    posted,updated,unchanged,adopted,remaining:Math.max(0,changes.length-cap),cap,postedTotal:state.totalPosted}));

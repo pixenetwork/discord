@@ -32,7 +32,7 @@ function harness(get,extra={}){
   },
  };
  const state={receipts:{[key]:{messageId:existing.id,channel}}};
- return {calls,state,run:()=>action(rest,{channelMessage:(c,id)=>'msg:'+id,channelMessages:c=>'recent'},state,key,url,()=>channel,{id:'bot-1'},mark,payload,null,async()=>{throw Error('Old receipt missing message ID or channel mismatch')})};
+ return {calls,state,run:()=>action(rest,{channelMessage:(c,id)=>{extra.seenChannels?.push(c);return 'msg:'+id},channelMessages:c=>'recent'},state,key,url,()=>channel,{id:'bot-1'},mark,payload,null,extra.resolve||async()=>{throw Error('Old receipt missing message ID or channel mismatch')})};
 }
 for(const s of [403,404,429,500,503]){
  test('existing receipt '+s+' keeps writer and receipt unchanged',async()=>{
@@ -96,4 +96,26 @@ test('recorded receipt GET null fails closed rather than searching recent posts'
  await assert.rejects(h.run(),/Old receipt missing/);
  assert.deepEqual(h.calls,{get:['msg:legacy-123'],post:[],patch:[]});
  assert.equal(JSON.stringify(h.state),before);
+});
+
+test('an archived breeder receipt is PATCHed in original verified channel, not fallback research-results',async()=>{
+ const recorded='archived-original-thread';
+ const seenChannels=[];
+ const h=harness(async()=>({...existing,channel_id:recorded}),{
+  seenChannels,
+  patchReturn:{...existing,channel_id:recorded,...payload},
+  resolve:async(receipt,proposed,entry)=>{
+   assert.equal(receipt.channel,recorded);
+   assert.equal(proposed,channel);
+   return recorded;
+  }
+ });
+ h.state.receipts[key].channel=recorded;
+ const output=await h.run();
+ assert.equal(output.action,'updated');
+ assert.equal(output.message.id,existing.id);
+ assert.equal(h.calls.post.length,0);
+ assert.equal(h.calls.patch.length,1);
+ assert.ok(seenChannels.length>=2);
+ assert.ok(seenChannels.every(id=>id===recorded));
 });

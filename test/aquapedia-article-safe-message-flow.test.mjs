@@ -32,7 +32,7 @@ function harness(get,extra={}){
   },
  };
  const state={receipts:{[key]:{messageId:existing.id,channel}}};
- return {calls,state,run:()=>action(rest,{channelMessage:(c,id)=>{extra.seenChannels?.push(c);return 'msg:'+id},channelMessages:c=>'recent'},state,key,url,()=>channel,{id:'bot-1'},mark,payload,null,(extra.resolve||async()=>{throw Error('Old receipt missing message ID or channel mismatch')}))};
+ return {calls,state,run:()=>action(rest,{channelMessage:(c,id)=>{extra.seenChannels?.push(c);return 'msg:'+id},channelMessages:c=>'recent'},state,key,url,()=>channel,{id:'bot-1'},mark,payload,null,(extra.resolve||(async()=>{throw Error('Old receipt missing message ID or channel mismatch')})))};
 }
 for(const s of [403,404,429,500,503]){
  test('existing receipt '+s+' keeps writer and receipt unchanged',async()=>{

@@ -48,3 +48,16 @@ A `pending` receipt is an **operator-review condition**, not publication success
 The source-level private-channel preflight is now supplemented by validation of the **actual selected** breeder forum and shrimp destination. Current read-only Discord permissions audit found 15 breeder forums with no direct public `@everyone` ViewChannel overrides and the research-results destination private, but this is not a substitute for current role/ACL verification at release.
 
 `meaningful(main)` strips HTML elements only to calculate a stable content **digest**, not as an HTML sanitizer or rendered/user-executable output. CodeQL HTML-filter findings need independent context review; changing this digest normalization in a small security patch may cause **all existing article digests** to change, creating a mass queue. Do not adjust the hashing algorithm or dismiss active security alerts without a documented migration and qualified review.
+
+## Concurrent preflight snapshot fence (2026-10-23)
+
+The article writer scans the site and evaluates its two persisted inputs **before** attempting its exclusive lock. Under an adversarial overlap, another authorized publisher might complete between those operations. The draft now captures the exact raw JSON of both inputs at preflight time:
+
+- `data/aquapedia-article-content-checkpoint.v1.json` (article receipts/digests)
+- `data/aquapedia-autosync-state.v1.json` (metadata publisher receipts/route baseline)
+
+**Immediately after acquiring** the shared writer lock and writing the process-owned lock record, it re-reads both and requires byte-for-byte equality. A changed file causes a fail-closed exception, closes the acquired descriptor, removes only that process's lock, and performs **zero** article writes. The operator re-runs a full `--check` from current files instead of replaying old state.
+
+Red/green tests in `test/aquapedia-article-checkpoint-race.test.mjs` simulate a changed article checkpoint and a changed metadata baseline. They each failed before the new fence, then passed. The existing exclusive lock fault test was adjusted to inject both snapshots and still ensures foreign lock `EEXIST` cannot be unlinked.
+
+This fence is separate from the HTTP scan-failure gate and the first-POST pending receipt gate. All must remain operative when the reviewed script is deployed through the one existing scheduled publisher.

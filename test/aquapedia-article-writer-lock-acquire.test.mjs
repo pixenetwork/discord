@@ -6,7 +6,7 @@ const src=fs.readFileSync(new URL('../tools/aquapedia-article-content-watch-2026
 const start=src.indexOf('  let lock;');
 const end=src.indexOf('  let posted=0,updated=0,unchanged=0,adopted=0;',start);
 assert.ok(start>=0&&end>start,'Find actual writer-lock acquisition and owner-write code');
-const acquire=new Function('fs','lockFile','process','mode',src.slice(start,end)+'return lock;');
+const acquire=new Function('fs','lockFile','process','mode','file','checkpointSnapshot',src.slice(start,end)+'return lock;');
 const lockFile='data/aquapedia-autosync-writer.lock';
 
 test('lock open failure must not unlink a lock this process does not own',()=>{
@@ -17,7 +17,7 @@ test('lock open failure must not unlink a lock this process does not own',()=>{
   unlinkSync:()=>events.push('unlink'),
   writeSync:()=>events.push('write')
  };
- assert.throws(()=>acquire(mock,lockFile,{pid:123},'apply'),/Existing sync publisher could not acquire or record writer lock/);
+ assert.throws(()=>acquire(mock,lockFile,{pid:123},'apply','checkpoint.json','snapshot'),/Existing sync publisher could not acquire or record writer lock/);
  assert.deepEqual(events,['open']);
 });
 test('ownership metadata write failure cleans up newly acquired lock',()=>{
@@ -28,7 +28,7 @@ test('ownership metadata write failure cleans up newly acquired lock',()=>{
   closeSync:fd=>events.push('close:'+fd),
   unlinkSync:p=>events.push('unlink:'+p)
  };
- assert.throws(()=>acquire(mock,lockFile,{pid:123},'apply'),/Existing sync publisher could not acquire or record writer lock/);
+ assert.throws(()=>acquire(mock,lockFile,{pid:123},'apply','checkpoint.json','snapshot'),/Existing sync publisher could not acquire or record writer lock/);
  assert.deepEqual(events,['open','write','close:77','unlink:'+lockFile]);
 });
 test('successful acquisition retains the lock for the publication loop',()=>{
@@ -36,9 +36,10 @@ test('successful acquisition retains the lock for the publication loop',()=>{
  const mock={
   openSync:(p,f)=>{events.push('open:'+p+':'+f);return 44},
   writeSync:(fd,s)=>{events.push('owner:'+fd);assert.equal(JSON.parse(s).pid,123)},
+  readFileSync:p=>{assert.equal(p,'checkpoint.json');events.push('checkpoint-read');return 'snapshot'},
   closeSync:()=>events.push('close'),
   unlinkSync:()=>events.push('unlink')
  };
- assert.equal(acquire(mock,lockFile,{pid:123},'apply'),44);
- assert.deepEqual(events,['open:'+lockFile+':wx','owner:44']);
+ assert.equal(acquire(mock,lockFile,{pid:123},'apply','checkpoint.json','snapshot'),44);
+ assert.deepEqual(events,['open:'+lockFile+':wx','owner:44','checkpoint-read']);
 });

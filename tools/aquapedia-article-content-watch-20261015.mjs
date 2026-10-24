@@ -224,6 +224,14 @@ if(mode==='seed'){
        const recent=await rest.get(Routes.channelMessages(channel),{query:new URLSearchParams({limit:'100'})});
        message=(recent||[]).find(v=>v.author?.id===me.id&&v.content?.includes(mark))||null;
      }
+     if(!old){
+       // Persist first-write intent before any external PATCH or POST.
+       // If Discord accepts a write but readback/crash fails, the next run
+       // sees this pending receipt and refuses a blind replacement post.
+       state.receipts[key]={key,url,channel,messageId:message?.id||null,
+        status:'pending',preparedAt:new Date().toISOString()};
+       saveAtomically(state);
+     }
      // Compare source links and evidence fields too; a title-only match is insufficient.
      const wanted=payload.embeds?.[0];
      const sameCard=seen=>{

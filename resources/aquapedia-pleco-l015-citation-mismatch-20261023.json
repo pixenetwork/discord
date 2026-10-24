@@ -1,0 +1,24 @@
+{
+  "date": "2026-10-23",
+  "slug": "l015",
+  "reviewStatus": "citation-context-conflict",
+  "publicSiteUrl": "https://aquapedia.app/plecopedia/research/l015/",
+  "doi": "10.11646/zootaxa.2534.1.3",
+  "doiActualDescribedSpecies": "Peckoltia compta",
+  "doiSupportsL015Identity": false,
+  "doiSupportsDirectL015OriginalDescription": false,
+  "allowAsComparativeTaxonomyOnly": true,
+  "possibleTradeIdentifications": [
+    "Peckoltia sp. L015",
+    "Peckoltia vittata (unconfirmed)"
+  ],
+  "historicalL134Comparison": "Peckoltia compta, not evidence of L015 same taxon",
+  "geneticLineageEstablished": false,
+  "publicDiscordPublishAuthorized": false,
+  "sourceLinks": [
+    "https://www.mapress.com/zt/article/view/zootaxa.2534.1.3",
+    "https://www.scotcat.com/loricariidae/peckoltia_vittata.htm",
+    "https://indofishexporter.com/2010/02/15/peckoltia-sp-l015/"
+  ],
+  "note": "Do not infer identical species or founder genetics from trade labels or comparative DOI"
+}

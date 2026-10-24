@@ -1,0 +1,51 @@
+{
+  "capturedAt": "2026-10-23",
+  "scope": "three direct original-description DOI links through original bot, claim review pending",
+  "verified": true,
+  "repeatAction": "adopted",
+  "records": [
+    {
+      "version": 1,
+      "verified": true,
+      "key": "hyp-contradens",
+      "threadId": "1561139081063174268",
+      "messageId": "1563362277623599114",
+      "url": "https://discord.com/channels/1519337502379475095/1561139081063174268/1563362277623599114",
+      "botAuthorId": "1535522109571203152",
+      "sourceUrl": "https://aquapedia.app/plecopedia/research/hyp-contradens/",
+      "doi": "10.1643/0045-8511(2007)7[62:fnhslf]2.0.co;2",
+      "contentSha256": "b9a6397b63b96ffa12225ca1ba7ab195da19e1dd9eb28e43c4f142585d8a1c46",
+      "scope": "Provisional source-link index only; genetics, specimen ID, breeding outcomes and image rights not authenticated",
+      "verifiedAt": "2026-10-24T01:23:33.052Z"
+    },
+    {
+      "version": 1,
+      "verified": true,
+      "key": "hyp-parkateje",
+      "threadId": "1561146973275426817",
+      "messageId": "1563362337878970448",
+      "url": "https://discord.com/channels/1519337502379475095/1561146973275426817/1563362337878970448",
+      "botAuthorId": "1535522109571203152",
+      "sourceUrl": "https://aquapedia.app/plecopedia/research/hyp-parkateje/",
+      "doi": "10.1111/jfb.15971",
+      "contentSha256": "7dc5819f3903cb8a55f647e5a9cc06269b5cf228288734c6a1bfe14e21613b85",
+      "scope": "Provisional source-link index only; genetics, specimen ID, breeding outcomes and image rights not authenticated",
+      "verifiedAt": "2026-10-24T01:23:47.539Z"
+    },
+    {
+      "version": 1,
+      "verified": true,
+      "key": "pseudo-sidereus",
+      "threadId": "1561174493689548871",
+      "messageId": "1563362345835569214",
+      "url": "https://discord.com/channels/1519337502379475095/1561174493689548871/1563362345835569214",
+      "botAuthorId": "1535522109571203152",
+      "sourceUrl": "https://aquapedia.app/plecopedia/research/pseudo-sidereus/",
+      "doi": "10.11646/zootaxa.628.1.1",
+      "contentSha256": "004dafbbed4676313ba51d696207acfd1510feb3b337dad59f79411f7a8f4f77",
+      "scope": "Provisional source-link index only; genetics, specimen ID, breeding outcomes and image rights not authenticated",
+      "verifiedAt": "2026-10-24T01:23:49.389Z"
+    }
+  ],
+  "otherDraftsAuthorized": false
+}

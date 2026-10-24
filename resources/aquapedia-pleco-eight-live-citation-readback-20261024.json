@@ -1,0 +1,123 @@
+{
+  "capturedAt": "2026-10-24T05:33:14.115Z",
+  "scope": "eight pending Plecopedia live source link presence and claim-role triage",
+  "liveCatalogCount": 853,
+  "sourceRoleMatrix": "resources/aquapedia-pleco-eight-source-roles-20261024.json",
+  "currentQueue": 72,
+  "publishedLinksDuringAudit": 0,
+  "publicationAuthorized": false,
+  "counts": {
+    "checked": 8,
+    "http200": 8,
+    "exactCitationPresent": 8,
+    "exactCitationMissing": 0,
+    "originals": 4,
+    "held": 6
+  },
+  "results": [
+    {
+      "slug": "l398",
+      "pageUrl": "https://aquapedia.app/plecopedia/research/l398/",
+      "pageHttp": 200,
+      "status": "Research draft — independent review pending",
+      "reviewRole": "original-named-species-with-trade-mention",
+      "originalSourceUrl": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0165388",
+      "exactCitationPresent": true,
+      "externalCitationCount": 2,
+      "independentClaimVerification": false,
+      "proposedReleaseApproved": false,
+      "discordWrites": 0
+    },
+    {
+      "slug": "breeder-andreas-tanke-l398",
+      "pageUrl": "https://aquapedia.app/plecopedia/research/breeder-andreas-tanke-l398/",
+      "pageHttp": 200,
+      "status": "Research draft — independent review pending",
+      "reviewRole": "taxonomic-honoree-and-qualified-breeder-context",
+      "originalSourceUrl": "https://doi.org/10.1371/journal.pone.0165388",
+      "exactCitationPresent": true,
+      "externalCitationCount": 2,
+      "independentClaimVerification": false,
+      "proposedReleaseApproved": false,
+      "discordWrites": 0
+    },
+    {
+      "slug": "l397",
+      "pageUrl": "https://aquapedia.app/plecopedia/research/l397/",
+      "pageHttp": 200,
+      "status": "Research draft — independent review pending",
+      "reviewRole": "related-species-comparison-not-original-description",
+      "originalSourceUrl": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0165388",
+      "exactCitationPresent": true,
+      "externalCitationCount": 2,
+      "independentClaimVerification": false,
+      "proposedReleaseApproved": false,
+      "discordWrites": 0
+    },
+    {
+      "slug": "l239",
+      "pageUrl": "https://aquapedia.app/plecopedia/research/l239/",
+      "pageHttp": 200,
+      "status": "Research draft — independent review pending",
+      "reviewRole": "original-named-species-with-direct-trade-mention",
+      "originalSourceUrl": "https://doi.org/10.1643/ci-07-187",
+      "exactCitationPresent": true,
+      "externalCitationCount": 2,
+      "independentClaimVerification": false,
+      "proposedReleaseApproved": false,
+      "discordWrites": 0
+    },
+    {
+      "slug": "l191",
+      "pageUrl": "https://aquapedia.app/plecopedia/research/l191/",
+      "pageHttp": 200,
+      "status": "Research draft — independent review pending",
+      "reviewRole": "original-species-study-with-geographically-conditional-trade-association",
+      "originalSourceUrl": "https://doi.org/10.1643/ci-09-185",
+      "exactCitationPresent": true,
+      "externalCitationCount": 2,
+      "independentClaimVerification": false,
+      "proposedReleaseApproved": false,
+      "discordWrites": 0
+    },
+    {
+      "slug": "l418",
+      "pageUrl": "https://aquapedia.app/plecopedia/research/l418/",
+      "pageHttp": 200,
+      "status": "Research draft — independent review pending",
+      "reviewRole": "original-species-study-with-geographically-conditional-trade-association",
+      "originalSourceUrl": "https://doi.org/10.1643/ci-09-185",
+      "exactCitationPresent": true,
+      "externalCitationCount": 2,
+      "independentClaimVerification": false,
+      "proposedReleaseApproved": false,
+      "discordWrites": 0
+    },
+    {
+      "slug": "bary-niveatus",
+      "pageUrl": "https://aquapedia.app/plecopedia/research/bary-niveatus/",
+      "pageHttp": 200,
+      "status": "Research draft — independent review pending",
+      "reviewRole": "related-genus-review-not-original-description",
+      "originalSourceUrl": "https://www.ni.bio.br/1982-0224-2025-0066/",
+      "exactCitationPresent": true,
+      "externalCitationCount": 2,
+      "independentClaimVerification": false,
+      "proposedReleaseApproved": false,
+      "discordWrites": 0
+    },
+    {
+      "slug": "l015",
+      "pageUrl": "https://aquapedia.app/plecopedia/research/l015/",
+      "pageHttp": 200,
+      "status": "Research draft — independent review pending",
+      "reviewRole": "different-species-original-description-used-comparatively",
+      "originalSourceUrl": "https://doi.org/10.11646/zootaxa.2534.1.3",
+      "exactCitationPresent": true,
+      "externalCitationCount": 2,
+      "independentClaimVerification": false,
+      "proposedReleaseApproved": false,
+      "discordWrites": 0
+    }
+  ]
+}

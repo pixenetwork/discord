@@ -1,0 +1,1665 @@
+{
+  "capturedAt": "2026-10-22T03:23:08.158Z",
+  "source": "live public Aquapedia HTML; external hrefs counted but linked documents not retrieved",
+  "proposedMessages": 99,
+  "proposedSourceLinks": 143,
+  "uniqueFetchedPages": 134,
+  "counts": {
+    "guppy": 48,
+    "corydoras": 10,
+    "pleco": 85
+  },
+  "missing": {
+    "guppy": 0,
+    "corydoras": 0,
+    "pleco": 0
+  },
+  "withCitationLinks": 143,
+  "totalDistinctDomains": 32,
+  "domains": [
+    {
+      "domain": "ikgh.org",
+      "count": 48
+    },
+    {
+      "domain": "doi.org",
+      "count": 46
+    },
+    {
+      "domain": "www.planetcatfish.com",
+      "count": 27
+    },
+    {
+      "domain": "www.scotcat.com",
+      "count": 16
+    },
+    {
+      "domain": "researcharchive.calacademy.org",
+      "count": 16
+    },
+    {
+      "domain": "www.ni.bio.br",
+      "count": 13
+    },
+    {
+      "domain": "planetcatfish.com",
+      "count": 8
+    },
+    {
+      "domain": "aquainfo.nl",
+      "count": 7
+    },
+    {
+      "domain": "www.seriouslyfish.com",
+      "count": 5
+    },
+    {
+      "domain": "www.aquariumglaser.de",
+      "count": 4
+    },
+    {
+      "domain": "www.ig-bssw.org",
+      "count": 3
+    },
+    {
+      "domain": "journals.plos.org",
+      "count": 3
+    },
+    {
+      "domain": "www.esf.edu",
+      "count": 3
+    },
+    {
+      "domain": "www.suedamerikafans.de",
+      "count": 3
+    },
+    {
+      "domain": "en.amazonoco.de",
+      "count": 2
+    },
+    {
+      "domain": "pmc.ncbi.nlm.nih.gov",
+      "count": 2
+    },
+    {
+      "domain": "pubmed.ncbi.nlm.nih.gov",
+      "count": 2
+    },
+    {
+      "domain": "tfcb.org",
+      "count": 1
+    },
+    {
+      "domain": "www.pvas.com",
+      "count": 1
+    },
+    {
+      "domain": "www.fieldmuseum.org",
+      "count": 1
+    },
+    {
+      "domain": "catfishcodex.com",
+      "count": 1
+    },
+    {
+      "domain": "repositorio.museu-goeldi.br",
+      "count": 1
+    },
+    {
+      "domain": "www.alr-journal.org",
+      "count": 1
+    },
+    {
+      "domain": "www.acquariofiliaconsapevole.it",
+      "count": 1
+    },
+    {
+      "domain": "www.itis.gov",
+      "count": 1
+    },
+    {
+      "domain": "www.faunatropica.eu",
+      "count": 1
+    },
+    {
+      "domain": "www.practicalfishkeeping.co.uk",
+      "count": 1
+    },
+    {
+      "domain": "www.mapress.com",
+      "count": 1
+    },
+    {
+      "domain": "www.tfhmagazine.com",
+      "count": 1
+    },
+    {
+      "domain": "auburn.edu",
+      "count": 1
+    },
+    {
+      "domain": "www.sfi-cybium.fr",
+      "count": 1
+    },
+    {
+      "domain": "www.utsc.utoronto.ca",
+      "count": 1
+    }
+  ],
+  "records": [
+    {
+      "url": "https://aquapedia.app/corydoraspedia/breeding/#brochis-splendens",
+      "sourceScope": "anchor-local",
+      "links": [
+        "https://www.scotcat.com/articles/article128.htm"
+      ],
+      "externalCitationCount": 1,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/corydoraspedia/breeding/#hoplisoma-adolfoi",
+      "sourceScope": "anchor-local",
+      "links": [
+        "https://www.scotcat.com/articles/article88.htm"
+      ],
+      "externalCitationCount": 1,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/corydoraspedia/breeding/#hoplisoma-burgessi",
+      "sourceScope": "anchor-local",
+      "links": [
+        "https://www.scotcat.com/articles/article13.html"
+      ],
+      "externalCitationCount": 1,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/corydoraspedia/breeding/#hoplisoma-davidsandsi",
+      "sourceScope": "anchor-local",
+      "links": [
+        "https://www.scotcat.com/articles/article3.html"
+      ],
+      "externalCitationCount": 1,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/corydoraspedia/breeding/#hoplisoma-duplicareum",
+      "sourceScope": "anchor-local",
+      "links": [
+        "https://www.scotcat.com/articles/article12.html"
+      ],
+      "externalCitationCount": 1,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/corydoraspedia/breeding/#hoplisoma-metae",
+      "sourceScope": "anchor-local",
+      "links": [
+        "https://www.scotcat.com/articles/article54.htm"
+      ],
+      "externalCitationCount": 1,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/corydoraspedia/breeding/#hoplisoma-nattereri",
+      "sourceScope": "anchor-local",
+      "links": [
+        "https://www.scotcat.com/articles/article1.html"
+      ],
+      "externalCitationCount": 1,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/corydoraspedia/breeding/#hoplisoma-panda",
+      "sourceScope": "anchor-local",
+      "links": [
+        "https://tfcb.org/wp-content/uploads/2018/05/May-June-2018-web-FINAL.pdf"
+      ],
+      "externalCitationCount": 1,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/corydoraspedia/breeding/#hoplisoma-sterbai",
+      "sourceScope": "anchor-local",
+      "links": [
+        "https://www.pvas.com/post/corydoras-sterbai"
+      ],
+      "externalCitationCount": 1,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/corydoraspedia/breeding/#hoplisoma-xinguense",
+      "sourceScope": "anchor-local",
+      "links": [
+        "https://www.scotcat.com/articles/article16.html"
+      ],
+      "externalCitationCount": 1,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/guppypedia/entries/gup-001/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://ikgh.org/wp-content/uploads/2023/05/IHS-Version-2023.pdf"
+      ],
+      "externalCitationCount": 1,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/guppypedia/entries/gup-002/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://ikgh.org/wp-content/uploads/2023/05/IHS-Version-2023.pdf"
+      ],
+      "externalCitationCount": 1,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/guppypedia/entries/gup-003/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://ikgh.org/wp-content/uploads/2023/05/IHS-Version-2023.pdf"
+      ],
+      "externalCitationCount": 1,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/guppypedia/entries/gup-004/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://ikgh.org/wp-content/uploads/2023/05/IHS-Version-2023.pdf"
+      ],
+      "externalCitationCount": 1,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/guppypedia/entries/gup-005/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://ikgh.org/wp-content/uploads/2023/05/IHS-Version-2023.pdf"
+      ],
+      "externalCitationCount": 1,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/guppypedia/entries/gup-006/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://ikgh.org/wp-content/uploads/2023/05/IHS-Version-2023.pdf"
+      ],
+      "externalCitationCount": 1,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/guppypedia/entries/gup-007/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://ikgh.org/wp-content/uploads/2023/05/IHS-Version-2023.pdf"
+      ],
+      "externalCitationCount": 1,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/guppypedia/entries/gup-008/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://ikgh.org/wp-content/uploads/2023/05/IHS-Version-2023.pdf"
+      ],
+      "externalCitationCount": 1,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/guppypedia/entries/gup-009/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://ikgh.org/wp-content/uploads/2023/05/IHS-Version-2023.pdf"
+      ],
+      "externalCitationCount": 1,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/guppypedia/entries/gup-010/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://ikgh.org/wp-content/uploads/2023/05/IHS-Version-2023.pdf"
+      ],
+      "externalCitationCount": 1,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/guppypedia/entries/gup-011/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://ikgh.org/wp-content/uploads/2023/05/IHS-Version-2023.pdf"
+      ],
+      "externalCitationCount": 1,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/guppypedia/entries/gup-012/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://ikgh.org/wp-content/uploads/2023/05/IHS-Version-2023.pdf"
+      ],
+      "externalCitationCount": 1,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/guppypedia/entries/gup-013/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://ikgh.org/wp-content/uploads/2023/05/IHS-Version-2023.pdf"
+      ],
+      "externalCitationCount": 1,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/guppypedia/entries/gup-014/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://ikgh.org/wp-content/uploads/2023/05/IHS-Version-2023.pdf"
+      ],
+      "externalCitationCount": 1,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/guppypedia/entries/gup-015/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://ikgh.org/wp-content/uploads/2023/05/IHS-Version-2023.pdf"
+      ],
+      "externalCitationCount": 1,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/guppypedia/entries/gup-016/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://ikgh.org/wp-content/uploads/2023/05/IHS-Version-2023.pdf"
+      ],
+      "externalCitationCount": 1,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/guppypedia/entries/gup-017/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://ikgh.org/wp-content/uploads/2023/05/IHS-Version-2023.pdf"
+      ],
+      "externalCitationCount": 1,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/guppypedia/entries/gup-018/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://ikgh.org/wp-content/uploads/2023/05/IHS-Version-2023.pdf"
+      ],
+      "externalCitationCount": 1,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/guppypedia/entries/gup-019/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://ikgh.org/wp-content/uploads/2023/05/IHS-Version-2023.pdf"
+      ],
+      "externalCitationCount": 1,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/guppypedia/entries/gup-020/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://ikgh.org/wp-content/uploads/2023/05/IHS-Version-2023.pdf"
+      ],
+      "externalCitationCount": 1,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/guppypedia/entries/gup-021/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://ikgh.org/wp-content/uploads/2023/05/IHS-Version-2023.pdf"
+      ],
+      "externalCitationCount": 1,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/guppypedia/entries/gup-022/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://ikgh.org/wp-content/uploads/2023/05/IHS-Version-2023.pdf"
+      ],
+      "externalCitationCount": 1,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/guppypedia/entries/gup-023/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://ikgh.org/wp-content/uploads/2023/05/IHS-Version-2023.pdf"
+      ],
+      "externalCitationCount": 1,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/guppypedia/entries/gup-024/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://ikgh.org/wp-content/uploads/2023/05/IHS-Version-2023.pdf"
+      ],
+      "externalCitationCount": 1,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/guppypedia/entries/gup-025/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://ikgh.org/wp-content/uploads/2023/05/IHS-Version-2023.pdf"
+      ],
+      "externalCitationCount": 1,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/guppypedia/entries/gup-026/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://ikgh.org/wp-content/uploads/2023/05/IHS-Version-2023.pdf"
+      ],
+      "externalCitationCount": 1,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/guppypedia/entries/gup-027/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://ikgh.org/wp-content/uploads/2023/05/IHS-Version-2023.pdf"
+      ],
+      "externalCitationCount": 1,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/guppypedia/entries/gup-028/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://ikgh.org/wp-content/uploads/2023/05/IHS-Version-2023.pdf"
+      ],
+      "externalCitationCount": 1,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/guppypedia/entries/gup-029/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://ikgh.org/wp-content/uploads/2023/05/IHS-Version-2023.pdf"
+      ],
+      "externalCitationCount": 1,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/guppypedia/entries/gup-030/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://ikgh.org/wp-content/uploads/2023/05/IHS-Version-2023.pdf"
+      ],
+      "externalCitationCount": 1,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/guppypedia/entries/gup-031/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://ikgh.org/wp-content/uploads/2023/05/IHS-Version-2023.pdf"
+      ],
+      "externalCitationCount": 1,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/guppypedia/entries/gup-032/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://ikgh.org/wp-content/uploads/2023/05/IHS-Version-2023.pdf"
+      ],
+      "externalCitationCount": 1,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/guppypedia/entries/gup-033/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://ikgh.org/wp-content/uploads/2023/05/IHS-Version-2023.pdf"
+      ],
+      "externalCitationCount": 1,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/guppypedia/entries/gup-034/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://ikgh.org/wp-content/uploads/2023/05/IHS-Version-2023.pdf"
+      ],
+      "externalCitationCount": 1,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/guppypedia/entries/gup-035/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://ikgh.org/wp-content/uploads/2023/05/IHS-Version-2023.pdf"
+      ],
+      "externalCitationCount": 1,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/guppypedia/entries/gup-036/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://ikgh.org/wp-content/uploads/2023/05/IHS-Version-2023.pdf"
+      ],
+      "externalCitationCount": 1,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/guppypedia/entries/gup-037/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://ikgh.org/wp-content/uploads/2023/05/IHS-Version-2023.pdf"
+      ],
+      "externalCitationCount": 1,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/guppypedia/entries/gup-038/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://ikgh.org/wp-content/uploads/2023/05/IHS-Version-2023.pdf"
+      ],
+      "externalCitationCount": 1,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/guppypedia/entries/gup-039/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://ikgh.org/wp-content/uploads/2023/05/IHS-Version-2023.pdf"
+      ],
+      "externalCitationCount": 1,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/guppypedia/entries/gup-040/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://ikgh.org/wp-content/uploads/2023/05/IHS-Version-2023.pdf"
+      ],
+      "externalCitationCount": 1,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/guppypedia/entries/gup-041/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://ikgh.org/wp-content/uploads/2023/05/IHS-Version-2023.pdf"
+      ],
+      "externalCitationCount": 1,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/guppypedia/entries/gup-042/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://ikgh.org/wp-content/uploads/2023/05/IHS-Version-2023.pdf"
+      ],
+      "externalCitationCount": 1,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/guppypedia/entries/gup-043/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://ikgh.org/wp-content/uploads/2023/05/IHS-Version-2023.pdf"
+      ],
+      "externalCitationCount": 1,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/guppypedia/entries/gup-044/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://ikgh.org/wp-content/uploads/2023/05/IHS-Version-2023.pdf"
+      ],
+      "externalCitationCount": 1,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/guppypedia/entries/gup-045/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://ikgh.org/wp-content/uploads/2023/05/IHS-Version-2023.pdf"
+      ],
+      "externalCitationCount": 1,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/guppypedia/entries/gup-046/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://ikgh.org/wp-content/uploads/2023/05/IHS-Version-2023.pdf"
+      ],
+      "externalCitationCount": 1,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/guppypedia/entries/gup-047/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://ikgh.org/wp-content/uploads/2023/05/IHS-Version-2023.pdf"
+      ],
+      "externalCitationCount": 1,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/guppypedia/entries/gup-048/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://ikgh.org/wp-content/uploads/2023/05/IHS-Version-2023.pdf"
+      ],
+      "externalCitationCount": 1,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/anc-claro/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=65318",
+        "https://www.scotcat.com/loricariidae/ancistrus_claro.htm"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/anc-l267-alias/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://doi.org/10.1111/jfb.15637",
+        "https://www.ig-bssw.org/l-267-als-ancistrus-yanesha-beschrieben/?lang=en"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/anc-leoni/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://doi.org/10.11646/zootaxa.4552.1.1",
+        "https://doi.org/10.5281/zenodo.5932331"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/anc-patronus/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://doi.org/10.11646/zootaxa.4552.1.1",
+        "https://www.fieldmuseum.org/about/press/six-new-species-hideously-adorable-tentacle-nosed-catfish-discovered-amazon"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/anc-yanesha/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://doi.org/10.1111/jfb.15637",
+        "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=77546"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/bary-hadrostomus/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://doi.org/10.1643/CI-19-201",
+        "https://www.ni.bio.br/1982-0224-2025-0066/"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/bary-micropunctatus/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://doi.org/10.1643/CI-19-201",
+        "https://www.ni.bio.br/1982-0224-2025-0066/"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/bary-niveatus/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://aquainfo.nl/en/l-numbers-and-lda-numbers-the-explanation/",
+        "https://www.ni.bio.br/1982-0224-2025-0066/"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/breeder-andreas-tanke-l398/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://doi.org/10.1371/journal.pone.0165388",
+        "https://en.amazonoco.de/project/panaqolus-tankei-l-398-origin-and-breeding/"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/breeder-apistomaster-l134/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://www.planetcatfish.com/forum/viewtopic.php?t=29601"
+      ],
+      "externalCitationCount": 1,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/breeder-christophe-l025/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://planetcatfish.com/shanesworld/shanesworld.php?article_id=405"
+      ],
+      "externalCitationCount": 1,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/breeder-davej-l134/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://planetcatfish.com/forum/viewtopic.php?t=32922"
+      ],
+      "externalCitationCount": 1,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/breeder-karsten-l183/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://www.planetcatfish.com/forum/viewtopic.php?t=24178"
+      ],
+      "externalCitationCount": 1,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/breeder-parha-l046/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://aquainfo.nl/en/keeping-and-breeding-hypancistrus-zebra-l046-part-2-breeding/"
+      ],
+      "externalCitationCount": 1,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/hyp-contradens/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://catfishcodex.com/page-one/hypancistrus/hypancistrus-contradens/",
+        "https://doi.org/10.1643/0045-8511(2007)7[62:fnhslf]2.0.co;2"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/hyp-margaritatus/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://doi.org/10.3897/zookeys.552.5956",
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC4740853/"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/hyp-parkateje/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://doi.org/10.1111/jfb.15971",
+        "https://repositorio.museu-goeldi.br/server/api/core/bitstreams/fa4ff8d2-72ce-4784-8714-140b6e5f32cd/content"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/hyp-phantasma/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://doi.org/10.3897/zookeys.552.5956",
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC4740853/"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/hyp-vandragti/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://doi.org/10.1643/CI-10-008",
+        "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=71886"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/l001/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://doi.org/10.5962/bhl.part.82074",
+        "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=58211"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/l007/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://www.planetcatfish.com/common/common_names.php?language=English&letter=l",
+        "https://www.seriouslyfish.com/species/leporacanthicus-galaxias/"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/l011/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://www.aquariumglaser.de/en/tag/aphanotorulus-en/",
+        "https://www.seriouslyfish.com/species/squaliforma-cf-emarginata"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/l014/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=62281",
+        "https://www.planetcatfish.com/arn/species.php?species_id=161"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/l015/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://aquainfo.nl/en/l-numbers-and-lda-numbers-the-explanation/",
+        "https://doi.org/10.11646/zootaxa.2534.1.3"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/l017/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0244894",
+        "https://www.planetcatfish.com/common/common_names.php?language=English&letter=l"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/l018/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://aquainfo.nl/en/l-numbers-and-lda-numbers-the-explanation/",
+        "https://doi.org/10.1590/S1679-62252011000200001"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/l020/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://doi.org/10.1590/s1679-62252014000100001",
+        "https://www.planetcatfish.com/common/common_names.php?language=English&letter=l"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/l021/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://www.alr-journal.org/articles/alr/full_html/2025/01/alr240111/alr240111.html",
+        "https://www.scotcat.com/loricariidae/pterygoplichthys_pardalis.htm"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/l022/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://aquainfo.nl/en/l-numbers-and-lda-numbers-the-explanation/",
+        "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=58211"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/l024/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://doi.org/10.11646/zootaxa.3973.2.6",
+        "https://www.planetcatfish.com/common/common_names.php?language=English&letter=l"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/l025/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://doi.org/10.1111/jfb.13184",
+        "https://planetcatfish.com/shanesworld/shanesworld.php?article_id=405"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/l027-toc/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://www.esf.edu/biology/faculty/documents/71.LujanHidalgoStewart2010Panaque.pdf",
+        "https://www.planetcatfish.com/common/common_names.php?language=English&letter=l"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/l027/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://www.esf.edu/biology/faculty/documents/71.LujanHidalgoStewart2010Panaque.pdf",
+        "https://www.planetcatfish.com/common/common_names.php?language=English&letter=l"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/l027x/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://www.esf.edu/biology/faculty/documents/71.LujanHidalgoStewart2010Panaque.pdf",
+        "https://www.planetcatfish.com/common/common_names.php?language=English&letter=l"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/l029/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://www.planetcatfish.com/common/common_names.php?language=English&letter=l",
+        "https://www.seriouslyfish.com/species/leporacanthicus-galaxias/"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/l030/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://doi.org/10.1590/s1679-62252014000100001",
+        "https://www.planetcatfish.com/common/common_names.php?language=English&letter=l"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/l031/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://doi.org/10.1590/s1679-62252005000400014",
+        "https://www.planetcatfish.com/common/common_names.php?language=English&letter=l"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/l035/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://www.aquariumglaser.de/en/tag/aphanotorulus-en/",
+        "https://www.seriouslyfish.com/species/squaliforma-cf-emarginata"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/l037/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://doi.org/10.5281/zenodo.17162021",
+        "https://www.planetcatfish.com/common/common_names.php?language=English&letter=l"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/l041/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://doi.org/10.1371/journal.pone.0189789",
+        "https://www.planetcatfish.com/common/common_names.php?language=English&letter=l"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/l046/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://www.ni.bio.br/1982-0224-2024-0080/",
+        "https://www.scotcat.com/factsheets/hypancistrus_zebra.htm"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/l052-l168/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=5320",
+        "https://www.planetcatfish.com/forum/viewtopic.php?t=18990"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/l056/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://www.ig-bssw.org/again-and-again-l-56/?lang=en",
+        "https://www.planetcatfish.com/common/common_names.php?language=English&letter=l"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/l059/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=4946",
+        "https://www.scotcat.com/factsheets/ancistrus_dolichopterus.htm"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/l066/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://doi.org/10.1089/zeb.2015.1213",
+        "https://www.ni.bio.br/1982-0224-2024-0080/"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/l067/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://pubmed.ncbi.nlm.nih.gov/25709528/",
+        "https://www.planetcatfish.com/common/common_names.php?language=English&letter=l"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/l073/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://aquainfo.nl/en/l-numbers-and-lda-numbers-the-explanation/",
+        "https://www.planetcatfish.com/common/common_names.php?language=English&letter=l"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/l075/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://www.acquariofiliaconsapevole.it/pesci_peckoltia_sabaji",
+        "https://www.itis.gov/servlet/SingleRpt/SingleRpt?print_version=PRT&search_topic=TSN&search_value=680318&source=to_print"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/l081/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://doi.org/10.1590/S1679-62252011000200001",
+        "https://www.planetcatfish.com/common/common_names.php?language=English&letter=l"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/l082/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://www.ni.bio.br/1982-0224-2023-0038/",
+        "https://www.planetcatfish.com/common/common_names.php?language=English&letter=l"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/l083/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://doi.org/10.5962/bhl.part.82074",
+        "https://www.suedamerikafans.de/en/pterygoplichthys-gibbiceps-pterygoplichthys-xinguensis-l165-l83-wer-ist-wer/"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/l086/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://doi.org/10.1590/s1679-62252014000100001",
+        "https://www.planetcatfish.com/common/common_names.php?language=English&letter=l"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/l091/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://www.planetcatfish.com/common/common_names.php?language=English&letter=l",
+        "https://www.scotcat.com/loricariidae/leporacanthicus_triactis.htm"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/l096/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://planetcatfish.com/common/species.php?species_id=85",
+        "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=5335"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/l098/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://aquainfo.nl/en/l-numbers-and-lda-numbers-the-explanation/",
+        "https://www.ni.bio.br/1982-0224-2024-0080/"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/l104/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://planetcatfish.com/panaqolus_maccus",
+        "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=62023"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/l106/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://doi.org/10.1590/S1679-62252005000400012",
+        "https://www.seriouslyfish.com/species/hemiancistrus-guahiborum"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/l126-lithox/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=6069",
+        "https://www.suedamerikafans.de/en/wels-datenbank/welsart/?art=214"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/l128/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://www.faunatropica.eu/animals/fish/loricariidae/hemiancistrus-sp-l128/",
+        "https://www.practicalfishkeeping.co.uk/features/keeping-and-breeding-the-green-phantom-plec/"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/l129/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://www.planetcatfish.com/common/common_names.php?language=English&letter=l",
+        "https://www.scotcat.com/loricariidae/hypancistrus_contradens.htm"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/l134/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://doi.org/10.11646/zootaxa.2534.1.3",
+        "https://www.planetcatfish.com/common/common_names.php?language=English&letter=l"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/l162/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://planetcatfish.com/panaqolus_maccus",
+        "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=62023"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/l190/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=5756",
+        "https://www.scotcat.com/factsheets/panaque_nigrolineatus.htm"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/l191/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://doi.org/10.1643/ci-09-185",
+        "https://www.aquariumglaser.de/en/fisharchive/panaque-from-colombia-l190-l191-l330/"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/l201/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://www.planetcatfish.com/common/common_names.php?language=English&letter=l",
+        "https://www.scotcat.com/loricariidae/hypancistrus_contradens.htm"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/l204/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://pubmed.ncbi.nlm.nih.gov/26167575/",
+        "https://www.mapress.com/zt/article/view/zootaxa.3691.1.8"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/l236/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://doi.org/10.1089/zeb.2015.1213",
+        "https://www.ni.bio.br/1982-0224-2024-0080/"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/l239/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://doi.org/10.1643/ci-07-187",
+        "https://www.ig-bssw.org/again-and-again-l-56/?lang=en"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/l287/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://doi.org/10.1089/zeb.2015.1213",
+        "https://www.ni.bio.br/1982-0224-2024-0080/"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/l306/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://doi.org/10.5281/zenodo.19115497",
+        "https://www.suedamerikafans.de/en/datz-012017-wels-presseschau/"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/l330/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://www.aquariumglaser.de/en/fisharchive/panaque-from-colombia-l190-l191-l330/",
+        "https://www.tfhmagazine.com/articles/freshwater/royal-plecos-full-article"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/l333/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://doi.org/10.1089/zeb.2015.1213",
+        "https://www.ni.bio.br/1982-0224-2024-0080/"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/l397/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0165388",
+        "https://www.planetcatfish.com/Panaqolus%20sp(L397)"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/l398/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://en.amazonoco.de/project/panaqolus-tankei-l-398-origin-and-breeding/",
+        "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0165388"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/l399/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://doi.org/10.1089/zeb.2015.1213",
+        "https://www.ni.bio.br/1982-0224-2024-0080/"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/l400/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://doi.org/10.1089/zeb.2015.1213",
+        "https://www.ni.bio.br/1982-0224-2024-0080/"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/l418/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://doi.org/10.1643/ci-09-185",
+        "https://planetcatfish.com/common/species.php?species_id=803"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/pana-changae/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://auburn.edu/~armbrjw/Panaque_changae.pdf",
+        "https://doi.org/10.1590/s1679-62252014000100006"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/pana-koko/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=72287",
+        "https://www.sfi-cybium.fr/sites/default/files/pdfs-cybium/11-FischMuller%5BGuianas%5D%20colour.pdf"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/pana-nocturnus/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://planetcatfish.com/panaqolus_nocturnus",
+        "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=62021"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/pana-orcesi/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://doi.org/10.11646/zootaxa.5463.1.7",
+        "https://doi.org/10.5281/zenodo.11645868"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/pana-pantostiktos/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://doi.org/10.11646/zootaxa.5463.1.7",
+        "https://doi.org/10.5281/zenodo.11645870"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/peckol-lujani/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://doi.org/10.3897/zookeys.480.6540",
+        "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=73654"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/pseudo-sidereus/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://doi.org/10.11646/zootaxa.628.1.1",
+        "https://www.utsc.utoronto.ca/~lovejoy/pdfpubs/2015/LujanN_MolecPhylo&Evo_2015.pdf"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    },
+    {
+      "url": "https://aquapedia.app/plecopedia/research/study-l333-captive/",
+      "sourceScope": "full-public-article",
+      "links": [
+        "https://doi.org/10.1007/s10499-024-01720-z",
+        "https://www.ni.bio.br/1982-0224-2024-0080/"
+      ],
+      "externalCitationCount": 2,
+      "claimVerified": false,
+      "mediaRightsVerified": false
+    }
+  ],
+  "claimVerified": false,
+  "mediaRightsVerified": false,
+  "discordWrites": 0,
+  "publicationAuthorized": false
+}

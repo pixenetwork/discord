@@ -1,0 +1,92 @@
+{
+  "source": "Authorized existing Aquaphoria bot receipt readback",
+  "compiledAt": "2026-10-22",
+  "previouslyVerifiedBaseMessageId": "1562987115036278834",
+  "topics": [
+    {
+      "version": 1,
+      "topic": "cover-one",
+      "verified": true,
+      "messageId": "1563012950346833990",
+      "threadId": "1562195157028184178",
+      "url": "https://discord.com/channels/1519337502379475095/1562195157028184178/1563012950346833990",
+      "botAuthorId": "1535522109571203152",
+      "messageSha256": "6eee843b99843ef14d592234d1ac534cdf3d2d16975218189379b16ea8c3c680",
+      "sourceEntryCount": 19,
+      "sourceUrls": [
+        "https://aquapedia.app/guppypedia/entries/gup-011/",
+        "https://aquapedia.app/guppypedia/entries/gup-012/",
+        "https://aquapedia.app/guppypedia/entries/gup-013/",
+        "https://aquapedia.app/guppypedia/entries/gup-014/",
+        "https://aquapedia.app/guppypedia/entries/gup-015/",
+        "https://aquapedia.app/guppypedia/entries/gup-016/",
+        "https://aquapedia.app/guppypedia/entries/gup-017/",
+        "https://aquapedia.app/guppypedia/entries/gup-018/",
+        "https://aquapedia.app/guppypedia/entries/gup-019/",
+        "https://aquapedia.app/guppypedia/entries/gup-020/",
+        "https://aquapedia.app/guppypedia/entries/gup-021/",
+        "https://aquapedia.app/guppypedia/entries/gup-022/",
+        "https://aquapedia.app/guppypedia/entries/gup-023/",
+        "https://aquapedia.app/guppypedia/entries/gup-024/",
+        "https://aquapedia.app/guppypedia/entries/gup-025/",
+        "https://aquapedia.app/guppypedia/entries/gup-026/",
+        "https://aquapedia.app/guppypedia/entries/gup-027/",
+        "https://aquapedia.app/guppypedia/entries/gup-028/",
+        "https://aquapedia.app/guppypedia/entries/gup-029/"
+      ],
+      "claimScope": "IKGH show-standard classification, not verified genotype or pedigree",
+      "verifiedAt": "2026-10-23T02:15:27.163Z"
+    },
+    {
+      "version": 1,
+      "topic": "cover-two",
+      "verified": true,
+      "messageId": "1563013035759771728",
+      "threadId": "1562195157028184178",
+      "url": "https://discord.com/channels/1519337502379475095/1562195157028184178/1563013035759771728",
+      "botAuthorId": "1535522109571203152",
+      "messageSha256": "aabc603114dfcd150102314970708ee13cc460c5d7f154622826bd2ed8422fba",
+      "sourceEntryCount": 6,
+      "sourceUrls": [
+        "https://aquapedia.app/guppypedia/entries/gup-030/",
+        "https://aquapedia.app/guppypedia/entries/gup-031/",
+        "https://aquapedia.app/guppypedia/entries/gup-032/",
+        "https://aquapedia.app/guppypedia/entries/gup-033/",
+        "https://aquapedia.app/guppypedia/entries/gup-034/",
+        "https://aquapedia.app/guppypedia/entries/gup-035/"
+      ],
+      "claimScope": "IKGH show-standard classification, not verified genotype or pedigree",
+      "verifiedAt": "2026-10-23T02:15:47.299Z"
+    },
+    {
+      "version": 1,
+      "topic": "tail",
+      "verified": true,
+      "messageId": "1563013085415997522",
+      "threadId": "1562195154817917080",
+      "url": "https://discord.com/channels/1519337502379475095/1562195154817917080/1563013085415997522",
+      "botAuthorId": "1535522109571203152",
+      "messageSha256": "cf84e4a5884f119b5c723490d1f48ab19932f26d5025ceca1ea9780d42bfd43e",
+      "sourceEntryCount": 13,
+      "sourceUrls": [
+        "https://aquapedia.app/guppypedia/entries/gup-036/",
+        "https://aquapedia.app/guppypedia/entries/gup-037/",
+        "https://aquapedia.app/guppypedia/entries/gup-038/",
+        "https://aquapedia.app/guppypedia/entries/gup-039/",
+        "https://aquapedia.app/guppypedia/entries/gup-040/",
+        "https://aquapedia.app/guppypedia/entries/gup-041/",
+        "https://aquapedia.app/guppypedia/entries/gup-042/",
+        "https://aquapedia.app/guppypedia/entries/gup-043/",
+        "https://aquapedia.app/guppypedia/entries/gup-044/",
+        "https://aquapedia.app/guppypedia/entries/gup-045/",
+        "https://aquapedia.app/guppypedia/entries/gup-046/",
+        "https://aquapedia.app/guppypedia/entries/gup-047/",
+        "https://aquapedia.app/guppypedia/entries/gup-048/"
+      ],
+      "claimScope": "IKGH show-standard classification, not verified genotype or pedigree",
+      "verifiedAt": "2026-10-23T02:15:59.266Z"
+    }
+  ],
+  "publicationScope": "IKGH show label source-only; no genetic/pedigree claims",
+  "otherCrossTaxaApproved": false
+}

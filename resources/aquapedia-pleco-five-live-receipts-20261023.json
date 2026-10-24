@@ -1,0 +1,79 @@
+{
+  "scope": "five original bot-authored Plecopedia draft source-link messages; no claim or media validation",
+  "capturedAt": "2026-10-23",
+  "verified": true,
+  "repeatAction": "adopted",
+  "records": [
+    {
+      "version": 1,
+      "verified": true,
+      "key": "anc-leoni",
+      "threadId": "1561146978644136089",
+      "messageId": "1563184859084623934",
+      "url": "https://discord.com/channels/1519337502379475095/1561146978644136089/1563184859084623934",
+      "botAuthorId": "1535522109571203152",
+      "sourceUrl": "https://aquapedia.app/plecopedia/research/anc-leoni/",
+      "doi": "10.11646/zootaxa.4552.1.1",
+      "contentSha256": "86a0177b9e6701f7c9e7025bb09a9e0b77c8ea34e5f5ecf5d215eb2e41eff39c",
+      "scope": "Provisional source-link index only; genetics, specimen ID, breeding outcomes and image rights not authenticated",
+      "verifiedAt": "2026-10-23T13:38:33.284Z"
+    },
+    {
+      "version": 1,
+      "verified": true,
+      "key": "anc-patronus",
+      "threadId": "1561146984935465023",
+      "messageId": "1563184955465539686",
+      "url": "https://discord.com/channels/1519337502379475095/1561146984935465023/1563184955465539686",
+      "botAuthorId": "1535522109571203152",
+      "sourceUrl": "https://aquapedia.app/plecopedia/research/anc-patronus/",
+      "doi": "10.11646/zootaxa.4552.1.1",
+      "contentSha256": "dd13477ab5a16f8114432b47eda86d94a3820fa5387391ab8a8e0b8e04d9b45b",
+      "scope": "Provisional source-link index only; genetics, specimen ID, breeding outcomes and image rights not authenticated",
+      "verifiedAt": "2026-10-23T13:38:56.423Z"
+    },
+    {
+      "version": 1,
+      "verified": true,
+      "key": "study-l333-captive",
+      "threadId": "1561136979171610685",
+      "messageId": "1563184964214984746",
+      "url": "https://discord.com/channels/1519337502379475095/1561136979171610685/1563184964214984746",
+      "botAuthorId": "1535522109571203152",
+      "sourceUrl": "https://aquapedia.app/plecopedia/research/study-l333-captive/",
+      "doi": "10.1007/s10499-024-01720-z",
+      "contentSha256": "9bcf56a90101d8742695db1007582e23b8df8f2c807c33652b6f0402e30bf4a8",
+      "scope": "Provisional source-link index only; genetics, specimen ID, breeding outcomes and image rights not authenticated",
+      "verifiedAt": "2026-10-23T13:38:58.607Z"
+    },
+    {
+      "version": 1,
+      "verified": true,
+      "key": "anc-yanesha",
+      "threadId": "1561146967290150964",
+      "messageId": "1563184973878534286",
+      "url": "https://discord.com/channels/1519337502379475095/1561146967290150964/1563184973878534286",
+      "botAuthorId": "1535522109571203152",
+      "sourceUrl": "https://aquapedia.app/plecopedia/research/anc-yanesha/",
+      "doi": "10.1111/jfb.15637",
+      "contentSha256": "d56935234ba3702b4341c4c922860f7a0693bddf8ab39023db1b18af4206d7ac",
+      "scope": "Provisional source-link index only; genetics, specimen ID, breeding outcomes and image rights not authenticated",
+      "verifiedAt": "2026-10-23T13:39:00.712Z"
+    },
+    {
+      "version": 1,
+      "verified": true,
+      "key": "anc-l267-alias",
+      "threadId": "1561146970599587851",
+      "messageId": "1563184981876936816",
+      "url": "https://discord.com/channels/1519337502379475095/1561146970599587851/1563184981876936816",
+      "botAuthorId": "1535522109571203152",
+      "sourceUrl": "https://aquapedia.app/plecopedia/research/anc-l267-alias/",
+      "doi": "10.1111/jfb.15637",
+      "contentSha256": "2b21e84f954440ce18df0f7ed3da52c0ca5598bc07b563dd9fddc0772926c2f4",
+      "scope": "Provisional source-link index only; genetics, specimen ID, breeding outcomes and image rights not authenticated",
+      "verifiedAt": "2026-10-23T13:39:02.797Z"
+    }
+  ],
+  "otherDraftsAuthorized": false
+}

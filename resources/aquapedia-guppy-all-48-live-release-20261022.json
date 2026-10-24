@@ -1,0 +1,38 @@
+{
+  "capturedAt": "2026-10-23T02:18:50.527Z",
+  "sourceCatalogTotal": 853,
+  "sourceCatalogGuppyCount": 176,
+  "scope": "source-only IKGH show-standard terminology; no pedigree",
+  "verifiedGuppyIndexMessages": 4,
+  "verifiedGuppySourceUrls": 48,
+  "completedNewMessageReceipts": [
+    {
+      "topic": "cover-one",
+      "messageId": "1563012950346833990",
+      "url": "https://discord.com/channels/1519337502379475095/1562195157028184178/1563012950346833990",
+      "sourceCount": 19
+    },
+    {
+      "topic": "cover-two",
+      "messageId": "1563013035759771728",
+      "url": "https://discord.com/channels/1519337502379475095/1562195157028184178/1563013035759771728",
+      "sourceCount": 6
+    },
+    {
+      "topic": "tail",
+      "messageId": "1563013085415997522",
+      "url": "https://discord.com/channels/1519337502379475095/1562195154817917080/1563013085415997522",
+      "sourceCount": 13
+    }
+  ],
+  "heldGuppyCommercialAndHybridLabels": 128,
+  "pendingCrossTaxaProposals": 95,
+  "pendingActive": 59,
+  "pendingArchived": 36,
+  "pendingByGroup": {
+    "corydoras": 10,
+    "pleco": 85
+  },
+  "remainingPublicationsAuthorized": false,
+  "discordWritesInReconciliation": 0
+}

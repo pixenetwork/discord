@@ -1,0 +1,1410 @@
+[
+  {
+    "name": "Wild grey",
+    "slug": "guppy-gup-001",
+    "url": "/guppypedia/entries/gup-001/",
+    "group": "guppy",
+    "type": "Guppy standardized trait",
+    "status": "Officially standardized phenotype"
+  },
+  {
+    "name": "Gold base",
+    "slug": "guppy-gup-002",
+    "url": "/guppypedia/entries/gup-002/",
+    "group": "guppy",
+    "type": "Guppy standardized trait",
+    "status": "Officially standardized phenotype"
+  },
+  {
+    "name": "Blond base",
+    "slug": "guppy-gup-003",
+    "url": "/guppypedia/entries/gup-003/",
+    "group": "guppy",
+    "type": "Guppy standardized trait",
+    "status": "Officially standardized phenotype"
+  },
+  {
+    "name": "Blue base",
+    "slug": "guppy-gup-004",
+    "url": "/guppypedia/entries/gup-004/",
+    "group": "guppy",
+    "type": "Guppy standardized trait",
+    "status": "Officially standardized phenotype"
+  },
+  {
+    "name": "Pink base",
+    "slug": "guppy-gup-005",
+    "url": "/guppypedia/entries/gup-005/",
+    "group": "guppy",
+    "type": "Guppy standardized trait",
+    "status": "Officially standardized phenotype"
+  },
+  {
+    "name": "Albino (RREA) base",
+    "slug": "guppy-gup-006",
+    "url": "/guppypedia/entries/gup-006/",
+    "group": "guppy",
+    "type": "Guppy standardized trait",
+    "status": "Officially standardized phenotype"
+  },
+  {
+    "name": "White base",
+    "slug": "guppy-gup-007",
+    "url": "/guppypedia/entries/gup-007/",
+    "group": "guppy",
+    "type": "Guppy standardized trait",
+    "status": "Officially standardized phenotype"
+  },
+  {
+    "name": "Silver base",
+    "slug": "guppy-gup-008",
+    "url": "/guppypedia/entries/gup-008/",
+    "group": "guppy",
+    "type": "Guppy standardized trait",
+    "status": "Officially standardized phenotype"
+  },
+  {
+    "name": "Cream base",
+    "slug": "guppy-gup-009",
+    "url": "/guppypedia/entries/gup-009/",
+    "group": "guppy",
+    "type": "Guppy standardized trait",
+    "status": "Officially standardized phenotype"
+  },
+  {
+    "name": "Lutino (WREA) base",
+    "slug": "guppy-gup-010",
+    "url": "/guppypedia/entries/gup-010/",
+    "group": "guppy",
+    "type": "Guppy standardized trait",
+    "status": "Officially standardized phenotype"
+  },
+  {
+    "name": "Red cover",
+    "slug": "guppy-gup-011",
+    "url": "/guppypedia/entries/gup-011/",
+    "group": "guppy",
+    "type": "Guppy standardized trait",
+    "status": "Officially standardized phenotype"
+  },
+  {
+    "name": "Blue cover",
+    "slug": "guppy-gup-012",
+    "url": "/guppypedia/entries/gup-012/",
+    "group": "guppy",
+    "type": "Guppy standardized trait",
+    "status": "Officially standardized phenotype"
+  },
+  {
+    "name": "Green cover",
+    "slug": "guppy-gup-013",
+    "url": "/guppypedia/entries/gup-013/",
+    "group": "guppy",
+    "type": "Guppy standardized trait",
+    "status": "Officially standardized phenotype"
+  },
+  {
+    "name": "Yellow cover",
+    "slug": "guppy-gup-014",
+    "url": "/guppypedia/entries/gup-014/",
+    "group": "guppy",
+    "type": "Guppy standardized trait",
+    "status": "Officially standardized phenotype"
+  },
+  {
+    "name": "White cover",
+    "slug": "guppy-gup-015",
+    "url": "/guppypedia/entries/gup-015/",
+    "group": "guppy",
+    "type": "Guppy standardized trait",
+    "status": "Officially standardized phenotype"
+  },
+  {
+    "name": "Black cover",
+    "slug": "guppy-gup-016",
+    "url": "/guppypedia/entries/gup-016/",
+    "group": "guppy",
+    "type": "Guppy standardized trait",
+    "status": "Officially standardized phenotype"
+  },
+  {
+    "name": "Neon",
+    "slug": "guppy-gup-017",
+    "url": "/guppypedia/entries/gup-017/",
+    "group": "guppy",
+    "type": "Guppy standardized trait",
+    "status": "Officially standardized phenotype"
+  },
+  {
+    "name": "Moscow",
+    "slug": "guppy-gup-018",
+    "url": "/guppypedia/entries/gup-018/",
+    "group": "guppy",
+    "type": "Guppy standardized trait",
+    "status": "Officially standardized phenotype"
+  },
+  {
+    "name": "Metallic",
+    "slug": "guppy-gup-019",
+    "url": "/guppypedia/entries/gup-019/",
+    "group": "guppy",
+    "type": "Guppy standardized trait",
+    "status": "Officially standardized phenotype"
+  },
+  {
+    "name": "Half-black",
+    "slug": "guppy-gup-020",
+    "url": "/guppypedia/entries/gup-020/",
+    "group": "guppy",
+    "type": "Guppy standardized trait",
+    "status": "Officially standardized phenotype"
+  },
+  {
+    "name": "Three-quarter black",
+    "slug": "guppy-gup-021",
+    "url": "/guppypedia/entries/gup-021/",
+    "group": "guppy",
+    "type": "Guppy standardized trait",
+    "status": "Officially standardized phenotype"
+  },
+  {
+    "name": "Snakeskin",
+    "slug": "guppy-gup-022",
+    "url": "/guppypedia/entries/gup-022/",
+    "group": "guppy",
+    "type": "Guppy standardized trait",
+    "status": "Officially standardized phenotype"
+  },
+  {
+    "name": "Lace / Filigree",
+    "slug": "guppy-gup-023",
+    "url": "/guppypedia/entries/gup-023/",
+    "group": "guppy",
+    "type": "Guppy standardized trait",
+    "status": "Officially standardized phenotype"
+  },
+  {
+    "name": "Viennese Emerald",
+    "slug": "guppy-gup-024",
+    "url": "/guppypedia/entries/gup-024/",
+    "group": "guppy",
+    "type": "Guppy standardized trait",
+    "status": "Officially standardized phenotype"
+  },
+  {
+    "name": "One single color",
+    "slug": "guppy-gup-025",
+    "url": "/guppypedia/entries/gup-025/",
+    "group": "guppy",
+    "type": "Guppy standardized trait",
+    "status": "Officially standardized phenotype"
+  },
+  {
+    "name": "Two-tone",
+    "slug": "guppy-gup-026",
+    "url": "/guppypedia/entries/gup-026/",
+    "group": "guppy",
+    "type": "Guppy standardized trait",
+    "status": "Officially standardized phenotype"
+  },
+  {
+    "name": "Multicolor",
+    "slug": "guppy-gup-027",
+    "url": "/guppypedia/entries/gup-027/",
+    "group": "guppy",
+    "type": "Guppy standardized trait",
+    "status": "Officially standardized phenotype"
+  },
+  {
+    "name": "Mosaic",
+    "slug": "guppy-gup-028",
+    "url": "/guppypedia/entries/gup-028/",
+    "group": "guppy",
+    "type": "Guppy standardized trait",
+    "status": "Officially standardized phenotype"
+  },
+  {
+    "name": "Galaxy",
+    "slug": "guppy-gup-029",
+    "url": "/guppypedia/entries/gup-029/",
+    "group": "guppy",
+    "type": "Guppy standardized trait",
+    "status": "Officially standardized phenotype"
+  },
+  {
+    "name": "Japan Blue",
+    "slug": "guppy-gup-030",
+    "url": "/guppypedia/entries/gup-030/",
+    "group": "guppy",
+    "type": "Guppy standardized trait",
+    "status": "Officially standardized phenotype"
+  },
+  {
+    "name": "Singa Blue",
+    "slug": "guppy-gup-031",
+    "url": "/guppypedia/entries/gup-031/",
+    "group": "guppy",
+    "type": "Guppy standardized trait",
+    "status": "Officially standardized phenotype"
+  },
+  {
+    "name": "Blue Grass",
+    "slug": "guppy-gup-032",
+    "url": "/guppypedia/entries/gup-032/",
+    "group": "guppy",
+    "type": "Guppy standardized trait",
+    "status": "Officially standardized phenotype"
+  },
+  {
+    "name": "Red Grass",
+    "slug": "guppy-gup-033",
+    "url": "/guppypedia/entries/gup-033/",
+    "group": "guppy",
+    "type": "Guppy standardized trait",
+    "status": "Officially standardized phenotype"
+  },
+  {
+    "name": "Santa Maria",
+    "slug": "guppy-gup-034",
+    "url": "/guppypedia/entries/gup-034/",
+    "group": "guppy",
+    "type": "Guppy standardized trait",
+    "status": "Officially standardized phenotype"
+  },
+  {
+    "name": "Pink Moscow / Panda",
+    "slug": "guppy-gup-035",
+    "url": "/guppypedia/entries/gup-035/",
+    "group": "guppy",
+    "type": "Guppy standardized trait",
+    "status": "Officially standardized phenotype"
+  },
+  {
+    "name": "Fan Tail",
+    "slug": "guppy-gup-036",
+    "url": "/guppypedia/entries/gup-036/",
+    "group": "guppy",
+    "type": "Guppy standardized trait",
+    "status": "Officially standardized phenotype"
+  },
+  {
+    "name": "Triangle Tail / Delta",
+    "slug": "guppy-gup-037",
+    "url": "/guppypedia/entries/gup-037/",
+    "group": "guppy",
+    "type": "Guppy standardized trait",
+    "status": "Officially standardized phenotype"
+  },
+  {
+    "name": "Veil Tail",
+    "slug": "guppy-gup-038",
+    "url": "/guppypedia/entries/gup-038/",
+    "group": "guppy",
+    "type": "Guppy standardized trait",
+    "status": "Officially standardized phenotype"
+  },
+  {
+    "name": "Flag Tail",
+    "slug": "guppy-gup-039",
+    "url": "/guppypedia/entries/gup-039/",
+    "group": "guppy",
+    "type": "Guppy standardized trait",
+    "status": "Officially standardized phenotype"
+  },
+  {
+    "name": "Halfmoon Tail",
+    "slug": "guppy-gup-040",
+    "url": "/guppypedia/entries/gup-040/",
+    "group": "guppy",
+    "type": "Guppy standardized trait",
+    "status": "Officially standardized phenotype"
+  },
+  {
+    "name": "Double Swordtail",
+    "slug": "guppy-gup-041",
+    "url": "/guppypedia/entries/gup-041/",
+    "group": "guppy",
+    "type": "Guppy standardized trait",
+    "status": "Officially standardized phenotype"
+  },
+  {
+    "name": "Top Swordtail",
+    "slug": "guppy-gup-042",
+    "url": "/guppypedia/entries/gup-042/",
+    "group": "guppy",
+    "type": "Guppy standardized trait",
+    "status": "Officially standardized phenotype"
+  },
+  {
+    "name": "Bottom Swordtail",
+    "slug": "guppy-gup-043",
+    "url": "/guppypedia/entries/gup-043/",
+    "group": "guppy",
+    "type": "Guppy standardized trait",
+    "status": "Officially standardized phenotype"
+  },
+  {
+    "name": "Lyre Tail",
+    "slug": "guppy-gup-044",
+    "url": "/guppypedia/entries/gup-044/",
+    "group": "guppy",
+    "type": "Guppy standardized trait",
+    "status": "Officially standardized phenotype"
+  },
+  {
+    "name": "Spade Tail",
+    "slug": "guppy-gup-045",
+    "url": "/guppypedia/entries/gup-045/",
+    "group": "guppy",
+    "type": "Guppy standardized trait",
+    "status": "Officially standardized phenotype"
+  },
+  {
+    "name": "Spear Tail",
+    "slug": "guppy-gup-046",
+    "url": "/guppypedia/entries/gup-046/",
+    "group": "guppy",
+    "type": "Guppy standardized trait",
+    "status": "Officially standardized phenotype"
+  },
+  {
+    "name": "Round Tail",
+    "slug": "guppy-gup-047",
+    "url": "/guppypedia/entries/gup-047/",
+    "group": "guppy",
+    "type": "Guppy standardized trait",
+    "status": "Officially standardized phenotype"
+  },
+  {
+    "name": "Needle / Pin Tail",
+    "slug": "guppy-gup-048",
+    "url": "/guppypedia/entries/gup-048/",
+    "group": "guppy",
+    "type": "Guppy standardized trait",
+    "status": "Officially standardized phenotype"
+  },
+  {
+    "name": "Moscow Blue",
+    "slug": "guppy-gup-049",
+    "url": "/guppypedia/entries/gup-049/",
+    "group": "guppy",
+    "type": "Guppy documented commercial line",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Full Platinum White",
+    "slug": "guppy-gup-050",
+    "url": "/guppypedia/entries/gup-050/",
+    "group": "guppy",
+    "type": "Guppy documented commercial line",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Golden Lyretail",
+    "slug": "guppy-gup-051",
+    "url": "/guppypedia/entries/gup-051/",
+    "group": "guppy",
+    "type": "Guppy documented commercial line",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Blue Grass (Japanese catalog spelling: Blue Glass)",
+    "slug": "guppy-gup-052",
+    "url": "/guppypedia/entries/gup-052/",
+    "group": "guppy",
+    "type": "Guppy documented commercial line",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Metal Pink",
+    "slug": "guppy-gup-053",
+    "url": "/guppypedia/entries/gup-053/",
+    "group": "guppy",
+    "type": "Guppy documented commercial line",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Pink Tuxedo",
+    "slug": "guppy-gup-054",
+    "url": "/guppypedia/entries/gup-054/",
+    "group": "guppy",
+    "type": "Guppy documented commercial line",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Singa Blue Tail",
+    "slug": "guppy-gup-055",
+    "url": "/guppypedia/entries/gup-055/",
+    "group": "guppy",
+    "type": "Guppy documented commercial line",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "German Yellow Tuxedo Ribbon",
+    "slug": "guppy-gup-056",
+    "url": "/guppypedia/entries/gup-056/",
+    "group": "guppy",
+    "type": "Guppy documented commercial line",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Red Grass (Japanese catalog spelling: Red Glass)",
+    "slug": "guppy-gup-057",
+    "url": "/guppypedia/entries/gup-057/",
+    "group": "guppy",
+    "type": "Guppy documented commercial line",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Koi Tuxedo",
+    "slug": "guppy-gup-058",
+    "url": "/guppypedia/entries/gup-058/",
+    "group": "guppy",
+    "type": "Guppy documented commercial line",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Platinum Black Lyretail",
+    "slug": "guppy-gup-059",
+    "url": "/guppypedia/entries/gup-059/",
+    "group": "guppy",
+    "type": "Guppy documented commercial line",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Albino Koi",
+    "slug": "guppy-gup-060",
+    "url": "/guppypedia/entries/gup-060/",
+    "group": "guppy",
+    "type": "Guppy documented commercial line",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Golden Platinum German Yellow",
+    "slug": "guppy-gup-061",
+    "url": "/guppypedia/entries/gup-061/",
+    "group": "guppy",
+    "type": "Guppy documented commercial line",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Micariff Golden Yellow",
+    "slug": "guppy-gup-062",
+    "url": "/guppypedia/entries/gup-062/",
+    "group": "guppy",
+    "type": "Guppy documented commercial line",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Platinum Mosaic Dumbo",
+    "slug": "guppy-gup-063",
+    "url": "/guppypedia/entries/gup-063/",
+    "group": "guppy",
+    "type": "Guppy documented commercial line",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Metal Leopard",
+    "slug": "guppy-gup-064",
+    "url": "/guppypedia/entries/gup-064/",
+    "group": "guppy",
+    "type": "Guppy documented commercial line",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Blue Lyretail",
+    "slug": "guppy-gup-065",
+    "url": "/guppypedia/entries/gup-065/",
+    "group": "guppy",
+    "type": "Guppy documented commercial line",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Flamingo",
+    "slug": "guppy-gup-066",
+    "url": "/guppypedia/entries/gup-066/",
+    "group": "guppy",
+    "type": "Guppy documented commercial line",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Platinum Red Mosaic Dumbo",
+    "slug": "guppy-gup-067",
+    "url": "/guppypedia/entries/gup-067/",
+    "group": "guppy",
+    "type": "Guppy documented commercial line",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Koi / Tancho",
+    "slug": "guppy-gup-068",
+    "url": "/guppypedia/entries/gup-068/",
+    "group": "guppy",
+    "type": "Guppy documented commercial line",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Platinum White",
+    "slug": "guppy-gup-069",
+    "url": "/guppypedia/entries/gup-069/",
+    "group": "guppy",
+    "type": "Guppy documented commercial line",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Neon Tuxedo",
+    "slug": "guppy-gup-070",
+    "url": "/guppypedia/entries/gup-070/",
+    "group": "guppy",
+    "type": "Guppy documented commercial line",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Blue Moscow",
+    "slug": "guppy-gup-071",
+    "url": "/guppypedia/entries/gup-071/",
+    "group": "guppy",
+    "type": "Guppy documented hobby label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Green Moscow",
+    "slug": "guppy-gup-072",
+    "url": "/guppypedia/entries/gup-072/",
+    "group": "guppy",
+    "type": "Guppy documented hobby label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Purple Moscow",
+    "slug": "guppy-gup-073",
+    "url": "/guppypedia/entries/gup-073/",
+    "group": "guppy",
+    "type": "Guppy documented hobby label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Black Moscow",
+    "slug": "guppy-gup-074",
+    "url": "/guppypedia/entries/gup-074/",
+    "group": "guppy",
+    "type": "Guppy documented hobby label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Red Moscow",
+    "slug": "guppy-gup-075",
+    "url": "/guppypedia/entries/gup-075/",
+    "group": "guppy",
+    "type": "Guppy documented hobby label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Silver Moscow",
+    "slug": "guppy-gup-076",
+    "url": "/guppypedia/entries/gup-076/",
+    "group": "guppy",
+    "type": "Guppy documented hobby label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Platinum Moscow",
+    "slug": "guppy-gup-077",
+    "url": "/guppypedia/entries/gup-077/",
+    "group": "guppy",
+    "type": "Guppy documented hobby label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Albino Moscow",
+    "slug": "guppy-gup-078",
+    "url": "/guppypedia/entries/gup-078/",
+    "group": "guppy",
+    "type": "Guppy documented hobby label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Metal Moscow",
+    "slug": "guppy-gup-079",
+    "url": "/guppypedia/entries/gup-079/",
+    "group": "guppy",
+    "type": "Guppy documented hobby label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Dragon Moscow",
+    "slug": "guppy-gup-080",
+    "url": "/guppypedia/entries/gup-080/",
+    "group": "guppy",
+    "type": "Guppy documented hobby label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Red Leopard",
+    "slug": "guppy-gup-081",
+    "url": "/guppypedia/entries/gup-081/",
+    "group": "guppy",
+    "type": "Guppy documented hobby label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Blue Leopard",
+    "slug": "guppy-gup-082",
+    "url": "/guppypedia/entries/gup-082/",
+    "group": "guppy",
+    "type": "Guppy documented hobby label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Yellow Leopard",
+    "slug": "guppy-gup-083",
+    "url": "/guppypedia/entries/gup-083/",
+    "group": "guppy",
+    "type": "Guppy documented hobby label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Black Leopard",
+    "slug": "guppy-gup-084",
+    "url": "/guppypedia/entries/gup-084/",
+    "group": "guppy",
+    "type": "Guppy documented hobby label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Red Cobra",
+    "slug": "guppy-gup-085",
+    "url": "/guppypedia/entries/gup-085/",
+    "group": "guppy",
+    "type": "Guppy documented hobby label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Blue Cobra",
+    "slug": "guppy-gup-086",
+    "url": "/guppypedia/entries/gup-086/",
+    "group": "guppy",
+    "type": "Guppy documented hobby label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Green Cobra",
+    "slug": "guppy-gup-087",
+    "url": "/guppypedia/entries/gup-087/",
+    "group": "guppy",
+    "type": "Guppy documented hobby label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Yellow Cobra",
+    "slug": "guppy-gup-088",
+    "url": "/guppypedia/entries/gup-088/",
+    "group": "guppy",
+    "type": "Guppy documented hobby label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "King Cobra",
+    "slug": "guppy-gup-089",
+    "url": "/guppypedia/entries/gup-089/",
+    "group": "guppy",
+    "type": "Guppy documented hobby label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Red Lace",
+    "slug": "guppy-gup-090",
+    "url": "/guppypedia/entries/gup-090/",
+    "group": "guppy",
+    "type": "Guppy documented hobby label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Blue Lace",
+    "slug": "guppy-gup-091",
+    "url": "/guppypedia/entries/gup-091/",
+    "group": "guppy",
+    "type": "Guppy documented hobby label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Metal Lace",
+    "slug": "guppy-gup-092",
+    "url": "/guppypedia/entries/gup-092/",
+    "group": "guppy",
+    "type": "Guppy documented hobby label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Red Mosaic",
+    "slug": "guppy-gup-093",
+    "url": "/guppypedia/entries/gup-093/",
+    "group": "guppy",
+    "type": "Guppy documented hobby label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Blue Mosaic",
+    "slug": "guppy-gup-094",
+    "url": "/guppypedia/entries/gup-094/",
+    "group": "guppy",
+    "type": "Guppy documented hobby label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Albino Mosaic",
+    "slug": "guppy-gup-095",
+    "url": "/guppypedia/entries/gup-095/",
+    "group": "guppy",
+    "type": "Guppy documented hobby label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Yellow Tuxedo",
+    "slug": "guppy-gup-096",
+    "url": "/guppypedia/entries/gup-096/",
+    "group": "guppy",
+    "type": "Guppy documented hobby label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Blue Tuxedo",
+    "slug": "guppy-gup-097",
+    "url": "/guppypedia/entries/gup-097/",
+    "group": "guppy",
+    "type": "Guppy documented hobby label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Red Tuxedo",
+    "slug": "guppy-gup-098",
+    "url": "/guppypedia/entries/gup-098/",
+    "group": "guppy",
+    "type": "Guppy documented hobby label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Black Panda",
+    "slug": "guppy-gup-099",
+    "url": "/guppypedia/entries/gup-099/",
+    "group": "guppy",
+    "type": "Guppy documented hobby label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Blue Panda",
+    "slug": "guppy-gup-100",
+    "url": "/guppypedia/entries/gup-100/",
+    "group": "guppy",
+    "type": "Guppy documented hobby label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Koi",
+    "slug": "guppy-gup-101",
+    "url": "/guppypedia/entries/gup-101/",
+    "group": "guppy",
+    "type": "Guppy documented hobby label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Koi Red Ear",
+    "slug": "guppy-gup-102",
+    "url": "/guppypedia/entries/gup-102/",
+    "group": "guppy",
+    "type": "Guppy documented hobby label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Dragon Dumbo",
+    "slug": "guppy-gup-103",
+    "url": "/guppypedia/entries/gup-103/",
+    "group": "guppy",
+    "type": "Guppy documented hobby label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Red Dragon",
+    "slug": "guppy-gup-104",
+    "url": "/guppypedia/entries/gup-104/",
+    "group": "guppy",
+    "type": "Guppy documented hobby label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Blue Dragon",
+    "slug": "guppy-gup-105",
+    "url": "/guppypedia/entries/gup-105/",
+    "group": "guppy",
+    "type": "Guppy documented hobby label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Yellow Dragon",
+    "slug": "guppy-gup-106",
+    "url": "/guppypedia/entries/gup-106/",
+    "group": "guppy",
+    "type": "Guppy documented hobby label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Magenta",
+    "slug": "guppy-gup-107",
+    "url": "/guppypedia/entries/gup-107/",
+    "group": "guppy",
+    "type": "Guppy documented hobby label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Fireworks",
+    "slug": "guppy-gup-108",
+    "url": "/guppypedia/entries/gup-108/",
+    "group": "guppy",
+    "type": "Guppy documented hobby label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Metalhead",
+    "slug": "guppy-gup-109",
+    "url": "/guppypedia/entries/gup-109/",
+    "group": "guppy",
+    "type": "Guppy documented hobby label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Medusa",
+    "slug": "guppy-gup-110",
+    "url": "/guppypedia/entries/gup-110/",
+    "group": "guppy",
+    "type": "Guppy documented hobby label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Platinum Blue",
+    "slug": "guppy-gup-111",
+    "url": "/guppypedia/entries/gup-111/",
+    "group": "guppy",
+    "type": "Guppy documented hobby label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Platinum Red",
+    "slug": "guppy-gup-112",
+    "url": "/guppypedia/entries/gup-112/",
+    "group": "guppy",
+    "type": "Guppy documented hobby label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Platinum Yellow",
+    "slug": "guppy-gup-113",
+    "url": "/guppypedia/entries/gup-113/",
+    "group": "guppy",
+    "type": "Guppy documented hobby label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Platinum White",
+    "slug": "guppy-gup-114",
+    "url": "/guppypedia/entries/gup-114/",
+    "group": "guppy",
+    "type": "Guppy documented hobby label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Metallic Green",
+    "slug": "guppy-gup-115",
+    "url": "/guppypedia/entries/gup-115/",
+    "group": "guppy",
+    "type": "Guppy documented hobby label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Metallic Red",
+    "slug": "guppy-gup-116",
+    "url": "/guppypedia/entries/gup-116/",
+    "group": "guppy",
+    "type": "Guppy documented hobby label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Neon Blue",
+    "slug": "guppy-gup-117",
+    "url": "/guppypedia/entries/gup-117/",
+    "group": "guppy",
+    "type": "Guppy documented hobby label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Neon Red",
+    "slug": "guppy-gup-118",
+    "url": "/guppypedia/entries/gup-118/",
+    "group": "guppy",
+    "type": "Guppy documented hobby label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Electric Blue",
+    "slug": "guppy-gup-119",
+    "url": "/guppypedia/entries/gup-119/",
+    "group": "guppy",
+    "type": "Guppy documented hobby label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Blue Topaz",
+    "slug": "guppy-gup-120",
+    "url": "/guppypedia/entries/gup-120/",
+    "group": "guppy",
+    "type": "Guppy documented hobby label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Full Red",
+    "slug": "guppy-gup-121",
+    "url": "/guppypedia/entries/gup-121/",
+    "group": "guppy",
+    "type": "Guppy documented hobby label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Albino Full Red",
+    "slug": "guppy-gup-122",
+    "url": "/guppypedia/entries/gup-122/",
+    "group": "guppy",
+    "type": "Guppy documented hobby label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Full Black",
+    "slug": "guppy-gup-123",
+    "url": "/guppypedia/entries/gup-123/",
+    "group": "guppy",
+    "type": "Guppy documented hobby label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Full Blue",
+    "slug": "guppy-gup-124",
+    "url": "/guppypedia/entries/gup-124/",
+    "group": "guppy",
+    "type": "Guppy documented hobby label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Full Gold",
+    "slug": "guppy-gup-125",
+    "url": "/guppypedia/entries/gup-125/",
+    "group": "guppy",
+    "type": "Guppy documented hobby label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Full Yellow",
+    "slug": "guppy-gup-126",
+    "url": "/guppypedia/entries/gup-126/",
+    "group": "guppy",
+    "type": "Guppy documented hobby label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Full Orange",
+    "slug": "guppy-gup-127",
+    "url": "/guppypedia/entries/gup-127/",
+    "group": "guppy",
+    "type": "Guppy documented hobby label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Full White",
+    "slug": "guppy-gup-128",
+    "url": "/guppypedia/entries/gup-128/",
+    "group": "guppy",
+    "type": "Guppy documented hobby label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Full Platinum",
+    "slug": "guppy-gup-129",
+    "url": "/guppypedia/entries/gup-129/",
+    "group": "guppy",
+    "type": "Guppy documented hobby label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Full Purple",
+    "slug": "guppy-gup-130",
+    "url": "/guppypedia/entries/gup-130/",
+    "group": "guppy",
+    "type": "Guppy documented hobby label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Full Green",
+    "slug": "guppy-gup-131",
+    "url": "/guppypedia/entries/gup-131/",
+    "group": "guppy",
+    "type": "Guppy documented hobby label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Full Pink",
+    "slug": "guppy-gup-132",
+    "url": "/guppypedia/entries/gup-132/",
+    "group": "guppy",
+    "type": "Guppy documented hobby label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Super White",
+    "slug": "guppy-gup-133",
+    "url": "/guppypedia/entries/gup-133/",
+    "group": "guppy",
+    "type": "Guppy documented hobby label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Albino Platinum",
+    "slug": "guppy-gup-134",
+    "url": "/guppypedia/entries/gup-134/",
+    "group": "guppy",
+    "type": "Guppy documented hobby label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Albino Tuxedo",
+    "slug": "guppy-gup-135",
+    "url": "/guppypedia/entries/gup-135/",
+    "group": "guppy",
+    "type": "Guppy documented hobby label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Albino Cobra",
+    "slug": "guppy-gup-136",
+    "url": "/guppypedia/entries/gup-136/",
+    "group": "guppy",
+    "type": "Guppy documented hobby label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Albino Snakeskin",
+    "slug": "guppy-gup-137",
+    "url": "/guppypedia/entries/gup-137/",
+    "group": "guppy",
+    "type": "Guppy documented hobby label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Albino Lace",
+    "slug": "guppy-gup-138",
+    "url": "/guppypedia/entries/gup-138/",
+    "group": "guppy",
+    "type": "Guppy documented hobby label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Albino Blue Topaz",
+    "slug": "guppy-gup-139",
+    "url": "/guppypedia/entries/gup-139/",
+    "group": "guppy",
+    "type": "Guppy documented hobby label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Albino German Yellow",
+    "slug": "guppy-gup-140",
+    "url": "/guppypedia/entries/gup-140/",
+    "group": "guppy",
+    "type": "Guppy documented hobby label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Dumbo Ear / Big Ear",
+    "slug": "guppy-gup-141",
+    "url": "/guppypedia/entries/gup-141/",
+    "group": "guppy",
+    "type": "Guppy documented trade trait",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Ribbon",
+    "slug": "guppy-gup-142",
+    "url": "/guppypedia/entries/gup-142/",
+    "group": "guppy",
+    "type": "Guppy documented trade trait",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Swallow",
+    "slug": "guppy-gup-143",
+    "url": "/guppypedia/entries/gup-143/",
+    "group": "guppy",
+    "type": "Guppy documented trade trait",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Rose Tail",
+    "slug": "guppy-gup-144",
+    "url": "/guppypedia/entries/gup-144/",
+    "group": "guppy",
+    "type": "Guppy documented trade trait",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Glass Belly",
+    "slug": "guppy-gup-145",
+    "url": "/guppypedia/entries/gup-145/",
+    "group": "guppy",
+    "type": "Guppy documented trade trait",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Short Body / Balloon",
+    "slug": "guppy-gup-146",
+    "url": "/guppypedia/entries/gup-146/",
+    "group": "guppy",
+    "type": "Guppy documented trade trait",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "AB Blue Topaz RB (seller shorthand)",
+    "slug": "guppy-gup-147",
+    "url": "/guppypedia/entries/gup-147/",
+    "group": "guppy",
+    "type": "Guppy documented seller label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "AB Full Red BDS (seller shorthand)",
+    "slug": "guppy-gup-148",
+    "url": "/guppypedia/entries/gup-148/",
+    "group": "guppy",
+    "type": "Guppy documented seller label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "AB Golden Lace SS (seller shorthand)",
+    "slug": "guppy-gup-149",
+    "url": "/guppypedia/entries/gup-149/",
+    "group": "guppy",
+    "type": "Guppy documented seller label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "AB Koi Red Ear (seller shorthand)",
+    "slug": "guppy-gup-150",
+    "url": "/guppypedia/entries/gup-150/",
+    "group": "guppy",
+    "type": "Guppy documented seller label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Albino Dumbo Ear Red Tail",
+    "slug": "guppy-gup-151",
+    "url": "/guppypedia/entries/gup-151/",
+    "group": "guppy",
+    "type": "Guppy documented seller label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Albino Metal Yellow Lace",
+    "slug": "guppy-gup-152",
+    "url": "/guppypedia/entries/gup-152/",
+    "group": "guppy",
+    "type": "Guppy documented seller label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Albino Sky Blue Tail",
+    "slug": "guppy-gup-153",
+    "url": "/guppypedia/entries/gup-153/",
+    "group": "guppy",
+    "type": "Guppy documented seller label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Albino Tuxedo Red Koi",
+    "slug": "guppy-gup-154",
+    "url": "/guppypedia/entries/gup-154/",
+    "group": "guppy",
+    "type": "Guppy documented seller label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Albino Yellow King Cobra Snakeskin",
+    "slug": "guppy-gup-155",
+    "url": "/guppypedia/entries/gup-155/",
+    "group": "guppy",
+    "type": "Guppy documented seller label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Black Koi Short",
+    "slug": "guppy-gup-156",
+    "url": "/guppypedia/entries/gup-156/",
+    "group": "guppy",
+    "type": "Guppy documented seller label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Blond Tuxedo Koi Short Body",
+    "slug": "guppy-gup-157",
+    "url": "/guppypedia/entries/gup-157/",
+    "group": "guppy",
+    "type": "Guppy documented seller label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Blue Dragon",
+    "slug": "guppy-gup-158",
+    "url": "/guppypedia/entries/gup-158/",
+    "group": "guppy",
+    "type": "Guppy documented seller label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Blue Grass",
+    "slug": "guppy-gup-159",
+    "url": "/guppypedia/entries/gup-159/",
+    "group": "guppy",
+    "type": "Guppy documented seller label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Tiger King Cobra",
+    "slug": "guppy-gup-160",
+    "url": "/guppypedia/entries/gup-160/",
+    "group": "guppy",
+    "type": "Guppy documented seller label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Pink Grass",
+    "slug": "guppy-gup-161",
+    "url": "/guppypedia/entries/gup-161/",
+    "group": "guppy",
+    "type": "Guppy documented seller label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Full 24K Gold Ribbon",
+    "slug": "guppy-gup-162",
+    "url": "/guppypedia/entries/gup-162/",
+    "group": "guppy",
+    "type": "Guppy documented seller label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Metal Blue",
+    "slug": "guppy-gup-163",
+    "url": "/guppypedia/entries/gup-163/",
+    "group": "guppy",
+    "type": "Guppy documented seller label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Metal Rose Red",
+    "slug": "guppy-gup-164",
+    "url": "/guppypedia/entries/gup-164/",
+    "group": "guppy",
+    "type": "Guppy documented seller label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Red Dragon Ribbon",
+    "slug": "guppy-gup-165",
+    "url": "/guppypedia/entries/gup-165/",
+    "group": "guppy",
+    "type": "Guppy documented seller label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Blue Topaz Ribbon",
+    "slug": "guppy-gup-166",
+    "url": "/guppypedia/entries/gup-166/",
+    "group": "guppy",
+    "type": "Guppy documented seller label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Koi Red Ear Ribbon Butterfly Ear",
+    "slug": "guppy-gup-167",
+    "url": "/guppypedia/entries/gup-167/",
+    "group": "guppy",
+    "type": "Guppy documented seller label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Dark Knight Halfmoon",
+    "slug": "guppy-gup-168",
+    "url": "/guppypedia/entries/gup-168/",
+    "group": "guppy",
+    "type": "Guppy documented seller label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "White Tiger",
+    "slug": "guppy-gup-169",
+    "url": "/guppypedia/entries/gup-169/",
+    "group": "guppy",
+    "type": "Guppy documented seller label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Purple Ivory Mosaic",
+    "slug": "guppy-gup-170",
+    "url": "/guppypedia/entries/gup-170/",
+    "group": "guppy",
+    "type": "Guppy documented seller label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Half Black Red Rose",
+    "slug": "guppy-gup-171",
+    "url": "/guppypedia/entries/gup-171/",
+    "group": "guppy",
+    "type": "Guppy documented seller label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Wild-type Endler / Poecilia wingei",
+    "slug": "guppy-gup-172",
+    "url": "/guppypedia/entries/gup-172/",
+    "group": "guppy",
+    "type": "Guppy separate-species or hybrid-related label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Golden Endler",
+    "slug": "guppy-gup-173",
+    "url": "/guppypedia/entries/gup-173/",
+    "group": "guppy",
+    "type": "Guppy separate-species or hybrid-related label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Scarlet Endler",
+    "slug": "guppy-gup-174",
+    "url": "/guppypedia/entries/gup-174/",
+    "group": "guppy",
+    "type": "Guppy separate-species or hybrid-related label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Tiger Endler",
+    "slug": "guppy-gup-175",
+    "url": "/guppypedia/entries/gup-175/",
+    "group": "guppy",
+    "type": "Guppy separate-species or hybrid-related label",
+    "status": "Trade label; lineage unverified"
+  },
+  {
+    "name": "Japan Blue Endler",
+    "slug": "guppy-gup-176",
+    "url": "/guppypedia/entries/gup-176/",
+    "group": "guppy",
+    "type": "Guppy separate-species or hybrid-related label",
+    "status": "Trade label; lineage unverified"
+  }
+]

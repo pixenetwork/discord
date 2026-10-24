@@ -1,0 +1,117 @@
+{
+  "reviewDate": "2026-10-24",
+  "scope": "Eight active Plecopedia source-link proposals; classify original description versus comparison, geography, or breeder context",
+  "publicationAuthorized": false,
+  "claimLevelSiteReviewComplete": false,
+  "discordWrites": 0,
+  "records": [
+    {
+      "slug": "l398",
+      "researchRole": "original-named-species-with-trade-mention",
+      "taxonDescribed": "Panaqolus tankei",
+      "source": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0165388",
+      "primaryPublication": "10.1371/journal.pone.0165388",
+      "interpretation": "2016 original description explicitly references Panaqolus sp. L398, but does not prove a sold aquarium specimen matches its type series.",
+      "claimsNotProven": [
+        "identity of individual stock",
+        "breeder pedigree",
+        "any similar Xingu population is the same species"
+      ],
+      "reviewResult": "original-link-candidate-after-live-thread-and-content-review"
+    },
+    {
+      "slug": "breeder-andreas-tanke-l398",
+      "researchRole": "taxonomic-honoree-and-qualified-breeder-context",
+      "taxonDescribed": "Panaqolus tankei",
+      "source": "https://doi.org/10.1371/journal.pone.0165388",
+      "primaryPublication": "10.1371/journal.pone.0165388",
+      "interpretation": "Original authors named tankei in honor of Andreas Tanke and wrote 'probably' first to reproduce the species; this is a qualified attribution, not independent verification of all breeding claims.",
+      "claimsNotProven": [
+        "exclusive first breeder status",
+        "current commercial line",
+        "photo rights"
+      ],
+      "reviewResult": "breeder-claim-review-hold"
+    },
+    {
+      "slug": "l397",
+      "researchRole": "related-species-comparison-not-original-description",
+      "taxonDescribed": "Panaqolus tankei",
+      "source": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0165388",
+      "primaryPublication": "10.1371/journal.pone.0165388",
+      "interpretation": "The 2016 paper describes P. tankei/L398, not L397; L397 is a distinct trade form. A 2015 Catfish Study Group article records a particular keeper's L397 spawning observations.",
+      "claimsNotProven": [
+        "L397 identical to P. tankei",
+        "general breeding success across all lineages"
+      ],
+      "reviewResult": "comparative-citation-hold"
+    },
+    {
+      "slug": "l239",
+      "researchRole": "original-named-species-with-direct-trade-mention",
+      "taxonDescribed": "Baryancistrus beggini",
+      "source": "https://doi.org/10.1643/ci-07-187",
+      "primaryPublication": "10.1643/ci-07-187",
+      "interpretation": "The 2009 original description directly uses L239 and blue panaque as trade names for described B. beggini; genus assignment was originally tentative, and individual stock still requires ID.",
+      "claimsNotProven": [
+        "genetic lineage of aquarium stock",
+        "any traded blue pleco is taxonomically authenticated"
+      ],
+      "reviewResult": "original-link-candidate-after-live-thread-and-content-review"
+    },
+    {
+      "slug": "l191",
+      "researchRole": "original-species-study-with-geographically-conditional-trade-association",
+      "taxonDescribed": "Panaque titan",
+      "source": "https://doi.org/10.1643/ci-09-185",
+      "primaryPublication": "10.1643/ci-09-185",
+      "interpretation": "2010 original work describes P. titan from Ecuador Napo; IUCN 2023 discusses L191 from Colombian Caqueta as commercially identified P. titan but treats Colombian occurrence uncertain/cf. titan.",
+      "claimsNotProven": [
+        "L191 and L418 identical by genetics",
+        "Caqueta fish definitively P. titan",
+        "all specimens authenticate against type"
+      ],
+      "reviewResult": "geographic-identification-hold"
+    },
+    {
+      "slug": "l418",
+      "researchRole": "original-species-study-with-geographically-conditional-trade-association",
+      "taxonDescribed": "Panaque titan",
+      "source": "https://doi.org/10.1643/ci-09-185",
+      "primaryPublication": "10.1643/ci-09-185",
+      "interpretation": "Original P. titan description is Napo Ecuador; IUCN 2023 associates L418 with Huallaga Peru trade fish. Do not treat that commercial source region as verified type locality.",
+      "claimsNotProven": [
+        "Peruvian L418 authenticated to Ecuador type",
+        "L191 identical to L418 by lineage"
+      ],
+      "reviewResult": "geographic-identification-hold"
+    },
+    {
+      "slug": "bary-niveatus",
+      "researchRole": "related-genus-review-not-original-description",
+      "taxonDescribed": "Two new Baryancistrus species from Trombetas, not Baryancistrus niveatus",
+      "source": "https://www.ni.bio.br/1982-0224-2025-0066/",
+      "primaryPublication": "10.1590/1982-0224-2025-0066",
+      "interpretation": "The 2025 Trombetas study reviews B. niveatus as an existing comparison; B. niveatus was originally described by Castelnau 1855, not in this study.",
+      "claimsNotProven": [
+        "original description of B. niveatus",
+        "unverified aquarium Baryancistrus morph identity"
+      ],
+      "reviewResult": "comparative-citation-hold"
+    },
+    {
+      "slug": "l015",
+      "researchRole": "different-species-original-description-used-comparatively",
+      "taxonDescribed": "Peckoltia compta (L134), not L015",
+      "source": "https://doi.org/10.11646/zootaxa.2534.1.3",
+      "primaryPublication": "10.11646/zootaxa.2534.1.3",
+      "interpretation": "2010 Zootaxa paper describes P. compta/L134; does not make L015 P. compta or establish L015 as P. vittata.",
+      "claimsNotProven": [
+        "L015 same species as L134",
+        "L015 definitely Peckoltia vittata",
+        "any L015 genetic pedigree"
+      ],
+      "reviewResult": "source-identity-conflict-hold"
+    }
+  ]
+}

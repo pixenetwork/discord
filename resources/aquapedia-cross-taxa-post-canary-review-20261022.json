@@ -1,0 +1,22 @@
+{
+  "verifiedPostedSourceOnlyMessages": 1,
+  "verifiedPublishedSourceEntries": 10,
+  "completedProposalId": "guppy:show-phenotype-index:index-base-1",
+  "completedDiscordMessageUrl": "https://discord.com/channels/1519337502379475095/1562195157028184178/1562987115036278834",
+  "remainingProposals": 98,
+  "remainingActive": 62,
+  "remainingArchived": 36,
+  "remainingByGroup": {
+    "guppy": 3,
+    "corydoras": 10,
+    "pleco": 85
+  },
+  "overallCrossTaxaReleaseAuthorized": false,
+  "discordWritesDuringReconciliation": 0,
+  "liveCatalogTotal": 853,
+  "verifiedReceipt": "https://discord.com/channels/1519337502379475095/1562195157028184178/1562987115036278834",
+  "originalReviewProposalCount": 99,
+  "originalReviewManifestsUnchanged": true,
+  "remainingRequireSourceAndEditorialReview": true,
+  "documentationOnly": true
+}

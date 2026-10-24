@@ -1,0 +1,1310 @@
+{
+  "createdAt": "2026-10-22T22:01:38.238Z",
+  "sourceCatalogTotal": 853,
+  "sourceCohorts": {
+    "guppy": 176,
+    "corydoras": 19,
+    "pleco": 167
+  },
+  "purpose": "Unapproved active-only review staging. DO NOT POST.",
+  "publicationAuthorized": false,
+  "discordWrites": 0,
+  "newThreadsToCreate": 0,
+  "activeCount": 63,
+  "archivedHeld": 36,
+  "byGroup": {
+    "guppy": 4,
+    "corydoras": 4,
+    "pleco": 55
+  },
+  "batches": [
+    {
+      "index": 1,
+      "canPublish": false,
+      "needsLivePreflight": true,
+      "requiresOwnerApproval": true,
+      "sourceReviewRequired": true,
+      "items": [
+        {
+          "id": "guppy:show-phenotype-index:index-base-1",
+          "group": "guppy",
+          "threadId": "1562195157028184178",
+          "sourceUrls": [
+            "https://aquapedia.app/guppypedia/entries/gup-001/",
+            "https://aquapedia.app/guppypedia/entries/gup-002/",
+            "https://aquapedia.app/guppypedia/entries/gup-003/",
+            "https://aquapedia.app/guppypedia/entries/gup-004/",
+            "https://aquapedia.app/guppypedia/entries/gup-005/",
+            "https://aquapedia.app/guppypedia/entries/gup-006/",
+            "https://aquapedia.app/guppypedia/entries/gup-007/",
+            "https://aquapedia.app/guppypedia/entries/gup-008/",
+            "https://aquapedia.app/guppypedia/entries/gup-009/",
+            "https://aquapedia.app/guppypedia/entries/gup-010/"
+          ],
+          "contentSha256": "84815d2e1c681b54b57a39f619a241d5a92fae9c60fb089c7b182fab9c567ce5",
+          "receiptKey": "ebbab8ec844eecb9fca5155f6427c5cfe0ac5d8b61a2f9d31d0b1bd98bb1ffcc",
+          "archived": false,
+          "editorialStatus": "needs independent review"
+        },
+        {
+          "id": "guppy:show-phenotype-index:index-cover-2",
+          "group": "guppy",
+          "threadId": "1562195157028184178",
+          "sourceUrls": [
+            "https://aquapedia.app/guppypedia/entries/gup-011/",
+            "https://aquapedia.app/guppypedia/entries/gup-012/",
+            "https://aquapedia.app/guppypedia/entries/gup-013/",
+            "https://aquapedia.app/guppypedia/entries/gup-014/",
+            "https://aquapedia.app/guppypedia/entries/gup-015/",
+            "https://aquapedia.app/guppypedia/entries/gup-016/",
+            "https://aquapedia.app/guppypedia/entries/gup-017/",
+            "https://aquapedia.app/guppypedia/entries/gup-018/",
+            "https://aquapedia.app/guppypedia/entries/gup-019/",
+            "https://aquapedia.app/guppypedia/entries/gup-020/",
+            "https://aquapedia.app/guppypedia/entries/gup-021/",
+            "https://aquapedia.app/guppypedia/entries/gup-022/",
+            "https://aquapedia.app/guppypedia/entries/gup-023/",
+            "https://aquapedia.app/guppypedia/entries/gup-024/",
+            "https://aquapedia.app/guppypedia/entries/gup-025/",
+            "https://aquapedia.app/guppypedia/entries/gup-026/",
+            "https://aquapedia.app/guppypedia/entries/gup-027/",
+            "https://aquapedia.app/guppypedia/entries/gup-028/",
+            "https://aquapedia.app/guppypedia/entries/gup-029/"
+          ],
+          "contentSha256": "b05410e23fc1e2417e8ec6b33b148112a13bc39b30fb5882e728a106e79d3c44",
+          "receiptKey": "d9c1590eca110ac99c52056a1fd1977034413c232dfbac8f7c23186563cce4e0",
+          "archived": false,
+          "editorialStatus": "needs independent review"
+        },
+        {
+          "id": "guppy:show-phenotype-index:index-cover-3",
+          "group": "guppy",
+          "threadId": "1562195157028184178",
+          "sourceUrls": [
+            "https://aquapedia.app/guppypedia/entries/gup-030/",
+            "https://aquapedia.app/guppypedia/entries/gup-031/",
+            "https://aquapedia.app/guppypedia/entries/gup-032/",
+            "https://aquapedia.app/guppypedia/entries/gup-033/",
+            "https://aquapedia.app/guppypedia/entries/gup-034/",
+            "https://aquapedia.app/guppypedia/entries/gup-035/"
+          ],
+          "contentSha256": "1ce9f4d3e24515eb325929215c4b0687e3e5d32c0a74aa65de5f555b1ec1f2db",
+          "receiptKey": "83eb3f98f2218facbdfce76c5773e7b3255a8e8ad2c3d9d3468bdff1bdaac33f",
+          "archived": false,
+          "editorialStatus": "needs independent review"
+        },
+        {
+          "id": "guppy:show-phenotype-index:index-tail-4",
+          "group": "guppy",
+          "threadId": "1562195154817917080",
+          "sourceUrls": [
+            "https://aquapedia.app/guppypedia/entries/gup-036/",
+            "https://aquapedia.app/guppypedia/entries/gup-037/",
+            "https://aquapedia.app/guppypedia/entries/gup-038/",
+            "https://aquapedia.app/guppypedia/entries/gup-039/",
+            "https://aquapedia.app/guppypedia/entries/gup-040/",
+            "https://aquapedia.app/guppypedia/entries/gup-041/",
+            "https://aquapedia.app/guppypedia/entries/gup-042/",
+            "https://aquapedia.app/guppypedia/entries/gup-043/",
+            "https://aquapedia.app/guppypedia/entries/gup-044/",
+            "https://aquapedia.app/guppypedia/entries/gup-045/",
+            "https://aquapedia.app/guppypedia/entries/gup-046/",
+            "https://aquapedia.app/guppypedia/entries/gup-047/",
+            "https://aquapedia.app/guppypedia/entries/gup-048/"
+          ],
+          "contentSha256": "06441449056719c3e3fba53aa6e7e389006c8fc2ecc0bf551666f27552adf6b4",
+          "receiptKey": "507465f4c8a02e05bfe8797ec31ceda52fb48f32d328e7068d3eb99b897d119a",
+          "archived": false,
+          "editorialStatus": "needs independent review"
+        },
+        {
+          "id": "corydoras:research-section-backlink:hoplisoma-burgessi-breeding",
+          "group": "corydoras",
+          "threadId": "1560942081436942398",
+          "sourceUrls": [
+            "https://aquapedia.app/corydoraspedia/breeding/#hoplisoma-burgessi"
+          ],
+          "contentSha256": "17be0e2b16e025104dd222d84c00cc998e5682eb55788b2e22cbdd2b7f7478e9",
+          "receiptKey": "f124b6ccd80af2d661012eacfa372542036bd31793fccf5a05eb0f7706f7d2c4",
+          "archived": false,
+          "editorialStatus": "needs independent review"
+        },
+        {
+          "id": "corydoras:research-section-backlink:hoplisoma-davidsandsi-breeding",
+          "group": "corydoras",
+          "threadId": "1560953415230824582",
+          "sourceUrls": [
+            "https://aquapedia.app/corydoraspedia/breeding/#hoplisoma-davidsandsi"
+          ],
+          "contentSha256": "1c15428398018782491c4ec892b1b9f3664c8fa747980f58c249befa927fad6a",
+          "receiptKey": "908ade75485850f3acecde3b76ec4850734e8906769b56f1e4bea22db4bccb9f",
+          "archived": false,
+          "editorialStatus": "needs independent review"
+        },
+        {
+          "id": "corydoras:research-section-backlink:hoplisoma-nattereri-breeding",
+          "group": "corydoras",
+          "threadId": "1560963836872360040",
+          "sourceUrls": [
+            "https://aquapedia.app/corydoraspedia/breeding/#hoplisoma-nattereri"
+          ],
+          "contentSha256": "7ab6a5befe8685aeb198ff952d0feccb93eb50a07538f4b438c759570d85446d",
+          "receiptKey": "2cc2807c83fd5eb7eca095c33ee55dda4fb650af9f19792d650bfafc3d7ea8fe",
+          "archived": false,
+          "editorialStatus": "needs independent review"
+        },
+        {
+          "id": "corydoras:research-section-backlink:hoplisoma-xinguense-breeding",
+          "group": "corydoras",
+          "threadId": "1560966748222656554",
+          "sourceUrls": [
+            "https://aquapedia.app/corydoraspedia/breeding/#hoplisoma-xinguense"
+          ],
+          "contentSha256": "c7bee074da3b8e8748c42ccb8b3d1e5e6d9216a273a79a8a3f9e46b59801e282",
+          "receiptKey": "adb4d2ad45dfdbc8f5660932269d879ff56aa147881ccb3cc02d26010f915234",
+          "archived": false,
+          "editorialStatus": "needs independent review"
+        },
+        {
+          "id": "pleco:research-article-backlink:anc-claro",
+          "group": "pleco",
+          "threadId": "1561139086432010261",
+          "sourceUrls": [
+            "https://aquapedia.app/plecopedia/research/anc-claro/"
+          ],
+          "contentSha256": "37ee03c6b99b54a070e428d36e27ea89cbef8e0d8b505dec22f3ed4108e27d4c",
+          "receiptKey": "eb3d5cca53ab950b8bc4f057bf34d5039c12b91d0c3ca142a0478855bc85fc72",
+          "archived": false,
+          "editorialStatus": "needs independent review"
+        },
+        {
+          "id": "pleco:research-article-backlink:anc-l267-alias",
+          "group": "pleco",
+          "threadId": "1561146970599587851",
+          "sourceUrls": [
+            "https://aquapedia.app/plecopedia/research/anc-l267-alias/"
+          ],
+          "contentSha256": "f3cb0d3f779c8890abac9b85265c09f9c9b702c2bb808a5619d95882ad19a873",
+          "receiptKey": "bdfa25943ffee58299cab18c5c5e6bb5dbceec8f97298b46f16941adc39b0616",
+          "archived": false,
+          "editorialStatus": "needs independent review"
+        },
+        {
+          "id": "pleco:research-article-backlink:anc-leoni",
+          "group": "pleco",
+          "threadId": "1561146978644136089",
+          "sourceUrls": [
+            "https://aquapedia.app/plecopedia/research/anc-leoni/"
+          ],
+          "contentSha256": "05155f1b5864af17d7b2242d27cdc8d117a8495551aa5df0579ae8c2854e86b3",
+          "receiptKey": "34be244a235935ce71bc291a800d32aaf97263f9ac63d8e2052837c090525d38",
+          "archived": false,
+          "editorialStatus": "needs independent review"
+        },
+        {
+          "id": "pleco:research-article-backlink:anc-patronus",
+          "group": "pleco",
+          "threadId": "1561146984935465023",
+          "sourceUrls": [
+            "https://aquapedia.app/plecopedia/research/anc-patronus/"
+          ],
+          "contentSha256": "348daa230ab4b4cd50493be79687b14416c53f114ddaf03f55d9f777b351961c",
+          "receiptKey": "de1b4c7ebdb52398a131a09951f5071ba9c450ef2f4ac48f001c603703c8bae9",
+          "archived": false,
+          "editorialStatus": "needs independent review"
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "canPublish": false,
+      "needsLivePreflight": true,
+      "requiresOwnerApproval": true,
+      "sourceReviewRequired": true,
+      "items": [
+        {
+          "id": "pleco:research-article-backlink:anc-yanesha",
+          "group": "pleco",
+          "threadId": "1561146967290150964",
+          "sourceUrls": [
+            "https://aquapedia.app/plecopedia/research/anc-yanesha/"
+          ],
+          "contentSha256": "f330efe48b5fc473dd44ef5049713a8da6583de6d5329258a5122e9c48e8175d",
+          "receiptKey": "fd2a9e9a68d5fcb1dc001299070fbbf22b4cfc5744abfd3fdd88be60206585d6",
+          "archived": false,
+          "editorialStatus": "needs independent review"
+        },
+        {
+          "id": "pleco:research-article-backlink:bary-hadrostomus",
+          "group": "pleco",
+          "threadId": "1561139039829229641",
+          "sourceUrls": [
+            "https://aquapedia.app/plecopedia/research/bary-hadrostomus/"
+          ],
+          "contentSha256": "8d3509aceed8565d413ea7fff69aabefc07abb584f1a8782b0552826a4edf954",
+          "receiptKey": "47973207c24a57a49453363b24fdc2e0b882135f22b88f311456cf21c92f2692",
+          "archived": false,
+          "editorialStatus": "needs independent review"
+        },
+        {
+          "id": "pleco:research-article-backlink:bary-micropunctatus",
+          "group": "pleco",
+          "threadId": "1561139043067101295",
+          "sourceUrls": [
+            "https://aquapedia.app/plecopedia/research/bary-micropunctatus/"
+          ],
+          "contentSha256": "9037f1a2d2e37cfa995feb033ab96838b62d3eb6d25455cbd5c304fbfdb0e930",
+          "receiptKey": "492efbf524106fd0ef079f94344343d85f2360e70823061162cac21647a4e3e1",
+          "archived": false,
+          "editorialStatus": "needs independent review"
+        },
+        {
+          "id": "pleco:research-article-backlink:bary-niveatus",
+          "group": "pleco",
+          "threadId": "1561139048737935521",
+          "sourceUrls": [
+            "https://aquapedia.app/plecopedia/research/bary-niveatus/"
+          ],
+          "contentSha256": "9f001e5c90363cfb85d98f58f9abe303916c35a3a79a2e15c51e94e05ee3cff7",
+          "receiptKey": "eba8f5cc324c1fcd324b25681590ed1cb1c26fb1aaa067c3b8a1414b5e1226d3",
+          "archived": false,
+          "editorialStatus": "needs independent review"
+        },
+        {
+          "id": "pleco:research-article-backlink:breeder-andreas-tanke-l398",
+          "group": "pleco",
+          "threadId": "1560966177549844531",
+          "sourceUrls": [
+            "https://aquapedia.app/plecopedia/research/breeder-andreas-tanke-l398/"
+          ],
+          "contentSha256": "d828e21c4dbed86859962e10003368059b316010f3d656b2a94e717a08f54a15",
+          "receiptKey": "eea9cf92902aefd63c77937839904ba8252e711a640d3990ac2ee38c05e9cd17",
+          "archived": false,
+          "editorialStatus": "needs independent review"
+        },
+        {
+          "id": "pleco:research-article-backlink:breeder-apistomaster-l134",
+          "group": "pleco",
+          "threadId": "1561136971076862066",
+          "sourceUrls": [
+            "https://aquapedia.app/plecopedia/research/breeder-apistomaster-l134/"
+          ],
+          "contentSha256": "61c70f35653e653673e87b63671afa02db40747da9c2ba937adab5a5ad8ba988",
+          "receiptKey": "51f4003b23ac1bbe11f138efe28790b89c871361df0ed784b26150f3e3cc5b47",
+          "archived": false,
+          "editorialStatus": "needs independent review"
+        },
+        {
+          "id": "pleco:research-article-backlink:breeder-christophe-l025",
+          "group": "pleco",
+          "threadId": "1560955934845440142",
+          "sourceUrls": [
+            "https://aquapedia.app/plecopedia/research/breeder-christophe-l025/"
+          ],
+          "contentSha256": "2edb72c933d1c38a82f85ab2dd3540578c4cfb5071e6680472e6a1420361a15a",
+          "receiptKey": "dd72065fcee6fd7849f3c1f08a6276432f80e9ef030b2e8b4021bab2c8a32c59",
+          "archived": false,
+          "editorialStatus": "needs independent review"
+        },
+        {
+          "id": "pleco:research-article-backlink:breeder-davej-l134",
+          "group": "pleco",
+          "threadId": "1561136974897742007",
+          "sourceUrls": [
+            "https://aquapedia.app/plecopedia/research/breeder-davej-l134/"
+          ],
+          "contentSha256": "6c15127d9a47bcbe613f27283c3db5f22354baed971bb61c00ba122f0c18157e",
+          "receiptKey": "53cbf0c8dd5a0600cb6f1af7bd4b17710ed036fa40a5ae6f04721a19fa7944c6",
+          "archived": false,
+          "editorialStatus": "needs independent review"
+        },
+        {
+          "id": "pleco:research-article-backlink:breeder-parha-l046",
+          "group": "pleco",
+          "threadId": "1560966174827749438",
+          "sourceUrls": [
+            "https://aquapedia.app/plecopedia/research/breeder-parha-l046/"
+          ],
+          "contentSha256": "33264515adb7d18d0d56dc76143da8e2d1e713cb5ce9e3096aacece87c908468",
+          "receiptKey": "85912c4140311f23a1fe25b105df813a5856773df5a6098b31c864205ef7df99",
+          "archived": false,
+          "editorialStatus": "needs independent review"
+        },
+        {
+          "id": "pleco:research-article-backlink:hyp-contradens",
+          "group": "pleco",
+          "threadId": "1561139081063174268",
+          "sourceUrls": [
+            "https://aquapedia.app/plecopedia/research/hyp-contradens/"
+          ],
+          "contentSha256": "12a44c545b4252f6e05f8871a67ee9df99e05477f508d2ef42462a064d66e485",
+          "receiptKey": "c4b7d734042ced41f25442fc4d9ef662bb5194f5411ca63fe7b79ce2fab6a536",
+          "archived": false,
+          "editorialStatus": "needs independent review"
+        },
+        {
+          "id": "pleco:research-article-backlink:hyp-margaritatus",
+          "group": "pleco",
+          "threadId": "1561147013100470355",
+          "sourceUrls": [
+            "https://aquapedia.app/plecopedia/research/hyp-margaritatus/"
+          ],
+          "contentSha256": "df98c7c223d52cdf9ac2d32c847477f99e23a0d6108548c5afecb5c3b542ab2b",
+          "receiptKey": "67b0b0d24222e1ba996ea4cc51f3ebdb229ac88cd080f1dd6a376e08ba710e7d",
+          "archived": false,
+          "editorialStatus": "needs independent review"
+        },
+        {
+          "id": "pleco:research-article-backlink:hyp-parkateje",
+          "group": "pleco",
+          "threadId": "1561146973275426817",
+          "sourceUrls": [
+            "https://aquapedia.app/plecopedia/research/hyp-parkateje/"
+          ],
+          "contentSha256": "9257d8dc5e33cce4ea3433a99297a2745d8c33382ea080acdc5eb832b4150e90",
+          "receiptKey": "38fd8b40add50b2486ad60dc9747986d3839fdd4fb3b45d9e437a361ae7021d2",
+          "archived": false,
+          "editorialStatus": "needs independent review"
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "canPublish": false,
+      "needsLivePreflight": true,
+      "requiresOwnerApproval": true,
+      "sourceReviewRequired": true,
+      "items": [
+        {
+          "id": "pleco:research-article-backlink:hyp-phantasma",
+          "group": "pleco",
+          "threadId": "1561147010076123231",
+          "sourceUrls": [
+            "https://aquapedia.app/plecopedia/research/hyp-phantasma/"
+          ],
+          "contentSha256": "09c535441b25be8b25668eeeb4b7547938db69199e631a507769c174ddf39fe0",
+          "receiptKey": "b963aa101909d87c1d6c1f879d15c0277fa5b85fee7e675cc9a3d4a8938b6f28",
+          "archived": false,
+          "editorialStatus": "needs independent review"
+        },
+        {
+          "id": "pleco:research-article-backlink:hyp-vandragti",
+          "group": "pleco",
+          "threadId": "1561147015482839093",
+          "sourceUrls": [
+            "https://aquapedia.app/plecopedia/research/hyp-vandragti/"
+          ],
+          "contentSha256": "5752e6b8dc12d293f9c6a8ec9954ad79a860e9b1096dd26e46e5b680c5c0ba72",
+          "receiptKey": "d720279bfb726d7e260280714296e2299faa6dd5f601d7685b5869f34cc4a279",
+          "archived": false,
+          "editorialStatus": "needs independent review"
+        },
+        {
+          "id": "pleco:research-article-backlink:l001",
+          "group": "pleco",
+          "threadId": "1560964908160393288",
+          "sourceUrls": [
+            "https://aquapedia.app/plecopedia/research/l001/"
+          ],
+          "contentSha256": "76bc4afc14fe2d1b39758d06547950ecfd1099294f92a9af0332dc2e5afa0535",
+          "receiptKey": "98955206eb6cc7b1e011b909035de914c96e521661711045cfa3e731cfeca85c",
+          "archived": false,
+          "editorialStatus": "needs independent review"
+        },
+        {
+          "id": "pleco:research-article-backlink:l011",
+          "group": "pleco",
+          "threadId": "1561136913623023750",
+          "sourceUrls": [
+            "https://aquapedia.app/plecopedia/research/l011/"
+          ],
+          "contentSha256": "e42378b251a0ef5736794d7b92000b649db11df9ed54bd6ef55979dd68e2405f",
+          "receiptKey": "ba066c23b5614e6f9d814bb0d1c58c587a243086ddbab2f11309e347ba73a550",
+          "archived": false,
+          "editorialStatus": "needs independent review"
+        },
+        {
+          "id": "pleco:research-article-backlink:l015",
+          "group": "pleco",
+          "threadId": "1560964994890334320",
+          "sourceUrls": [
+            "https://aquapedia.app/plecopedia/research/l015/"
+          ],
+          "contentSha256": "2dd71d85f2d0efee93535af897b0e291acbf28e1ad551883aa3c46b1d7d148c3",
+          "receiptKey": "89514695143b126f538cdebb37d23c1551cdaca674088d15c0557a3a496a39c1",
+          "archived": false,
+          "editorialStatus": "needs independent review"
+        },
+        {
+          "id": "pleco:research-article-backlink:l017",
+          "group": "pleco",
+          "threadId": "1560954763015888960",
+          "sourceUrls": [
+            "https://aquapedia.app/plecopedia/research/l017/"
+          ],
+          "contentSha256": "b4f3f676b6046d31c68458d332202a16f7f31435b61dcd9bca32ad7d582de50d",
+          "receiptKey": "4d57429a5a78b526f9302d58eb9f22793f354aaba0b899c437fde1d87c470434",
+          "archived": false,
+          "editorialStatus": "needs independent review"
+        },
+        {
+          "id": "pleco:research-article-backlink:l020",
+          "group": "pleco",
+          "threadId": "1560954765528141928",
+          "sourceUrls": [
+            "https://aquapedia.app/plecopedia/research/l020/"
+          ],
+          "contentSha256": "2d0cbffb9ad726131ef86f1bde35e7729e2467c3d9afb1e9653067a3e76cb3c7",
+          "receiptKey": "860e0e5094a6811f7dd5181ac44a98ea9b7e9171df4a3b05be8fd5f619f1cf7f",
+          "archived": false,
+          "editorialStatus": "needs independent review"
+        },
+        {
+          "id": "pleco:research-article-backlink:l021",
+          "group": "pleco",
+          "threadId": "1560964913432891403",
+          "sourceUrls": [
+            "https://aquapedia.app/plecopedia/research/l021/"
+          ],
+          "contentSha256": "b547ffc655433339f82eb9578a231fd46f7ad2c7a51c2cd2e4c37027c81d0ed3",
+          "receiptKey": "d2ca72ff3b5f8375d736c192e523c04dc0da48c4d2200194091db78ad743d09f",
+          "archived": false,
+          "editorialStatus": "needs independent review"
+        },
+        {
+          "id": "pleco:research-article-backlink:l022",
+          "group": "pleco",
+          "threadId": "1560964910861516922",
+          "sourceUrls": [
+            "https://aquapedia.app/plecopedia/research/l022/"
+          ],
+          "contentSha256": "1c1dc0131db565447ecd1d5ed752e0c26290162a54a9cb57572c1c5688f796c9",
+          "receiptKey": "87300debfda2078ae3aad961524435fb94672279bedadb76c449fc9662782f0b",
+          "archived": false,
+          "editorialStatus": "needs independent review"
+        },
+        {
+          "id": "pleco:research-article-backlink:l027-toc",
+          "group": "pleco",
+          "threadId": "1560955937609486347",
+          "sourceUrls": [
+            "https://aquapedia.app/plecopedia/research/l027-toc/"
+          ],
+          "contentSha256": "cca8c6353f269560b6503eee642cdf718679cb90e979136bd772a783d59e4aca",
+          "receiptKey": "e7d52e2bb4dcc1635776bf0027cde383ea4fffe57a68993f2280d4967915f17a",
+          "archived": false,
+          "editorialStatus": "needs independent review"
+        },
+        {
+          "id": "pleco:research-article-backlink:l035",
+          "group": "pleco",
+          "threadId": "1561136916047470605",
+          "sourceUrls": [
+            "https://aquapedia.app/plecopedia/research/l035/"
+          ],
+          "contentSha256": "57d384149ee71f06d4a67dd76986108e6e66d18a1813e3db4b05c71a63bc0883",
+          "receiptKey": "14510c9896edd5c36027c35befbd558cc8fe9b5a835b87bebdb9abb251c26dcd",
+          "archived": false,
+          "editorialStatus": "needs independent review"
+        },
+        {
+          "id": "pleco:research-article-backlink:l056",
+          "group": "pleco",
+          "threadId": "1560954721672630424",
+          "sourceUrls": [
+            "https://aquapedia.app/plecopedia/research/l056/"
+          ],
+          "contentSha256": "ea85a3e416f1fd1e0b73f6a505eccea93e046ca8d40afd86988596ca5e1c30e5",
+          "receiptKey": "02ff7dbb348a05ebf3f3fe6eb0e003ebc49abfa00a8b581e75faea3935f4d292",
+          "archived": false,
+          "editorialStatus": "needs independent review"
+        }
+      ]
+    },
+    {
+      "index": 4,
+      "canPublish": false,
+      "needsLivePreflight": true,
+      "requiresOwnerApproval": true,
+      "sourceReviewRequired": true,
+      "items": [
+        {
+          "id": "pleco:research-article-backlink:l059",
+          "group": "pleco",
+          "threadId": "1560964958735568938",
+          "sourceUrls": [
+            "https://aquapedia.app/plecopedia/research/l059/"
+          ],
+          "contentSha256": "ff676b9094fc62728580bf0a63df646d00cf6eb85567d5bacaad660d9e0223f6",
+          "receiptKey": "a87e25ba603c4d984e8b3ac2ee213b166b7dda6cca8012962c18ba9e1e6d03fa",
+          "archived": false,
+          "editorialStatus": "needs independent review"
+        },
+        {
+          "id": "pleco:research-article-backlink:l067",
+          "group": "pleco",
+          "threadId": "1560954724717428840",
+          "sourceUrls": [
+            "https://aquapedia.app/plecopedia/research/l067/"
+          ],
+          "contentSha256": "e28062789e5e3f04d1d538c68ed8e5daf2e0bec99ba549d66954b01d476bd79a",
+          "receiptKey": "789810464ad77d7539e1764014e9e92adc22cc7b2acd4da21e6cac871bc6c778",
+          "archived": false,
+          "editorialStatus": "needs independent review"
+        },
+        {
+          "id": "pleco:research-article-backlink:l073",
+          "group": "pleco",
+          "threadId": "1560954805260783679",
+          "sourceUrls": [
+            "https://aquapedia.app/plecopedia/research/l073/"
+          ],
+          "contentSha256": "8871aa5b2e47f2592db5aee5e68fda83416e7405194bda76f66f36b4739ae602",
+          "receiptKey": "357b381a7f7547a93885596511ddbe850485b6ce5d69d244558b96db0d8cb3dd",
+          "archived": false,
+          "editorialStatus": "needs independent review"
+        },
+        {
+          "id": "pleco:research-article-backlink:l081",
+          "group": "pleco",
+          "threadId": "1560955889723248703",
+          "sourceUrls": [
+            "https://aquapedia.app/plecopedia/research/l081/"
+          ],
+          "contentSha256": "82f52c3f0be78f8ee53e92c4ed4cf739c3ea7c9e48a004d177abd5c8b2f80eb9",
+          "receiptKey": "5803424dff16ced61ba03227ab0a8b9dd34aea3d98a520215e2624887a5451fe",
+          "archived": false,
+          "editorialStatus": "needs independent review"
+        },
+        {
+          "id": "pleco:research-article-backlink:l082",
+          "group": "pleco",
+          "threadId": "1560955892772503694",
+          "sourceUrls": [
+            "https://aquapedia.app/plecopedia/research/l082/"
+          ],
+          "contentSha256": "61366f215e655d7d962dfcb35ec671ddbdea3623c50a3417a8297db38eb251d2",
+          "receiptKey": "234da4f6ea65c8452ef372c9c09bbd88346611f96eab0b38b35ce99c82ddb9c3",
+          "archived": false,
+          "editorialStatus": "needs independent review"
+        },
+        {
+          "id": "pleco:research-article-backlink:l083",
+          "group": "pleco",
+          "threadId": "1561136932631879834",
+          "sourceUrls": [
+            "https://aquapedia.app/plecopedia/research/l083/"
+          ],
+          "contentSha256": "e599133ba4df8006a7202de93d3ccbc22ddc6af4760dc686f66fb2bf63bb3a79",
+          "receiptKey": "f5936fb4d75652a9e6424fffd2b7fb5762c4540d31d980b9ef3076c86664832d",
+          "archived": false,
+          "editorialStatus": "needs independent review"
+        },
+        {
+          "id": "pleco:research-article-backlink:l086",
+          "group": "pleco",
+          "threadId": "1560955895754530897",
+          "sourceUrls": [
+            "https://aquapedia.app/plecopedia/research/l086/"
+          ],
+          "contentSha256": "f5a9a2ff3f792144858abc00f2691b9bd81a968aad4876da5ad0e34df1746e14",
+          "receiptKey": "64afee6778d1a7cd990631e3670e67d9da8283b1ed6d9a4fd7f6ddbb287de134",
+          "archived": false,
+          "editorialStatus": "needs independent review"
+        },
+        {
+          "id": "pleco:research-article-backlink:l091",
+          "group": "pleco",
+          "threadId": "1560955900531970110",
+          "sourceUrls": [
+            "https://aquapedia.app/plecopedia/research/l091/"
+          ],
+          "contentSha256": "287c833e5bdc26b24b9d553de019ca8c25292e58330ddcd8bed03836fd48e011",
+          "receiptKey": "a553caf5d2c5a56987deebe117b7b7a8d99e37ed94740a781d5321507e92447c",
+          "archived": false,
+          "editorialStatus": "needs independent review"
+        },
+        {
+          "id": "pleco:research-article-backlink:l096",
+          "group": "pleco",
+          "threadId": "1560955929631924276",
+          "sourceUrls": [
+            "https://aquapedia.app/plecopedia/research/l096/"
+          ],
+          "contentSha256": "b88436dcaa3a517ae067fa3bc655e3327c6bdede7deec6717790574135767ac9",
+          "receiptKey": "03af2cc42bfe7dad122b173b0883f3f7664a06db3080d3ef3f4f885839f7ffe7",
+          "archived": false,
+          "editorialStatus": "needs independent review"
+        },
+        {
+          "id": "pleco:research-article-backlink:l106",
+          "group": "pleco",
+          "threadId": "1561136963262877840",
+          "sourceUrls": [
+            "https://aquapedia.app/plecopedia/research/l106/"
+          ],
+          "contentSha256": "a99eda8da9b2a0e0dfecff79b829cf0effed9fd3b4018f56ce0e384f518a618d",
+          "receiptKey": "b9f794705d91d3ec00c4becf56c86d293f2cf7b9ed5601bc7287133680d1cf3c",
+          "archived": false,
+          "editorialStatus": "needs independent review"
+        },
+        {
+          "id": "pleco:research-article-backlink:l126-lithox",
+          "group": "pleco",
+          "threadId": "1561139089388867645",
+          "sourceUrls": [
+            "https://aquapedia.app/plecopedia/research/l126-lithox/"
+          ],
+          "contentSha256": "dfc80422e7ce9ccbb81a4141b5c2533711efa5e3b83f654e19139439ad96e391",
+          "receiptKey": "d4dae7780a13fd9c4f1d788213f650c98b45cff493b1eafbdeca6d1ef618e73b",
+          "archived": false,
+          "editorialStatus": "needs independent review"
+        },
+        {
+          "id": "pleco:research-article-backlink:l128",
+          "group": "pleco",
+          "threadId": "1560964961583243306",
+          "sourceUrls": [
+            "https://aquapedia.app/plecopedia/research/l128/"
+          ],
+          "contentSha256": "6610da15fabaebd82ad34b6f7db4625d17b2146569a58a19a822b952cf57c426",
+          "receiptKey": "d5fae26273ca06ef4d5f56371b32414c83201d51dc2203ab9865e9fda74b41c3",
+          "archived": false,
+          "editorialStatus": "needs independent review"
+        }
+      ]
+    },
+    {
+      "index": 5,
+      "canPublish": false,
+      "needsLivePreflight": true,
+      "requiresOwnerApproval": true,
+      "sourceReviewRequired": true,
+      "items": [
+        {
+          "id": "pleco:research-article-backlink:l191",
+          "group": "pleco",
+          "threadId": "1561136953322377221",
+          "sourceUrls": [
+            "https://aquapedia.app/plecopedia/research/l191/"
+          ],
+          "contentSha256": "4c8ddcc9c2cd6c9b9622236ab19a41c95a801d704b1abc28a529f33526c1ff62",
+          "receiptKey": "0a419d3c5d82e294634f6e6f804d54513973681ed568316620e9d6b6574d0e52",
+          "archived": false,
+          "editorialStatus": "needs independent review"
+        },
+        {
+          "id": "pleco:research-article-backlink:l239",
+          "group": "pleco",
+          "threadId": "1560955932400427049",
+          "sourceUrls": [
+            "https://aquapedia.app/plecopedia/research/l239/"
+          ],
+          "contentSha256": "1ee7e4af94f214ca2a5921a0fb376bec460561faaaccf6fa13679a3ce17f57b9",
+          "receiptKey": "cbd4f17dd9266aceaee80aa48ee7a1555f46f021167fc98931b1a690fd06df96",
+          "archived": false,
+          "editorialStatus": "needs independent review"
+        },
+        {
+          "id": "pleco:research-article-backlink:l306",
+          "group": "pleco",
+          "threadId": "1560965006005112833",
+          "sourceUrls": [
+            "https://aquapedia.app/plecopedia/research/l306/"
+          ],
+          "contentSha256": "3855fc224e09b3513c93c091a930ffd566d0b8a2bbd098f61e9c5ff18c0e9639",
+          "receiptKey": "831bbc17262d4ae5a1e41c6cb22f1ec0d3490f246e20b3a5ed7cf4a576994112",
+          "archived": false,
+          "editorialStatus": "needs independent review"
+        },
+        {
+          "id": "pleco:research-article-backlink:l330",
+          "group": "pleco",
+          "threadId": "1561136957474742346",
+          "sourceUrls": [
+            "https://aquapedia.app/plecopedia/research/l330/"
+          ],
+          "contentSha256": "6c39fbc6ec47eca2d4a0c2792d2108ef38268f8d1685598e94b10ab179713062",
+          "receiptKey": "6a2da46947cb4945191e5eac3724f5d3237f9ce4744b7b0f48f6a33a87af6cde",
+          "archived": false,
+          "editorialStatus": "needs independent review"
+        },
+        {
+          "id": "pleco:research-article-backlink:l397",
+          "group": "pleco",
+          "threadId": "1560965001416679475",
+          "sourceUrls": [
+            "https://aquapedia.app/plecopedia/research/l397/"
+          ],
+          "contentSha256": "a969661017a02ee65bce660f8d52f07fa026067f92be468ef9cef6b10e0a28b8",
+          "receiptKey": "c83562632f05ad596ad9358748d511d9f826316a519e13a02a6dc35b36168d24",
+          "archived": false,
+          "editorialStatus": "needs independent review"
+        },
+        {
+          "id": "pleco:research-article-backlink:l398",
+          "group": "pleco",
+          "threadId": "1560964997721489449",
+          "sourceUrls": [
+            "https://aquapedia.app/plecopedia/research/l398/"
+          ],
+          "contentSha256": "74d61a4cdf82c2870b111f6161fc02c5bbcdf25014f575f69d03bcb36c1eb64e",
+          "receiptKey": "449d2f91306729dd8b70e2c4199cd3a6a5d9ea6048aad3d768619ce8ba6339c3",
+          "archived": false,
+          "editorialStatus": "needs independent review"
+        },
+        {
+          "id": "pleco:research-article-backlink:l418",
+          "group": "pleco",
+          "threadId": "1561136961001889893",
+          "sourceUrls": [
+            "https://aquapedia.app/plecopedia/research/l418/"
+          ],
+          "contentSha256": "b784de07f9938620c3600da332cc5aedea3b6f6f70450919cb39a62f1385624b",
+          "receiptKey": "c474d5a7b3491b60f732ceb4127f7009568a062bc4aaa4c5295f0305a137ae59",
+          "archived": false,
+          "editorialStatus": "needs independent review"
+        },
+        {
+          "id": "pleco:research-article-backlink:pana-changae",
+          "group": "pleco",
+          "threadId": "1561174473669873706",
+          "sourceUrls": [
+            "https://aquapedia.app/plecopedia/research/pana-changae/"
+          ],
+          "contentSha256": "312c7bdf770ae52343dbd15d86e1886fd595fc3d160cfeb4a979e72bf8f29a18",
+          "receiptKey": "fb8679cf89cb4996e1f1be6501b4af3289cb81480d2df7f8477523227d8cc87f",
+          "archived": false,
+          "editorialStatus": "needs independent review"
+        },
+        {
+          "id": "pleco:research-article-backlink:pana-koko",
+          "group": "pleco",
+          "threadId": "1561147053097230420",
+          "sourceUrls": [
+            "https://aquapedia.app/plecopedia/research/pana-koko/"
+          ],
+          "contentSha256": "a344fba7f7fe7dc94a2b6c20be0ac1d58073522ba8fb87869aa79a9d00ed5439",
+          "receiptKey": "2407edf2d8519dfd3976e468327188cc113349ca5d3605ada0c37ea8466b63d4",
+          "archived": false,
+          "editorialStatus": "needs independent review"
+        },
+        {
+          "id": "pleco:research-article-backlink:pana-nocturnus",
+          "group": "pleco",
+          "threadId": "1561147036588318821",
+          "sourceUrls": [
+            "https://aquapedia.app/plecopedia/research/pana-nocturnus/"
+          ],
+          "contentSha256": "705e987f881a840dadfe82109243965d4cd057dd3f647bb2693def12eb496da4",
+          "receiptKey": "b55f71c9370295189bd8eff7e6d262f22b7480f0fe1f87bc7f827fc1eda49452",
+          "archived": false,
+          "editorialStatus": "needs independent review"
+        },
+        {
+          "id": "pleco:research-article-backlink:pana-orcesi",
+          "group": "pleco",
+          "threadId": "1561174414156890224",
+          "sourceUrls": [
+            "https://aquapedia.app/plecopedia/research/pana-orcesi/"
+          ],
+          "contentSha256": "2762fba3e9491afcceccb8fa15dfc3e336b4b304f0fd66b6ca6e38b7afe646ff",
+          "receiptKey": "6a240352220f6972501e3ee500a23e8bcb6e5a238c04047c337443d52caf0b1b",
+          "archived": false,
+          "editorialStatus": "needs independent review"
+        },
+        {
+          "id": "pleco:research-article-backlink:pana-pantostiktos",
+          "group": "pleco",
+          "threadId": "1561174416778465311",
+          "sourceUrls": [
+            "https://aquapedia.app/plecopedia/research/pana-pantostiktos/"
+          ],
+          "contentSha256": "8c17610c66607b3c66d079b2922f691d076817839e0eae51ebe7244179e5c783",
+          "receiptKey": "7e79cc4af02504590832d97cf5a18822d3dbb86ab1ddce39e2e879428d42c9e8",
+          "archived": false,
+          "editorialStatus": "needs independent review"
+        }
+      ]
+    },
+    {
+      "index": 6,
+      "canPublish": false,
+      "needsLivePreflight": true,
+      "requiresOwnerApproval": true,
+      "sourceReviewRequired": true,
+      "items": [
+        {
+          "id": "pleco:research-article-backlink:peckol-lujani",
+          "group": "pleco",
+          "threadId": "1561139054697775215",
+          "sourceUrls": [
+            "https://aquapedia.app/plecopedia/research/peckol-lujani/"
+          ],
+          "contentSha256": "d9aadb497497fa09828188d763f30b6be4dacb7686a359d568c604cdbeeda7f6",
+          "receiptKey": "dca7a077912665699bed2566e1afbac54a1b7476ce65d93e08ddeb8f1e05a610",
+          "archived": false,
+          "editorialStatus": "needs independent review"
+        },
+        {
+          "id": "pleco:research-article-backlink:pseudo-sidereus",
+          "group": "pleco",
+          "threadId": "1561174493689548871",
+          "sourceUrls": [
+            "https://aquapedia.app/plecopedia/research/pseudo-sidereus/"
+          ],
+          "contentSha256": "fbefa352501bb405b64cd2f987eb65fa09bd14b73d5130ca1d7577dee9976f55",
+          "receiptKey": "19d8e0a963735bb5a92b574e774e5c356c65c6e020b25abc23cfc31ff6b16e5c",
+          "archived": false,
+          "editorialStatus": "needs independent review"
+        },
+        {
+          "id": "pleco:research-article-backlink:study-l333-captive",
+          "group": "pleco",
+          "threadId": "1561136979171610685",
+          "sourceUrls": [
+            "https://aquapedia.app/plecopedia/research/study-l333-captive/"
+          ],
+          "contentSha256": "0ca68bcc7f13dd4febbe8a8faa4765dd5918be863dedd1c71b7d49f9d452bcf1",
+          "receiptKey": "57148a6733429aa41aeab402e8548656fed12675ce8da0481cb051d458e7961d",
+          "archived": false,
+          "editorialStatus": "needs independent review"
+        }
+      ]
+    }
+  ],
+  "archived": [
+    {
+      "id": "corydoras:research-section-backlink:hoplisoma-panda-breeding",
+      "group": "corydoras",
+      "threadId": "1560887820451709019",
+      "sourceUrls": [
+        "https://aquapedia.app/corydoraspedia/breeding/#hoplisoma-panda"
+      ],
+      "contentSha256": "1f439d30be6ea7f2f8bb558bc392fe655f3277015bd91a5160baf1523069c4f6",
+      "receiptKey": "d2d3274c127140a396cbf6772352e84900486fc50eba79db209375a4cbdd5766",
+      "archived": true,
+      "editorialStatus": "needs independent review"
+    },
+    {
+      "id": "corydoras:research-section-backlink:hoplisoma-sterbai-breeding",
+      "group": "corydoras",
+      "threadId": "1560887818866270344",
+      "sourceUrls": [
+        "https://aquapedia.app/corydoraspedia/breeding/#hoplisoma-sterbai"
+      ],
+      "contentSha256": "46f68e1957e69a03a9de557e9b78ff0fae93a6e018f34ba6578afe5d3b2711b3",
+      "receiptKey": "650266ba59962c2d10229537f8d8768229881ce6ba8009dc15c54d0a28b0dd81",
+      "archived": true,
+      "editorialStatus": "needs independent review"
+    },
+    {
+      "id": "corydoras:research-section-backlink:hoplisoma-adolfoi-breeding",
+      "group": "corydoras",
+      "threadId": "1560887821441437827",
+      "sourceUrls": [
+        "https://aquapedia.app/corydoraspedia/breeding/#hoplisoma-adolfoi"
+      ],
+      "contentSha256": "f95e2a63af18933b9153bdcc47b25855a330b4838d8cf0b6b0d9e5e893b343b3",
+      "receiptKey": "0cd875189d34f0e8e64fe8a5aeb3f9570ecea16cf41d523e1503bfce1805ae9e",
+      "archived": true,
+      "editorialStatus": "needs independent review"
+    },
+    {
+      "id": "corydoras:research-section-backlink:hoplisoma-duplicareum-breeding",
+      "group": "corydoras",
+      "threadId": "1560887822452527187",
+      "sourceUrls": [
+        "https://aquapedia.app/corydoraspedia/breeding/#hoplisoma-duplicareum"
+      ],
+      "contentSha256": "30f6ddb20298310d9f36a8286475f76dac74d3118aa435657983fbfff93180cb",
+      "receiptKey": "a9a596f576e0d08c21cf101635f138c80e36f01cf69969b384ca29cf4b1f314a",
+      "archived": true,
+      "editorialStatus": "needs independent review"
+    },
+    {
+      "id": "corydoras:research-section-backlink:hoplisoma-metae-breeding",
+      "group": "corydoras",
+      "threadId": "1560887870728831078",
+      "sourceUrls": [
+        "https://aquapedia.app/corydoraspedia/breeding/#hoplisoma-metae"
+      ],
+      "contentSha256": "63a4e676ce0298e51ae74732e60fcfb4421dfa8ef6556b22b07bf9f4fc52da25",
+      "receiptKey": "2004d1ec8f7861c50a634b19c4805c230282d16a384b465228c03c3903f675df",
+      "archived": true,
+      "editorialStatus": "needs independent review"
+    },
+    {
+      "id": "corydoras:research-section-backlink:brochis-splendens-breeding",
+      "group": "corydoras",
+      "threadId": "1560887915066691665",
+      "sourceUrls": [
+        "https://aquapedia.app/corydoraspedia/breeding/#brochis-splendens"
+      ],
+      "contentSha256": "fdd2ea0de7ae8fcf7b149e54c8c799af69328393158e06735db7d55a2f0e864e",
+      "receiptKey": "cda49845ec88ae3720aeb504834aa2853658b3b065a109845496137b4aae032f",
+      "archived": true,
+      "editorialStatus": "needs independent review"
+    },
+    {
+      "id": "pleco:research-article-backlink:breeder-karsten-l183",
+      "group": "pleco",
+      "threadId": "1560944606336782417",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/breeder-karsten-l183/"
+      ],
+      "contentSha256": "da8b9f158646bf08932877b5fa68232cebcbb8e214441b6f68d3f8af9457d898",
+      "receiptKey": "1264bdc1f9dc5313bf1048e102bf99c7c18ab956bcb70dcbcdca78af2289dad5",
+      "archived": true,
+      "editorialStatus": "needs independent review"
+    },
+    {
+      "id": "pleco:research-article-backlink:l007",
+      "group": "pleco",
+      "threadId": "1560943342492057603",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l007/"
+      ],
+      "contentSha256": "d1765ba884b888e0758cb44a58dd461478b552328929a19fa8c9d69fef231f4e",
+      "receiptKey": "45eb4bc40764c88e65af38af10c328c4cf4335ea08e72f326a4325d546cbe79e",
+      "archived": true,
+      "editorialStatus": "needs independent review"
+    },
+    {
+      "id": "pleco:research-article-backlink:l014",
+      "group": "pleco",
+      "threadId": "1560943431881195653",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l014/"
+      ],
+      "contentSha256": "6392212b357806473dd70e84f2d094c05ac56ac47b617dd200d83e36bf040ed9",
+      "receiptKey": "75e8ac029ace0f9ff216b7d5e7153eac4146c8e0deeb7a8988c790b673079ed9",
+      "archived": true,
+      "editorialStatus": "needs independent review"
+    },
+    {
+      "id": "pleco:research-article-backlink:l018",
+      "group": "pleco",
+      "threadId": "1560931485324804169",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l018/"
+      ],
+      "contentSha256": "ced7306477f071ab2cecb31d0fabd0790e2af16d300d3808f98ab86d3b2b5e41",
+      "receiptKey": "5bf563b67970c1cfd0dbca4dbd04492efa287918882d8b405e9cd0ea18312c67",
+      "archived": true,
+      "editorialStatus": "needs independent review"
+    },
+    {
+      "id": "pleco:research-article-backlink:l024",
+      "group": "pleco",
+      "threadId": "1560954626130448407",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l024/"
+      ],
+      "contentSha256": "2db253d55124625c4e2593946e0f6895bb21052db25b1379106631a49b5b2156",
+      "receiptKey": "156147d63a196b42757d42d5f90446071602526a01d785ad67672116e6e0f6f8",
+      "archived": true,
+      "editorialStatus": "needs independent review"
+    },
+    {
+      "id": "pleco:research-article-backlink:l025",
+      "group": "pleco",
+      "threadId": "1560954629502668895",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l025/"
+      ],
+      "contentSha256": "bfbd87ebe1e5cca27db26fa0fcf4742b1143e164f7690341d7c959b0993bcdd2",
+      "receiptKey": "5497d2a6c30f523cfc959a429cfb6e41a15a8e37a5e493b23fb4f11eda83ccf3",
+      "archived": true,
+      "editorialStatus": "needs independent review"
+    },
+    {
+      "id": "pleco:research-article-backlink:l027",
+      "group": "pleco",
+      "threadId": "1560954632816164926",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l027/"
+      ],
+      "contentSha256": "83f4e14f6d5b4194cc8e643aafb6d32af5837f4360d9b328e6e555296fa66475",
+      "receiptKey": "7a302685773e2a4f73b277e072afac83018e8dfaa7e025b55a93e75d513d519c",
+      "archived": true,
+      "editorialStatus": "needs independent review"
+    },
+    {
+      "id": "pleco:research-article-backlink:l027x",
+      "group": "pleco",
+      "threadId": "1560954635525689449",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l027x/"
+      ],
+      "contentSha256": "c88b1ef2400e36d429d03c128566c5e02f9d3e733d660430734b221f9b3d0099",
+      "receiptKey": "49ded8f9c60119a0857b359707ff8326a875d73b1524807542483a796242b7d3",
+      "archived": true,
+      "editorialStatus": "needs independent review"
+    },
+    {
+      "id": "pleco:research-article-backlink:l029",
+      "group": "pleco",
+      "threadId": "1560943339757375612",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l029/"
+      ],
+      "contentSha256": "2c4b8befce4cc7743000c3f6055bb504112d42b9962eda656d068a01bdae1d50",
+      "receiptKey": "3e6131ecd1f93a657891c67584d87e89b208e5481ffb4141d9758c23e8c77900",
+      "archived": true,
+      "editorialStatus": "needs independent review"
+    },
+    {
+      "id": "pleco:research-article-backlink:l030",
+      "group": "pleco",
+      "threadId": "1560954673203253329",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l030/"
+      ],
+      "contentSha256": "53aa4ef79aa31f31c79cefd1cb8984d137182419f2c05029d2c60ea396718b1c",
+      "receiptKey": "32ecd0ba47ab4ca2af686ca5b4e8df13287307619923623c88664c7873e35d51",
+      "archived": true,
+      "editorialStatus": "needs independent review"
+    },
+    {
+      "id": "pleco:research-article-backlink:l031",
+      "group": "pleco",
+      "threadId": "1560954676302712835",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l031/"
+      ],
+      "contentSha256": "4a56a0a6194b46541f8cd21283eff9dd905ca590aa52f63a8a1f61b10de5d9a5",
+      "receiptKey": "e032d9b0fa940d565d3bb00bd39e3a7098606b7120707f3a688d61a480f5762d",
+      "archived": true,
+      "editorialStatus": "needs independent review"
+    },
+    {
+      "id": "pleco:research-article-backlink:l037",
+      "group": "pleco",
+      "threadId": "1560954716446396517",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l037/"
+      ],
+      "contentSha256": "8d1dd69b84a2cf55b243fd326d510b2dbbe7550b0a33ce810c92636f05365291",
+      "receiptKey": "0ebca26ee804e33586211eeba61431765eab9b6edafccee9c570f367bf41c6d1",
+      "archived": true,
+      "editorialStatus": "needs independent review"
+    },
+    {
+      "id": "pleco:research-article-backlink:l041",
+      "group": "pleco",
+      "threadId": "1560954719055253645",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l041/"
+      ],
+      "contentSha256": "aca3cb0ab90c2ad5e97d8c71de86f7ab70a97c47701ff8e518de30afe04fa821",
+      "receiptKey": "e3d63e5f71b6bd26def3a854468d908d506697f2decc2f860b9677035dab2fe9",
+      "archived": true,
+      "editorialStatus": "needs independent review"
+    },
+    {
+      "id": "pleco:research-article-backlink:l046",
+      "group": "pleco",
+      "threadId": "1560931436960415758",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l046/"
+      ],
+      "contentSha256": "881e2cda9befdfddc7c824fe26c0f0872b1c5fed7b073584e70aa9dcc86abff7",
+      "receiptKey": "0777b66596f5a707cb9ddbfef30851c90823d41cd78881a0283e4d20a7e73955",
+      "archived": true,
+      "editorialStatus": "needs independent review"
+    },
+    {
+      "id": "pleco:research-article-backlink:l052-l168",
+      "group": "pleco",
+      "threadId": "1560944594177228811",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l052-l168/"
+      ],
+      "contentSha256": "3b21028a87d288764f1eea719707c775a2b65acbab169bceba69473868369465",
+      "receiptKey": "b040cf28494e98df63e5a83fcdef62c370987a40d642feaff297237b73404cdb",
+      "archived": true,
+      "editorialStatus": "needs independent review"
+    },
+    {
+      "id": "pleco:research-article-backlink:l066",
+      "group": "pleco",
+      "threadId": "1560931443146752052",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l066/"
+      ],
+      "contentSha256": "b648a6acbd5da2ed66ced7a0438bad9f8ce84f1c3dcd8e9150227abdd1245908",
+      "receiptKey": "26ef11b45bb2cb3396d45104860ef44943081da3473a0f2b649ff5e3e9b4d07b",
+      "archived": true,
+      "editorialStatus": "needs independent review"
+    },
+    {
+      "id": "pleco:research-article-backlink:l075",
+      "group": "pleco",
+      "threadId": "1560944554021097516",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l075/"
+      ],
+      "contentSha256": "990abf1601cfa0c6f598663a3fbfcab88ae8e87912b7217f1975f60cb07ffe72",
+      "receiptKey": "63b9cdfa68de0ea39ebc9f8bdf8f73b1e49fdcd2f8dbe22b099615dffbcd4312",
+      "archived": true,
+      "editorialStatus": "needs independent review"
+    },
+    {
+      "id": "pleco:research-article-backlink:l098",
+      "group": "pleco",
+      "threadId": "1560931440177451129",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l098/"
+      ],
+      "contentSha256": "9c243db949777251ea0836b650a6733f6463887d468fa03570c703cd51144459",
+      "receiptKey": "11dee78761685105ae1a393c1acf9c3c07035d8ac10fdfb34a4596e5a4339db6",
+      "archived": true,
+      "editorialStatus": "needs independent review"
+    },
+    {
+      "id": "pleco:research-article-backlink:l104",
+      "group": "pleco",
+      "threadId": "1560943425220644925",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l104/"
+      ],
+      "contentSha256": "81cde716bd09a1fe9219c2ebbedd8427789530095054118702c95d41135c6020",
+      "receiptKey": "004c7d5846469f0616a0ba7d176558de62fbc335bdc690871fd121d5934fb155",
+      "archived": true,
+      "editorialStatus": "needs independent review"
+    },
+    {
+      "id": "pleco:research-article-backlink:l129",
+      "group": "pleco",
+      "threadId": "1560944600603172915",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l129/"
+      ],
+      "contentSha256": "b59e1f4f3c0e11026c1667e39f51554c71504b35a951c4aad557f03807d6dadd",
+      "receiptKey": "35c917557116c9151150dc7d9abf3f59270f283f2b386949952fa284dc4800d6",
+      "archived": true,
+      "editorialStatus": "needs independent review"
+    },
+    {
+      "id": "pleco:research-article-backlink:l134",
+      "group": "pleco",
+      "threadId": "1560943291636383796",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l134/"
+      ],
+      "contentSha256": "5b8c635a6147449ec829c07adeb5b12e6e3b82a35156c442edc6da35857804d6",
+      "receiptKey": "459908e61f23ea13a7f9b7f09db44aed3431d275819bf511d67b4dc42b0145df",
+      "archived": true,
+      "editorialStatus": "needs independent review"
+    },
+    {
+      "id": "pleco:research-article-backlink:l162",
+      "group": "pleco",
+      "threadId": "1560943428101996667",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l162/"
+      ],
+      "contentSha256": "849e7f8f71fe5ba47cb393d97ea7f8af4c6649d0617c7bcc23a2e797a7ceb7cf",
+      "receiptKey": "b41f84d48ff4d151de8ced42d8640a92846869e34b2322fdd43f2886e9504934",
+      "archived": true,
+      "editorialStatus": "needs independent review"
+    },
+    {
+      "id": "pleco:research-article-backlink:l190",
+      "group": "pleco",
+      "threadId": "1560943465146089493",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l190/"
+      ],
+      "contentSha256": "d0d44f967f122b230b3e928bc02c38307f89533724d6cfca741bb034879ef2f5",
+      "receiptKey": "80566a5e4bdd3cdffe5c232f4c8ac1c42d0681501880f5b8e5ccb87cb04ff43b",
+      "archived": true,
+      "editorialStatus": "needs independent review"
+    },
+    {
+      "id": "pleco:research-article-backlink:l201",
+      "group": "pleco",
+      "threadId": "1560944603572600843",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l201/"
+      ],
+      "contentSha256": "5b4cb5bfee4ba2d33162923de5516a2821c0bcf272a394f09882d7f25d6fd06f",
+      "receiptKey": "35a13e21efc80f7f42bab0db23f89ddb22cff0638b5ff901dd441eb833512a5f",
+      "archived": true,
+      "editorialStatus": "needs independent review"
+    },
+    {
+      "id": "pleco:research-article-backlink:l204",
+      "group": "pleco",
+      "threadId": "1560944551248666787",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l204/"
+      ],
+      "contentSha256": "e23a10fe43d95fdd41e1fbc95a011c1e4716d44bc63cf35159a17789476f3e1c",
+      "receiptKey": "776a55aa03e786d5fd9206f7ddc690280bdf3cbd5c41f06d28d1d2e73afaf4c9",
+      "archived": true,
+      "editorialStatus": "needs independent review"
+    },
+    {
+      "id": "pleco:research-article-backlink:l236",
+      "group": "pleco",
+      "threadId": "1560931446275711040",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l236/"
+      ],
+      "contentSha256": "9fcee981b1ba5c8d08756c6973d49cf073ed321e425bbfb6a553c308a093d182",
+      "receiptKey": "89ad84031521c72d9935edbf2be484c2c3b6bea8aee8c45b52b7aae231e606eb",
+      "archived": true,
+      "editorialStatus": "needs independent review"
+    },
+    {
+      "id": "pleco:research-article-backlink:l287",
+      "group": "pleco",
+      "threadId": "1560931449245274134",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l287/"
+      ],
+      "contentSha256": "6fa347721c086303d678004a3a99622872a2bc80c634f98c9ea6ba7363ed5441",
+      "receiptKey": "b850b8fab2bb6dcae0c30d1e3620e4eef5663aa63f18cd4e7910f820652ce81a",
+      "archived": true,
+      "editorialStatus": "needs independent review"
+    },
+    {
+      "id": "pleco:research-article-backlink:l333",
+      "group": "pleco",
+      "threadId": "1560931452529672213",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l333/"
+      ],
+      "contentSha256": "2c353bb9d08187a303c1a92d3d27d8756e8a7160664d3c8569ac85d54c0d845e",
+      "receiptKey": "e556b3eed3b705616a5d426b450c523433c8f5cb4e822c4551f6aa78e49ecdfa",
+      "archived": true,
+      "editorialStatus": "needs independent review"
+    },
+    {
+      "id": "pleco:research-article-backlink:l399",
+      "group": "pleco",
+      "threadId": "1560931455566086145",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l399/"
+      ],
+      "contentSha256": "92b9648305c558e6150e2e5cb25bd1c0046f1e3850636a23381828378b85a27e",
+      "receiptKey": "ba6e66da5df7a9a6f427463788fbfeb792631f342185cc3e9372d24cfcfe7843",
+      "archived": true,
+      "editorialStatus": "needs independent review"
+    },
+    {
+      "id": "pleco:research-article-backlink:l400",
+      "group": "pleco",
+      "threadId": "1560931458195918920",
+      "sourceUrls": [
+        "https://aquapedia.app/plecopedia/research/l400/"
+      ],
+      "contentSha256": "5f9a24f172ffe843bbd7467178a7c439a9b901dab7113756f2e0958165fe6ad9",
+      "receiptKey": "4d5a88ad588cb45c709f6294a86a2179de891c62e504949fb68ec74aa31a0272",
+      "archived": true,
+      "editorialStatus": "needs independent review"
+    }
+  ]
+}

@@ -1,0 +1,694 @@
+{
+  "capturedAt": "2026-10-22T22:02:31.734Z",
+  "method": "HTTP HEAD only, no source content downloaded",
+  "refTotals": {
+    "checked": 109,
+    "reachableByHead": 82,
+    "inaccessibleByHead": 27
+  },
+  "pageTotals": {
+    "audited": 143,
+    "hasReachableSource": 137,
+    "onlyRestrictedSources": 6
+  },
+  "affectedUrls": [
+    "https://aquapedia.app/plecopedia/research/breeder-apistomaster-l134/",
+    "https://aquapedia.app/plecopedia/research/breeder-christophe-l025/",
+    "https://aquapedia.app/plecopedia/research/breeder-davej-l134/",
+    "https://aquapedia.app/plecopedia/research/breeder-karsten-l183/",
+    "https://aquapedia.app/plecopedia/research/l025/",
+    "https://aquapedia.app/plecopedia/research/l037/"
+  ],
+  "sourceClaimsVerified": false,
+  "linksProvenBroken": 0,
+  "publicationAuthorized": false,
+  "affectedByGroup": {
+    "guppypedia": 0,
+    "plecopedia": 6,
+    "corydoraspedia": 0
+  },
+  "mediaRightsVerified": false,
+  "discordWrites": 0,
+  "responseBreakdown": {
+    "200": 80,
+    "203": 2,
+    "403": 23,
+    "502": 4
+  },
+  "checks": [
+    {
+      "url": "https://aquainfo.nl/en/keeping-and-breeding-hypancistrus-zebra-l046-part-2-breeding/",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "aquainfo.nl"
+    },
+    {
+      "url": "https://aquainfo.nl/en/l-numbers-and-lda-numbers-the-explanation/",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "aquainfo.nl"
+    },
+    {
+      "url": "https://auburn.edu/~armbrjw/Panaque_changae.pdf",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "webhome.auburn.edu"
+    },
+    {
+      "url": "https://catfishcodex.com/page-one/hypancistrus/hypancistrus-contradens/",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "catfishcodex.com"
+    },
+    {
+      "url": "https://doi.org/10.1007/s10499-024-01720-z",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "link.springer.com"
+    },
+    {
+      "url": "https://doi.org/10.1089/zeb.2015.1213",
+      "status": 403,
+      "outcome": "http_status",
+      "finalHostname": "journals.sagepub.com"
+    },
+    {
+      "url": "https://doi.org/10.1111/jfb.13184",
+      "status": 403,
+      "outcome": "http_status",
+      "finalHostname": "onlinelibrary.wiley.com"
+    },
+    {
+      "url": "https://doi.org/10.1111/jfb.15637",
+      "status": 403,
+      "outcome": "http_status",
+      "finalHostname": "onlinelibrary.wiley.com"
+    },
+    {
+      "url": "https://doi.org/10.1111/jfb.15971",
+      "status": 403,
+      "outcome": "http_status",
+      "finalHostname": "onlinelibrary.wiley.com"
+    },
+    {
+      "url": "https://doi.org/10.11646/zootaxa.2534.1.3",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "mapress.com"
+    },
+    {
+      "url": "https://doi.org/10.11646/zootaxa.3973.2.6",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "mapress.com"
+    },
+    {
+      "url": "https://doi.org/10.11646/zootaxa.4552.1.1",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "www.mapress.com"
+    },
+    {
+      "url": "https://doi.org/10.11646/zootaxa.5463.1.7",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "mapress.com"
+    },
+    {
+      "url": "https://doi.org/10.11646/zootaxa.628.1.1",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "mapress.com"
+    },
+    {
+      "url": "https://doi.org/10.1371/journal.pone.0165388",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "journals.plos.org"
+    },
+    {
+      "url": "https://doi.org/10.1371/journal.pone.0189789",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "journals.plos.org"
+    },
+    {
+      "url": "https://doi.org/10.1590/S1679-62252005000400012",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "www.scielo.br"
+    },
+    {
+      "url": "https://doi.org/10.1590/s1679-62252005000400014",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "www.scielo.br"
+    },
+    {
+      "url": "https://doi.org/10.1590/S1679-62252011000200001",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "www.scielo.br"
+    },
+    {
+      "url": "https://doi.org/10.1590/s1679-62252014000100001",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "www.scielo.br"
+    },
+    {
+      "url": "https://doi.org/10.1590/s1679-62252014000100006",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "www.scielo.br"
+    },
+    {
+      "url": "https://doi.org/10.1643/0045-8511(2007)7[62:fnhslf]2.0.co;2",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "bioone.org"
+    },
+    {
+      "url": "https://doi.org/10.1643/ci-07-187",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "bioone.org"
+    },
+    {
+      "url": "https://doi.org/10.1643/ci-09-185",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "bioone.org"
+    },
+    {
+      "url": "https://doi.org/10.1643/CI-10-008",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "bioone.org"
+    },
+    {
+      "url": "https://doi.org/10.1643/CI-19-201",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "bioone.org"
+    },
+    {
+      "url": "https://doi.org/10.3897/zookeys.480.6540",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "zookeys.pensoft.net"
+    },
+    {
+      "url": "https://doi.org/10.3897/zookeys.552.5956",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "zookeys.pensoft.net"
+    },
+    {
+      "url": "https://doi.org/10.5281/zenodo.11645868",
+      "status": 403,
+      "outcome": "http_status",
+      "finalHostname": "zenodo.org"
+    },
+    {
+      "url": "https://doi.org/10.5281/zenodo.11645870",
+      "status": 403,
+      "outcome": "http_status",
+      "finalHostname": "zenodo.org"
+    },
+    {
+      "url": "https://doi.org/10.5281/zenodo.17162021",
+      "status": 403,
+      "outcome": "http_status",
+      "finalHostname": "zenodo.org"
+    },
+    {
+      "url": "https://doi.org/10.5281/zenodo.19115497",
+      "status": 403,
+      "outcome": "http_status",
+      "finalHostname": "zenodo.org"
+    },
+    {
+      "url": "https://doi.org/10.5281/zenodo.5932331",
+      "status": 403,
+      "outcome": "http_status",
+      "finalHostname": "zenodo.org"
+    },
+    {
+      "url": "https://doi.org/10.5962/bhl.part.82074",
+      "status": 403,
+      "outcome": "http_status",
+      "finalHostname": "www.biodiversitylibrary.org"
+    },
+    {
+      "url": "https://en.amazonoco.de/project/panaqolus-tankei-l-398-origin-and-breeding/",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "en.amazonoco.de"
+    },
+    {
+      "url": "https://ikgh.org/wp-content/uploads/2023/05/IHS-Version-2023.pdf",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "ikgh.org"
+    },
+    {
+      "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0165388",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "journals.plos.org"
+    },
+    {
+      "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0244894",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "journals.plos.org"
+    },
+    {
+      "url": "https://planetcatfish.com/common/species.php?species_id=803",
+      "status": 403,
+      "outcome": "http_status",
+      "finalHostname": "planetcatfish.com"
+    },
+    {
+      "url": "https://planetcatfish.com/common/species.php?species_id=85",
+      "status": 403,
+      "outcome": "http_status",
+      "finalHostname": "planetcatfish.com"
+    },
+    {
+      "url": "https://planetcatfish.com/forum/viewtopic.php?t=32922",
+      "status": 403,
+      "outcome": "http_status",
+      "finalHostname": "planetcatfish.com"
+    },
+    {
+      "url": "https://planetcatfish.com/panaqolus_maccus",
+      "status": 403,
+      "outcome": "http_status",
+      "finalHostname": "planetcatfish.com"
+    },
+    {
+      "url": "https://planetcatfish.com/panaqolus_nocturnus",
+      "status": 403,
+      "outcome": "http_status",
+      "finalHostname": "planetcatfish.com"
+    },
+    {
+      "url": "https://planetcatfish.com/shanesworld/shanesworld.php?article_id=405",
+      "status": 403,
+      "outcome": "http_status",
+      "finalHostname": "planetcatfish.com"
+    },
+    {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4740853/",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "pmc.ncbi.nlm.nih.gov"
+    },
+    {
+      "url": "https://pubmed.ncbi.nlm.nih.gov/25709528/",
+      "status": 203,
+      "outcome": "reachable_head",
+      "finalHostname": "pubmed.ncbi.nlm.nih.gov"
+    },
+    {
+      "url": "https://pubmed.ncbi.nlm.nih.gov/26167575/",
+      "status": 203,
+      "outcome": "reachable_head",
+      "finalHostname": "pubmed.ncbi.nlm.nih.gov"
+    },
+    {
+      "url": "https://repositorio.museu-goeldi.br/server/api/core/bitstreams/fa4ff8d2-72ce-4784-8714-140b6e5f32cd/content",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "repositorio.museu-goeldi.br"
+    },
+    {
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=4946",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "researcharchive.calacademy.org"
+    },
+    {
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=5320",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "researcharchive.calacademy.org"
+    },
+    {
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=5335",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "researcharchive.calacademy.org"
+    },
+    {
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=5756",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "researcharchive.calacademy.org"
+    },
+    {
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=58211",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "researcharchive.calacademy.org"
+    },
+    {
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=6069",
+      "status": 502,
+      "outcome": "http_status",
+      "finalHostname": "researcharchive.calacademy.org"
+    },
+    {
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=62021",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "researcharchive.calacademy.org"
+    },
+    {
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=62023",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "researcharchive.calacademy.org"
+    },
+    {
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=62281",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "researcharchive.calacademy.org"
+    },
+    {
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=65318",
+      "status": 502,
+      "outcome": "http_status",
+      "finalHostname": "researcharchive.calacademy.org"
+    },
+    {
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=71886",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "researcharchive.calacademy.org"
+    },
+    {
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=72287",
+      "status": 502,
+      "outcome": "http_status",
+      "finalHostname": "researcharchive.calacademy.org"
+    },
+    {
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=73654",
+      "status": 502,
+      "outcome": "http_status",
+      "finalHostname": "researcharchive.calacademy.org"
+    },
+    {
+      "url": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=77546",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "researcharchive.calacademy.org"
+    },
+    {
+      "url": "https://tfcb.org/wp-content/uploads/2018/05/May-June-2018-web-FINAL.pdf",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "tfcb.org"
+    },
+    {
+      "url": "https://www.acquariofiliaconsapevole.it/pesci_peckoltia_sabaji",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "acquariofiliaconsapevole.it"
+    },
+    {
+      "url": "https://www.alr-journal.org/articles/alr/full_html/2025/01/alr240111/alr240111.html",
+      "status": 403,
+      "outcome": "http_status",
+      "finalHostname": "www.alr-journal.org"
+    },
+    {
+      "url": "https://www.aquariumglaser.de/en/fisharchive/panaque-from-colombia-l190-l191-l330/",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "www.aquariumglaser.de"
+    },
+    {
+      "url": "https://www.aquariumglaser.de/en/tag/aphanotorulus-en/",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "www.aquariumglaser.de"
+    },
+    {
+      "url": "https://www.esf.edu/biology/faculty/documents/71.LujanHidalgoStewart2010Panaque.pdf",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "www.esf.edu"
+    },
+    {
+      "url": "https://www.faunatropica.eu/animals/fish/loricariidae/hemiancistrus-sp-l128/",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "www.faunatropica.eu"
+    },
+    {
+      "url": "https://www.fieldmuseum.org/about/press/six-new-species-hideously-adorable-tentacle-nosed-catfish-discovered-amazon",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "www.fieldmuseum.org"
+    },
+    {
+      "url": "https://www.ig-bssw.org/again-and-again-l-56/?lang=en",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "www.ig-bssw.org"
+    },
+    {
+      "url": "https://www.ig-bssw.org/l-267-als-ancistrus-yanesha-beschrieben/?lang=en",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "www.ig-bssw.org"
+    },
+    {
+      "url": "https://www.itis.gov/servlet/SingleRpt/SingleRpt?print_version=PRT&search_topic=TSN&search_value=680318&source=to_print",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "www.itis.gov"
+    },
+    {
+      "url": "https://www.mapress.com/zt/article/view/zootaxa.3691.1.8",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "www.mapress.com"
+    },
+    {
+      "url": "https://www.ni.bio.br/1982-0224-2023-0038/",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "www.ni.bio.br"
+    },
+    {
+      "url": "https://www.ni.bio.br/1982-0224-2024-0080/",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "www.ni.bio.br"
+    },
+    {
+      "url": "https://www.ni.bio.br/1982-0224-2025-0066/",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "www.ni.bio.br"
+    },
+    {
+      "url": "https://www.planetcatfish.com/arn/species.php?species_id=161",
+      "status": 403,
+      "outcome": "http_status",
+      "finalHostname": "www.planetcatfish.com"
+    },
+    {
+      "url": "https://www.planetcatfish.com/common/common_names.php?language=English&letter=l",
+      "status": 403,
+      "outcome": "http_status",
+      "finalHostname": "www.planetcatfish.com"
+    },
+    {
+      "url": "https://www.planetcatfish.com/forum/viewtopic.php?t=18990",
+      "status": 403,
+      "outcome": "http_status",
+      "finalHostname": "www.planetcatfish.com"
+    },
+    {
+      "url": "https://www.planetcatfish.com/forum/viewtopic.php?t=24178",
+      "status": 403,
+      "outcome": "http_status",
+      "finalHostname": "www.planetcatfish.com"
+    },
+    {
+      "url": "https://www.planetcatfish.com/forum/viewtopic.php?t=29601",
+      "status": 403,
+      "outcome": "http_status",
+      "finalHostname": "www.planetcatfish.com"
+    },
+    {
+      "url": "https://www.planetcatfish.com/Panaqolus%20sp(L397)",
+      "status": 403,
+      "outcome": "http_status",
+      "finalHostname": "www.planetcatfish.com"
+    },
+    {
+      "url": "https://www.practicalfishkeeping.co.uk/features/keeping-and-breeding-the-green-phantom-plec/",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "www.practicalfishkeeping.co.uk"
+    },
+    {
+      "url": "https://www.pvas.com/post/corydoras-sterbai",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "www.pvas.com"
+    },
+    {
+      "url": "https://www.scotcat.com/articles/article1.html",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "www.scotcat.com"
+    },
+    {
+      "url": "https://www.scotcat.com/articles/article12.html",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "www.scotcat.com"
+    },
+    {
+      "url": "https://www.scotcat.com/articles/article128.htm",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "www.scotcat.com"
+    },
+    {
+      "url": "https://www.scotcat.com/articles/article13.html",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "www.scotcat.com"
+    },
+    {
+      "url": "https://www.scotcat.com/articles/article16.html",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "www.scotcat.com"
+    },
+    {
+      "url": "https://www.scotcat.com/articles/article3.html",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "www.scotcat.com"
+    },
+    {
+      "url": "https://www.scotcat.com/articles/article54.htm",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "www.scotcat.com"
+    },
+    {
+      "url": "https://www.scotcat.com/articles/article88.htm",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "www.scotcat.com"
+    },
+    {
+      "url": "https://www.scotcat.com/factsheets/ancistrus_dolichopterus.htm",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "www.scotcat.com"
+    },
+    {
+      "url": "https://www.scotcat.com/factsheets/hypancistrus_zebra.htm",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "www.scotcat.com"
+    },
+    {
+      "url": "https://www.scotcat.com/factsheets/panaque_nigrolineatus.htm",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "www.scotcat.com"
+    },
+    {
+      "url": "https://www.scotcat.com/loricariidae/ancistrus_claro.htm",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "www.scotcat.com"
+    },
+    {
+      "url": "https://www.scotcat.com/loricariidae/hypancistrus_contradens.htm",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "www.scotcat.com"
+    },
+    {
+      "url": "https://www.scotcat.com/loricariidae/leporacanthicus_triactis.htm",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "www.scotcat.com"
+    },
+    {
+      "url": "https://www.scotcat.com/loricariidae/pterygoplichthys_pardalis.htm",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "www.scotcat.com"
+    },
+    {
+      "url": "https://www.seriouslyfish.com/species/hemiancistrus-guahiborum",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "www.seriouslyfish.com"
+    },
+    {
+      "url": "https://www.seriouslyfish.com/species/leporacanthicus-galaxias/",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "www.seriouslyfish.com"
+    },
+    {
+      "url": "https://www.seriouslyfish.com/species/squaliforma-cf-emarginata",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "www.seriouslyfish.com"
+    },
+    {
+      "url": "https://www.sfi-cybium.fr/sites/default/files/pdfs-cybium/11-FischMuller%5BGuianas%5D%20colour.pdf",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "www.sfi-cybium.fr"
+    },
+    {
+      "url": "https://www.suedamerikafans.de/en/datz-012017-wels-presseschau/",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "www.suedamerikafans.de"
+    },
+    {
+      "url": "https://www.suedamerikafans.de/en/pterygoplichthys-gibbiceps-pterygoplichthys-xinguensis-l165-l83-wer-ist-wer/",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "www.suedamerikafans.de"
+    },
+    {
+      "url": "https://www.suedamerikafans.de/en/wels-datenbank/welsart/?art=214",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "www.suedamerikafans.de"
+    },
+    {
+      "url": "https://www.tfhmagazine.com/articles/freshwater/royal-plecos-full-article",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "www.tfhmagazine.com"
+    },
+    {
+      "url": "https://www.utsc.utoronto.ca/~lovejoy/pdfpubs/2015/LujanN_MolecPhylo&Evo_2015.pdf",
+      "status": 200,
+      "outcome": "reachable_head",
+      "finalHostname": "www.utsc.utoronto.ca"
+    }
+  ]
+}

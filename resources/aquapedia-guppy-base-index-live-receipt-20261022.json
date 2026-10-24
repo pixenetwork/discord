@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "scope": "source-only-standard-index; no pedigree verification",
+  "verifiedAt": "2026-10-23T00:32:47.342Z",
+  "verified": true,
+  "url": "https://discord.com/channels/1519337502379475095/1562195157028184178/1562987115036278834",
+  "threadId": "1562195157028184178",
+  "messageId": "1562987115036278834",
+  "botAuthorId": "1535522109571203152",
+  "messageSha256": "3146b76ed42f322f4171a1a7969be3af127dd991ec2af21238196247e0b0a3ed",
+  "sourceEntryCount": 10,
+  "sourceEntryIds": [
+    "gup-001",
+    "gup-002",
+    "gup-003",
+    "gup-004",
+    "gup-005",
+    "gup-006",
+    "gup-007",
+    "gup-008",
+    "gup-009",
+    "gup-010"
+  ],
+  "sourceStatus": "IKGH show-standard terminology; breeding ancestry unverified",
+  "actionVerified": "posted-and-rechecked-as-adopted",
+  "recordsFrom": "Authenticated managed bot API readback + durable on-host receipt",
+  "noPicturesOrMedia": true,
+  "otherCrossTaxaProposalsPublished": false
+}

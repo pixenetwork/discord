@@ -1,0 +1,50 @@
+{
+  "time": "2026-10-23T02:31:05.421Z",
+  "liveSourceTotal": 853,
+  "liveCoryCount": 19,
+  "previousGuppyReceiptsVerified": true,
+  "guppyStandardIndexLinks": 48,
+  "corySourceLinksVerified": 4,
+  "coryPublished": [
+    {
+      "key": "burgessi",
+      "threadId": "1560942081436942398",
+      "messageId": "1563015948766810224",
+      "url": "https://discord.com/channels/1519337502379475095/1560942081436942398/1563015948766810224",
+      "sourceUrl": "https://aquapedia.app/corydoraspedia/breeding/#hoplisoma-burgessi"
+    },
+    {
+      "key": "davidsandsi",
+      "threadId": "1560953415230824582",
+      "messageId": "1563015996867084379",
+      "url": "https://discord.com/channels/1519337502379475095/1560953415230824582/1563015996867084379",
+      "sourceUrl": "https://aquapedia.app/corydoraspedia/breeding/#hoplisoma-davidsandsi"
+    },
+    {
+      "key": "nattereri",
+      "threadId": "1560963836872360040",
+      "messageId": "1563016007482744882",
+      "url": "https://discord.com/channels/1519337502379475095/1560963836872360040/1563016007482744882",
+      "sourceUrl": "https://aquapedia.app/corydoraspedia/breeding/#hoplisoma-nattereri"
+    },
+    {
+      "key": "xinguense",
+      "threadId": "1560966748222656554",
+      "messageId": "1563016014738751659",
+      "url": "https://discord.com/channels/1519337502379475095/1560966748222656554/1563016014738751659",
+      "sourceUrl": "https://aquapedia.app/corydoraspedia/breeding/#hoplisoma-xinguense"
+    }
+  ],
+  "pendingCrossTaxaProposals": 91,
+  "pendingActive": 55,
+  "pendingArchived": 36,
+  "pendingByGroup": {
+    "corydoras": 6,
+    "pleco": 85
+  },
+  "claimLevelVerificationGranted": false,
+  "mediaRightsGranted": false,
+  "otherPublicationsAuthorized": false,
+  "discordWritesInReconciliation": 0,
+  "notes": "Public source links only; historical review manifest retained"
+}

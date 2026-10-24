@@ -1,0 +1,457 @@
+{
+  "auditedAt": "2026-10-23T13:11:19.774Z",
+  "sourceLane": "55 active Plecopedia review-only candidates",
+  "bibliographyOnly": true,
+  "publishingAuthorized": false,
+  "discordWrites": 0,
+  "counts": {
+    "all": 24,
+    "registryFound": 15,
+    "exactRegistryMatch": 15,
+    "crossref": 11,
+    "datacite": 4,
+    "missing": 9
+  },
+  "results": [
+    {
+      "doi": "10.1007/s10499-024-01720-z",
+      "usedBy": [
+        "pleco:research-article-backlink:study-l333-captive"
+      ],
+      "metadataFound": true,
+      "registryDoiExactMatch": true,
+      "metadata": {
+        "registry": "Crossref",
+        "resolvedDoi": "10.1007/s10499-024-01720-z",
+        "title": "First record of captive breeding of the ornamental fish L333, King Tiger Pleco, Hypancistrus sp. (Siluriformes – Loricariidae) of the Amazon River basin",
+        "year": 2024,
+        "journal": "Aquaculture International",
+        "type": "journal-article",
+        "authorCount": 7
+      },
+      "error": null,
+      "scientificClaimVerified": false,
+      "breedingClaimVerified": false,
+      "rightsApproved": false
+    },
+    {
+      "doi": "10.1111/jfb.15637",
+      "usedBy": [
+        "pleco:research-article-backlink:anc-l267-alias",
+        "pleco:research-article-backlink:anc-yanesha"
+      ],
+      "metadataFound": false,
+      "registryDoiExactMatch": false,
+      "metadata": null,
+      "error": null,
+      "scientificClaimVerified": false,
+      "breedingClaimVerified": false,
+      "rightsApproved": false
+    },
+    {
+      "doi": "10.1111/jfb.15971",
+      "usedBy": [
+        "pleco:research-article-backlink:hyp-parkateje"
+      ],
+      "metadataFound": true,
+      "registryDoiExactMatch": true,
+      "metadata": {
+        "registry": "Crossref",
+        "resolvedDoi": "10.1111/jfb.15971",
+        "title": "A new species of Hypancistrus Isbrücker &amp; Nijssen 1991 (Loricariidae, Siluriformes) from the rapids of the middle Rio Tocantins",
+        "year": 2024,
+        "journal": "Journal of Fish Biology",
+        "type": "journal-article",
+        "authorCount": 4
+      },
+      "error": null,
+      "scientificClaimVerified": false,
+      "breedingClaimVerified": false,
+      "rightsApproved": false
+    },
+    {
+      "doi": "10.11646/zootaxa.2534.1.3",
+      "usedBy": [
+        "pleco:research-article-backlink:l015"
+      ],
+      "metadataFound": false,
+      "registryDoiExactMatch": false,
+      "metadata": null,
+      "error": null,
+      "scientificClaimVerified": false,
+      "breedingClaimVerified": false,
+      "rightsApproved": false
+    },
+    {
+      "doi": "10.11646/zootaxa.4552.1.1",
+      "usedBy": [
+        "pleco:research-article-backlink:anc-leoni",
+        "pleco:research-article-backlink:anc-patronus"
+      ],
+      "metadataFound": true,
+      "registryDoiExactMatch": true,
+      "metadata": {
+        "registry": "Crossref",
+        "resolvedDoi": "10.11646/zootaxa.4552.1.1",
+        "title": "Review of Ancistrus (Siluriformes: Loricariidae) from the northwestern Guiana Shield, Orinoco Andes, and adjacent basins with description of six new species",
+        "year": 2019,
+        "journal": "Zootaxa",
+        "type": "journal-article",
+        "authorCount": 3
+      },
+      "error": null,
+      "scientificClaimVerified": false,
+      "breedingClaimVerified": false,
+      "rightsApproved": false
+    },
+    {
+      "doi": "10.11646/zootaxa.5463.1.7",
+      "usedBy": [
+        "pleco:research-article-backlink:pana-orcesi",
+        "pleco:research-article-backlink:pana-pantostiktos"
+      ],
+      "metadataFound": true,
+      "registryDoiExactMatch": true,
+      "metadata": {
+        "registry": "Crossref",
+        "resolvedDoi": "10.11646/zootaxa.5463.1.7",
+        "title": "Two new species of the armored catfish genus Panaqolus (Siluriformes, Loricariidae) from the Ecuadorian Amazon",
+        "year": 2024,
+        "journal": "Zootaxa",
+        "type": "journal-article",
+        "authorCount": 3
+      },
+      "error": null,
+      "scientificClaimVerified": false,
+      "breedingClaimVerified": false,
+      "rightsApproved": false
+    },
+    {
+      "doi": "10.11646/zootaxa.628.1.1",
+      "usedBy": [
+        "pleco:research-article-backlink:pseudo-sidereus"
+      ],
+      "metadataFound": true,
+      "registryDoiExactMatch": true,
+      "metadata": {
+        "registry": "Crossref",
+        "resolvedDoi": "10.11646/zootaxa.628.1.1",
+        "title": "Pseudancistrus sidereus, a new species from southern Venezuela (Siluriformes: Loricariidae) with a redescription of Pseudancistrus",
+        "year": 2004,
+        "journal": "Zootaxa",
+        "type": "journal-article",
+        "authorCount": 1
+      },
+      "error": null,
+      "scientificClaimVerified": false,
+      "breedingClaimVerified": false,
+      "rightsApproved": false
+    },
+    {
+      "doi": "10.1371/journal.pone.0165388",
+      "usedBy": [
+        "pleco:research-article-backlink:breeder-andreas-tanke-l398"
+      ],
+      "metadataFound": true,
+      "registryDoiExactMatch": true,
+      "metadata": {
+        "registry": "Crossref",
+        "resolvedDoi": "10.1371/journal.pone.0165388",
+        "title": "A New Species of Tiger Pleco Panaqolus (Siluriformes: Loricariidae) from the Xingu Basin, Brazil",
+        "year": 2016,
+        "journal": "PLOS ONE",
+        "type": "journal-article",
+        "authorCount": 2
+      },
+      "error": null,
+      "scientificClaimVerified": false,
+      "breedingClaimVerified": false,
+      "rightsApproved": false
+    },
+    {
+      "doi": "10.1590/s1679-62252005000400012",
+      "usedBy": [
+        "pleco:research-article-backlink:l106"
+      ],
+      "metadataFound": true,
+      "registryDoiExactMatch": true,
+      "metadata": {
+        "registry": "Crossref",
+        "resolvedDoi": "10.1590/s1679-62252005000400012",
+        "title": "Hemiancistrus guahiborum, a new suckermouth armored catfish from Southern Venezuela (Siluriformes: Loricariidae)",
+        "year": 2005,
+        "journal": "Neotropical Ichthyology",
+        "type": "journal-article",
+        "authorCount": 4
+      },
+      "error": null,
+      "scientificClaimVerified": false,
+      "breedingClaimVerified": false,
+      "rightsApproved": false
+    },
+    {
+      "doi": "10.1590/s1679-62252011000200001",
+      "usedBy": [
+        "pleco:research-article-backlink:l081"
+      ],
+      "metadataFound": true,
+      "registryDoiExactMatch": true,
+      "metadata": {
+        "registry": "Crossref",
+        "resolvedDoi": "10.1590/s1679-62252011000200001",
+        "title": "Two new ornamental loricariid catfishes of Baryancistrus from rio Xingu drainage (Siluriformes: Hypostominae)",
+        "year": 2011,
+        "journal": "Neotropical Ichthyology",
+        "type": "journal-article",
+        "authorCount": 3
+      },
+      "error": null,
+      "scientificClaimVerified": false,
+      "breedingClaimVerified": false,
+      "rightsApproved": false
+    },
+    {
+      "doi": "10.1590/s1679-62252014000100001",
+      "usedBy": [
+        "pleco:research-article-backlink:l020",
+        "pleco:research-article-backlink:l086"
+      ],
+      "metadataFound": true,
+      "registryDoiExactMatch": true,
+      "metadata": {
+        "registry": "Crossref",
+        "resolvedDoi": "10.1590/s1679-62252014000100001",
+        "title": "Taxonomic revision of SpectracanthicusNijssen &amp; Isbrücker (Loricariidae: Hypostominae: Ancistrini), with description of three new species",
+        "year": 2014,
+        "journal": "Neotropical Ichthyology",
+        "type": "journal-article",
+        "authorCount": 2
+      },
+      "error": null,
+      "scientificClaimVerified": false,
+      "breedingClaimVerified": false,
+      "rightsApproved": false
+    },
+    {
+      "doi": "10.1590/s1679-62252014000100006",
+      "usedBy": [
+        "pleco:research-article-backlink:pana-changae"
+      ],
+      "metadataFound": false,
+      "registryDoiExactMatch": false,
+      "metadata": null,
+      "error": null,
+      "scientificClaimVerified": false,
+      "breedingClaimVerified": false,
+      "rightsApproved": false
+    },
+    {
+      "doi": "10.1643/0045-8511(2007)7[62:fnhslf]2.0.co;2",
+      "usedBy": [
+        "pleco:research-article-backlink:hyp-contradens"
+      ],
+      "metadataFound": false,
+      "registryDoiExactMatch": false,
+      "metadata": null,
+      "error": null,
+      "scientificClaimVerified": false,
+      "breedingClaimVerified": false,
+      "rightsApproved": false
+    },
+    {
+      "doi": "10.1643/ci-07-187",
+      "usedBy": [
+        "pleco:research-article-backlink:l239"
+      ],
+      "metadataFound": false,
+      "registryDoiExactMatch": false,
+      "metadata": null,
+      "error": null,
+      "scientificClaimVerified": false,
+      "breedingClaimVerified": false,
+      "rightsApproved": false
+    },
+    {
+      "doi": "10.1643/ci-09-185",
+      "usedBy": [
+        "pleco:research-article-backlink:l191",
+        "pleco:research-article-backlink:l418"
+      ],
+      "metadataFound": true,
+      "registryDoiExactMatch": true,
+      "metadata": {
+        "registry": "Crossref",
+        "resolvedDoi": "10.1643/ci-09-185",
+        "title": "Revision of Panaque (Panaque), with Descriptions of Three New Species from the Amazon Basin (Siluriformes, Loricariidae)",
+        "year": 2010,
+        "journal": "Copeia",
+        "type": "journal-article",
+        "authorCount": 3
+      },
+      "error": null,
+      "scientificClaimVerified": false,
+      "breedingClaimVerified": false,
+      "rightsApproved": false
+    },
+    {
+      "doi": "10.1643/ci-10-008",
+      "usedBy": [
+        "pleco:research-article-backlink:hyp-vandragti"
+      ],
+      "metadataFound": false,
+      "registryDoiExactMatch": false,
+      "metadata": null,
+      "error": null,
+      "scientificClaimVerified": false,
+      "breedingClaimVerified": false,
+      "rightsApproved": false
+    },
+    {
+      "doi": "10.1643/ci-19-201",
+      "usedBy": [
+        "pleco:research-article-backlink:bary-hadrostomus",
+        "pleco:research-article-backlink:bary-micropunctatus"
+      ],
+      "metadataFound": false,
+      "registryDoiExactMatch": false,
+      "metadata": null,
+      "error": null,
+      "scientificClaimVerified": false,
+      "breedingClaimVerified": false,
+      "rightsApproved": false
+    },
+    {
+      "doi": "10.3897/zookeys.480.6540",
+      "usedBy": [
+        "pleco:research-article-backlink:peckol-lujani"
+      ],
+      "metadataFound": false,
+      "registryDoiExactMatch": false,
+      "metadata": null,
+      "error": null,
+      "scientificClaimVerified": false,
+      "breedingClaimVerified": false,
+      "rightsApproved": false
+    },
+    {
+      "doi": "10.3897/zookeys.552.5956",
+      "usedBy": [
+        "pleco:research-article-backlink:hyp-margaritatus",
+        "pleco:research-article-backlink:hyp-phantasma"
+      ],
+      "metadataFound": true,
+      "registryDoiExactMatch": true,
+      "metadata": {
+        "registry": "Crossref",
+        "resolvedDoi": "10.3897/zookeys.552.5956",
+        "title": "Two new species of spotted Hypancistrus from the Rio Negro drainage (Loricariidae, Hypostominae)",
+        "year": 2016,
+        "journal": "ZooKeys",
+        "type": "journal-article",
+        "authorCount": 2
+      },
+      "error": null,
+      "scientificClaimVerified": false,
+      "breedingClaimVerified": false,
+      "rightsApproved": false
+    },
+    {
+      "doi": "10.5281/zenodo.11645868",
+      "usedBy": [
+        "pleco:research-article-backlink:pana-orcesi"
+      ],
+      "metadataFound": true,
+      "registryDoiExactMatch": true,
+      "metadata": {
+        "registry": "DataCite",
+        "resolvedDoi": "10.5281/zenodo.11645868",
+        "title": "Panaqolus orcesi Provenzano-Rizzi & Barriga-Salazar & Stewart 2024, new species",
+        "year": 2024,
+        "journal": "Zenodo",
+        "type": "Text",
+        "authorCount": 3
+      },
+      "error": null,
+      "scientificClaimVerified": false,
+      "breedingClaimVerified": false,
+      "rightsApproved": false
+    },
+    {
+      "doi": "10.5281/zenodo.11645870",
+      "usedBy": [
+        "pleco:research-article-backlink:pana-pantostiktos"
+      ],
+      "metadataFound": true,
+      "registryDoiExactMatch": true,
+      "metadata": {
+        "registry": "DataCite",
+        "resolvedDoi": "10.5281/zenodo.11645870",
+        "title": "Panaqolus pantostiktos Provenzano-Rizzi & Barriga-Salazar & Stewart 2024, new species",
+        "year": 2024,
+        "journal": "Zenodo",
+        "type": "Text",
+        "authorCount": 3
+      },
+      "error": null,
+      "scientificClaimVerified": false,
+      "breedingClaimVerified": false,
+      "rightsApproved": false
+    },
+    {
+      "doi": "10.5281/zenodo.19115497",
+      "usedBy": [
+        "pleco:research-article-backlink:l306"
+      ],
+      "metadataFound": true,
+      "registryDoiExactMatch": true,
+      "metadata": {
+        "registry": "DataCite",
+        "resolvedDoi": "10.5281/zenodo.19115497",
+        "title": "Panaqolus claustellifer Tan & de Souza & Armbruster 2016, new species",
+        "year": 2016,
+        "journal": "Zenodo",
+        "type": "Text",
+        "authorCount": 3
+      },
+      "error": null,
+      "scientificClaimVerified": false,
+      "breedingClaimVerified": false,
+      "rightsApproved": false
+    },
+    {
+      "doi": "10.5281/zenodo.5932331",
+      "usedBy": [
+        "pleco:research-article-backlink:anc-leoni"
+      ],
+      "metadataFound": true,
+      "registryDoiExactMatch": true,
+      "metadata": {
+        "registry": "DataCite",
+        "resolvedDoi": "10.5281/zenodo.5932331",
+        "title": "Ancistrus leoni De & Taphorn & Armbruster 2019, new species",
+        "year": 2019,
+        "journal": "Zenodo",
+        "type": "Text",
+        "authorCount": 3
+      },
+      "error": null,
+      "scientificClaimVerified": false,
+      "breedingClaimVerified": false,
+      "rightsApproved": false
+    },
+    {
+      "doi": "10.5962/bhl.part.82074",
+      "usedBy": [
+        "pleco:research-article-backlink:l001",
+        "pleco:research-article-backlink:l083"
+      ],
+      "metadataFound": false,
+      "registryDoiExactMatch": false,
+      "metadata": null,
+      "error": null,
+      "scientificClaimVerified": false,
+      "breedingClaimVerified": false,
+      "rightsApproved": false
+    }
+  ]
+}

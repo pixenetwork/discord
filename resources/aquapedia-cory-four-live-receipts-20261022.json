@@ -1,0 +1,60 @@
+{
+  "source": "Managed Aquaphoria bot exact message readback and durable on-host receipts",
+  "liveVerified": true,
+  "publicationScope": "Links to keeper observations only, not validated claims",
+  "topics": [
+    {
+      "version": 1,
+      "key": "burgessi",
+      "verified": true,
+      "threadId": "1560942081436942398",
+      "messageId": "1563015948766810224",
+      "url": "https://discord.com/channels/1519337502379475095/1560942081436942398/1563015948766810224",
+      "botAuthorId": "1535522109571203152",
+      "sourceUrl": "https://aquapedia.app/corydoraspedia/breeding/#hoplisoma-burgessi",
+      "messageSha256": "2755d89934b53a2a5f44c89f1363bcd52270ccb8c37bd8a4ff0cceb67fb88470",
+      "claimStatus": "Link to keeper observation only. Not universally verified breeding conditions or pedigree.",
+      "verifiedAt": "2026-10-23T02:27:21.850Z"
+    },
+    {
+      "version": 1,
+      "key": "davidsandsi",
+      "verified": true,
+      "threadId": "1560953415230824582",
+      "messageId": "1563015996867084379",
+      "url": "https://discord.com/channels/1519337502379475095/1560953415230824582/1563015996867084379",
+      "botAuthorId": "1535522109571203152",
+      "sourceUrl": "https://aquapedia.app/corydoraspedia/breeding/#hoplisoma-davidsandsi",
+      "messageSha256": "683fb947903b861cdfba692afe5f891d1a2ae14427d7d78742fd6bd1262409ba",
+      "claimStatus": "Link to keeper observation only. Not universally verified breeding conditions or pedigree.",
+      "verifiedAt": "2026-10-23T02:27:34.002Z"
+    },
+    {
+      "version": 1,
+      "key": "nattereri",
+      "verified": true,
+      "threadId": "1560963836872360040",
+      "messageId": "1563016007482744882",
+      "url": "https://discord.com/channels/1519337502379475095/1560963836872360040/1563016007482744882",
+      "botAuthorId": "1535522109571203152",
+      "sourceUrl": "https://aquapedia.app/corydoraspedia/breeding/#hoplisoma-nattereri",
+      "messageSha256": "9266a5ccdd1258c2b86b1ea9fdb7a1b4a1e1f1d2e380b6e84d21ebbd98be6ec8",
+      "claimStatus": "Link to keeper observation only. Not universally verified breeding conditions or pedigree.",
+      "verifiedAt": "2026-10-23T02:27:35.862Z"
+    },
+    {
+      "version": 1,
+      "key": "xinguense",
+      "verified": true,
+      "threadId": "1560966748222656554",
+      "messageId": "1563016014738751659",
+      "url": "https://discord.com/channels/1519337502379475095/1560966748222656554/1563016014738751659",
+      "botAuthorId": "1535522109571203152",
+      "sourceUrl": "https://aquapedia.app/corydoraspedia/breeding/#hoplisoma-xinguense",
+      "messageSha256": "e7a5d38a8a5806100fe255250ece8775a24f9c956a45a262d97e50cdfcf3472e",
+      "claimStatus": "Link to keeper observation only. Not universally verified breeding conditions or pedigree.",
+      "verifiedAt": "2026-10-23T02:27:37.534Z"
+    }
+  ],
+  "otherClaimsApproved": false
+}

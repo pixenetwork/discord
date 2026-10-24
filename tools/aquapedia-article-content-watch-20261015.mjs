@@ -98,7 +98,8 @@ if(mode==='seed'){
  process.exitCode=0;
 }else{
  if(!fs.existsSync(file))throw Error('Content baseline missing: first seed after 152 receipts');
- const state=JSON.parse(fs.readFileSync(file,'utf8'));
+ const checkpointSnapshot=fs.readFileSync(file,'utf8');
+ const state=JSON.parse(checkpointSnapshot);
  if(state.version!==1)throw Error('Unsupported article checkpoint');
  const announcedCatalogPages=new Set(Object.values(old.receipts||{}).filter(x=>x.source&&x.id&&x.channel&&x.verifiedAt).map(x=>x.source));
  const changes=paths.filter(x=>!state.pages[x]||state.pages[x].digest!==now[x].digest);
@@ -174,6 +175,10 @@ if(mode==='seed'){
   try{
    lock=fs.openSync(lockFile,'wx');
    fs.writeSync(lock,JSON.stringify({pid:process.pid,mode,started:new Date().toISOString()}));
+   // A previous publisher may finish between our source scan and lock acquisition.
+   // Never publish using stale receipts or overwrite its newer checkpoint.
+   if(fs.readFileSync(file,'utf8')!==checkpointSnapshot)
+    throw Error('Article checkpoint changed during preflight; rerun complete check');
   }catch(e){
    // If ownership metadata fails after exclusive creation, release only OUR lock.
    if(lock!==undefined){

@@ -42,3 +42,24 @@ test('historical alias census requires actual private child overrides and comple
  assert.notEqual(short.status,0,'partial archive census must fail closed');
  assert.equal(short.receipt,null);
 });
+
+
+test('historical census cannot overwrite a hardlink or differently cased snapshot path',()=>{
+ const root=fs.mkdtempSync(path.join(os.tmpdir(),'pixel-alias-census-alias-'));
+ try {
+   const source=path.join(root,'snapshot.json');
+   const output=path.join(root,'receipt-hardlink.json');
+   const original=JSON.stringify(snapshot());
+   fs.writeFileSync(source,original);
+   fs.linkSync(source,output);
+   for(const actualOutput of [output,...(process.platform==='win32'?[source.toUpperCase()]:[])]){
+     const p=spawnSync(process.execPath,[script],{
+       cwd:root,encoding:'utf8',windowsHide:true,
+       env:{...process.env,DISCORD_COUNCIL_SNAPSHOT_PATH:source,DISCORD_COUNCIL_ALIAS_RECEIPT_PATH:actualOutput}
+     });
+     assert.notEqual(p.status,0,'same file identity must fail closed');
+     assert.match(p.stderr,/input and evidence output must be different files/);
+     assert.equal(fs.readFileSync(source,'utf8'),original,'original snapshot must remain unchanged');
+   }
+ }finally{fs.rmSync(root,{recursive:true,force:true});}
+});

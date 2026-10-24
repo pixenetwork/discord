@@ -5,7 +5,14 @@ import path from 'node:path';
 const local=path.join(os.homedir(),'.pixelnetwork','discord','receipts');
 const source=path.resolve(process.env.DISCORD_COUNCIL_SNAPSHOT_PATH||path.join(local,'discord-council-prechange-20261017.json'));
 const output=path.resolve(process.env.DISCORD_COUNCIL_ALIAS_RECEIPT_PATH||path.join(local,'discord-council-legacy-alias-inventory-20261017.json'));
-if(source===output)throw Error('Snapshot input and evidence output must be different files');
+// Compare resolved filesystem identity, not only path spellings: Windows path
+// case, hardlinks and symlinks must never let a report overwrite its input.
+const sourceIdentity=fs.statSync(source);
+if(fs.existsSync(output)) {
+ const outputIdentity=fs.statSync(output);
+ if(sourceIdentity.dev===outputIdentity.dev && sourceIdentity.ino===outputIdentity.ino)
+   throw Error('Snapshot input and evidence output must be different files');
+}
 const snap=JSON.parse(fs.readFileSync(source,'utf8'));
 if(!snap||!Array.isArray(snap.channels)||!/^\d+$/.test(String(snap.id||'')))throw Error('Malformed historical Discord guild snapshot');
 const hold=snap.channels.filter(x=>x.type===4 && x.name.includes('MIGRATION HOLD'));

@@ -29,7 +29,7 @@ const [channels,roles,bot]=await Promise.all([
 const plan=buildAquapediaDirectory({guildId:guild,channels,roles});
 const prior=await findDirectoryIndexPosts(request,plan.hubId);
 if(prior.length>1)throw Error('Duplicate index posts exist; refusing another write');
-if(prior.length===1&&String(prior[0].author.id)!==String(bot.id))throw Error('Index marker owned by another author');
+if(prior.length===1&&String(prior[0].author?.id)!==String(bot.id))throw Error('Index marker owned by another author');
 console.log('PREFLIGHT '+JSON.stringify({guild,channel:plan.hubId,targets:plan.targets,oldPosts:prior.length,dryRun:!applying,plannedLength:plan.content.length}));
 if(!applying){console.log('PREVIEW\n'+plan.content);process.exit(0);}
 let post;

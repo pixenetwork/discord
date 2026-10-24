@@ -36,3 +36,15 @@ A verified 404 on an existing receipt is **not** automatic approval to create a 
 ## Remaining limitations
 
 The draft's tests use mocked Discord REST calls and extracted production guarded blocks; they do **not** establish actual Discord end-to-end release readiness. Real bot security ACL, state persistence under process crash and cross-run one-writer fencing require separate independent verification. The PR remains unmerged and the live publisher remains unchanged.
+
+## First-write intent and uncertain Discord outcomes
+
+When an article has **no prior receipt**, the reviewed publisher writes a durable `status: pending` entry (with the chosen channel and a message ID only if an existing bot-owned post was already located) **before** any PATCH/POST. The record is replaced with the verified complete receipt only after independent Discord GET validates the persisted card. A POST timeout, failed readback, crash, or failed checkpoint write therefore does **not** authorize another POST: the next run encounters the pending receipt and fails closed rather than duplicating the message.
+
+A `pending` receipt is an **operator-review condition**, not publication success. Jarvis must inspect actual channel history and bot-owned marker/author/source URL through authenticated **read-only** Discord requests, reconcile whether the message exists, preserve the original IDs, and document a bounded recovery approval before any state repair. Never bootstrap, delete the pending record, truncate channel history, or force a replacement POST to clear the queue. Missing old message IDs or cross-channel receipts must remain blocked.
+
+## Automated review triage note
+
+The source-level private-channel preflight is now supplemented by validation of the **actual selected** breeder forum and shrimp destination. Current read-only Discord permissions audit found 15 breeder forums with no direct public `@everyone` ViewChannel overrides and the research-results destination private, but this is not a substitute for current role/ACL verification at release.
+
+`meaningful(main)` strips HTML elements only to calculate a stable content **digest**, not as an HTML sanitizer or rendered/user-executable output. CodeQL HTML-filter findings need independent context review; changing this digest normalization in a small security patch may cause **all existing article digests** to change, creating a mass queue. Do not adjust the hashing algorithm or dismiss active security alerts without a documented migration and qualified review.

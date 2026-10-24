@@ -8,7 +8,7 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
-import {createHash} from 'node:crypto';
+import {createHash,randomUUID} from 'node:crypto';
 import {REST,Routes,ChannelType,PermissionFlagsBits} from 'discord.js';
 import {renderAquapediaCard} from './aquapedia-post-card.mjs';
 import {requiredChannelKinds} from './aquapedia-article-destination-policy.mjs';
@@ -22,9 +22,21 @@ const hash=x=>createHash('sha256').update(x).digest('hex');
 const cap=50;
 function saveAtomically(v){
  fs.mkdirSync(path.dirname(file),{recursive:true});
- const tmp=file+'.tmp-'+process.pid;
- fs.writeFileSync(tmp,JSON.stringify(v,null,2),{encoding:'utf8',flag:'wx'});
- fs.renameSync(tmp,file);
+ // A PID can be reused after a crash; never collide with an abandoned temp file.
+ const tmp=file+'.tmp-'+process.pid+'-'+randomUUID();
+ let created=false;
+ try{
+  fs.writeFileSync(tmp,JSON.stringify(v,null,2),{encoding:'utf8',flag:'wx'});
+  created=true;
+  fs.renameSync(tmp,file);
+ }catch(e){
+  if(created){
+   try{fs.unlinkSync(tmp)}catch(cleanup){
+    if(cleanup?.code!=='ENOENT')e.cleanupError=cleanup?.message;
+   }
+  }
+  throw e;
+ }
 }
 function pagePath(v){
  return typeof v==='string'&&/^\/(?:medakapedia|shrimpapedia|arowanapedia)\//.test(v)

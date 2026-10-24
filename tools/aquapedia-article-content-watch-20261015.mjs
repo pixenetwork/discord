@@ -197,15 +197,36 @@ if(mode==='seed'){
        const recent=await rest.get(Routes.channelMessages(channel),{query:new URLSearchParams({limit:'100'})});
        message=(recent||[]).find(v=>v.author?.id===me.id&&v.content?.includes(mark))||null;
      }
+     // Compare source links and evidence fields too; a title-only match is insufficient.
+     const wanted=payload.embeds?.[0];
+     const sameCard=seen=>{
+       const card=seen?.embeds?.[0];
+       const actualFields=card?.fields||[],expectedFields=wanted?.fields||[];
+       return !!card && card.title===wanted?.title && card.description===wanted?.description
+        && card.url===wanted?.url && card.color===wanted?.color
+        && card.footer?.text===wanted?.footer?.text
+        && actualFields.length===expectedFields.length
+        && expectedFields.every((v,i)=>actualFields[i].name===v.name
+         && actualFields[i].value===v.value && Boolean(actualFields[i].inline)===Boolean(v.inline));
+     };
      let action='unchanged';
-     if(!message||message.content!==payload.content||message.embeds?.[0]?.title!==payload.embeds?.[0]?.title||message.embeds?.[0]?.description!==payload.embeds?.[0]?.description){
-       message=message
-        ?await rest.patch(Routes.channelMessage(channel,message.id),{body:payload})
+     if(!message||message.content!==payload.content||!sameCard(message)){
+       const previous=message;
+       message=previous
+        ?await rest.patch(Routes.channelMessage(channel,previous.id),{body:payload})
         :await rest.post(Routes.channelMessages(channel),{body:payload});
-       action=old?'updated':'posted';
+       action=previous?'updated':'posted';
      }
-     if(!message||message.author?.id!==me.id||!message.content?.includes(mark)||(message.attachments||[]).length)
-      throw Error('Discord write not acknowledged/readback failed '+url);
+     if(!message?.id||(old&&message.id!==old.messageId))
+      throw Error('Discord write changed or omitted existing receipt ID '+url);
+     // A PATCH/POST response is not independent readback. Fetch the persisted
+     // message and validate the entire source-linked card before checkpointing.
+     const confirmed=action==='unchanged'?message:await rest.get(Routes.channelMessage(channel,message.id));
+     if(!confirmed||confirmed.id!==message.id||confirmed.channel_id!==channel
+      ||confirmed.author?.id!==me.id||confirmed.content!==payload.content
+      ||(confirmed.attachments||[]).length||!sameCard(confirmed))
+      throw Error('Discord independent readback mismatch '+url);
+     message=confirmed;
      state.pages[url]=item;
      state.receipts[key]={key,url,channel,messageId:message.id,digest:item.digest,
       action,lastVerified:new Date().toISOString()};

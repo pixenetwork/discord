@@ -3,8 +3,8 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 
 const source=fs.readFileSync(new URL('../tools/aquapedia-article-content-watch-20261015.mjs',import.meta.url),'utf8');
-const start=source.indexOf('   const privateDestination=c=>{');
-const end=source.indexOf('   // Guard only destinations',start);
+const start=source.indexOf('  const privateDestination=c=>{');
+const end=source.indexOf('  // Guard only destinations',start);
 assert.ok(start>=0&&end>start,'Find actual publisher permission gate');
 const build=new Function('guild','channels','PermissionFlagsBits',source.slice(start,end)+'return privateDestination;');
 const guild='guild-1',researchCat='research-parent',bit=1024n;

@@ -1,18 +1,18 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {spawnSync} from 'node:child_process';
-test('current receipt-only queue excludes 21 released Cory/Pleco messages: 74 pending',()=>{
+test('current receipt-only queue excludes 23 released Cory/Pleco messages: 72 pending',()=>{
  const cwd=new URL('..',import.meta.url).pathname.replace(/^\/(?=[A-Za-z]:)/,'');
  const cmd=spawnSync(process.execPath,['tools/read-aquapedia-cross-taxa-current-queue.mjs'],{cwd,encoding:'utf8'});
  assert.equal(cmd.status,0,cmd.stderr);
  const r=JSON.parse(cmd.stdout);
- assert.equal(r.pendingCount,74);
- assert.equal(r.activeCount,38);
+ assert.equal(r.pendingCount,72);
+ assert.equal(r.activeCount,36);
  assert.equal(r.archivedHeld,36);
  assert.equal(r.verifiedGuppySourceLinks,48);
  assert.equal(r.verifiedCoryWorkingReportLinks,4);
- assert.equal(r.verifiedPlecoResearchSourceLinks,17);
- assert.deepEqual(r.byGroup,{corydoras:6,pleco:68});
+ assert.equal(r.verifiedPlecoResearchSourceLinks,19);
+ assert.deepEqual(r.byGroup,{corydoras:6,pleco:66});
  assert.equal(r.publicationAuthorized,false);
  assert.equal(r.discordWrites,0);
  assert.ok(r.activeBatches.every(x=>!x.canPublish));
@@ -26,6 +26,6 @@ test('read-only report rejects write/apply and retains 36 archived hold entries'
  assert.equal(run.status,0,run.stderr);
  const result=JSON.parse(run.stdout);
  assert.equal(result.archived.length,36);
- assert.equal(result.activeBatches.reduce((sum,x)=>sum+x.count,0),38);
+ assert.equal(result.activeBatches.reduce((sum,x)=>sum+x.count,0),36);
  assert.ok(result.archived.every(x=>x.publicationAuthorized===false));
 });

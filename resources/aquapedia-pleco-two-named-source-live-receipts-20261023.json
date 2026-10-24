@@ -1,0 +1,37 @@
+{
+  "capturedAt": "2026-10-23",
+  "verified": true,
+  "repeatAction": "adopted",
+  "scope": "two managed-bot named-species source-only publications, not claim or specimen verification",
+  "records": [
+    {
+      "version": 1,
+      "verified": true,
+      "key": "anc-claro",
+      "threadId": "1561139086432010261",
+      "messageId": "1563391459728560288",
+      "botAuthorId": "1535522109571203152",
+      "url": "https://discord.com/channels/1519337502379475095/1561139086432010261/1563391459728560288",
+      "sourceUrl": "https://aquapedia.app/plecopedia/research/anc-claro/",
+      "catalogUrl": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=65318",
+      "messageSha256": "bdb7e9455c14d9914563baddadfced35077185fa403adfdc05253ce8a559e78f",
+      "scope": "Named-species bibliography source only, not specimen identity or breeder genealogy",
+      "verifiedAt": "2026-10-24T03:19:30.631Z"
+    },
+    {
+      "version": 1,
+      "verified": true,
+      "key": "pana-nocturnus",
+      "threadId": "1561147036588318821",
+      "messageId": "1563391526602539148",
+      "botAuthorId": "1535522109571203152",
+      "url": "https://discord.com/channels/1519337502379475095/1561147036588318821/1563391526602539148",
+      "sourceUrl": "https://aquapedia.app/plecopedia/research/pana-nocturnus/",
+      "catalogUrl": "https://researcharchive.calacademy.org/research/ichthyology/catalog/fishcatget.asp?spid=62021",
+      "messageSha256": "c3f5663c2b882e8bb021c82603a83dedf656fa326134f00f18b0d3e838b067de",
+      "scope": "Named-species bibliography source only, not specimen identity or breeder genealogy",
+      "verifiedAt": "2026-10-24T03:19:46.735Z"
+    }
+  ],
+  "otherDraftsAuthorized": false
+}

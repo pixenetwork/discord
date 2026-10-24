@@ -1,3 +1,5 @@
+> **LATEST AFTER NAMED-SPECIES POSTS (October 23, 2026):** Two further original Eschmeyer catalog source-only links have been independently posted and receipt verified. The previous 74 pending / 38 active figures below are historical; the current read-only queue shows **72 pending = 36 active Pleco + 36 archived Cory/Pleco holds**. See `docs/operations/aquapedia-pleco-two-named-source-live-20261023.md`. No other scientific claims or third-party media were published.
+
 # Plecopedia nomenclature corrections — LIVE Discord receipt verification, October 23, 2026
 
 Two source-only **taxonomic naming-history** index messages are public in the original Aquaphoria Discord bot's existing, public, unarchived Plecopedia threads. These are research-directory links only, not authenticated aquarium stock identification or a genetic gene tree.

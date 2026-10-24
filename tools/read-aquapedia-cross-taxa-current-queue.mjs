@@ -11,6 +11,7 @@ import {reconcileFivePlecoSourcePosts} from '../src/aquapedia-pleco-five-reconci
 import {reconcileSevenPlecoTaxonomySources} from '../src/aquapedia-pleco-seven-taxonomy-reconciliation.mjs';
 import {reconcileThreeDirectPlecoDescriptions} from '../src/aquapedia-pleco-three-direct-reconciliation.mjs';
 import {reconcileTwoPlecoNames} from '../src/aquapedia-pleco-two-nomenclature-reconciliation.mjs';
+import {reconcileTwoNamedPlecoSources} from '../src/aquapedia-pleco-two-named-source-reconciliation.mjs';
 const read=x=>JSON.parse(fs.readFileSync(new URL(x,import.meta.url),'utf8').replace(/^\uFEFF/,''));
 const args=process.argv.slice(2);
 if(args.length>1||args.some(x=>x!=='--queue'))throw Error('Only optional --queue supported; no apply or write');
@@ -27,6 +28,7 @@ const fiveReceipts=read('../resources/aquapedia-pleco-five-live-receipts-2026102
 const sevenReceipts=read('../resources/aquapedia-pleco-seven-taxonomy-live-receipts-20261023.json');
 const threeReceipts=read('../resources/aquapedia-pleco-three-direct-live-receipts-20261023.json');
 const twoReceipts=read('../resources/aquapedia-pleco-two-nomenclature-live-receipts-20261023.json');
+const namedReceipts=read('../resources/aquapedia-pleco-two-named-source-live-receipts-20261023.json');
 const plecoEditorial=read('../resources/aquapedia-pleco-active-55-editorial-review-20261023.json');
 const afterGuppy=stageCrossTaxaAfterAllGuppyIndexes(manifest,guppySource,base,later);
 const cory=reconcileFourCorySourceLinks(corySource,coryReceipts,guppyLedger,manifest);
@@ -34,21 +36,23 @@ const five=reconcileFivePlecoSourcePosts(plecoSource,fiveReceipts,plecoEditorial
 const seven=reconcileSevenPlecoTaxonomySources(plecoSource,sevenReceipts,manifest,fiveReceipts);
 const three=reconcileThreeDirectPlecoDescriptions(plecoSource,threeReceipts,manifest,fiveReceipts,sevenReceipts);
 const two=reconcileTwoPlecoNames(plecoSource,twoReceipts,manifest,fiveReceipts,sevenReceipts,threeReceipts);
+const named=reconcileTwoNamedPlecoSources(plecoSource,namedReceipts,manifest,fiveReceipts,sevenReceipts,threeReceipts,twoReceipts);
 const released=new Set([
  ...cory.coryPublished.map(x=>'corydoras:research-section-backlink:hoplisoma-'+x.key+'-breeding'),
  ...five.releasedProposalIds,
  ...seven.completedProposalIds,
  ...three.completedIds,
- ...two.completedIds
+ ...two.completedIds,
+ ...named.completedIds
 ]);
-if(released.size!==21)throw Error('Exactly twenty-one non-Guppy source-link receipts required');
+if(released.size!==23)throw Error('Exactly twenty-three non-Guppy source-link receipts required');
 const active=afterGuppy.batches.flatMap(b=>b.items).filter(x=>!released.has(x.id));
 const archived=afterGuppy.archived;
-if(active.length!==38||archived.length!==36||active.some(x=>x.group!=='pleco')||
+if(active.length!==36||archived.length!==36||active.some(x=>x.group!=='pleco')||
  cory.pendingCrossTaxaProposals!==91||five.remainingProposals!==86||
- seven.remaining!==79||three.pendingCount!==76||two.pendingCount!==74)
+ seven.remaining!==79||three.pendingCount!==76||two.pendingCount!==74||named.pendingCount!==72)
  throw Error('Current queue mismatches frozen proposals and verified receipts');
-if(new Set([...active,...archived].map(x=>x.receiptKey)).size!==74)
+if(new Set([...active,...archived].map(x=>x.receiptKey)).size!==72)
  throw Error('Duplicate pending publication receipt identity');
 const view=x=>({
  id:x.id,group:x.group,existingThreadId:x.existingThreadId,sourceUrls:x.sourceUrls,
@@ -61,16 +65,16 @@ for(let i=0;i<active.length;i+=12){
   ...(detailed?{items:items.map(view)}:{ids:items.map(x=>x.id)})});
 }
 console.log(JSON.stringify({
- schema:'aquapedia.cross-taxa.post-two-pleco-nomenclature-reviewed.v1',
+ schema:'aquapedia.cross-taxa.post-two-pleco-named-sources-reviewed.v1',
  verifiedGuppySourceLinks:cory.guppyStandardIndexLinks,
  verifiedCoryWorkingReportLinks:cory.corySourceLinksVerified,
  verifiedPlecoResearchSourceLinks:
   five.verifiedPlecoResearchLinks+seven.verifiedPlecoTaxonomyPosts+
-  three.verifiedDirectDescriptionMessages+two.verifiedNomenclatureMessages,
+  three.verifiedDirectDescriptionMessages+two.verifiedNomenclatureMessages+named.verifiedNamedSpeciesPosts,
  historicalReviewItems:99,
- pendingCount:74,activeCount:38,archivedHeld:36,
- byGroup:{corydoras:6,pleco:68},
- activeByGroup:{corydoras:0,pleco:38},
+ pendingCount:72,activeCount:36,archivedHeld:36,
+ byGroup:{corydoras:6,pleco:66},
+ activeByGroup:{corydoras:0,pleco:36},
  activeBatches:batches,
  archived:detailed?archived.map(view):{held:archived.length},
  noPublishAccess:true,publicationAuthorized:false,discordWrites:0,

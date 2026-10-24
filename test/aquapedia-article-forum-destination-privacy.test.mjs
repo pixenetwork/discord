@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 const src=fs.readFileSync(new URL('../tools/aquapedia-article-content-watch-20261015.mjs',import.meta.url),'utf8');
 const start=src.indexOf('const dest=url=>{');
-const end=src.indexOf('   let lock;',start);
+const end=src.indexOf('  let lock;',start);
 assert.ok(start>=0&&end>start,'Locate actual forum destination routing code');
 const mk=new Function('catUrlToEntry','threads','breederForums','cleanName','privateDestination','shrimps','results',src.slice(start,end)+'return dest;');
 const route='/medakapedia/strains/rinkou/';

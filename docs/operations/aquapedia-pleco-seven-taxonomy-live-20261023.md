@@ -1,3 +1,5 @@
+> **CURRENT AFTER THREE DIRECT DESCRIPTIONS (October 23, 2026):** The earlier **79 pending / 43 active Pleco** tally is historical. Three additional exact-DOI, bot-readback-verified original-description links are public. The **current review-only queue is 76 total = 40 active Pleco + 36 archived Pleco/Cory**. See `docs/operations/aquapedia-pleco-three-direct-live-20261023.md` and the read-only queue reporter. Unresolved L-number aliases, breeder information, media rights and archive operations remain held.
+
 # Seven Plecopedia taxonomic sources — live and independently verified (October 23, 2026)
 
 Seven **source-only directory references** are now publicly posted through the original Aquaphoria bot to seven pre-existing, public, bot-owned, active Pleco species research threads.

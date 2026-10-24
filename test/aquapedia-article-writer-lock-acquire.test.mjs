@@ -17,7 +17,7 @@ test('lock open failure must not unlink a lock this process does not own',()=>{
   unlinkSync:()=>events.push('unlink'),
   writeSync:()=>events.push('write')
  };
- assert.throws(()=>acquire(mock,lockFile,{pid:123},'apply'),/Existing sync publisher holds shared writer lock/);
+ assert.throws(()=>acquire(mock,lockFile,{pid:123},'apply'),/Existing sync publisher could not acquire or record writer lock/);
  assert.deepEqual(events,['open']);
 });
 test('ownership metadata write failure cleans up newly acquired lock',()=>{
@@ -28,7 +28,7 @@ test('ownership metadata write failure cleans up newly acquired lock',()=>{
   closeSync:fd=>events.push('close:'+fd),
   unlinkSync:p=>events.push('unlink:'+p)
  };
- assert.throws(()=>acquire(mock,lockFile,{pid:123},'apply'),/Existing sync publisher holds shared writer lock/);
+ assert.throws(()=>acquire(mock,lockFile,{pid:123},'apply'),/Existing sync publisher could not acquire or record writer lock/);
  assert.deepEqual(events,['open','write','close:77','unlink:'+lockFile]);
 });
 test('successful acquisition retains the lock for the publication loop',()=>{

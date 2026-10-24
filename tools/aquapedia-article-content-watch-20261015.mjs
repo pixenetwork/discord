@@ -142,7 +142,10 @@ if(mode==='seed'){
    .replace(/[^\p{L}\p{N}]/gu,'').toLocaleLowerCase();
   const dest=url=>{
     const x=catUrlToEntry.get(url);
-    if(url.startsWith('/shrimpapedia/')||x?.group==='shrimp')return shrimps.id;
+    if(url.startsWith('/shrimpapedia/')||x?.group==='shrimp'){
+     privateDestination(shrimps); // Validate actual selected route, not only the URL-derived preflight.
+     return shrimps.id;
+    }
     if(x){
      const candidates=threads.filter(t=>cleanName(t.name)===cleanName(x.name));
      if(candidates.length===1){

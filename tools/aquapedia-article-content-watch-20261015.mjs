@@ -74,7 +74,8 @@ async function pool(input,limit,work){
  await Promise.all(workers);
  return output;
 }
-const old=JSON.parse(fs.readFileSync(priorFile,'utf8'));
+const priorSnapshot=fs.readFileSync(priorFile,'utf8');
+const old=JSON.parse(priorSnapshot);
 if(old.version!==1||Object.keys(old.catalogHashes||{}).length<185)
  throw Error('Prior verified catalog baseline missing/incompatible');
 const paths=[...new Set(old.knownRoutes.map(pagePath).filter(Boolean))].sort();
@@ -179,6 +180,8 @@ if(mode==='seed'){
    // Never publish using stale receipts or overwrite its newer checkpoint.
    if(fs.readFileSync(file,'utf8')!==checkpointSnapshot)
     throw Error('Article checkpoint changed during preflight; rerun complete check');
+   if(fs.readFileSync(priorFile,'utf8')!==priorSnapshot)
+    throw Error('Metadata baseline changed during preflight; rerun complete check');
   }catch(e){
    // If ownership metadata fails after exclusive creation, release only OUR lock.
    if(lock!==undefined){

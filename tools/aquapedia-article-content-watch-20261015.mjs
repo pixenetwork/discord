@@ -145,7 +145,13 @@ if(mode==='seed'){
     if(url.startsWith('/shrimpapedia/')||x?.group==='shrimp')return shrimps.id;
     if(x){
      const candidates=threads.filter(t=>cleanName(t.name)===cleanName(x.name));
-     if(candidates.length===1)return candidates[0].id;
+     if(candidates.length===1){
+       const forum=breederForums.find(f=>f.id===candidates[0].parent_id);
+       if(!forum)throw Error('Selected breeder thread lost its parent forum '+url);
+       // A forum may explicitly allow @everyone despite a private parent category.
+       privateDestination(forum);
+       return candidates[0].id;
+     }
     }
     return results.id;
   };

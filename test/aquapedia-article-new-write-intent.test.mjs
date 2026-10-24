@@ -50,3 +50,11 @@ test('failed post-readback leaves a pending receipt to prevent unsafe retries',a
  assert.equal(h.state.receipts[key]?.messageId??null,null);
  assert.equal(h.calls.filter(c=>c.kind==='post').length,1);
 });
+
+test('retry after an uncertain first POST refuses to create a second message',async()=>{
+ const h=harness({readbackFails:true});
+ await assert.rejects(h.run(),/Discord GET unavailable/);
+ await assert.rejects(h.run(),/Old receipt missing message ID or channel mismatch/);
+ assert.equal(h.calls.filter(c=>c.kind==='post').length,1);
+ assert.equal(h.state.receipts[key]?.status,'pending');
+});

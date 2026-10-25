@@ -8,7 +8,7 @@ const routes=Array.from({length:526},(_,i)=>'/medakapedia/strains/verified-'+i+'
 const pages=Object.fromEntries(routes.map(route=>[route,{digest:'sha256-old'}]));
 
 test('article publisher validates tracked route coverage before considering changes',()=>{
- assert.match(publisher,/assertTrackedRouteCoverage\(paths,state\.pages\)/);
+ assert.match(publisher,/assertTrackedRouteCoverage\(paths,state\.pages,state\.receipts\)/);
 });
 test('complete 526-route inventory is accepted',()=>{
  assert.doesNotThrow(()=>assertTrackedRouteCoverage(routes,pages));

@@ -5,6 +5,11 @@ import {buildMedaka79Index, verifyMedaka79PublishedMessages}
 // Pure protocol module. The existing Jarvis/HostOps runtime must supply a
 // signature-verifying authorizer, an exclusive lock, Discord I/O and an atomic
 // receipt store. No credentials, timers, token fetches or automatic execution.
+// Discord message flags: SUPPRESS_EMBEDS (1<<2) blocks URL link-preview embeds
+// that could show unlicensed third-party fish photos; SUPPRESS_NOTIFICATIONS
+// (1<<12) keeps the 11-message index from pushing notifications. 4096 alone is
+// only SUPPRESS_NOTIFICATIONS and does not suppress embeds.
+export const MEDAKA79_MESSAGE_FLAGS=(1<<2)|(1<<12);
 const EXPECTED_SOURCE_SHA='5e15684e2059f94a1c4c3c47ba67d723ec5b98ce13097efcf546bdd428e6e7f0';
 
 export async function publishApprovedMedaka79({
@@ -143,7 +148,7 @@ export async function publishApprovedMedaka79({
       }
       const created=await discord.createThread({
         forumId:plan.forumId, name:plan.threadName,
-        content:plan.starter,allowedMentions:{parse:[]},flags:4096, // SuppressEmbeds
+        content:plan.starter,allowedMentions:{parse:[]},flags:MEDAKA79_MESSAGE_FLAGS,
       });
       if(!created?.threadId || !created?.starterId){
         throw new Error('Discord starter post not verifiable');
@@ -161,7 +166,7 @@ export async function publishApprovedMedaka79({
     const partsToSend=plan.parts.slice(messageIds.length-1);
     for(const part of partsToSend){
       const sent=await discord.send(thread.threadId,{
-        content:part.content,allowedMentions:{parse:[]},flags:4096, // SuppressEmbeds
+        content:part.content,allowedMentions:{parse:[]},flags:MEDAKA79_MESSAGE_FLAGS,
       });
       if(!sent?.id)throw new Error('Discord returned a reply without message ID');
       messageIds.push(String(sent.id));

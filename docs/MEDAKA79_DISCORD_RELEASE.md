@@ -76,7 +76,10 @@ All content is rebuilt from the checked-in 79-entry matrix and checked against
 the plan; the SHA-256 normalizes only Windows checkout CRLF line endings to
 the Git LF canonical bytes. The publisher checks that every proposed message
 equals the source-locked plan. Every Discord message requests
-`flags:4096` (**SuppressEmbeds**) to avoid accidental third-party image
+`flags: SUPPRESS_EMBEDS | SUPPRESS_NOTIFICATIONS` (`(1<<2)|(1<<12)` = 4100) to
+avoid accidental third-party image link previews, and `allowedMentions: {parse:[]}`.
+(Earlier revisions sent `flags:4096`, which is only SUPPRESS_NOTIFICATIONS and
+would still have rendered URL preview embeds.)
 
 Source-record URL validation now rejects query strings (`?`) and hash fragments
 (`#`) on allowed specialist research hosts, preventing injection of unexpected
@@ -89,7 +92,6 @@ making partial-publication diagnostics unambiguous. All injected runtime adapter
 capabilities — including `savePartial` and `loadPartial` — are validated before
 the signed authorization grant is consumed, so a misconfigured runtime fails
 immediately without spending a one-use approval token.
-link previews, and `allowedMentions: {parse:[]}`.
 
 **No runtime binding or live publishing is activated by this PR.** The existing
 running bot was observed on an older dirty checkout, and legacy HostOps V2

@@ -6,6 +6,15 @@ import path from 'node:path';
 import {buildMedaka79Index} from '../src/medaka79-research-index.mjs';
 import {publishApprovedMedaka79} from '../src/medaka79-approved-publisher.mjs';
 
+// Discord message flags: SUPPRESS_EMBEDS is 1<<2 (4); 4096 is 1<<12,
+// SUPPRESS_NOTIFICATIONS, which does NOT stop link-preview embeds.
+const SUPPRESS_EMBEDS=1<<2;
+const SUPPRESS_NOTIFICATIONS=1<<12;
+function assertSuppressesEmbeds(flags){
+  assert.equal(typeof flags,'number');
+  assert.equal(flags&SUPPRESS_EMBEDS,SUPPRESS_EMBEDS,'source citations must not generate third-party fish photo previews');
+  assert.equal(flags&~(SUPPRESS_EMBEDS|SUPPRESS_NOTIFICATIONS),0,'only embed and notification suppression flags may be sent');
+}
 const dir=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const bytes=readFileSync(path.join(dir,'resources/aquapedia-medaka79-20261020.json'));
 const plan=buildMedaka79Index(JSON.parse(bytes),{rawSource:bytes});
@@ -45,7 +54,7 @@ function fixture({
       calls.created++;
       assert.equal(params.forumId,plan.forumId);
       assert.deepEqual(params.allowedMentions,{parse:[]});
-      assert.equal(params.flags,4096,'source citations must not generate third-party fish photo previews');
+      assertSuppressesEmbeds(params.flags);
       const starterId=String(++id);
       records.set(starterId,{id:starterId,author:{id:botId},content:params.content});
       return {threadId:'6000',starterId};
@@ -53,7 +62,7 @@ function fixture({
     async send(threadId,params){
       calls.sent++;
       assert.deepEqual(params.allowedMentions,{parse:[]});
-      assert.equal(params.flags,4096,'source citations must not generate third-party fish photo previews');
+      assertSuppressesEmbeds(params.flags);
       const messageId=String(++id);
       records.set(messageId,{id:messageId,author:{id:botId},content:params.content});
       return {id:messageId};

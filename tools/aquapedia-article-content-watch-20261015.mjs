@@ -17,7 +17,7 @@ import {assertTrackedRouteCoverage} from './aquapedia-article-route-integrity.mj
 import {migratePrivateShrimpArticle,PRIVATE_SHRIMP_MIGRATION_ROUTES} from './aquapedia-private-shrimp-migration.mjs';
 
 const migrateFlag=process.argv.includes('--migrate-shrimp-private');
-if(migrateFlag&&(process.argv.includes('--seed')||process.argv.includes('--apply')))
+if(migrateFlag&&(process.argv.includes('--seed')||process.argv.includes('--apply')||process.argv.includes('--check')))
  throw Error('Do not combine private migration with seed or regular apply');
 const mode=migrateFlag?'migrate':process.argv.includes('--seed')?'seed':process.argv.includes('--apply')?'apply':'check';
 const base='https://aquapedia.app';
@@ -52,7 +52,9 @@ function meaningful(main){
  // This is a digest normalizer, not a general-purpose HTML sanitizer.
  // Do not render its output. A scanner avoids overlapping replacement
  // patterns and recognizes whitespace in valid closing raw-text tags.
- const lower=main.toLowerCase();
+ // HTML element names use ASCII case. Unicode lowercasing may expand UTF-16
+ // length and misalign raw-text tag positions against the original source.
+ const lower=main.replace(/[A-Z]/g,ch=>ch.toLowerCase());
  const kept=[];
  let cursor=0,spanStart=0;
  while(cursor<main.length){
@@ -312,6 +314,7 @@ if(mode==='seed'){
        '**AQUAPEDIA â€” UPDATED RESEARCH ARTICLE**',
        '**Article:** '+(entry?.name||item.title),
        '**Change:** The published research article content was updated since the last verified Discord sync.',
+       '**Revision fingerprint:** '+item.digest.slice(0,16),
        '**Source evidence and updated report:** '+base+url,
        '**Scope:** '+(entry?.summary||'Read the full article for its original source citations.').slice(0,260),
        '**Evidence:** Updated article content is not itself proof of DNA-verified lineage, breeder-original inventor status, or photographic reuse rights.',
@@ -366,7 +369,8 @@ if(mode==='seed'){
        // embeds, thumbnails or author/media metadata as a verified text card.
        if(!Array.isArray(seen?.embeds)||seen.embeds.length!==payload.embeds?.length
          ||!card||['image','thumbnail','video','author','provider','timestamp'].some(k=>card[k]!==undefined)
-         ||(card.type!==undefined&&card.type!=='rich'))return false;
+         ||(card.type!==undefined&&card.type!=='rich')
+         ||Object.keys(card.footer||{}).some(k=>k!=='text'))return false;
        return card.title===wanted?.title && card.description===wanted?.description
         && card.url===wanted?.url && card.color===wanted?.color
         && card.footer?.text===wanted?.footer?.text
@@ -375,7 +379,9 @@ if(mode==='seed'){
          && actualFields[i].value===v.value && Boolean(actualFields[i].inline)===Boolean(v.inline));
      };
      let action='unchanged';
-     if(!message||message.content!==payload.content||!sameCard(message)){
+     // A new content digest must result in a write even if title/summary stayed the same.
+     if(!message||(old&&old.digest!==item.digest)
+       ||message.content!==payload.content||!sameCard(message)){
        const previous=message;
        message=previous
         ?await rest.patch(Routes.channelMessage(targetChannel,previous.id),{body:payload})

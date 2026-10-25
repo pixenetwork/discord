@@ -18,7 +18,8 @@ function matchingEmbed(received,wanted){
  // Require an exact text-only card, never one with hidden legacy media.
  if(!received||!wanted
    ||['image','thumbnail','video','author','provider','timestamp'].some(k=>received[k]!==undefined)
-   ||(received.type!==undefined&&received.type!=='rich'))return false;
+   ||(received.type!==undefined&&received.type!=='rich')
+   ||Object.keys(received.footer||{}).some(k=>k!=='text'))return false;
  return received.title===wanted.title
   &&received.description===wanted.description&&received.url===wanted.url
   &&received.color===wanted.color&&received.footer?.text===wanted.footer?.text
@@ -40,9 +41,11 @@ export async function migratePrivateShrimpArticle({
    ||payload.embeds?.[0]?.url!=='https://aquapedia.app'+url)
   throw Error('PRIVATE_SHRIMP_MIGRATION_BLOCK missing sourced article payload');
  const previous=await rest.get(Routes.channelMessage(old.channel,old.messageId));
- if(!previous||previous.id!==old.messageId||previous.author?.id!==botId
+ if(!previous||previous.id!==old.messageId
+   ||previous.channel_id!==old.channel||previous.author?.id!==botId
    ||!previous.content?.includes(mark)
-   ||!JSON.stringify(previous.embeds||[]).includes('https://aquapedia.app'+url))
+   ||!Array.isArray(previous.embeds)
+   ||!previous.embeds.some(embed=>embed?.url==='https://aquapedia.app'+url))
   throw Error('PRIVATE_SHRIMP_MIGRATION_BLOCK historical Discord receipt failed readback');
  const recent=await rest.get(Routes.channelMessages(targetChannel),{
   query:new URLSearchParams({limit:'100'}),

@@ -6,7 +6,7 @@ import {requiredChannelKinds,channelWriteCandidates} from '../tools/aquapedia-ar
 const source=fs.readFileSync(new URL('../tools/aquapedia-article-content-watch-20261015.mjs',import.meta.url),'utf8');
 
 test('actual publisher filters receipt-only adoptions before privacy destination preflight',()=>{
- assert.match(source,/channelWriteCandidates\(changes,cap,state\.pages,announcedCatalogPages\)/);
+ assert.match(source,/channelWriteCandidates\(workChanges,cap,state\.pages,announcedCatalogPages\)/);
  assert.match(source,/requiredChannelKinds\(writeCandidates,cap\)/);
 });
 test('already-verified metadata receipts do not require private-channel write preflight',()=>{

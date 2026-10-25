@@ -7,7 +7,7 @@ const start=src.indexOf('const channel=dest(url),old=state.receipts[key];');
 const end=src.indexOf('state.pages[url]=item;',start);
 assert.ok(start>=0&&end>start,'Find production article write flow');
 const AsyncFunction=Object.getPrototypeOf(async function(){}).constructor;
-const perform=new AsyncFunction('rest','Routes','state','key','url','dest','me','mark','payload','saveAtomically',src.slice(start,end)+'return {message,action};');
+const perform=new AsyncFunction('rest','Routes','state','key','url','dest','me','mark','payload','saveAtomically','mode','migratePrivateShrimpArticle',src.slice(start,end)+'return {message,action};');
 const url='/medakapedia/strains/verified-new/';
 const key='article-v1-new-article';
 const channel='private-research';
@@ -29,7 +29,7 @@ function harness({readbackFails=false}={}){
   patch:async()=>{throw Error('PATCH forbidden on new item')}
  };
  const run=()=>perform(rest,{channelMessages:()=> 'recent',channelMessage:(ch,id)=> 'message:'+id},
-  state,key,url,()=>channel,{id:'bot-user'},mark,payload,saveAtomically);
+  state,key,url,()=>channel,{id:'bot-user'},mark,payload,saveAtomically,'apply',async()=>{throw Error('Unexpected migration mode')});
  return {calls,state,run};
 }
 test('a new Discord POST requires a durable pending receipt BEFORE external write',async()=>{

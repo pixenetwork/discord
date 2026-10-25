@@ -220,7 +220,9 @@ if(mode==='seed'){
   // Live public shrimp-guides is not a private publication destination.
   // Use only the independently verified dedicated channel inside the research category.
   const shrimps=channels.find(x=>x.type===ChannelType.GuildText&&x.parent_id===researcher.id&&/shrimp-research-updates/i.test(x.name));
-  if(!results||!shrimps)throw Error('Existing destination channels missing');
+  const neededKinds=requiredChannelKinds(writeCandidates,cap);
+  if((neededKinds.includes('research')&&!results)||(neededKinds.includes('shrimp')&&!shrimps))
+   throw Error('Required private article write destination missing');
   // Fail closed: every write destination must deny @everyone ViewChannel.
   // An explicit allow on a child overrides a private parent category.
   const privateDestination=c=>{
@@ -235,7 +237,7 @@ if(mode==='seed'){
   // Guard only destinations used by THIS batch. Shrimp-guides is in the
   // public AQUAPEDIA category; never weaken its private-only publication gate.
   // Medaka-only updates must not be blocked by the unused shrimp destination.
-  for(const kind of requiredChannelKinds(writeCandidates,cap)){
+  for(const kind of neededKinds){
    privateDestination(kind==='shrimp'?shrimps:results);
   }
   const breederForums=channels.filter(x=>x.type===ChannelType.GuildForum&&x.parent_id===breeder.id);

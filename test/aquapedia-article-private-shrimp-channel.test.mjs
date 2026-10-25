@@ -4,7 +4,7 @@ import fs from 'node:fs';
 
 const src=fs.readFileSync(new URL('../tools/aquapedia-article-content-watch-20261015.mjs',import.meta.url),'utf8');
 const start=src.indexOf('  const results=channels.find(');
-const end=src.indexOf('  if(!results||!shrimps)',start);
+const end=src.indexOf('  const neededKinds=',start);
 assert.ok(start>=0&&end>start,'Find real article publisher destination discovery');
 const discover=new Function('channels','ChannelType','researcher',src.slice(start,end)+'return {results,shrimps};');
 

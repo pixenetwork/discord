@@ -8,7 +8,7 @@ const end=source.indexOf('state.pages[url]=item;',start);
 assert.ok(start>=0 && end>start,'Extract actual publisher Discord write and receipt-validation logic');
 const AsyncFunction=Object.getPrototypeOf(async function(){}).constructor;
 const runBlock=new AsyncFunction('rest','Routes','state','key','url','dest','me','mark','payload','saveAtomically','mode','migratePrivateShrimpArticle',
- source.slice(start,end)+'return {message,action};');
+ source.slice(start,end).replace(/\bcontinue;/,'return {message:null,action:"migrated"};')+'return {message,action};');
 
 const url='/medakapedia/strains/rinkou/';
 const key='article-v1-test-readback';

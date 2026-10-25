@@ -87,3 +87,21 @@ test('readback with wrong bot identity is rejected',async()=>{
  assert.equal(h.calls.posts,0);
  assert.equal(JSON.stringify(h.state),h.before);
 });
+
+test('independent readback refuses unexpected second embed',async()=>{
+ const stale={...updated,embeds:[...updated.embeds,{title:'Unexpected media embed'}]};
+ const h=makeHarness({confirmed:stale});
+ await assert.rejects(h.run(),/readback mismatch/);
+ assert.equal(h.calls.posts,0);
+ assert.equal(JSON.stringify(h.state),h.before);
+});
+test('independent readback refuses hidden image or thumbnail data',async()=>{
+ for(const extra of [{image:{url:'https://example.test/stale.jpg'}},
+  {thumbnail:{url:'https://example.test/thumb.jpg'}},
+  {author:{name:'External'}}]){
+  const stale={...updated,embeds:[{...updated.embeds[0],...extra}]};
+  const h=makeHarness({confirmed:stale});
+  await assert.rejects(h.run(),/readback mismatch/);
+  assert.equal(h.calls.posts,0);
+ }
+});

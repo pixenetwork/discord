@@ -7,7 +7,7 @@ const to=text.indexOf('state.pages[url]=item;',from);
 assert.ok(from>=0 && to>from,'find actual guarded Discord write block');
 const snippet=text.slice(from,to).replace(/\bcontinue;/,'return {message:null,action:"migrated"};');
 const AsyncFunction=Object.getPrototypeOf(async function(){}).constructor;
-const action=new AsyncFunction('rest','Routes','state','key','url','dest','me','mark','payload','entry','resolveArchivedReceiptChannel','mode','migratePrivateShrimpArticle',snippet+' return {message,action};');
+const action=new AsyncFunction('rest','Routes','state','key','url','dest','me','mark','payload','item','entry','resolveArchivedReceiptChannel','mode','migratePrivateShrimpArticle',snippet+' return {message,action};');
 const url='/medakapedia/strains/rinkou/';
 const key='article-v1-unchanged-key';
 const mark='[AQUAPEDIA-ARTICLE-SYNC:'+key+']';
@@ -31,8 +31,8 @@ function harness(get,extra={}){
    return persisted;
   },
  };
- const state={receipts:{[key]:{messageId:existing.id,channel}}};
- return {calls,state,run:()=>action(rest,{channelMessage:(c,id)=>{extra.seenChannels?.push(c);return 'msg:'+id},channelMessages:c=>'recent'},state,key,url,()=>channel,{id:'bot-1'},mark,payload,null,(extra.resolve||(async()=>{throw Error('Old receipt missing message ID or channel mismatch')})),'apply',async()=>{throw Error('Unexpected migration mode')})};
+ const state={receipts:{[key]:{messageId:existing.id,channel,digest:'fixture'}}};
+ return {calls,state,run:()=>action(rest,{channelMessage:(c,id)=>{extra.seenChannels?.push(c);return 'msg:'+id},channelMessages:c=>'recent'},state,key,url,()=>channel,{id:'bot-1'},mark,payload,{digest:'fixture'},null,(extra.resolve||(async()=>{throw Error('Old receipt missing message ID or channel mismatch')})),'apply',async()=>{throw Error('Unexpected migration mode')})};
 }
 for(const s of [403,404,429,500,503]){
  test('existing receipt '+s+' keeps writer and receipt unchanged',async()=>{

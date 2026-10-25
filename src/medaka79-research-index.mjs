@@ -13,7 +13,8 @@ const TIERS = [
 const ALLOWED_HOSTS = new Set(['medakazukan.net', 'www.medakazukan.net', 'medakanoyakata.muragon.com']);
 
 function safe(value, max = 140) {
-  const text = String(value ?? '').replace(/[\r\n\t]/g, ' ').replace(/[@`*_~|<>]/g, ' ').trim();
+  // Remove display-text Markdown link and mention constructs while leaving evidence IDs unchanged.
+  const text = String(value ?? '').replace(/[\r\n\[\]()@<>*_~\\\x60]/g, ' ').trim();
   if (!text || text.length > max) throw new Error('Invalid source-research display text');
   return text;
 }
@@ -35,8 +36,9 @@ export function buildMedaka79Index(matrix, { rawSource } = {}) {
     names.add(id);
     const url = new URL(String(item.primary_source_url ?? 'https://invalid.invalid'));
     if (url.protocol !== 'https:' || !ALLOWED_HOSTS.has(url.hostname)
-      || url.username || url.password || url.pathname === '/') {
-      throw new Error('Unapproved or unsafe specialist research source URL');
+      || url.username || url.password || url.pathname === '/'
+      || url.search || url.hash) {
+      throw new Error('Unapproved or unsafe Medaka source URL');
     }
     if (item.photo_rights !== 'NOT_GRANTED'
       || item.authenticated_standalone_bloodline !== false
@@ -104,8 +106,11 @@ export function buildMedaka79Index(matrix, { rawSource } = {}) {
     threadName: MEDAKA79_THREAD_NAME,
     records: 79,
     counts,
-    // Match Git's canonical LF source bytes even when Windows checks out CRLF.
-    sourceSha256: rawSource ? crypto.createHash('sha256').update(Buffer.from(rawSource).toString('utf8').replace(/\r\n/g, '\n')).digest('hex') : null,
+    sourceSha256: rawSource
+      ? crypto.createHash('sha256').update(Buffer.from(
+        Buffer.from(rawSource).toString('utf8').replace(/\r\n/g, '\n'), 'utf8'
+      )).digest('hex')
+      : null,
     starter,
     parts,
     allowedMentions: { parse: [] },

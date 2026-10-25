@@ -35,6 +35,15 @@ test('source-linked 79-record Medaka index stays distinct from authenticated str
   }
 });
 
+test('source fingerprint is stable across Windows CRLF and Git LF checkouts', () => {
+  const lf=Buffer.from(bytes.toString('utf8').replace(/\r\n/g,'\n'),'utf8');
+  const crlf=Buffer.from(lf.toString('utf8').replace(/\n/g,'\r\n'),'utf8');
+  const clean=buildMedaka79Index(JSON.parse(lf),{rawSource:lf});
+  const windows=buildMedaka79Index(JSON.parse(crlf),{rawSource:crlf});
+  assert.equal(clean.sourceSha256,'5e15684e2059f94a1c4c3c47ba67d723ec5b98ce13097efcf546bdd428e6e7f0');
+  assert.equal(windows.sourceSha256,clean.sourceSha256);
+});
+
 test('index rejects changes in research evidence tiers, image rights and pedigree claims',()=>{
   for(const [field,value] of [
     ['photo_rights','permission_granted'],
@@ -52,8 +61,32 @@ test('index rejects changes in research evidence tiers, image rights and pedigre
   const rootUrl=structuredClone(source);rootUrl.records[0].primary_source_url='https://medakazukan.net/';
   assert.throws(()=>buildMedaka79Index(rootUrl),/Unapproved or unsafe/);
   const duplicate=structuredClone(source);duplicate.records[1].id=duplicate.records[0].id;
+  // Issue 4 red test: URL with query string was previously accepted; must now be rejected.
+  const withSearch=structuredClone(source);
+  withSearch.records[0].primary_source_url='https://medakazukan.net/fish/detail?id=1';
+  assert.throws(()=>buildMedaka79Index(withSearch),/Unapproved or unsafe/,
+    'query strings on allowed hosts must be rejected (CWE-74)');
+  // Issue 4 red test: URL with hash fragment was previously accepted; must now be rejected.
+  const withHash=structuredClone(source);
+  withHash.records[0].primary_source_url='https://medakazukan.net/fish/detail#section';
+  assert.throws(()=>buildMedaka79Index(withHash),/Unapproved or unsafe/,
+    'hash fragments on allowed hosts must be rejected (CWE-74)');
   assert.throws(()=>buildMedaka79Index(duplicate),/duplicate Medaka/);
 });
+// Issue 5 red test: name containing ](  would have survived safe() before the fix,
+// allowing Discord Markdown link injection in message content (CWE-79).
+test('safe() strips Markdown link injection characters from display text',()=>{
+  // Verify that ] and ( are now stripped, preventing Markdown link formation.
+  const altered=structuredClone(source);
+  // Inject a payload that would form a Markdown link: **1. foo](<url>)**
+  altered.records[0].name='LegitName](https://evil.example.com/';
+  // buildMedaka79Index calls safe() which must sanitise ] and (.
+  // If stripped correctly, the resulting label contains no ]( sequence.
+  const result=buildMedaka79Index(altered);
+  const allContent=[result.starter,...result.parts.map(p=>p.content)].join('\n');
+  assert.doesNotMatch(allContent,/\]\(/,'Markdown link injection characters must be stripped from display text (CWE-79)');
+});
+
 
 test('no publication is claimed without every authenticated Discord readback',()=>{
   const plan=buildMedaka79Index(source);

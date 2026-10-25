@@ -14,5 +14,8 @@
   "dependencies": {
     "discord.js": "^14.0.0",
     "dotenv": "^16.0.0"
+  },
+  "devDependencies": {
+    "@resvg/resvg-js": "^2.6.2"
   }
 }

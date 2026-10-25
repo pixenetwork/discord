@@ -14,8 +14,12 @@ import {renderAquapediaCard} from './aquapedia-post-card.mjs';
 import {requiredChannelKinds,channelWriteCandidates} from './aquapedia-article-destination-policy.mjs';
 import {resolveArticleReceiptChannel} from './aquapedia-article-receipt-channel.mjs';
 import {assertTrackedRouteCoverage} from './aquapedia-article-route-integrity.mjs';
+import {migratePrivateShrimpArticle,PRIVATE_SHRIMP_MIGRATION_ROUTES} from './aquapedia-private-shrimp-migration.mjs';
 
-const mode=process.argv.includes('--seed')?'seed':process.argv.includes('--apply')?'apply':'check';
+const migrateFlag=process.argv.includes('--migrate-shrimp-private');
+if(migrateFlag&&(process.argv.includes('--seed')||process.argv.includes('--apply')))
+ throw Error('Do not combine private migration with seed or regular apply');
+const mode=migrateFlag?'migrate':process.argv.includes('--seed')?'seed':process.argv.includes('--apply')?'apply':'check';
 const base='https://aquapedia.app';
 const file=path.resolve('data/aquapedia-article-content-checkpoint.v1.json');
 const lockFile=path.resolve('data/aquapedia-autosync-writer.lock');
@@ -150,11 +154,15 @@ if(mode==='seed'){
  assertTrackedRouteCoverage(paths,state.pages);
  const announcedCatalogPages=new Set(Object.values(old.receipts||{}).filter(x=>x.source&&x.id&&x.channel&&x.verifiedAt).map(x=>x.source));
  const changes=paths.filter(x=>!state.pages[x]||state.pages[x].digest!==now[x].digest);
+ const workChanges=mode==='migrate'?changes.filter(url=>PRIVATE_SHRIMP_MIGRATION_ROUTES.includes(url)):changes;
  const alreadyAnnouncedNew=changes.filter(x=>!state.pages[x]&&announcedCatalogPages.has(x)).length;
  console.log('ARTICLE_CHECK '+JSON.stringify({mode,scanned:paths.length,changes:changes.length,
   newPages:changes.filter(x=>!state.pages[x]).length,alreadyAnnouncedNew,cap,queuedAfterPass:Math.max(0,changes.length-cap),
   examples:changes.slice(0,8)}));
- if(mode==='apply'&&changes.length){
+ if((mode==='apply'||mode==='migrate')&&workChanges.length){
+  if(mode==='migrate'
+    &&process.env.AQUAPEDIA_PRIVATE_SHRIMP_MIGRATION_APPROVAL!=='JARVIS_GOVERNED_DISCORD64_PRIVATE_SHRIMP_20261024')
+   throw Error('PRIVATE_SHRIMP_MIGRATION_BLOCK requires explicit governed release approval');
   const guild=process.env.AQUAPHORIA_GUILD_ID,token=process.env.DISCORD_TOKEN;
   if(!guild||!token)throw Error('Existing private Aquaphoria bot auth required');
   const rest=new REST({version:'10',retries:0}).setToken(token); // Never retry ambiguous message POSTs.
@@ -188,7 +196,7 @@ if(mode==='seed'){
   // Guard only destinations used by THIS batch. Shrimp-guides is in the
   // public AQUAPEDIA category; never weaken its private-only publication gate.
   // Medaka-only updates must not be blocked by the unused shrimp destination.
-  const writeCandidates=channelWriteCandidates(changes,cap,state.pages,announcedCatalogPages);
+  const writeCandidates=channelWriteCandidates(workChanges,cap,state.pages,announcedCatalogPages);
   for(const kind of requiredChannelKinds(writeCandidates,cap)){
    privateDestination(kind==='shrimp'?shrimps:results);
   }
@@ -245,7 +253,7 @@ if(mode==='seed'){
   }
   let posted=0,updated=0,unchanged=0,adopted=0;
   try{
-   for(const url of changes.slice(0,cap)){
+   for(const url of workChanges.slice(0,cap)){
      const item=now[url];
      // Source URL already posted and verified by the metadata publisher; only establish future article-change tracking.
      if(!state.pages[url]&&announcedCatalogPages.has(url)){
@@ -272,6 +280,15 @@ if(mode==='seed'){
      if(summary.length>1800)throw Error('Discord message oversize '+url);
      const payload=renderAquapediaCard(summary,{channel:url.startsWith('/shrimpapedia/')?'shrimp':'research'});
      const channel=dest(url),old=state.receipts[key];
+     if(mode==='migrate'){
+      const receipt=await migratePrivateShrimpArticle({
+       url,key,mark,old,targetChannel:channel,rest,Routes,botId:me.id,
+       payload,item,state,saveAtomically,
+      });
+      posted++;
+      console.log('ARTICLE_PRIVATE_MIGRATED '+JSON.stringify(receipt));
+      continue;
+     }
      if(old&&old.channel!==channel)
       await resolveArchivedReceiptChannel(old,channel,entry);
      // Historical receipts retain their original channel only if an archived
@@ -344,7 +361,7 @@ if(mode==='seed'){
    }
   }
   console.log('ARTICLE_APPLY_DONE '+JSON.stringify({scanned:paths.length,pendingBefore:changes.length,
-   posted,updated,unchanged,adopted,remaining:Math.max(0,changes.length-cap),cap,postedTotal:state.totalPosted}));
+   posted,updated,unchanged,adopted,remaining:Math.max(0,workChanges.length-cap),cap,postedTotal:state.totalPosted}));
 
  }
 }

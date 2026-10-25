@@ -25,7 +25,20 @@ test('unknown history does not imply verified parentage or invent source',()=>{
  assert.match(p.embeds[0].description,/Parent lines not documented/);
  assert.equal(p.components[0].components.length,2);
  assert.equal(p.embeds[0].fields.some(x=>x.value.includes('medakazukan')),false);
+ assert.equal(p.embeds[0].fields.some(x=>x.value.includes('Aquapedia record without original lineage evidence')),false);
  assert.equal(cardSlug({embeds:p.embeds}), 'x-test');
+});
+test('escapes publication title Markdown and never truncates a branch marker mid-row',()=>{
+ const title='Original [illustrated] ***source***';
+ const stages=Array.from({length:12},(_,i)=>'Breeder source line '+i+' '.repeat(150));
+ const p=buildLineageCard({...e,source_title:title,parents_or_stages:stages},opts);
+ const cited=p.embeds[0].fields[1].value;
+ assert.ok(cited.includes('\\['));
+ assert.ok(cited.includes('\\]'));
+ const field=p.embeds[0].fields[0].value;
+ assert.ok(field.length<=1010);
+ assert.equal((field.split('**').length-1)%2,0);
+ assert.equal(p.components[0].components[1].url,e.source_url);
 });
 test('card slug works on old posts and rejects unrelated messages',()=>{
  assert.equal(cardSlug({content:'[AQUAPEDIA-MEDAKA-LINEAGE-V2:akari]'}),'akari');

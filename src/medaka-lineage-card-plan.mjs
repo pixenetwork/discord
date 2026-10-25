@@ -1,7 +1,6 @@
 import {buildLineageCard} from './medaka-lineage-card.mjs';
 const GUILD='1519337502379475095';
 const INDEX='1563764327037669416';
-const FORUM='1561189286399705128';
 const LINEAGE_URL=RegExp('^https://discord\\.com/channels/'+GUILD+'/\\d{17,20}/\\d{17,20}$');
 const SNOWFLAKE=/^\d{17,20}$/;
 export function planMedakaCardEdits(manifest,receipts){

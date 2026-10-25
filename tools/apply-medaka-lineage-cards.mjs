@@ -41,7 +41,7 @@ if(slugArg&&chosen.length!==1)throw Error('Requested slug has no verified edit r
 if(!chosen.length)throw Error('No verified messages for chosen entries');
 const gitHead=(cwd)=>execFileSync('git',['-C',cwd,'rev-parse','HEAD'],{encoding:'utf8'}).trim();
 const aquaHead=gitHead(AQUA);
-if(aquaHead!=='2e4adba96b8038d7d7475d7e7b05b9493239216f')throw Error('Aquapedia source HEAD changed; do not upload unreviewed tree art');
+if(!/^[0-9a-f]{40}$/.test(process.env.AQUAPEDIA_LINEAGE_RENDERER_HEAD??'')||aquaHead!==process.env.AQUAPEDIA_LINEAGE_RENDERER_HEAD)throw Error('Explicit approved Aquapedia renderer HEAD required; fail closed');
 const done=fs.existsSync(LEDGER)?JSON.parse(fs.readFileSync(LEDGER,'utf8')):{
   schemaVersion:1, manifestBase:manifest.aquapedia_commit, rendererHead:aquaHead,
   guildId:GUILD, indexChannelId:INDEX, records:{}, failures:[]};

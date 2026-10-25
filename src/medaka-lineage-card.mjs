@@ -1,6 +1,7 @@
 const MARKER=/AQUAPEDIA-MEDAKA-(?:LINEAGE-V2|CARD-V1):([a-z0-9-]+)/;
 const validUrl=value=>/^https:\/\/[^\s<>"']{1,800}$/.test(String(value??''));
 function limited(value,max=700){return String(value??'').replace(/@everyone|@here/gi,'@ community').slice(0,max);}
+function linkText(value){return limited(value,145).replace(/([\\\[\]*_`])/g,'\\$1');}
 export function cardSlug(message){
  const footer=message?.embeds?.find(e=>e?.footer?.text)?.footer?.text??'';
  return (String(footer).match(MARKER)??String(message?.content??'').match(MARKER))?.[1]??null;
@@ -18,11 +19,16 @@ export function buildLineageCard(entry,{fileName,forumUrl,revision}={}){
  const fields=[];
  if(sourced){
    const names=Array.isArray(entry.parents_or_stages)?entry.parents_or_stages:[];
+   const lines=[];
+   for(const n of names.slice(0,12)){
+     const item='**'+(lines.length+1)+'.** '+limited(n,200).replace(/[\r\n]+/g,' ');
+     if(lines.join('\n').length+(lines.length?1:0)+item.length>1010)break;
+     lines.push(item);
+   }
    fields.push({name:'🌿 Reported source lines / selection stages',
-     value:names.length?names.slice(0,12).map((n,i)=>'**'+(i+1)+'.** '+limited(n,200)).join('\n').slice(0,1010):'Exact founder fish not reported',
-     inline:false});
+     value:lines.join('\n')||'Exact founder fish not reported',inline:false});
    fields.push({name:'📚 Original breeder / publication source',
-      value:'['+limited(entry.source_title,145)+']('+entry.source_url+')',inline:false});
+      value:'['+linkText(entry.source_title)+']('+entry.source_url+')',inline:false});
  }else {
    fields.push({name:'📂 Source status',value:'Research dossier only. An independent source establishing parentage is still needed.',inline:false});
  }

@@ -17,7 +17,7 @@ const receipts=JSON.parse(fs.readFileSync(path.join(R,'medaka-lineage-sync-recei
 validateLineageManifest(manifest);
 if(manifest.aquapedia_commit!==receipts.aquapediaHead||receipts.guildId!==GUILD||receipts.channelId!==INDEX)throw Error('Baseline mismatch');
 const aquaHead=execFileSync('git',['-C',A,'rev-parse','HEAD'],{encoding:'utf8'}).trim();
-if(aquaHead!=='2e4adba96b8038d7d7475d7e7b05b9493239216f')throw Error('Source artwork changed');
+if(!/^[0-9a-f]{40}$/.test(process.env.AQUAPEDIA_LINEAGE_RENDERER_HEAD??'')||aquaHead!==process.env.AQUAPEDIA_LINEAGE_RENDERER_HEAD)throw Error('Explicit approved Aquapedia renderer HEAD required; fail closed');
 const missing=manifest.trees.filter(e=>!Object.hasOwn(receipts.records,e.slug));
 const ledger=fs.existsSync(LEDGER)?JSON.parse(fs.readFileSync(LEDGER,'utf8')):{schemaVersion:1,sourceHead:aquaHead,records:{},errors:[]};
 if(ledger.sourceHead!==aquaHead)throw Error('Ledger source changed');

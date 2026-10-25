@@ -28,3 +28,7 @@ The 26 records absent from the initial 144 original receipts were handled in a s
 ## Live Discord readback
 
 At final audit, `tools/verify-medaka-lineage-cards-live.mjs` verified all **170** strain cards in the central index and all **170** strain-forum cards by their actual Discord message IDs (**340 unique messages**), with **0** errors or duplicate/missing strain markers. The first 144 cards were updated in place in both locations; the remaining 26 were recovered/published with one-writer controls and audited receipts. Research/source records total 170 and continue to distinguish reported ancestry from undocumented parentage. The Aquapedia website PR #319 remains separately governed, and this Discord audit does not demonstrate a live website deployment.
+
+## Reproducibility and dependency gates
+
+Future manual wrappers require `-ApprovedRendererHead` with the explicit independently approved 40-character Aquapedia Git SHA, propagated as `AQUAPEDIA_LINEAGE_RENDERER_HEAD`. Do not infer that approval from a mutable working branch or embed an approval hash into code. This change was made after the 170-card publication; it does not silently republish messages. The Node dependency audit was repaired by upgrading vulnerable transitive `undici` to 6.29.1, with `npm audit --omit=dev` reporting zero vulnerabilities. If external checks still reject a published `discord.js` release without a newer available version, retain that as an unresolved external release gate; do not forge a green check.

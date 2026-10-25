@@ -5,7 +5,7 @@ const source=fs.readFileSync(new URL('../tools/aquapedia-article-content-watch-2
 const start=source.indexOf('const channel=dest(url),old=state.receipts[key];');
 const end=source.indexOf("console.log('ARTICLE_VERIFIED",start);
 assert.ok(start>=0 && end>start,'Actual full message/checkpoint block must be found');
-const statement=source.slice(start,end);
+const statement=source.slice(start,end).replace(/\bcontinue;/,'return {message:null,action:"migrated"};');
 const AsyncFunction=Object.getPrototypeOf(async function(){}).constructor;
 const runner=new AsyncFunction('rest','Routes','state','key','url','dest','me','mark','payload','item','saveAtomically','cap','fs','lockFile','mode','migratePrivateShrimpArticle',statement+'return true;');
 for(const status of [403,404,429,500,503,'timeout']){

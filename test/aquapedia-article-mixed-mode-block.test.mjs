@@ -4,7 +4,8 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import {spawnSync} from 'node:child_process';
-const script=new URL('../tools/aquapedia-article-content-watch-20261015.mjs',import.meta.url).pathname;
+import {fileURLToPath} from 'node:url';
+const script=fileURLToPath(new URL('../tools/aquapedia-article-content-watch-20261015.mjs',import.meta.url));
 test('explicit --check cannot be combined with one-time migration mode',()=>{
  const cwd=fs.mkdtempSync(path.join(os.tmpdir(),'aquapedia-mixed-flags-'));
  try{

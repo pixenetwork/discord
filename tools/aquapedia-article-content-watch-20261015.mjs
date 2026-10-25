@@ -207,7 +207,7 @@ if(mode==='seed'){
   for(const x of currentCatalog){
    if(pagePath(x.url))catUrlToEntry.set(x.url,x);
   }
-  const cleanName=x=>String(x||'').normalize('NFKC').split(/[\/|â€”(ï¼ˆ]/)[0]
+  const cleanName=x=>String(x||'').normalize('NFKC').split(/[\\/|\u2014\u2013\uFF08(]/)[0]
    .replace(/[^\p{L}\p{N}]/gu,'').toLocaleLowerCase();
   const dest=url=>{
     const x=catUrlToEntry.get(url);
@@ -322,7 +322,12 @@ if(mode==='seed'){
      const sameCard=seen=>{
        const card=seen?.embeds?.[0];
        const actualFields=card?.fields||[],expectedFields=wanted?.fields||[];
-       return !!card && card.title===wanted?.title && card.description===wanted?.description
+       // Discord may add rich "type"; do not accept hidden old images, extra
+       // embeds, thumbnails or author/media metadata as a verified text card.
+       if(!Array.isArray(seen?.embeds)||seen.embeds.length!==payload.embeds?.length
+         ||!card||['image','thumbnail','video','author','provider','timestamp'].some(k=>card[k]!==undefined)
+         ||(card.type!==undefined&&card.type!=='rich'))return false;
+       return card.title===wanted?.title && card.description===wanted?.description
         && card.url===wanted?.url && card.color===wanted?.color
         && card.footer?.text===wanted?.footer?.text
         && actualFields.length===expectedFields.length

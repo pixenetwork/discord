@@ -170,7 +170,9 @@ if(mode==='seed'){
     throw Error('Forum category privacy mismatch '+c.name);
   }
   const results=channels.find(x=>x.type===ChannelType.GuildText&&x.parent_id===researcher.id&&/research-results/i.test(x.name));
-  const shrimps=channels.find(x=>x.type===ChannelType.GuildText&&/shrimp-guides/i.test(x.name));
+  // Live public shrimp-guides is not a private publication destination.
+  // Use only the independently verified dedicated channel inside the research category.
+  const shrimps=channels.find(x=>x.type===ChannelType.GuildText&&x.parent_id===researcher.id&&/shrimp-research-updates/i.test(x.name));
   if(!results||!shrimps)throw Error('Existing destination channels missing');
   // Fail closed: every write destination must deny @everyone ViewChannel.
   // An explicit allow on a child overrides a private parent category.

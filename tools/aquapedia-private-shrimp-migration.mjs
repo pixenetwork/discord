@@ -15,7 +15,11 @@ export const PRIVATE_SHRIMP_MIGRATION_ROUTES=Object.freeze([
 
 function matchingEmbed(received,wanted){
  const fields=received?.fields||[],desired=wanted?.fields||[];
- return !!received&&!!wanted&&received.title===wanted.title
+ // Require an exact text-only card, never one with hidden legacy media.
+ if(!received||!wanted
+   ||['image','thumbnail','video','author','provider','timestamp'].some(k=>received[k]!==undefined)
+   ||(received.type!==undefined&&received.type!=='rich'))return false;
+ return received.title===wanted.title
   &&received.description===wanted.description&&received.url===wanted.url
   &&received.color===wanted.color&&received.footer?.text===wanted.footer?.text
   &&fields.length===desired.length
@@ -60,6 +64,8 @@ export async function migratePrivateShrimpArticle({
  if(!confirmed||confirmed.id!==accepted.id||confirmed.channel_id!==targetChannel
    ||confirmed.author?.id!==botId||confirmed.content!==payload.content
    ||(confirmed.attachments||[]).length
+   ||!Array.isArray(confirmed.embeds)
+   ||confirmed.embeds.length!==payload.embeds?.length
    ||!matchingEmbed(confirmed.embeds?.[0],payload.embeds?.[0]))
   throw Error('PRIVATE_SHRIMP_MIGRATION_BLOCK independent private readback mismatch');
  state.receipts[key]={key,url,channel:targetChannel,messageId:confirmed.id,

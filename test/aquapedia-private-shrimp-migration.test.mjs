@@ -1,3 +1,4 @@
+import fs from 'node:fs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
@@ -108,4 +109,17 @@ test('migration guard excludes arbitrary shrimp and other fish routes',async()=>
  await assert.rejects(h.run({targetChannel:'public-guides'}),/unapproved URL/);
  await assert.rejects(h.run({url:'/medakapedia/strains/rinkou/'}),/unapproved URL/);
  assert.equal(h.events.filter(x=>x==='post').length,0);
+});
+
+const fsReadPublisher=()=>fs.readFileSync(new URL('../tools/aquapedia-article-content-watch-20261015.mjs',import.meta.url),'utf8');
+
+test('actual publisher migration mode is opt-in, fenced, and cannot run as ordinary apply',()=>{
+ const source=fsReadPublisher();
+ assert.match(source,/process\.argv\.includes\('--migrate-shrimp-private'\)/);
+ assert.match(source,/process\.argv\.includes\('--apply'\)/);
+ assert.match(source,/AQUAPEDIA_PRIVATE_SHRIMP_MIGRATION_APPROVAL/);
+ assert.match(source,/JARVIS_GOVERNED_DISCORD64_PRIVATE_SHRIMP_20261024/);
+ assert.match(source,/mode==='migrate'\?changes\.filter\(url=>PRIVATE_SHRIMP_MIGRATION_ROUTES\.includes\(url\)\)/);
+ assert.match(source,/const receipt=await migratePrivateShrimpArticle\(/);
+ assert.match(source,/mode==='apply'\|\|mode==='migrate'/);
 });

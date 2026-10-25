@@ -151,7 +151,7 @@ if(mode==='seed'){
  if(state.version!==1)throw Error('Unsupported article checkpoint');
  // Every previously published article must still be scanned; catalog shrinkage
  // above the coarse route count floor cannot silently retire old receipts.
- assertTrackedRouteCoverage(paths,state.pages);
+ assertTrackedRouteCoverage(paths,state.pages,state.receipts);
  const announcedCatalogPages=new Set(Object.values(old.receipts||{}).filter(x=>x.source&&x.id&&x.channel&&x.verifiedAt).map(x=>x.source));
  const changes=paths.filter(x=>!state.pages[x]||state.pages[x].digest!==now[x].digest);
  const workChanges=mode==='migrate'?changes.filter(url=>PRIVATE_SHRIMP_MIGRATION_ROUTES.includes(url)):changes;
@@ -196,7 +196,7 @@ if(mode==='seed'){
   // Guard only destinations used by THIS batch. Shrimp-guides is in the
   // public AQUAPEDIA category; never weaken its private-only publication gate.
   // Medaka-only updates must not be blocked by the unused shrimp destination.
-  const writeCandidates=channelWriteCandidates(workChanges,cap,state.pages,announcedCatalogPages);
+  const writeCandidates=channelWriteCandidates(workChanges,cap,state.pages,announcedCatalogPages,state.receipts);
   for(const kind of requiredChannelKinds(writeCandidates,cap)){
    privateDestination(kind==='shrimp'?shrimps:results);
   }
@@ -256,7 +256,9 @@ if(mode==='seed'){
    for(const url of workChanges.slice(0,cap)){
      const item=now[url];
      // Source URL already posted and verified by the metadata publisher; only establish future article-change tracking.
-     if(!state.pages[url]&&announcedCatalogPages.has(url)){
+     const key='article-v1-'+hash(url).slice(0,22);
+     // A pending first-write intent must not be adopted as if publication succeeded.
+     if(!state.pages[url]&&!state.receipts[key]&&announcedCatalogPages.has(url)){
        state.pages[url]=item;
        state.lastScan=new Date().toISOString();
        saveAtomically(state);
@@ -264,7 +266,6 @@ if(mode==='seed'){
        console.log('ARTICLE_ADOPTED_VERIFIED_CATALOG_RECEIPT '+url);
        continue;
      }
-     const key='article-v1-'+hash(url).slice(0,22);
      const mark='[AQUAPEDIA-ARTICLE-SYNC:'+key+']';
      const entry=catUrlToEntry.get(url);
      const summary=[

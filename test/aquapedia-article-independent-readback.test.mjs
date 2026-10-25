@@ -7,7 +7,7 @@ const start=source.indexOf('const channel=dest(url),old=state.receipts[key];');
 const end=source.indexOf('state.pages[url]=item;',start);
 assert.ok(start>=0 && end>start,'Extract actual publisher Discord write and receipt-validation logic');
 const AsyncFunction=Object.getPrototypeOf(async function(){}).constructor;
-const runBlock=new AsyncFunction('rest','Routes','state','key','url','dest','me','mark','payload','saveAtomically','mode','migratePrivateShrimpArticle',
+const runBlock=new AsyncFunction('rest','Routes','state','key','url','dest','me','mark','payload','item','saveAtomically','mode','migratePrivateShrimpArticle',
  source.slice(start,end).replace(/\bcontinue;/,'return {message:null,action:"migrated"};')+'return {message,action};');
 
 const url='/medakapedia/strains/rinkou/';
@@ -21,7 +21,7 @@ const payload={content:'||'+mark+'||',embeds:[{title:'Updated research article',
 const updated={...oldCard,content:payload.content,embeds:payload.embeds};
 function makeHarness({existing=true,first=oldCard,confirmed=updated,postResult=updated}={}){
  const calls={gets:[],posts:0,patches:0};
- const saved=existing?{messageId:oldCard.id,channel}:undefined;
+ const saved=existing?{messageId:oldCard.id,channel,digest:'fixture'}:undefined;
  const state={receipts:saved?{[key]:saved}:{}};
  const before=JSON.stringify(state);
  const rest={
@@ -35,7 +35,7 @@ function makeHarness({existing=true,first=oldCard,confirmed=updated,postResult=u
    patch:async()=>{calls.patches++;return updated;},
    post:async()=>{calls.posts++;return postResult}
  };
- return {calls,state,before,run:()=>runBlock(rest,{channelMessage:(c,id)=>'msg:'+id,channelMessages:()=> 'recent'},state,key,url,()=>channel,{id:'trusted-bot'},mark,payload,()=>{},'apply',async()=>{throw Error('Unexpected migration mode')})};
+ return {calls,state,before,run:()=>runBlock(rest,{channelMessage:(c,id)=>'msg:'+id,channelMessages:()=> 'recent'},state,key,url,()=>channel,{id:'trusted-bot'},mark,payload,{digest:'fixture'},()=>{},'apply',async()=>{throw Error('Unexpected migration mode')})};
 }
 test('acknowledged PATCH is not accepted when fresh Discord GET still shows old embed',async()=>{
  const h=makeHarness({confirmed:oldCard});

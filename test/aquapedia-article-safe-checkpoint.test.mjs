@@ -7,7 +7,7 @@ const end=source.indexOf("console.log('ARTICLE_VERIFIED",start);
 assert.ok(start>=0 && end>start,'Actual full message/checkpoint block must be found');
 const statement=source.slice(start,end);
 const AsyncFunction=Object.getPrototypeOf(async function(){}).constructor;
-const runner=new AsyncFunction('rest','Routes','state','key','url','dest','me','mark','payload','item','saveAtomically','cap','fs','lockFile',statement+'return true;');
+const runner=new AsyncFunction('rest','Routes','state','key','url','dest','me','mark','payload','item','saveAtomically','cap','fs','lockFile','mode','migratePrivateShrimpArticle',statement+'return true;');
 for(const status of [403,404,429,500,503,'timeout']){
  test('failed '+status+' must not post, patch or save checkpoint',async()=>{
   const calls={get:0,post:0,patch:0,save:0};
@@ -21,7 +21,7 @@ for(const status of [403,404,429,500,503,'timeout']){
     post:async()=>{calls.post++;throw new Error('POST should not occur')},
     patch:async()=>{calls.patch++;throw new Error('PATCH should not occur')}
   };
-  await assert.rejects(runner(rest,{channelMessage:()=>'/x',channelMessages:()=>'/recent'},state,key,url,()=>old.channel,{id:'bot'},'marker',{content:'next',embeds:[]},{digest:'next'},()=>{calls.save++},50,fs,'mock-lock'),/simulated/);
+  await assert.rejects(runner(rest,{channelMessage:()=>'/x',channelMessages:()=>'/recent'},state,key,url,()=>old.channel,{id:'bot'},'marker',{content:'next',embeds:[]},{digest:'next'},()=>{calls.save++},50,fs,'mock-lock','apply',async()=>{throw Error('Unexpected migration mode')}),/simulated/);
   assert.deepEqual(calls,{get:1,post:0,patch:0,save:0});
   assert.equal(JSON.stringify(state),before);
  });

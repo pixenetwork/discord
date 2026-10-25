@@ -123,3 +123,26 @@ test('actual publisher migration mode is opt-in, fenced, and cannot run as ordin
  assert.match(source,/const receipt=await migratePrivateShrimpArticle\(/);
  assert.match(source,/mode==='apply'\|\|mode==='migrate'/);
 });
+
+test('migration readback rejects a second embed even if first embed matches',async()=>{
+ const h=harness({newReadback:{...newMessage,embeds:[...newMessage.embeds,{title:'unexpected media'}]}});
+ await assert.rejects(h.run(),/independent private readback mismatch/);
+ assert.equal(h.events.filter(x=>x==='post').length,1);
+ assert.equal(h.state.receipts[key].status,'pending-migration');
+ assert.equal(h.snapshots[0].receipts[key].previousReceipt.messageId,oldMessage.id);
+ assert.equal(h.state.pages[url].digest,'prior');
+});
+test('migration readback rejects hidden image, thumbnail, author, timestamp and video metadata',async()=>{
+ for(const extraEmbed of [
+  {image:{url:'https://example.test/image.jpg'}},
+  {thumbnail:{url:'https://example.test/thumb.jpg'}},
+  {author:{name:'untrusted'}},
+  {timestamp:'2026-10-24T02:00:00Z'},
+  {video:{url:'https://example.test/video.mp4'}},
+ ]){
+  const h=harness({newReadback:{...newMessage,embeds:[{...newMessage.embeds[0],...extraEmbed}]}});
+  await assert.rejects(h.run(),/independent private readback mismatch/);
+  assert.equal(h.state.receipts[key].status,'pending-migration');
+  assert.equal(h.state.pages[url].digest,'prior');
+ }
+});

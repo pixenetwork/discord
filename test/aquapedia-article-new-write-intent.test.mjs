@@ -7,7 +7,7 @@ const start=src.indexOf('const channel=dest(url),old=state.receipts[key];');
 const end=src.indexOf('state.pages[url]=item;',start);
 assert.ok(start>=0&&end>start,'Find production article write flow');
 const AsyncFunction=Object.getPrototypeOf(async function(){}).constructor;
-const perform=new AsyncFunction('rest','Routes','state','key','url','dest','me','mark','payload','saveAtomically','mode','migratePrivateShrimpArticle',src.slice(start,end)+'return {message,action};');
+const perform=new AsyncFunction('rest','Routes','state','key','url','dest','me','mark','payload','saveAtomically','mode','migratePrivateShrimpArticle',src.slice(start,end).replace(/\bcontinue;/,'return {message:null,action:"migrated"};')+'return {message,action};');
 const url='/medakapedia/strains/verified-new/';
 const key='article-v1-new-article';
 const channel='private-research';

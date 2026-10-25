@@ -146,3 +146,21 @@ test('migration readback rejects hidden image, thumbnail, author, timestamp and 
   assert.equal(h.state.pages[url].digest,'prior');
  }
 });
+
+test('migration requires exact historical article source URL, not a URL prefix',async()=>{
+ const wrongUrl='https://aquapedia.app/shrimpapedia/breeders/flip-aquatics-robert-lupton/';
+ const h=harness({badOld:{...oldMessage,embeds:[{url:wrongUrl}]}});
+ await assert.rejects(h.run(),/historical Discord receipt failed readback/);
+ assert.equal(h.events.filter(x=>x==='post').length,0);
+});
+test('migration readback refuses footer icon and proxy icon media',async()=>{
+ for(const media of [
+  {icon_url:'https://example.test/old.png'},
+  {proxy_icon_url:'https://example.test/proxy.png'},
+ ]){
+  const h=harness({newReadback:{...newMessage,embeds:[{...newMessage.embeds[0],
+   footer:{...newMessage.embeds[0].footer,...media}}]}});
+  await assert.rejects(h.run(),/independent private readback mismatch/);
+  assert.equal(h.state.receipts[key].status,'pending-migration');
+ }
+});

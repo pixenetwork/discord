@@ -105,3 +105,12 @@ test('independent readback refuses hidden image or thumbnail data',async()=>{
   assert.equal(h.calls.posts,0);
  }
 });
+
+test('normal article readback refuses footer media icons despite matching text',async()=>{
+ for(const media of [{icon_url:'https://example.test/old.png'},{proxy_icon_url:'https://example.test/proxy.png'}]){
+  const h=makeHarness({confirmed:{...updated,embeds:[{...updated.embeds[0],
+   footer:{text:payload.embeds[0].footer?.text,...media}}]}});
+  await assert.rejects(h.run(),/readback mismatch/);
+  assert.equal(h.calls.posts,0);
+ }
+});

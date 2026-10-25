@@ -33,7 +33,7 @@ export function buildLineageCard(entry,{fileName,forumUrl,revision}={}){
    ...(forumUrl?[{type:2,style:5,label:'Strain discussion',url:forumUrl}]:[])
  ];
  return {
-    content:'',allowed_mentions:{parse:[]},
+    content:'━━━━━━━━━━━━━━━━━━━━━━━━━━\n🌳 **'+limited(entry.name,160)+' — Medaka lineage**\n━━━━━━━━━━━━━━━━━━━━━━━━━━',allowed_mentions:{parse:[]},
     embeds:[{
      title:'🌿 '+limited(entry.name,210)+' • Lineage tree',
      description:description,

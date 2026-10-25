@@ -99,3 +99,33 @@ After this correction, the Main PC **read-only, exact-candidate** article scan r
 - `/shrimpapedia/breeders/flip-aquatics-robert-lupton/`
 
 Both URLs already have metadata receipts **and** existing article checkpoints; they are **revisions, not receipt-only adoptions**, so `channelWriteCandidates` correctly identifies both as requiring actual private Discord writes. The configured `shrimp-guides` channel has **no explicit @everyone ViewChannel deny** and is intentionally refused by the article publisher. The appropriate response is to retain both as pending and resolve destination privacy/authorization through Jarvis, **never skip the ACL gate or redirect to a public channel**. No private/public channel permissions were changed and no `--apply` was run. Previous historical statements of zero pending are superseded by this live read-only scan; recheck current state at release time.
+
+## Dedicated private shrimp destination — approved owner continuation, October 24
+
+A new **separate** Discord text channel was created under the existing `🔬・AQUAPEDIA RESEARCH` private category:
+
+- **Name:** `🦐・shrimp-research-updates`
+- **Channel ID:** `1563706401132646410`
+- **Parent category ID:** `1557338265101795348`
+- **Privacy:** direct `@everyone ViewChannel` deny; permissions copied from the existing verified private `research-results` channel. Existing authorized `Aquaphoria Staff` and `Verified Aquaphoria Vendor` roles, and a previously allowed individual, retain their *existing private research-category visibility*. Role membership/individual eligibility remains a separate policy decision.
+- **Verified read-only:** `GET /channels/1563706401132646410` HTTP 200, `GET /channels/1563706401132646410/messages?limit=1` HTTP 200, message count **zero** immediately after creation. No article was posted.
+- The public `🦐・shrimp-guides` channel ID `1557338244545519666` was **not** renamed, hidden, deleted or changed.
+
+The PR's ordinary private shrimp destination discovery now requires `/shrimp-research-updates/` **and** the expected parent research category, and its regular `privateDestination` gate still enforces an explicit direct deny. This protects **new articles** from accidentally going to the old public guides channel.
+
+### Historical receipt migration hold (two existing shrimp revisions)
+
+Both pending pages are **already tracked** and their existing bot-owned historical messages have been independently retrieved from the old public `shrimp-guides` channel:
+
+| Article URL | Historical message ID |
+| --- | --- |
+| `/shrimpapedia/breeders/` | `1561184139716075531` |
+| `/shrimpapedia/breeders/flip-aquatics-robert-lupton/` | `1561184144556298251` |
+
+For **both**, old receipt channels match `1557338244545519666`, authenticated Discord GET returned 200, existing message ID and bot ownership match, article marker matches, and the source embed contains the correct live AquaPedia URL. Their original messages must be preserved for historical provenance.
+
+**Do not run `--apply` on these two simply because the new private destination exists.** The existing-receipt guard sees `old.channel !== privateDestinationChannel` and intentionally fails closed (only an identity-verified archived breeder thread can be reused automatically). Reposting in a new channel and silently replacing the old receipt would bypass the audit trail and duplicate uncertain writes.
+
+The safe path is a *separately reviewed, Jarvis-fenced, two-record migration*: validate each original message read-only, preserve original `channel`/`messageId` in provenance, durably reserve a **new-channel pending write** before any one-time POST, then independently GET/verify the new private bot-owned message and atomically commit its new `channel`, `messageId`, page digest and the preserved historical receipt. If POST or readback is uncertain, leave pending and require an operator inspection before retry; never POST a second copy or alter the public originals.
+
+The migration utility itself and release authorization are **NOT** included in the ordinary article watcher. Until separately implemented, tested and authorized, the two genuine shrimp revisions are still pending. This is a release blocker, not a completed sync.

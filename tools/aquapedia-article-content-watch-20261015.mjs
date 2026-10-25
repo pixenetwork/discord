@@ -394,7 +394,9 @@ if(mode==='seed'){
      message=confirmed;
      state.pages[url]=item;
      state.receipts[key]={key,url,channel:targetChannel,messageId:message.id,digest:item.digest,
-      action,lastVerified:new Date().toISOString()};
+      action,lastVerified:new Date().toISOString(),
+      // A future private PATCH must not erase the original public message proof.
+      ...(old?.previousReceipt?{previousReceipt:old.previousReceipt}:{})};
      state.totalPosted+=action==='unchanged'?0:1;
      state.lastScan=new Date().toISOString();
      saveAtomically(state);

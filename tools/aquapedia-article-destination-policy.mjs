@@ -16,10 +16,13 @@ export function requiredChannelKinds(changes,cap=50){
  * New articles already independently announced by the metadata publisher are
  * adopted into the article checkpoint without a Discord PATCH or POST.
  */
-export function channelWriteCandidates(changes,cap,trackedPages,announcedSources){
+export function channelWriteCandidates(changes,cap,trackedPages,announcedSources,receipts={}){
  if(!Array.isArray(changes)||!Number.isInteger(cap)||cap<1||cap>50)
   throw Error('Invalid changed article batch');
- if(!trackedPages||typeof trackedPages!=='object'||Array.isArray(trackedPages)||!(announcedSources instanceof Set))
+ if(!trackedPages||typeof trackedPages!=='object'||Array.isArray(trackedPages)||!(announcedSources instanceof Set)
+   ||!receipts||typeof receipts!=='object'||Array.isArray(receipts))
   throw Error('Invalid existing article checkpoint or announced source set');
- return changes.slice(0,cap).filter(route=>Object.hasOwn(trackedPages,route)||!announcedSources.has(route));
+ const receiptedRoutes=new Set(Object.values(receipts).map(x=>x?.url).filter(Boolean));
+ return changes.slice(0,cap).filter(route=>Object.hasOwn(trackedPages,route)
+  ||receiptedRoutes.has(route)||!announcedSources.has(route));
 }

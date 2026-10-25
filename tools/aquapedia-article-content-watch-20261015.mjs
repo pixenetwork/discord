@@ -163,6 +163,45 @@ if(mode==='seed'){
   if(mode==='migrate'
     &&process.env.AQUAPEDIA_PRIVATE_SHRIMP_MIGRATION_APPROVAL!=='JARVIS_GOVERNED_DISCORD64_PRIVATE_SHRIMP_20261024')
    throw Error('PRIVATE_SHRIMP_MIGRATION_BLOCK requires explicit governed release approval');
+  const writeCandidates=channelWriteCandidates(workChanges,cap,state.pages,announcedCatalogPages,state.receipts);
+  if(!writeCandidates.length){
+   // Metadata-verified first-time pages have no article Discord writes. Do
+   // not require channel lookup, bot authentication or REST for this branch.
+   if(mode!=='apply')throw Error('PRIVATE_SHRIMP_MIGRATION_BLOCK no migration candidates');
+   const adoptions=workChanges.slice(0,cap);
+   for(const url of adoptions){
+    const key='article-v1-'+hash(url).slice(0,22);
+    if(state.pages[url]||state.receipts[key]||!announcedCatalogPages.has(url))
+     throw Error('Unexpected pending or unverified article in adoption-only batch '+url);
+   }
+   let adoptionLock;
+   try{
+    adoptionLock=fs.openSync(lockFile,'wx');
+    fs.writeSync(adoptionLock,JSON.stringify({pid:process.pid,mode,started:new Date().toISOString()}));
+    if(fs.readFileSync(file,'utf8')!==checkpointSnapshot
+      ||fs.readFileSync(priorFile,'utf8')!==priorSnapshot)
+     throw Error('Article or metadata checkpoint changed during adoption preflight');
+   }catch(e){
+    if(adoptionLock!==undefined){
+     try{fs.closeSync(adoptionLock)}finally{fs.unlinkSync(lockFile)}
+    }
+    throw Error('Cannot safely acquire adoption-only writer lock: '+(e.code||e.message));
+   }
+   try{
+    for(const url of adoptions){
+     state.pages[url]=now[url];
+     state.lastScan=new Date().toISOString();
+     saveAtomically(state);
+     console.log('ARTICLE_ADOPTED_VERIFIED_CATALOG_RECEIPT '+url);
+    }
+   }finally{
+    if(adoptionLock!==undefined){
+     try{fs.closeSync(adoptionLock)}finally{fs.unlinkSync(lockFile)}
+    }
+   }
+   console.log('ARTICLE_APPLY_DONE '+JSON.stringify({scanned:paths.length,pendingBefore:adoptions.length,
+    posted:0,updated:0,unchanged:0,adopted:adoptions.length,remaining:Math.max(0,workChanges.length-cap),cap,postedTotal:state.totalPosted}));
+  }else{
   const guild=process.env.AQUAPHORIA_GUILD_ID,token=process.env.DISCORD_TOKEN;
   if(!guild||!token)throw Error('Existing private Aquaphoria bot auth required');
   const rest=new REST({version:'10',retries:0}).setToken(token); // Never retry ambiguous message POSTs.
@@ -196,7 +235,6 @@ if(mode==='seed'){
   // Guard only destinations used by THIS batch. Shrimp-guides is in the
   // public AQUAPEDIA category; never weaken its private-only publication gate.
   // Medaka-only updates must not be blocked by the unused shrimp destination.
-  const writeCandidates=channelWriteCandidates(workChanges,cap,state.pages,announcedCatalogPages,state.receipts);
   for(const kind of requiredChannelKinds(writeCandidates,cap)){
    privateDestination(kind==='shrimp'?shrimps:results);
   }
@@ -368,6 +406,6 @@ if(mode==='seed'){
   }
   console.log('ARTICLE_APPLY_DONE '+JSON.stringify({scanned:paths.length,pendingBefore:changes.length,
    posted,updated,unchanged,adopted,remaining:Math.max(0,workChanges.length-cap),cap,postedTotal:state.totalPosted}));
-
+  } // End Discord writer branch; adoption-only needs no network setup.
  }
 }

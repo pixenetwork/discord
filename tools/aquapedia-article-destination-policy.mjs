@@ -25,6 +25,17 @@ export function acquireArticleWriterLock(fsApi,lockFile,metadata){
  return ()=>{try{fsApi.closeSync(fd);}finally{fsApi.unlinkSync(lockFile);}};
 }
 
+export function guardArticleBulkChange(changedCount,totalPages){
+ if(!Number.isInteger(changedCount)||!Number.isInteger(totalPages)
+   ||totalPages<1||changedCount<0||changedCount>totalPages)
+  throw Error('Invalid article scan counts');
+ // Large, correlated HTML changes frequently reflect a renderer/template release.
+ // Require separate review rather than sending a site-wide Discord notification burst.
+ if(changedCount>=50&&changedCount/totalPages>0.20)
+  throw Error('BULK_CHANGE_REVIEW_REQUIRED '+changedCount+'/'+totalPages+' article digests changed');
+ return true;
+}
+
 export function requiredChannelKinds(changes,cap=50){
  if(!Array.isArray(changes))throw new Error('Expected changed-article array');
  if(!Number.isInteger(cap)||cap<1||cap>50)throw new Error('Invalid article batch cap');

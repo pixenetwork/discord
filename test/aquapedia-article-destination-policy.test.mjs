@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {requiredChannelKinds,articleWriteAction,ARTICLE_UPDATE_HEADING,normalizeAquapediaArticleName,acquireArticleWriterLock} from '../tools/aquapedia-article-destination-policy.mjs';
+import {requiredChannelKinds,articleWriteAction,ARTICLE_UPDATE_HEADING,normalizeAquapediaArticleName,acquireArticleWriterLock,guardArticleBulkChange} from '../tools/aquapedia-article-destination-policy.mjs';
 
 test('only Medaka updates require the private research destination, not public shrimp-guides',()=>{
  assert.deepEqual(requiredChannelKinds([
@@ -56,6 +56,14 @@ test('successful writer lock releases its own handle and file exactly once',()=>
  const release=acquireArticleWriterLock(api,'lock',{job:'test'});
  release();
  assert.deepEqual(calls,['open','write','close','unlink']);
+});
+
+test('bulk source-template changes cannot cause mass Discord updates without review',()=>{
+ assert.throws(()=>guardArticleBulkChange(172,526),/BULK_CHANGE_REVIEW_REQUIRED/);
+ assert.throws(()=>guardArticleBulkChange(110,526),/BULK_CHANGE_REVIEW_REQUIRED/);
+ assert.doesNotThrow(()=>guardArticleBulkChange(50,526));
+ assert.doesNotThrow(()=>guardArticleBulkChange(4,526));
+ assert.throws(()=>guardArticleBulkChange(527,526),/Invalid article scan counts/);
 });
 
 test('unknown paths and malformed batches fail closed',()=>{

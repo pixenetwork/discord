@@ -11,7 +11,7 @@ import path from 'node:path';
 import {createHash} from 'node:crypto';
 import {REST,Routes,ChannelType,PermissionFlagsBits} from 'discord.js';
 import {renderAquapediaCard} from './aquapedia-post-card.mjs';
-import {requiredChannelKinds,articleWriteAction,ARTICLE_UPDATE_HEADING,normalizeAquapediaArticleName,acquireArticleWriterLock} from './aquapedia-article-destination-policy.mjs';
+import {requiredChannelKinds,articleWriteAction,ARTICLE_UPDATE_HEADING,normalizeAquapediaArticleName,acquireArticleWriterLock,guardArticleBulkChange} from './aquapedia-article-destination-policy.mjs';
 
 const mode=process.argv.includes('--seed')?'seed':process.argv.includes('--apply')?'apply':'check';
 const base='https://aquapedia.app';
@@ -95,6 +95,8 @@ if(mode==='seed'){
   newPages:changes.filter(x=>!state.pages[x]).length,alreadyAnnouncedNew,cap,queuedAfterPass:Math.max(0,changes.length-cap),
   examples:changes.slice(0,8)}));
  if(mode==='apply'&&changes.length){
+  // Fail closed on site-wide template/render changes before connecting to Discord.
+  guardArticleBulkChange(changes.length,paths.length);
   const guild=process.env.AQUAPHORIA_GUILD_ID,token=process.env.DISCORD_TOKEN;
   if(!guild||!token)throw Error('Existing private Aquaphoria bot auth required');
   const rest=new REST({version:'10'}).setToken(token);

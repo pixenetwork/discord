@@ -9,6 +9,11 @@ import { ensureVendorWorkspace, provisionAquaphoriaLayout } from './layout.mjs';
 import { publishAquapediaCards, persistVerifiedReceipts } from './aquapedia-posts.mjs';
 import { createShrimpReleaseService } from './shrimp-release-service.mjs';
 const shrimpReleaseService = createShrimpReleaseService();
+const AQUAPEDIA_ONLY_COMMANDS = new Set([
+  'research', 'research-queue', 'shrimp-release', 'aquapedia-dm', 'aq-dm-test',
+]);
+export function aquapediaOnlyCommandNames() { return [...AQUAPEDIA_ONLY_COMMANDS]; }
+
 import {
   getCanonicalStaffRole,
   isCanonicalStaff,
@@ -385,7 +390,10 @@ function commandDefinitions() {
         ))
       .addStringOption((option) => option.setName('details').setDescription('Tell us what you need help with').setRequired(true).setMaxLength(1000)));
 
-  return [aquaphoria, vendor, catalog, product, research, researchQueue, shrimpRelease, order, payout, ticket, aquapediaDmCommand(), ownerDmDiagnosticCommand()];
+  const all = [aquaphoria, vendor, catalog, product, research, researchQueue, shrimpRelease, order, payout, ticket, aquapediaDmCommand(), ownerDmDiagnosticCommand()];
+  return process.env.AQUAPEDIA_ONLY === 'true'
+    ? all.filter((command) => AQUAPEDIA_ONLY_COMMANDS.has(command.name))
+    : all;
 }
 
 async function requireVendor(interaction, store) {
@@ -920,6 +928,10 @@ export function createCommandRouter(deps) {
       try {
         if (await aquapediaDmController.handle(interaction, deps)) return;
         if (!interaction.isChatInputCommand()) return;
+        if (process.env.AQUAPEDIA_ONLY === 'true'
+          && !AQUAPEDIA_ONLY_COMMANDS.has(interaction.commandName)) {
+          return interaction.reply({ content: 'This server is Aquapedia-only. Commerce commands have been retired.', ephemeral: true });
+        }
         if (interaction.commandName === 'aquaphoria') return await handleSetup(interaction, deps);
         if (interaction.commandName === 'vendor') return await handleVendor(interaction, deps);
         if (interaction.commandName === 'catalog') return await handleCatalog(interaction, deps);

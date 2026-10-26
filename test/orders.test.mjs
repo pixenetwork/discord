@@ -5,6 +5,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { ChannelType, Collection } from 'discord.js';
 import { createOrderService } from '../src/orders.mjs';
+import { layoutDefinition } from '../src/layout.mjs';
 import { createStore } from '../src/store.mjs';
 
 function mockGuild() {
@@ -35,6 +36,11 @@ function mockGuild() {
           type: input.type,
           parentId: input.parent ?? null,
           topic: input.topic ?? null,
+          // Discord exposes effective public readability on GuildCategory/GuildForum.
+          permissionsFor: () => ({ has: () => true }),
+          availableTags: (input.availableTags ?? []).map((tag, index) => ({
+            ...tag, id: `tag-${channelSequence}-${index}`,
+          })),
           permissionOverwrites: {
             async set() {},
           },
@@ -117,6 +123,16 @@ test('paid-order retry preserves ticket lifecycle, channel, and deterministic pa
       shopify,
     });
     const guild = mockGuild();
+    // Live magazine forums predate this order; commerce must never try to create them.
+    const aquapedia = layoutDefinition().find(x => x.category === '📰・AQUAPEDIA — MAGAZINES & ARTICLES');
+    const category = await guild.channels.create({ name: aquapedia.category, type: ChannelType.GuildCategory });
+    const magazineSpec = aquapedia.forums.find(x => x.name === '📖・medaka-hyakka');
+    const magazine = await guild.channels.create({
+      name: magazineSpec.name, type: ChannelType.GuildForum, parent: category.id,
+      topic: magazineSpec.topic, availableTags: magazineSpec.tags,
+    });
+    assert.ok(magazine,'existing magazine forum available before order retry');
+    magazine.availableTags.push({id:'moderator-tag',name:'Editorial Review',moderated:false});
     const order = {
       id: 12345,
       name: '#1001',
@@ -156,6 +172,8 @@ test('paid-order retry preserves ticket lifecycle, channel, and deterministic pa
       && String(channel.topic ?? '').includes('Aquaphoria ticket key: shopify:12345:toa')
     ));
     const summary = await store.payoutSummary('toa');
+    assert.equal(magazine.availableTags.some(tag=>tag.id==='moderator-tag'),true,
+      'paid-order routing must not alter magazine editorial tags');
     assert.equal(first.tickets.length, 1);
     assert.equal(retry.tickets.length, 1);
     assert.equal(issueRetry.tickets.length, 1);

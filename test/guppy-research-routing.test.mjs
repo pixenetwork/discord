@@ -21,9 +21,9 @@ const approval = {
 function guildFixture({publicVisible=true, forumName='🐠・guppy-research'}={}) {
   const created=[];
   const everyone={id:'everyone'};
-  const category={id:'aquapedia-public',type:4,name:'📚・AQUAPEDIA'};
+  const category={id:'1557338241903099945',type:4,name:'📚・AQUAPEDIA'};
   const forum={
-    id:'guppy-forum',parentId:category.id,type:15,name:forumName,
+    id:'1562195139353645146',parentId:category.id,type:15,name:forumName,
     permissionsFor(role) {return {has(flag) {return role===everyone && publicVisible &&
       [PermissionFlagsBits.ViewChannel,PermissionFlagsBits.ReadMessageHistory].includes(flag);}};},
     threads:{

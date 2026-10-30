@@ -258,7 +258,7 @@ export async function publishAquapediaCards(guild, result) {
   const ordered = [...cards].sort((a, b) => Number(b.entityType === 'breeder') - Number(a.entityType === 'breeder'));
   for (const card of ordered) {
     // Explicit forum names preserve Japanese characters for exact Discord-name matching.
-    const desired = String(card.breederForumName ?? '').trim().toLowerCase();
+    const desired = String(card.breederForumName ?? '').trim();
     const breeder = card.entityType === 'breeder' ? card.name : card.breederName;
     // Name-derived routing works only with an EXACT matching forum slug.
     // An unknown/contested breeder requires explicitly named "unknown-breeders".

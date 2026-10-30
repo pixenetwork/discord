@@ -114,13 +114,13 @@ test('private IPv4 and loopback IPv6 photo URLs cannot be embedded', () => {
 
 
 test('private breeder posts resolve a verified breeder forum in BREEDER RESEARCH II', async () => {
-  const { guild, events } = guildWithForums(['kondo-toshitsugu-近藤利継']);
+  const { guild, events } = guildWithForums(['Kondo-Toshitsugu-近藤利継']);
   guild.channels.cache.set('category-2', { id: 'category-2', name: '🔬・BREEDER RESEARCH II', type: 4 });
-  guild.channels.cache.get('kondo-toshitsugu-近藤利継').parentId = 'category-2';
+  guild.channels.cache.get('Kondo-Toshitsugu-近藤利継').parentId = 'category-2';
   const result = await publishAquapediaCards(guild, { status: 'completed', discordPublicationApproved: true,
-    cards: [{ ...strain, breederName: 'Kondo Toshitsugu', breederForumName: 'kondo-toshitsugu-近藤利継' }] });
+    cards: [{ ...strain, breederName: 'Kondo Toshitsugu', breederForumName: 'Kondo-Toshitsugu-近藤利継' }] });
   assert.equal(result.posted, 1);
-  assert.equal(events[0].forumName, 'kondo-toshitsugu-近藤利継');
+  assert.equal(events[0].forumName, 'Kondo-Toshitsugu-近藤利継');
   assert.equal(events[0].title, 'Fromage');
 });
 

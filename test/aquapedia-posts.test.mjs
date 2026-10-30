@@ -111,3 +111,26 @@ test('private IPv4 and loopback IPv6 photo URLs cannot be embedded', () => {
   assert.equal(result.embeds.length, 1);
   assert.ok(!result.embeds[0].image);
 });
+
+
+test('private breeder posts resolve a verified breeder forum in BREEDER RESEARCH II', async () => {
+  const { guild, events } = guildWithForums(['Kondo-Toshitsugu-近藤利継']);
+  guild.channels.cache.set('category-2', { id: 'category-2', name: '🔬・BREEDER RESEARCH II', type: 4 });
+  guild.channels.cache.get('Kondo-Toshitsugu-近藤利継').parentId = 'category-2';
+  const result = await publishAquapediaCards(guild, { status: 'completed', discordPublicationApproved: true,
+    cards: [{ ...strain, breederName: 'Kondo Toshitsugu', breederForumName: 'Kondo-Toshitsugu-近藤利継' }] });
+  assert.equal(result.posted, 1);
+  assert.equal(events[0].forumName, 'Kondo-Toshitsugu-近藤利継');
+  assert.equal(events[0].title, 'Fromage');
+});
+
+test('private breeder routing refuses ambiguous same-name forums across research categories', async () => {
+  const { guild, events } = guildWithForums(['tarumi-medaka']);
+  guild.channels.cache.set('category-2', { id: 'category-2', name: '🔬・BREEDER RESEARCH II', type: 4 });
+  const duplicate = { ...guild.channels.cache.get('tarumi-medaka'), id: 'second-tarumi', parentId: 'category-2' };
+  guild.channels.cache.set('second-tarumi', duplicate);
+  const result = await publishAquapediaCards(guild, { status: 'completed', discordPublicationApproved: true, cards: [strain] });
+  assert.equal(result.posted, 0);
+  assert.equal(result.skipped, 1);
+  assert.equal(events.length, 0);
+});

@@ -3,6 +3,7 @@ import { ChannelType, PermissionFlagsBits } from 'discord.js';
 
 // Source-backed, permission-gated Aquapedia messages for *existing* breeder forums.
 const CATEGORY_NAME = '🔬・BREEDER RESEARCH';
+const PRIVATE_BREEDER_CATEGORY_NAMES = new Set([CATEGORY_NAME, '🔬・BREEDER RESEARCH II']);
 const PUBLIC_CATEGORY_NAME = '📚・AQUAPEDIA';
 const PUBLIC_FORUM_NAME = '🦐・shrimp-research';
 const PUBLIC_AROWANA_FORUM_NAME = '🐉・arowana-research';
@@ -231,9 +232,14 @@ export async function publishAquapediaCards(guild, result) {
   const botId = guild?.client?.user?.id;
   if (!botId) return { posted: 0, reason: 'bot_identity_missing' };
   const channels = [...(guild?.channels?.cache?.values?.() ?? [])];
-  const category = channels.find((c) => c.type === ChannelType.GuildCategory && c.name === (publicResearch ? PUBLIC_CATEGORY_NAME : CATEGORY_NAME));
-  if (!category) return { posted: 0, reason: 'research_category_not_found' };
-  const forums = channels.filter((c) => c.type === ChannelType.GuildForum && c.parentId === category.id);
+  const categories = channels.filter((c) => c.type === ChannelType.GuildCategory
+    && (publicResearch ? c.name === PUBLIC_CATEGORY_NAME : PRIVATE_BREEDER_CATEGORY_NAMES.has(c.name)));
+  if (!categories.length) return { posted: 0, reason: 'research_category_not_found' };
+  if (new Set(categories.map((c) => c.name)).size !== categories.length) {
+    return { posted: 0, reason: 'research_category_ambiguous' };
+  }
+  const categoryIds = new Set(categories.map((c) => c.id));
+  const forums = channels.filter((c) => c.type === ChannelType.GuildForum && categoryIds.has(c.parentId));
   if (!forums.length) return { posted: 0, reason: 'research_forums_not_found' };
   const publicForum = publicResearch ? forums.find((c) => c.name === (publicShrimp ? PUBLIC_FORUM_NAME : publicArowana ? PUBLIC_AROWANA_FORUM_NAME : PUBLIC_GUPPY_FORUM_NAME)) : null;
   if (publicResearch) {
@@ -251,7 +257,8 @@ export async function publishAquapediaCards(guild, result) {
   const destinations = new Map();
   const ordered = [...cards].sort((a, b) => Number(b.entityType === 'breeder') - Number(a.entityType === 'breeder'));
   for (const card of ordered) {
-    const desired = forumSlug(card.breederForumName);
+    // Explicit forum names preserve Japanese characters for exact Discord-name matching.
+    const desired = String(card.breederForumName ?? '').trim();
     const breeder = card.entityType === 'breeder' ? card.name : card.breederName;
     // Name-derived routing works only with an EXACT matching forum slug.
     // An unknown/contested breeder requires explicitly named "unknown-breeders".
@@ -275,7 +282,9 @@ export async function publishAquapediaCards(guild, result) {
       skipped += 1;
       continue;
     }
-    const forum = publicResearch ? publicForum : forums.find((c) => c.name === target);
+    const matchingForums = publicResearch ? [] : forums.filter((c) => c.name === target);
+    // Fail closed if multiple breeder forums share an identical name.
+    const forum = publicResearch ? publicForum : matchingForums.length === 1 ? matchingForums[0] : null;
     if (!forum || (!publicResearch && !breeder && target !== 'unknown-breeders')) { skipped += 1; continue; }
     let payload;
     try {

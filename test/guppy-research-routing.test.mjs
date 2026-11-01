@@ -95,6 +95,7 @@ test('Jarvis explicit review and public-destination fields survive the research 
   globalThis.fetch=async()=>({ok:true,async json(){return {
     status:'completed',summary:'Source-backed research complete',files:[],cards:[card],
     discordPublicationApproved:true,publicAudienceApproved:true,publicGuppyResearch:true,
+    reviewReceiptId:'opaque-review-123',sourceHeadSha:'b'.repeat(40),
   };}});
   try{
     const service=createResearchService({
@@ -107,6 +108,8 @@ test('Jarvis explicit review and public-destination fields survive the research 
     assert.equal(result.discordPublicationApproved,true);
     assert.equal(result.publicAudienceApproved,true);
     assert.equal(result.publicGuppyResearch,true);
+    assert.equal(result.reviewReceiptId,'opaque-review-123');
+    assert.equal(result.sourceHeadSha,'b'.repeat(40));
     assert.equal(result.cards.length,1);
     assert.equal(recorded.at(-1).status,'completed');
   }finally{globalThis.fetch=original;}

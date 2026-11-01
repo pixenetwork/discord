@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { publishAquapediaCards } from '../src/aquapedia-posts.mjs';
+import { signedBreederFixture } from './helpers/breeder-auth-fixture.mjs';
 
 function makeCase({ completeSecondPage = true } = {}) {
   const events = [];
@@ -27,16 +28,22 @@ function makeCase({ completeSecondPage = true } = {}) {
   const category={id:'cat',name:'🔬・BREEDER RESEARCH',type:4};
   return { guild:{client:{user:{id:'bot'}},channels:{cache:new Map([['cat',category],['forum',forum]])}},entry,events, getPages:()=>page };
 }
+
+async function publishSigned(guild, cards) {
+  const f = signedBreederFixture(guild, { status: 'completed', discordPublicationApproved: true, cards });
+  return publishAquapediaCards(guild, f.result, f.authority);
+}
+
 test('searches older archived pages before reusing an existing breeder thread',async()=>{
   const {guild,entry,events,getPages}=makeCase();
-  const r=await publishAquapediaCards(guild,{status:'completed',discordPublicationApproved:true,cards:[entry]});
+  const r=await publishSigned(guild, [entry]);
   assert.equal(getPages(),2);
   assert.equal(r.posted,1);
   assert.deepEqual(events,['edit']);
 });
 test('incomplete archived search never creates a possibly duplicate thread',async()=>{
   const {guild,entry,events}=makeCase({completeSecondPage:false});
-  const r=await publishAquapediaCards(guild,{status:'completed',discordPublicationApproved:true,cards:[entry]});
+  const r=await publishSigned(guild, [entry]);
   assert.equal(r.posted,0);
   assert.ok(!events.includes('DUPLICATE-CREATE'));
 });

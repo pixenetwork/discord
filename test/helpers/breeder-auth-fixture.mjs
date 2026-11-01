@@ -25,6 +25,9 @@ export function signedBreederFixture(guild, originalResult, overrides = {}) {
     ['Kondo-Toshitsugu-近藤利継', { canonicalBreederKey: 'kondo-toshitsugu', aliases: ['Kondo Toshitsugu', '近藤利継', 'Kondo-Toshitsugu-近藤利継'] }],
     ['wang-xin-jiangyu', { canonicalBreederKey: 'wang-xin', aliases: ['Wang Xin', '王鑫'] }],
     ['unknown-breeders', { canonicalBreederKey: 'unknown-breeders', aliases: [] }],
+    ['old-breeder', { canonicalBreederKey: 'old-breeder', aliases: ['Old Breeder'] }],
+    ['skyfish', { canonicalBreederKey: 'skyfish', aliases: ['Skyfish'] }],
+    ['galactic-shrimps', { canonicalBreederKey: 'galactic-shrimps', aliases: ['Galactic Shrimps'] }],
   ]);
   const channels = [...guild.channels.cache.values()];
   const categories = channels.filter((c) => c.type === 4);

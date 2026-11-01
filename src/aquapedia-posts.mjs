@@ -1,4 +1,5 @@
 import { probePublicThreadCapacity } from './thread-capacity.mjs';
+import { authorizePrivateBreederCards } from './breeder-forum-authorization.mjs';
 import { ChannelType, PermissionFlagsBits } from 'discord.js';
 
 // Source-backed, permission-gated Aquapedia messages for *existing* breeder forums.
@@ -205,7 +206,7 @@ function matchingThread(threads, record, publicResearch = false) {
 
 // A breeder forum already exists under "🔬・BREEDER RESEARCH" in the live guild.
 // Do NOT create competing breeder forums or guess which farm founded a strain.
-export async function publishAquapediaCards(guild, result) {
+export async function publishAquapediaCards(guild, result, authority = null) {
   if (result?.status !== 'completed' || result.discordPublicationApproved !== true) {
     return { posted: 0, reason: 'review_or_completion_pending' };
   }
@@ -219,6 +220,11 @@ export async function publishAquapediaCards(guild, result) {
   }
   const cards = Array.isArray(result.cards) ? result.cards.slice(0, MAX_RECORDS) : [];
   if (!cards.length) return { posted: 0, reason: 'no_structured_cards' };
+  // Private breeder publication requires externally signed identity/forum binding
+  // and an atomically claimed review receipt. Public routes remain unchanged.
+  const authorization = publicResearch ? null
+    : await authorizePrivateBreederCards(guild, result, cards, authority);
+  if (authorization && !authorization.ok) return { posted: 0, reason: authorization.reason };
   if (publicResearch) {
     const ids = new Set();
     for (const card of cards) {
@@ -263,7 +269,7 @@ export async function publishAquapediaCards(guild, result) {
     // Name-derived routing works only with an EXACT matching forum slug.
     // An unknown/contested breeder requires explicitly named "unknown-breeders".
     const fallback = forumSlug(breeder);
-    const target = desired || fallback;
+    const target = publicResearch ? (desired || fallback) : authorization.approvedForumsByCard.get(card);
     // Existing hand-published Guppypedia topic guides are not recreated as new threads.
     // This lane accepts only source-reviewed indexed entries, not arbitrary destinations.
     if (publicGuppy && (

@@ -218,13 +218,20 @@ export async function publishAquapediaCards(guild, result, authority = null) {
   if (publicResearch && result.publicAudienceApproved !== true) {
     return { posted: 0, reason: 'public_audience_approval_pending' };
   }
-  const cards = Array.isArray(result.cards) ? result.cards.slice(0, MAX_RECORDS) : [];
+  const allCards = Array.isArray(result.cards) ? result.cards : [];
+  if (!publicResearch && allCards.length > MAX_RECORDS) {
+    // Reject the whole signed private batch; do not truncate the approved digest.
+    return { posted: 0, reason: 'breeder_batch_exceeds_limit' };
+  }
+  const cards = allCards.slice(0, MAX_RECORDS);
   if (!cards.length) return { posted: 0, reason: 'no_structured_cards' };
   // Private breeder publication requires externally signed identity/forum binding
   // and an atomically claimed review receipt. Public routes remain unchanged.
   const authorization = publicResearch ? null
     : await authorizePrivateBreederCards(guild, result, cards, authority);
-  if (authorization && !authorization.ok) return { posted: 0, reason: authorization.reason };
+  if (!publicResearch && (!authorization || !authorization.ok)) {
+    return { posted: 0, reason: authorization?.reason ?? 'breeder_binding_authority_unavailable' };
+  }
   if (publicResearch) {
     const ids = new Set();
     for (const card of cards) {

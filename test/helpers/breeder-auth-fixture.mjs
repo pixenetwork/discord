@@ -51,9 +51,14 @@ export function signedBreederFixture(guild, originalResult, overrides = {}) {
     allowlistSha256: createHash('sha256').update(canonicalJson(allowlistData)).digest('hex'),
     approvedBy: 'independent-governed-reviewer', decision: 'approved', issuedAt, expiresAt,
   };
-  const allowlistEnvelope = signed(overrides.allowlistData ?? allowlistData, privateKey, 'allowlist');
+  const finalAllowlistData = typeof overrides.allowlistTransform === 'function'
+    ? overrides.allowlistTransform(allowlistData) : overrides.allowlistData ?? allowlistData;
+  const allowlistEnvelope = signed(finalAllowlistData, privateKey, 'allowlist');
   const finalReceiptData = typeof overrides.receiptTransform === 'function'
-    ? overrides.receiptTransform(receiptData) : overrides.receiptData ?? receiptData;
+    ? overrides.receiptTransform({ ...receiptData,
+      allowlistSha256: createHash('sha256').update(canonicalJson(finalAllowlistData)).digest('hex') })
+    : overrides.receiptData ?? { ...receiptData,
+      allowlistSha256: createHash('sha256').update(canonicalJson(finalAllowlistData)).digest('hex') };
   const receiptEnvelope = signed(finalReceiptData, privateKey, 'receipt');
   let claimed = false;
   const authority = {

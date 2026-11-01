@@ -81,11 +81,13 @@ export async function authorizePrivateBreederCards(guild, result, cards, authori
     || receipt.jobId !== result.jobId
     || receipt.sourceHeadSha !== result.sourceHeadSha
     || receipt.sourceHeadSha !== authority.expectedSourceHeadSha
-    || receipt.cardsSha256 !== breederCardsDigest(cards)) {
+    || receipt.cardsSha256 !== breederCardsDigest(cards)
+    || receipt.allowlistSha256 !== createHash('sha256').update(canonicalJson(allowlist)).digest('hex')) {
     return deny('review_receipt_invalid');
   }
 
   const channels = [...(guild?.channels?.cache?.values?.() ?? [])];
+  const approvedForumsByCard = new Map();
   const forumByName = new Map();
   const breederByAlias = new Map();
   const forumIds = new Set();
@@ -134,6 +136,7 @@ export async function authorizePrivateBreederCards(guild, result, cards, authori
       || matchingForum[0].parentId !== binding.categoryId || category.length !== 1) {
       return deny('forum_binding_not_authorized');
     }
+    approvedForumsByCard.set(card, binding.forumName);
   }
 
   // The store must enforce an atomic, durable, one-use claim for this signed
@@ -146,5 +149,5 @@ export async function authorizePrivateBreederCards(guild, result, cards, authori
     if (claimed !== true) return deny('review_receipt_replayed_or_unavailable');
   } catch { return deny('review_receipt_replayed_or_unavailable'); }
 
-  return { ok: true };
+  return { ok: true, approvedForumsByCard };
 }

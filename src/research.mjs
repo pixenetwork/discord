@@ -156,6 +156,12 @@ export function createResearchService({ jarvis, aquapedia, store }) {
           duplicateOf: result.duplicateOf ?? null,
           files: written,
           discordPublicationApproved: status === 'completed' && result.discordPublicationApproved === true,
+          // Opaque governed-review references only; the publisher separately verifies
+          // signed receipts against its trusted external authorizer before any private write.
+          reviewReceiptId: status === 'completed' && /^[A-Za-z0-9._:-]{1,128}$/.test(String(result.reviewReceiptId ?? ''))
+            ? result.reviewReceiptId : null,
+          sourceHeadSha: status === 'completed' && /^[a-f0-9]{40}$/.test(String(result.sourceHeadSha ?? ''))
+            ? result.sourceHeadSha : null,
           publicAudienceApproved: status === 'completed' && result.publicAudienceApproved === true,
           publicShrimpResearch: status === 'completed' && result.publicShrimpResearch === true,
           publicArowanaResearch: status === 'completed' && result.publicArowanaResearch === true,

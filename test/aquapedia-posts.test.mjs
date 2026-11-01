@@ -151,3 +151,14 @@ test('contradictory breeder attribution makes zero Discord API calls', async () 
   assert.equal(result.reason, 'forum_binding_not_authorized');
   assert.equal(events.length, 0);
 });
+
+test('oversized private batch is denied as a whole, not silently truncated', async () => {
+  const { guild, events } = guildWithForums(['tarumi-medaka']);
+  const result = await publishSignedPrivate(guild, {
+    status: 'completed', discordPublicationApproved: true,
+    cards: Array.from({ length: 31 }, (_, i) => ({ ...strain, id: 'STRAIN-' + (i + 1) })),
+  });
+  assert.equal(result.posted, 0);
+  assert.equal(result.reason, 'breeder_batch_exceeds_limit');
+  assert.equal(events.length, 0);
+});

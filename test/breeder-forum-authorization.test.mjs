@@ -36,8 +36,8 @@ test('verified Japanese and romaji aliases resolve to exact approved existing fo
   ]));
   const checked = await check(f);
   assert.equal(checked.ok, true);
-  assert.equal(checked.approvedForumsByCard.get(f.result.cards[0]), 'Kondo-Toshitsugu-近藤利継');
-  assert.equal(checked.approvedForumsByCard.get(f.result.cards[1]), 'Kondo-Toshitsugu-近藤利継');
+  assert.equal(checked.approvedForumsByCard.get(f.result.cards[0]).name, 'Kondo-Toshitsugu-近藤利継');
+  assert.equal(checked.approvedForumsByCard.get(f.result.cards[1]).name, 'Kondo-Toshitsugu-近藤利継');
   assert.equal(f.getClaimed(), true);
 });
 

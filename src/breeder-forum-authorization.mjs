@@ -115,6 +115,10 @@ export async function authorizePrivateBreederCards(guild, result, cards, authori
   for (const card of cards) {
     if (!card || typeof card !== 'object') return deny('forum_binding_not_authorized');
     const breeder = card.entityType === 'breeder' ? card.name : card.breederName;
+    if (Object.hasOwn(card, 'breederForumName')
+      && (typeof card.breederForumName !== 'string' || !card.breederForumName.trim())) {
+      return deny('forum_binding_not_authorized');
+    }
     const requestedForum = typeof card.breederForumName === 'string' ? card.breederForumName.trim() : '';
     let binding;
     if (breeder == null || !String(breeder).trim()) {

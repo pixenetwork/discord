@@ -140,7 +140,9 @@ export async function authorizePrivateBreederCards(guild, result, cards, authori
       || matchingForum[0].parentId !== binding.categoryId || category.length !== 1) {
       return deny('forum_binding_not_authorized');
     }
-    approvedForumsByCard.set(card, binding.forumName);
+    approvedForumsByCard.set(card, {
+      name: binding.forumName, id: binding.forumId, parentId: binding.categoryId,
+    });
   }
 
   // The store must enforce an atomic, durable, one-use claim for this signed

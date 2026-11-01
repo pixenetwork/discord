@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { buildAquapediaPost, publishAquapediaCards } from '../src/aquapedia-posts.mjs';
+import { signedBreederFixture } from './helpers/breeder-auth-fixture.mjs';
 
 const breeder = { id: 'BREEDER-1', entityType: 'breeder', name: 'Tarumi Medaka', japaneseName: '垂水メダカ', description: 'Medaka line-development breeder', history: 'Some line history is breeder-reported', sources: ['https://piscesbook.com/archives/25289'], confidence: 'Specialist publisher, breeder cross unverified', photos: [
   { url: 'https://example.com/owned.jpg', reuseStatus: 'owner_owned', credit: 'Breeder; approved', view: 'side' },
@@ -27,6 +28,11 @@ function guildWithForums(names) {
     }
   }));
   return { guild: { client: { user: { id: 'test-bot' } }, channels: { cache: new Map([['category', category], ...forums.map((forum) => [forum.name, forum])]) } }, events };
+}
+
+async function publishSignedPrivate(guild, result) {
+  const fixture = signedBreederFixture(guild, result);
+  return publishAquapediaCards(guild, fixture.result, fixture.authority);
 }
 
 test('breeder card contains substantive info and only licensed inline photos', () => {
@@ -60,14 +66,14 @@ test('rejects unlicensed and unsafe HTTP/localhost URLs', () => {
 
 test('unreviewed or queued work never posts', async () => {
   const { guild } = guildWithForums(['tarumi-medaka']);
-  const x = await publishAquapediaCards(guild, { status: 'completed', discordPublicationApproved: false, cards: [breeder] });
+  const x = await publishSignedPrivate(guild, { status: 'completed', discordPublicationApproved: false, cards: [breeder] });
   assert.equal(x.posted, 0);
   assert.equal(x.reason, 'review_or_completion_pending');
 });
 
 test('breeder profile and strains create separate threads inside existing breeder forum', async () => {
   const { guild, events } = guildWithForums(['tarumi-medaka', 'unknown-breeders']);
-  const result = await publishAquapediaCards(guild, { status: 'completed', discordPublicationApproved: true, cards: [strain, breeder] });
+  const result = await publishSignedPrivate(guild, { status: 'completed', discordPublicationApproved: true, cards: [strain, breeder] });
   assert.equal(result.posted, 2);
   assert.deepEqual(events.map((e) => e.op), ['create', 'create']);
   assert.deepEqual(events.map((e) => e.forumName), ['tarumi-medaka', 'tarumi-medaka']);
@@ -79,15 +85,15 @@ test('breeder profile and strains create separate threads inside existing breede
 
 test('does not create new forums for unknown named breeders', async () => {
   const { guild, events } = guildWithForums(['tarumi-medaka', 'unknown-breeders']);
-  const result = await publishAquapediaCards(guild, { status: 'completed', discordPublicationApproved: true, cards: [{ ...strain, breederName: 'Unlisted Medaka' }] });
+  const result = await publishSignedPrivate(guild, { status: 'completed', discordPublicationApproved: true, cards: [{ ...strain, breederName: 'Unlisted Medaka' }] });
   assert.equal(result.posted, 0);
-  assert.equal(result.skipped, 1);
+  assert.equal(result.reason, 'forum_binding_not_authorized');
   assert.equal(events.length, 0);
 });
 
 test('unknown breeder uses existing unknown-breeders forum when explicitly routed', async () => {
   const { guild, events } = guildWithForums(['unknown-breeders']);
-  const result = await publishAquapediaCards(guild, { status: 'completed', discordPublicationApproved: true, cards: [{ ...strain, breederName: null, breederForumName: 'unknown-breeders' }] });
+  const result = await publishSignedPrivate(guild, { status: 'completed', discordPublicationApproved: true, cards: [{ ...strain, breederName: null, breederIdentityStatus: 'unverified', breederForumName: 'unknown-breeders' }] });
   assert.equal(result.posted, 1);
   assert.equal(events[0].forumName, 'unknown-breeders');
 });
@@ -95,7 +101,7 @@ test('unknown breeder uses existing unknown-breeders forum when explicitly route
 test('does not post in unrelated forums with same name outside breeder category', async () => {
   const { guild } = guildWithForums(['tarumi-medaka']);
   guild.channels.cache.get('tarumi-medaka').parentId = 'different-category';
-  const result = await publishAquapediaCards(guild, { status: 'completed', discordPublicationApproved: true, cards: [strain] });
+  const result = await publishSignedPrivate(guild, { status: 'completed', discordPublicationApproved: true, cards: [strain] });
   assert.equal(result.posted, 0);
 });
 
@@ -117,7 +123,7 @@ test('private breeder posts resolve a verified breeder forum in BREEDER RESEARCH
   const { guild, events } = guildWithForums(['Kondo-Toshitsugu-近藤利継']);
   guild.channels.cache.set('category-2', { id: 'category-2', name: '🔬・BREEDER RESEARCH II', type: 4 });
   guild.channels.cache.get('Kondo-Toshitsugu-近藤利継').parentId = 'category-2';
-  const result = await publishAquapediaCards(guild, { status: 'completed', discordPublicationApproved: true,
+  const result = await publishSignedPrivate(guild, { status: 'completed', discordPublicationApproved: true,
     cards: [{ ...strain, breederName: 'Kondo Toshitsugu', breederForumName: 'Kondo-Toshitsugu-近藤利継' }] });
   assert.equal(result.posted, 1);
   assert.equal(events[0].forumName, 'Kondo-Toshitsugu-近藤利継');
@@ -129,8 +135,8 @@ test('private breeder routing refuses ambiguous same-name forums across research
   guild.channels.cache.set('category-2', { id: 'category-2', name: '🔬・BREEDER RESEARCH II', type: 4 });
   const duplicate = { ...guild.channels.cache.get('tarumi-medaka'), id: 'second-tarumi', parentId: 'category-2' };
   guild.channels.cache.set('second-tarumi', duplicate);
-  const result = await publishAquapediaCards(guild, { status: 'completed', discordPublicationApproved: true, cards: [strain] });
+  const result = await publishSignedPrivate(guild, { status: 'completed', discordPublicationApproved: true, cards: [strain] });
   assert.equal(result.posted, 0);
-  assert.equal(result.skipped, 1);
+  assert.equal(result.reason, 'forum_binding_not_authorized');
   assert.equal(events.length, 0);
 });

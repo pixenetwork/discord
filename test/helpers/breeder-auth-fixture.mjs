@@ -52,7 +52,9 @@ export function signedBreederFixture(guild, originalResult, overrides = {}) {
     approvedBy: 'independent-governed-reviewer', decision: 'approved', issuedAt, expiresAt,
   };
   const allowlistEnvelope = signed(overrides.allowlistData ?? allowlistData, privateKey, 'allowlist');
-  const receiptEnvelope = signed(overrides.receiptData ?? receiptData, privateKey, 'receipt');
+  const finalReceiptData = typeof overrides.receiptTransform === 'function'
+    ? overrides.receiptTransform(receiptData) : overrides.receiptData ?? receiptData;
+  const receiptEnvelope = signed(finalReceiptData, privateKey, 'receipt');
   let claimed = false;
   const authority = {
     publicKey, expectedSourceHeadSha: EXPECTED_SHA,

@@ -269,7 +269,8 @@ export async function publishAquapediaCards(guild, result, authority = null) {
     // Name-derived routing works only with an EXACT matching forum slug.
     // An unknown/contested breeder requires explicitly named "unknown-breeders".
     const fallback = forumSlug(breeder);
-    const target = publicResearch ? (desired || fallback) : authorization.approvedForumsByCard.get(card);
+    const approvedForum = publicResearch ? null : authorization.approvedForumsByCard.get(card);
+    const target = publicResearch ? (desired || fallback) : approvedForum?.name;
     // Existing hand-published Guppypedia topic guides are not recreated as new threads.
     // This lane accepts only source-reviewed indexed entries, not arbitrary destinations.
     if (publicGuppy && (
@@ -290,7 +291,9 @@ export async function publishAquapediaCards(guild, result, authority = null) {
     }
     const matchingForums = publicResearch ? [] : forums.filter((c) => c.name === target);
     // Fail closed if multiple breeder forums share an identical name.
-    const forum = publicResearch ? publicForum : matchingForums.length === 1 ? matchingForums[0] : null;
+    const forum = publicResearch ? publicForum : matchingForums.length === 1
+      && matchingForums[0].id === approvedForum?.id
+      && matchingForums[0].parentId === approvedForum?.parentId ? matchingForums[0] : null;
     if (!forum || (!publicResearch && !breeder && target !== 'unknown-breeders')) { skipped += 1; continue; }
     let payload;
     try {

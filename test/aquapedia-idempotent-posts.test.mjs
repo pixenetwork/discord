@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { publishAquapediaCards } from '../src/aquapedia-posts.mjs';
+import { signedBreederFixture } from './helpers/breeder-auth-fixture.mjs';
 
 function fixture(hasBotPost) {
   const actions = [];
@@ -31,15 +32,21 @@ function fixture(hasBotPost) {
   return { guild, card, actions };
 }
 
+
+async function publishSigned(guild, cards) {
+  const f = signedBreederFixture(guild, { status: 'completed', discordPublicationApproved: true, cards });
+  return publishAquapediaCards(guild, f.result, f.authority);
+}
+
 test('existing bot-owned breeder profile is edited rather than appended again', async () => {
   const { guild, card, actions } = fixture(true);
-  await publishAquapediaCards(guild, { status: 'completed', discordPublicationApproved: true, cards: [card] });
+  await publishSigned(guild, [card]);
   assert.deepEqual(actions.map(x => x.type), ['edit']);
 });
 
 test('existing matching thread without bot-owned dossier fails closed', async () => {
   const { guild, card, actions } = fixture(false);
-  const result = await publishAquapediaCards(guild, { status: 'completed', discordPublicationApproved: true, cards: [card] });
+  const result = await publishSigned(guild, [card]);
   assert.equal(actions.length, 0);
   assert.equal(result.skipped, 1);
 });

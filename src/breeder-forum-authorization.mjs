@@ -60,6 +60,9 @@ export async function authorizePrivateBreederCards(guild, result, cards, authori
   if (!guildId || typeof receiptId !== 'string' || !receiptId.trim()
     || !result?.jobId || !result?.sourceHeadSha) return deny('review_receipt_invalid');
 
+  // Authorization must be valid when started AND after external I/O completes.
+  // A future-issued receipt cannot become valid merely because loading was slow.
+  const startedAt = Date.now();
   let allowlistEnvelope, receiptEnvelope;
   try {
     [allowlistEnvelope, receiptEnvelope] = await Promise.all([
@@ -70,12 +73,15 @@ export async function authorizePrivateBreederCards(guild, result, cards, authori
 
   const allowlist = verifiedEnvelope(allowlistEnvelope, authority.publicKey, 'allowlist');
   const receipt = verifiedEnvelope(receiptEnvelope, authority.publicKey, 'receipt');
-  const now = Date.now();
-  if (!allowlist || !liveApproval(allowlist, now)
+  const completedAt = Date.now();
+  if (completedAt < startedAt) return deny('review_receipt_invalid');
+  if (!allowlist || !liveApproval(allowlist, startedAt)
+    || !liveApproval(allowlist, completedAt)
     || String(allowlist.guildId) !== guildId || !Array.isArray(allowlist.bindings)) {
     return deny('breeder_allowlist_invalid');
   }
-  if (!receipt || !liveApproval(receipt, now) || receipt.decision !== 'approved'
+  if (!receipt || !liveApproval(receipt, startedAt)
+    || !liveApproval(receipt, completedAt) || receipt.decision !== 'approved'
     || typeof receipt.approvedBy !== 'string' || !receipt.approvedBy.trim()
     || receipt.receiptId !== receiptId || String(receipt.guildId) !== guildId
     || receipt.jobId !== result.jobId
@@ -95,7 +101,7 @@ export async function authorizePrivateBreederCards(guild, result, cards, authori
     if (typeof binding?.canonicalBreederKey !== 'string' || !binding.canonicalBreederKey.trim()
       || typeof binding.forumName !== 'string' || !binding.forumName
       || typeof binding.forumId !== 'string' || !binding.forumId
-      || typeof binding.categoryId !== 'string'
+      || typeof binding.categoryId !== 'string' || !binding.categoryId
       || !PRIVATE_CATEGORIES.has(binding.categoryName)
       || !Array.isArray(binding.aliases)
       || forumByName.has(binding.forumName) || forumIds.has(binding.forumId)) {

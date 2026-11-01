@@ -140,3 +140,14 @@ test('private breeder routing refuses ambiguous same-name forums across research
   assert.equal(result.reason, 'forum_binding_not_authorized');
   assert.equal(events.length, 0);
 });
+
+test('contradictory breeder attribution makes zero Discord API calls', async () => {
+  const { guild, events } = guildWithForums(['wang-xin-jiangyu', 'tarumi-medaka']);
+  const result = await publishSignedPrivate(guild, {
+    status: 'completed', discordPublicationApproved: true,
+    cards: [{ ...strain, breederName: 'Wang Xin', breederForumName: 'tarumi-medaka' }],
+  });
+  assert.equal(result.posted, 0);
+  assert.equal(result.reason, 'forum_binding_not_authorized');
+  assert.equal(events.length, 0);
+});

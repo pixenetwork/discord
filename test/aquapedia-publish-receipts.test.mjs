@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { publishAquapediaCards } from '../src/aquapedia-posts.mjs';
+import { signedBreederFixture } from './helpers/breeder-auth-fixture.mjs';
 
 function buildForum({ mode = 'created', correctAuthor = true, readbackError = false } = {}) {
   const events = [];
@@ -27,9 +28,15 @@ function buildForum({ mode = 'created', correctAuthor = true, readbackError = fa
   return { guild, card, events };
 }
 
+
+async function publishSigned(guild, cards) {
+  const f = signedBreederFixture(guild, { status: 'completed', discordPublicationApproved: true, cards });
+  return publishAquapediaCards(guild, f.result, f.authority);
+}
+
 test('new breeder post emits message-ID receipt only after bot-authored starter readback', async () => {
   const x = buildForum();
-  const r = await publishAquapediaCards(x.guild, { status:'completed', discordPublicationApproved:true, cards:[x.card] });
+  const r = await publishSigned(x.guild, [x.card]);
   assert.equal(r.posted, 1);
   assert.equal(r.receipts.length, 1);
   assert.deepEqual(r.receipts[0], { recordId:'shrimp-breeder-galactic', threadId:'thread-77', messageId:'msg-77', verified:true });
@@ -38,7 +45,7 @@ test('new breeder post emits message-ID receipt only after bot-authored starter 
 
 test('a forum post with an unverified author is NOT counted as verified publication', async () => {
   const x = buildForum({ correctAuthor:false });
-  const r = await publishAquapediaCards(x.guild, { status:'completed', discordPublicationApproved:true, cards:[x.card] });
+  const r = await publishSigned(x.guild, [x.card]);
   assert.equal(r.posted, 0);
   assert.equal(r.unverified, 1);
   assert.equal(r.receipts.length, 0);
@@ -46,7 +53,7 @@ test('a forum post with an unverified author is NOT counted as verified publicat
 
 test('existing bot-owned post emits receipt after editing and reading back', async () => {
   const x = buildForum({ mode:'existing' });
-  const r = await publishAquapediaCards(x.guild, { status:'completed', discordPublicationApproved:true, cards:[x.card] });
+  const r = await publishSigned(x.guild, [x.card]);
   assert.equal(r.posted, 1);
   assert.equal(r.receipts[0].messageId, 'msg-77');
   assert.ok(x.events.includes('edit'));
@@ -55,7 +62,7 @@ test('existing bot-owned post emits receipt after editing and reading back', asy
 
 test('Discord readback outage records unverified publication without claiming success', async () => {
   const x = buildForum({ readbackError: true });
-  const r = await publishAquapediaCards(x.guild, { status:'completed', discordPublicationApproved:true, cards:[x.card] });
+  const r = await publishSigned(x.guild, [x.card]);
   assert.equal(r.posted, 0);
   assert.equal(r.unverified, 1);
   assert.deepEqual(r.receipts, []);

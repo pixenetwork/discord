@@ -102,3 +102,28 @@ test('unsigned or substituted allowlist is rejected', async () => {
   } });
   assert.equal((await check(f)).reason, 'breeder_allowlist_invalid');
 });
+
+test('receipt issued during slow load must not become authorized', async () => {
+  const f = signedBreederFixture(guild(), publication([
+    { id: 'strain-future', entityType: 'strain', breederName: 'Wang Xin', breederForumName: 'wang-xin-jiangyu' },
+  ]), { receiptTransform: (r) => ({ ...r, issuedAt: new Date(Date.now() + 80).toISOString() }) });
+  const originalLoad = f.authority.loadReviewReceipt;
+  f.authority.loadReviewReceipt = async () => {
+    await new Promise((resolve) => setTimeout(resolve, 130));
+    return originalLoad();
+  };
+  const result = await check(f);
+  assert.equal(result.reason, 'review_receipt_invalid');
+  assert.equal(f.getClaimed(), false);
+});
+
+test('empty category ID invalidates entire signed allowlist before the claim', async () => {
+  const f = signedBreederFixture(guild(), publication([
+    { id: 'strain-blank-cat', entityType: 'strain', breederName: 'Wang Xin', breederForumName: 'wang-xin-jiangyu' },
+  ]), {
+    allowlistTransform: (a) => ({ ...a, bindings: a.bindings.map((b) =>
+      b.forumName === 'wang-xin-jiangyu' ? { ...b, categoryId: '' } : b) }),
+  });
+  assert.equal((await check(f)).reason, 'breeder_allowlist_ambiguous');
+  assert.equal(f.getClaimed(), false);
+});

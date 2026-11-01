@@ -58,12 +58,12 @@ test('a changed card after signing invalidates the batch review receipt', async 
 });
 
 test('expired signed review receipt is denied', async () => {
-  const f0 = signedBreederFixture(guild(), publication([{ id: 'strain-6',
-    entityType: 'strain', breederName: 'Wang Xin', breederForumName: 'wang-xin-jiangyu' }]));
-  const f = signedBreederFixture(f0.guild, f0.result, { receiptData: {
-    ...f0.receiptData, issuedAt: new Date(0).toISOString(), expiresAt: new Date(1000).toISOString(),
-  } });
-  // This signed receipt still fails, regardless of signer validity.
+  const f = signedBreederFixture(guild(), publication([{ id: 'strain-6',
+    entityType: 'strain', breederName: 'Wang Xin', breederForumName: 'wang-xin-jiangyu' }]), {
+    receiptTransform: (r) => ({
+      ...r, issuedAt: new Date(0).toISOString(), expiresAt: new Date(1000).toISOString(),
+    }),
+  });
   assert.equal((await check(f)).reason, 'review_receipt_invalid');
 });
 

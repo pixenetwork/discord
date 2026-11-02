@@ -114,3 +114,36 @@ test('Jarvis explicit review and public-destination fields survive the research 
     assert.equal(recorded.at(-1).status,'completed');
   }finally{globalThis.fetch=original;}
 });
+
+test('public research response retains 30-card cap while private signed batch remains complete', async () => {
+  const original = globalThis.fetch;
+  const cards = Array.from({ length: 31 }, (_, index) => ({
+    id: 'record-' + index, entityType: 'strain', name: 'Record ' + index,
+  }));
+  try {
+    const run = async (publicGuppyResearch) => {
+      globalThis.fetch = async () => ({ ok: true, async json() {
+        return {
+          status: 'completed', files: [], cards,
+          discordPublicationApproved: true,
+          publicAudienceApproved: publicGuppyResearch,
+          publicGuppyResearch,
+        };
+      } });
+      const service = createResearchService({
+        jarvis: { researchEndpoint: 'https://example.com/research', apiKey: null },
+        aquapedia: { githubToken: null, repository: 'pixenetwork/aquapedia', branch: 'main' },
+        store: { async recordResearchJob() {} },
+      });
+      return service.research({
+        entityType: 'strain', name: 'Card-cap regression', requestedBy: '1519337502379475095',
+      });
+    };
+    const publicResult = await run(true);
+    const privateResult = await run(false);
+    assert.equal(publicResult.cards.length, 30);
+    assert.equal(privateResult.cards.length, 31);
+  } finally {
+    globalThis.fetch = original;
+  }
+});

@@ -79,7 +79,7 @@ export function signedBreederFixture(guild, originalResult, overrides = {}) {
     },
   };
   if (typeof guild.channels.fetch !== 'function') {
-    guild.channels.fetch = async (id) => guild.channels.cache.get(id) ?? null;
+    guild.channels.fetch = async (id) => [...guild.channels.cache.values()].find((channel) => channel.id === id) ?? null;
   }
   return { guild, result, authority, receiptData, allowlistData, getClaimed: () => claimed };
 }

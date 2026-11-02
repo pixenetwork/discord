@@ -1,6 +1,6 @@
 import { probePublicThreadCapacity } from './thread-capacity.mjs';
 import { authorizePrivateBreederCards } from './breeder-forum-authorization.mjs';
-import { ChannelType, PermissionFlagsBits } from 'discord.js';
+import { ChannelType, MessageFlags, PermissionFlagsBits } from 'discord.js';
 
 // Source-backed, permission-gated Aquapedia messages for *existing* breeder forums.
 const CATEGORY_NAME = '🔬・BREEDER RESEARCH';
@@ -204,6 +204,29 @@ function matchingThread(threads, record, publicResearch = false) {
   return { name, existing: threads.find((thread) => thread.name === name) ?? null };
 }
 
+function privateApprovalFresh(authorization) {
+  return Number.isFinite(authorization?.approvedUntil) && Date.now() < authorization.approvedUntil;
+}
+
+async function fetchApprovedPrivateForum(guild, approvedForum) {
+  if (typeof guild?.channels?.fetch !== 'function' || !guild?.id || !approvedForum) return null;
+  let forum, category;
+  try {
+    forum = await guild.channels.fetch(approvedForum.id, { force: true });
+    if (!forum) return null;
+    category = await guild.channels.fetch(approvedForum.parentId, { force: true });
+  } catch { return null; }
+  const guildId = String(guild.id);
+  if (forum.id !== approvedForum.id || forum.type !== ChannelType.GuildForum
+    || forum.name !== approvedForum.name
+    || String(forum.guildId ?? forum.guild?.id ?? '') !== guildId
+    || forum.parentId !== approvedForum.parentId
+    || !category || category.id !== approvedForum.parentId
+    || category.type !== ChannelType.GuildCategory
+    || category.name !== approvedForum.categoryName
+    || String(category.guildId ?? category.guild?.id ?? '') !== guildId) return null;
+  return forum;
+}
 // A breeder forum already exists under "🔬・BREEDER RESEARCH" in the live guild.
 // Do NOT create competing breeder forums or guess which farm founded a strain.
 export async function publishAquapediaCards(guild, result, authority = null) {
@@ -347,90 +370,39 @@ export async function publishAquapediaCards(guild, result, authority = null) {
         && message.embeds?.some((embed) => embed.footer?.text?.startsWith(`Aquapedia • ${recordId} •`))
         && typeof message.edit === 'function');
       if (!previous) { skipped += 1; continue; }
-      // Re-validate destination after message-history fetch, before edit/reopen.
-      if (!publicResearch && typeof guild.channels?.fetch === 'function') {
-        let freshForumEdit, freshCategoryEdit;
-        try {
-          freshForumEdit = await guild.channels.fetch(approvedForum.id);
-          freshForumEdit = await guild.channels.fetch(approvedForum.id, { force: true });
-          freshCategoryEdit = freshForumEdit ? await guild.channels.fetch(approvedForum.parentId, { force: true }) : null;
-        if (!freshForumEdit || freshForumEdit.id !== approvedForum.id
-          || freshForumEdit.type !== ChannelType.GuildForum
-          || freshForumEdit.name !== approvedForum.name
-          || String(freshForumEdit.guildId ?? freshForumEdit.guild?.id ?? '') !== String(guild.id ?? '')
-          || freshForumEdit.parentId !== approvedForum.parentId
-          || !freshCategoryEdit || freshCategoryEdit.id !== approvedForum.parentId
-          || freshCategoryEdit.type !== ChannelType.GuildCategory
-          || freshCategoryEdit.name !== approvedForum.categoryName) {
-          skipped += 1; continue;
-        }
-      }
+      // A history fetch or thread reopen may race with a moved destination.
+      if (!publicResearch && (!(await fetchApprovedPrivateForum(guild, approvedForum))
+        || !privateApprovalFresh(authorization))) { skipped += 1; continue; }
       if (thread.archived) {
-      // Check expiry before each private mutation.
-      if (!publicResearch && Date.now() >= authorization.approvedUntil) {
-        skipped += 1; continue;
-      }
-        // Reopening an archived thread also consumes a guild-wide active slot.
         if (publicResearch) {
           const capacity = await probePublicThreadCapacity(guild);
           if (!capacity.allowed) { capacityBlocked = true; skipped += 1; break; }
         }
+        if (!publicResearch && !privateApprovalFresh(authorization)) { skipped += 1; continue; }
         await thread.setArchived(false, 'Update approved Aquapedia evidence');
-        if (!publicResearch && Date.now() >= authorization.approvedUntil) {
-          skipped += 1; continue;
-        }
+        // A successful reopen does not authorize a subsequent edit to a moved forum.
+        if (!publicResearch && (!(await fetchApprovedPrivateForum(guild, approvedForum))
+          || !privateApprovalFresh(authorization))) { skipped += 1; continue; }
       }
-        // Re-validate destination after reopen, before edit.
-        if (!publicResearch && typeof guild.channels?.fetch === 'function') {
-          let freshForumReopen, freshCategoryReopen;
-          try {
-            freshForumReopen = await guild.channels.fetch(approvedForum.id, { force: true });
-            freshCategoryReopen = freshForumReopen ? await guild.channels.fetch(approvedForum.parentId, { force: true }) : null;
-          } catch { skipped += 1; continue; }
-          if (!freshForumReopen || freshForumReopen.id !== approvedForum.id
-            || freshForumReopen.type !== ChannelType.GuildForum
-            || freshForumReopen.name !== approvedForum.name
-            || String(freshForumReopen.guildId ?? freshForumReopen.guild?.id ?? '') !== String(guild.id ?? '')
-            || freshForumReopen.parentId !== approvedForum.parentId
-            || !freshCategoryReopen || freshCategoryReopen.id !== approvedForum.parentId
-            || freshCategoryReopen.type !== ChannelType.GuildCategory
-            || freshCategoryReopen.name !== approvedForum.categoryName) {
-            skipped += 1; continue;
-          }
-        }
-        if (!publicResearch && Date.now() >= authorization.approvedUntil) {
-          skipped += 1; continue;
-        }
+      if (!publicResearch && !privateApprovalFresh(authorization)) { skipped += 1; continue; }
       await previous.edit(payload);
       priorMessageId = previous.id;
     } else {
+      let creationForum = forum;
       if (publicResearch) {
-        // The active-thread ceiling is GUILD-wide, not specific to this forum.
         const capacity = await probePublicThreadCapacity(guild);
         if (!capacity.allowed) { capacityBlocked = true; skipped += 1; break; }
+      } else {
+        // Forced live destination read happens after all thread lookups and before the write.
+        if (!privateApprovalFresh(authorization)) { skipped += 1; continue; }
+        creationForum = await fetchApprovedPrivateForum(guild, approvedForum);
+        if (!creationForum || !privateApprovalFresh(authorization)) { skipped += 1; continue; }
       }
-      thread = await forum.threads.create({ name, message: payload, reason: 'Approved Aquapedia breeder or strain dossier' });
-      // Re-validate destination after thread enumeration, before create.
-      if (!publicResearch && typeof guild.channels?.fetch === 'function') {
-        let freshForumCreate, freshCategoryCreate;
-        try {
-          freshForumCreate = await guild.channels.fetch(approvedForum.id, { force: true });
-          freshCategoryCreate = freshForumCreate ? await guild.channels.fetch(approvedForum.parentId, { force: true }) : null;
-        } catch { skipped += 1; continue; }
-        if (!freshForumCreate || freshForumCreate.id !== approvedForum.id
-          || freshForumCreate.type !== ChannelType.GuildForum
-          || freshForumCreate.name !== approvedForum.name
-          || String(freshForumCreate.guildId ?? freshForumCreate.guild?.id ?? '') !== String(guild.id ?? '')
-          || freshForumCreate.parentId !== approvedForum.parentId
-          || !freshCategoryCreate || freshCategoryCreate.id !== approvedForum.parentId
-          || freshCategoryCreate.type !== ChannelType.GuildCategory
-          || freshCategoryCreate.name !== approvedForum.categoryName) {
-          skipped += 1; continue;
-        }
-      }
-      if (!publicResearch && Date.now() >= authorization.approvedUntil) {
-        skipped += 1; continue;
-      }
+      thread = await creationForum.threads.create({
+        name,
+        message: publicResearch ? payload : { ...payload, flags: MessageFlags.SuppressNotifications },
+        reason: 'Approved Aquapedia breeder or strain dossier',
+      });
     }
     let readback = null;
     try {

@@ -17,14 +17,14 @@ function fixture(hasBotPost) {
     async send(payload) { actions.push({ type: 'send', payload }); },
   };
   const forum = {
-    id: 'forum-skyfish', type: 15, name: 'skyfish', parentId: 'research-cat',
+    id: 'forum-skyfish', guildId: 'test-guild', type: 15, name: 'skyfish', parentId: 'research-cat',
     threads: {
       async fetchActive() { return { threads: new Map([['thread-42', thread]]) }; },
       async fetchArchived() { return { threads: new Map() }; },
       async create() { throw new Error('must not create a second thread'); }
     }
   };
-  const category = { id: 'research-cat', type: 4, name: '🔬・BREEDER RESEARCH' };
+  const category = { id: 'research-cat', guildId: 'test-guild', type: 4, name: '🔬・BREEDER RESEARCH' };
   const guild = {
     client: { user: { id: 'our-bot' } },
     channels: { cache: new Map([['cat', category], ['forum', forum]]) }

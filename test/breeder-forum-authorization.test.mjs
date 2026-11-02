@@ -126,6 +126,7 @@ test('empty category ID invalidates entire signed allowlist before the claim', a
   });
   assert.equal((await check(f)).reason, 'breeder_allowlist_ambiguous');
   assert.equal(f.getClaimed(), false);
+});
 
 test('breeder card with same name and breederName resolves to same binding (positive)', async () => {
   const f = signedBreederFixture(guild(), publication([

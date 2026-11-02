@@ -12,9 +12,9 @@ const strain = { id: 'STRAIN-1', entityType: 'strain', name: 'Fromage', japanese
 
 function guildWithForums(names) {
   const events = [];
-  const category = { id: 'category-1', name: '🔬・BREEDER RESEARCH', type: 4 };
+  const category = { id: 'category-1', guildId: 'test-guild', name: '🔬・BREEDER RESEARCH', type: 4 };
   const forums = names.map((name, i) => ({
-    id: 'forum-' + i, name, type: 15, parentId: category.id,
+    id: 'forum-' + i, guildId: 'test-guild', name, type: 15, parentId: category.id,
     threads: {
       async fetchActive() { return { threads: new Map() }; },
       async fetchArchived() { return { threads: new Map() }; },
@@ -76,6 +76,9 @@ test('breeder profile and strains create separate threads inside existing breede
   const result = await publishSignedPrivate(guild, { status: 'completed', discordPublicationApproved: true, cards: [strain, breeder] });
   assert.equal(result.posted, 2);
   assert.deepEqual(events.map((e) => e.op), ['create', 'create']);
+  // Discord MessageFlags.SuppressNotifications is 4096: only starter creation is muted.
+  assert.equal(events[0].message.flags, 4096);
+  assert.equal(events[1].message.flags, 4096);
   assert.deepEqual(events.map((e) => e.forumName), ['tarumi-medaka', 'tarumi-medaka']);
   assert.match(events[0].title, /Breeder profile/);
   assert.equal(events[1].title, 'Fromage');
@@ -121,7 +124,7 @@ test('private IPv4 and loopback IPv6 photo URLs cannot be embedded', () => {
 
 test('private breeder posts resolve a verified breeder forum in BREEDER RESEARCH II', async () => {
   const { guild, events } = guildWithForums(['Kondo-Toshitsugu-近藤利継']);
-  guild.channels.cache.set('category-2', { id: 'category-2', name: '🔬・BREEDER RESEARCH II', type: 4 });
+  guild.channels.cache.set('category-2', { id: 'category-2', guildId: 'test-guild', name: '🔬・BREEDER RESEARCH II', type: 4 });
   guild.channels.cache.get('Kondo-Toshitsugu-近藤利継').parentId = 'category-2';
   const result = await publishSignedPrivate(guild, { status: 'completed', discordPublicationApproved: true,
     cards: [{ ...strain, breederName: 'Kondo Toshitsugu', breederForumName: 'Kondo-Toshitsugu-近藤利継' }] });
@@ -132,7 +135,7 @@ test('private breeder posts resolve a verified breeder forum in BREEDER RESEARCH
 
 test('private breeder routing refuses ambiguous same-name forums across research categories', async () => {
   const { guild, events } = guildWithForums(['tarumi-medaka']);
-  guild.channels.cache.set('category-2', { id: 'category-2', name: '🔬・BREEDER RESEARCH II', type: 4 });
+  guild.channels.cache.set('category-2', { id: 'category-2', guildId: 'test-guild', name: '🔬・BREEDER RESEARCH II', type: 4 });
   const duplicate = { ...guild.channels.cache.get('tarumi-medaka'), id: 'second-tarumi', parentId: 'category-2' };
   guild.channels.cache.set('second-tarumi', duplicate);
   const result = await publishSignedPrivate(guild, { status: 'completed', discordPublicationApproved: true, cards: [strain] });
@@ -161,13 +164,14 @@ test('oversized private batch is denied as a whole, not silently truncated', asy
   assert.equal(result.posted, 0);
   assert.equal(result.reason, 'breeder_batch_exceeds_limit');
   assert.equal(events.length, 0);
+});
 
 test('forum parent changes during fetchActive produces zero mutations (create path)', async () => {
   const events = [];
-  const category = { id: 'cat-original', type: 4, name: '🔬・BREEDER RESEARCH' };
-  const otherCategory = { id: 'cat-intruder', type: 4, name: '🔬・BREEDER RESEARCH II' };
+  const category = { id: 'cat-original', guildId: 'test-guild', type: 4, name: '🔬・BREEDER RESEARCH' };
+  const otherCategory = { id: 'cat-intruder', guildId: 'test-guild', type: 4, name: '🔬・BREEDER RESEARCH II' };
   const forum = {
-    id: 'forum-tarumi', type: 15, name: 'tarumi-medaka', parentId: 'cat-original',
+    id: 'forum-tarumi', guildId: 'test-guild', type: 15, name: 'tarumi-medaka', parentId: 'cat-original',
     threads: {
       async fetchActive() {
         // Simulate parent change during fetchActive
@@ -204,9 +208,9 @@ test('forum parent changes during fetchActive produces zero mutations (create pa
 
 test('whole-batch preflight: malformed second card returns posted=0, zero events, receipt unclaimed', async () => {
   const events = [];
-  const category = { id: 'cat-1', type: 4, name: '🔬・BREEDER RESEARCH' };
+  const category = { id: 'cat-1', guildId: 'test-guild', type: 4, name: '🔬・BREEDER RESEARCH' };
   const forum = {
-    id: 'forum-tarumi', type: 15, name: 'tarumi-medaka', parentId: 'cat-1',
+    id: 'forum-tarumi', guildId: 'test-guild', type: 15, name: 'tarumi-medaka', parentId: 'cat-1',
     threads: {
       async fetchActive() { return { threads: new Map() }; },
       async fetchArchived() { return { threads: new Map(), hasMore: false }; },
@@ -234,4 +238,159 @@ test('whole-batch preflight: malformed second card returns posted=0, zero events
   assert.equal(r.posted, 0);
   assert.equal(events.length, 0);
   assert.equal(getClaimed(), false);
+});
+
+test('private edit path denies a forum move during message-history lookup before reopen or edit', async () => {
+  const events = [];
+  const fetchCalls = [];
+  const category = { id: 'cat-original', guildId: 'test-guild', type: 4, name: '🔬・BREEDER RESEARCH' };
+  const intruder = { id: 'cat-intruder', guildId: 'test-guild', type: 4, name: '🔬・BREEDER RESEARCH II' };
+  const previous = {
+    id: 'message-edit',
+    author: { id: 'test-bot' },
+    embeds: [{ footer: { text: 'Aquapedia • STRAIN-EDIT • photos pending rights review' } }],
+    async edit() { events.push('edit'); },
+  };
+  const existingThread = {
+    id: 'thread-edit', name: 'Fromage', archived: true,
+    messages: { async fetch() {
+      forum.parentId = 'cat-intruder';
+      return new Map([['message-edit', previous]]);
+    } },
+    async setArchived() { events.push('reopen'); },
+  };
+  const forum = {
+    id: 'forum-tarumi', guildId: 'test-guild', type: 15, name: 'tarumi-medaka', parentId: 'cat-original',
+    threads: {
+      async fetchActive() { return { threads: new Map([['thread-edit', existingThread]]) }; },
+      async fetchArchived() { return { threads: new Map(), hasMore: false }; },
+      async create() { events.push('create'); return {}; },
+    },
+  };
+  const gld = {
+    id: 'test-guild',
+    client: { user: { id: 'test-bot' } },
+    channels: {
+      cache: new Map([['cat', category], ['cat2', intruder], ['forum', forum]]),
+      async fetch(id, options) {
+        fetchCalls.push({ id, options });
+        if (id === 'forum-tarumi') return { ...forum };
+        if (id === 'cat-original') return category;
+        return null;
+      },
+    },
+  };
+  const card = { id: 'STRAIN-EDIT', entityType: 'strain', name: 'Fromage',
+    breederName: 'Tarumi Medaka', breederForumName: 'tarumi-medaka',
+    sources: ['https://piscesbook.com/archives/25276'] };
+  const { result, authority } = signedBreederFixture(gld, {
+    status: 'completed', discordPublicationApproved: true, cards: [card],
+  });
+  const publicationResult = await publishAquapediaCards(gld, result, authority);
+  assert.equal(publicationResult.posted, 0);
+  assert.deepEqual(events, []);
+  assert.ok(fetchCalls.length >= 2 && fetchCalls.every((call) => call.options?.force === true));
+});
+
+test('private edit path revalidates destination after awaited reopen before editing', async () => {
+  const events = [];
+  const fetchCalls = [];
+  const category = { id: 'cat-original', guildId: 'test-guild', type: 4, name: '🔬・BREEDER RESEARCH' };
+  const intruder = { id: 'cat-intruder', guildId: 'test-guild', type: 4, name: '🔬・BREEDER RESEARCH II' };
+  const previous = {
+    id: 'message-reopen',
+    author: { id: 'test-bot' },
+    embeds: [{ footer: { text: 'Aquapedia • STRAIN-REOPEN • photos pending rights review' } }],
+    async edit() { events.push('edit'); },
+  };
+  const existingThread = {
+    id: 'thread-reopen', name: 'Fromage', archived: true,
+    messages: { async fetch() { return new Map([['message-reopen', previous]]); } },
+    async setArchived() {
+      events.push('reopen');
+      forum.parentId = 'cat-intruder';
+    },
+  };
+  const forum = {
+    id: 'forum-tarumi', guildId: 'test-guild', type: 15, name: 'tarumi-medaka', parentId: 'cat-original',
+    threads: {
+      async fetchActive() { return { threads: new Map([['thread-reopen', existingThread]]) }; },
+      async fetchArchived() { return { threads: new Map(), hasMore: false }; },
+      async create() { events.push('create'); return {}; },
+    },
+  };
+  const gld = {
+    id: 'test-guild',
+    client: { user: { id: 'test-bot' } },
+    channels: {
+      cache: new Map([['cat', category], ['cat2', intruder], ['forum', forum]]),
+      async fetch(id, options) {
+        fetchCalls.push({ id, options });
+        if (id === 'forum-tarumi') return { ...forum };
+        if (id === 'cat-original') return category;
+        return null;
+      },
+    },
+  };
+  const card = { id: 'STRAIN-REOPEN', entityType: 'strain', name: 'Fromage',
+    breederName: 'Tarumi Medaka', breederForumName: 'tarumi-medaka',
+    sources: ['https://piscesbook.com/archives/25276'] };
+  const { result, authority } = signedBreederFixture(gld, {
+    status: 'completed', discordPublicationApproved: true, cards: [card],
+  });
+  const publicationResult = await publishAquapediaCards(gld, result, authority);
+  assert.equal(publicationResult.posted, 0);
+  assert.deepEqual(events, ['reopen']);
+  assert.ok(fetchCalls.length >= 4 && fetchCalls.every((call) => call.options?.force === true));
+});
+
+test('private create path denies when approval expires during async thread lookup', async () => {
+  const events = [];
+  const category = { id: 'cat-1', guildId: 'test-guild', type: 4, name: '🔬・BREEDER RESEARCH' };
+  const forum = {
+    id: 'forum-tarumi', guildId: 'test-guild', type: 15, name: 'tarumi-medaka', parentId: 'cat-1',
+    threads: {
+      async fetchActive() { Date.now = () => expiresAt + 1; return { threads: new Map() }; },
+      async fetchArchived() { return { threads: new Map(), hasMore: false }; },
+      async create() { events.push('create'); return {}; },
+    },
+  };
+  const gld = {
+    id: 'test-guild',
+    client: { user: { id: 'test-bot' } },
+    channels: {
+      cache: new Map([['cat', category], ['forum', forum]]),
+      async fetch(id, options) {
+        if (id === 'forum-tarumi') return { ...forum };
+        if (id === 'cat-1') return category;
+        return null;
+      },
+    },
+  };
+  const card = { id: 'STRAIN-EXPIRE-LOOKUP', entityType: 'strain', name: 'Fromage',
+    breederName: 'Tarumi Medaka', breederForumName: 'tarumi-medaka',
+    sources: ['https://piscesbook.com/archives/25276'] };
+  const { result, authority, receiptData } = signedBreederFixture(gld, {
+    status: 'completed', discordPublicationApproved: true, cards: [card],
+  });
+  const originalNow = Date.now;
+  const expiresAt = Date.parse(receiptData.expiresAt);
+  try {
+    const publicationResult = await publishAquapediaCards(gld, result, authority);
+    assert.equal(publicationResult.posted, 0);
+    assert.deepEqual(events, []);
+  } finally {
+    Date.now = originalNow;
+  }
+});
+
+test('private create without fresh-channel capability fails closed before write', async () => {
+  const { guild, events } = guildWithForums(['tarumi-medaka']);
+  const fixture = signedBreederFixture(guild, {
+    status: 'completed', discordPublicationApproved: true, cards: [strain],
+  });
+  delete guild.channels.fetch;
+  const outcome = await publishAquapediaCards(guild, fixture.result, fixture.authority);
+  assert.equal(outcome.posted, 0);
+  assert.deepEqual(events, []);
 });

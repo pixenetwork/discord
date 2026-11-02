@@ -166,9 +166,12 @@ export function createResearchService({ jarvis, aquapedia, store }) {
           publicShrimpResearch: status === 'completed' && result.publicShrimpResearch === true,
           publicArowanaResearch: status === 'completed' && result.publicArowanaResearch === true,
           publicGuppyResearch: status === 'completed' && result.publicGuppyResearch === true,
-          // Preserve the full signed card set; the publisher rejects oversized
-          // private batches before authorization so the digest is never truncated.
-          cards: Array.isArray(result.cards) ? result.cards : [],
+          // Preserve full private signed batches so the publisher can reject >30
+          // before digest authorization; retain the public response cap unchanged.
+          cards: Array.isArray(result.cards)
+            ? (result.publicShrimpResearch === true || result.publicArowanaResearch === true
+              || result.publicGuppyResearch === true ? result.cards.slice(0, 30) : result.cards)
+            : [],
         };
       } catch (error) {
         // Preserve the original request for human review; do not silently strand it

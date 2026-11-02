@@ -14,7 +14,7 @@ function makeCase({ completeSecondPage = true } = {}) {
     archivedAt: new Date('2024-01-01T00:00:00Z'), archived: false,
     messages: { async fetch(q) { if(typeof q==='string') return post; return new Map([['m-old',post]]); } } };
   let page = 0;
-  const forum = { id:'f', name: 'old-breeder', type: 15, parentId: 'cat', threads: {
+  const forum = { id:'f', guildId:'test-guild', name: 'old-breeder', type: 15, parentId: 'cat', threads: {
     async fetchActive() { return { threads:new Map() }; },
     async fetchArchived(opts) {
       page++;
@@ -25,7 +25,7 @@ function makeCase({ completeSecondPage = true } = {}) {
     },
     async create() { events.push('DUPLICATE-CREATE'); return thread; }
   }};
-  const category={id:'cat',name:'🔬・BREEDER RESEARCH',type:4};
+  const category={id:'cat',guildId:'test-guild',name:'🔬・BREEDER RESEARCH',type:4};
   return { guild:{client:{user:{id:'bot'}},channels:{cache:new Map([['cat',category],['forum',forum]])}},entry,events, getPages:()=>page };
 }
 

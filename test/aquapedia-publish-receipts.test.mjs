@@ -17,12 +17,12 @@ function buildForum({ mode = 'created', correctAuthor = true, readbackError = fa
     async fetchStarterMessage() { events.push('starter-readback'); if (readbackError) throw new Error('Discord readback unavailable'); return message; },
     messages: { async fetch(query) { events.push('message-readback'); if (typeof query === 'string') return message; return new Map([['msg-77', message]]); } }
   };
-  const forum = { id: 'forum-4', type: 15, name: 'galactic-shrimps', parentId: 'research-category', threads: {
+  const forum = { id: 'forum-4', guildId: 'test-guild', type: 15, name: 'galactic-shrimps', parentId: 'research-category', threads: {
     async fetchActive() { return { threads: new Map(mode === 'existing' ? [['thread-77', thread]] : []) }; },
     async fetchArchived() { return { threads: new Map() }; },
     async create() { events.push('create'); return thread; }
   }};
-  const category = { id: 'research-category', type: 4, name: '🔬・BREEDER RESEARCH' };
+  const category = { id: 'research-category', guildId: 'test-guild', type: 4, name: '🔬・BREEDER RESEARCH' };
   const guild = { client: { user: { id: 'aquapedia-bot' } }, channels: {
     cache: new Map([['cat', category], ['forum', forum]]) } };
   return { guild, card, events };

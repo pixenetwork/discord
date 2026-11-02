@@ -235,4 +235,3 @@ test('whole-batch preflight: malformed second card returns posted=0, zero events
   assert.equal(events.length, 0);
   assert.equal(getClaimed(), false);
 });
-});

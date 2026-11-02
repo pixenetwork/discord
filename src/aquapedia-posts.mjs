@@ -225,6 +225,21 @@ export async function publishAquapediaCards(guild, result, authority = null) {
   }
   const cards = allCards.slice(0, MAX_RECORDS);
   if (!cards.length) return { posted: 0, reason: 'no_structured_cards' };
+  // Whole-batch static preflight for private routes: prebuild every card payload
+  // before the one-use receipt is claimed. Any invalid card denies the entire
+  // batch with zero Discord calls and the receipt unclaimed.
+  const prebuiltPayloads = new Map();
+  if (!publicResearch) {
+    for (const card of cards) {
+      let builtPayload;
+      try {
+        builtPayload = buildAquapediaPost(card);
+      } catch {
+        return { posted: 0, reason: 'invalid_card_payload' };
+      }
+      prebuiltPayloads.set(card, builtPayload);
+    }
+  }
   // Private breeder publication requires externally signed identity/forum binding
   // and an atomically claimed review receipt. Public routes remain unchanged.
   const authorization = publicResearch ? null
@@ -304,7 +319,8 @@ export async function publishAquapediaCards(guild, result, authority = null) {
     if (!forum || (!publicResearch && !breeder && target !== 'unknown-breeders')) { skipped += 1; continue; }
     let payload;
     try {
-      payload = buildAquapediaPost(card);
+      payload = publicResearch ? buildAquapediaPost(card) : prebuiltPayloads.get(card);
+      if (!payload) { skipped += 1; continue; }
     } catch {
       skipped += 1;
       continue;
@@ -336,8 +352,8 @@ export async function publishAquapediaCards(guild, result, authority = null) {
         let freshForumEdit, freshCategoryEdit;
         try {
           freshForumEdit = await guild.channels.fetch(approvedForum.id);
-          freshCategoryEdit = freshForumEdit ? await guild.channels.fetch(approvedForum.parentId) : null;
-        } catch { skipped += 1; continue; }
+          freshForumEdit = await guild.channels.fetch(approvedForum.id, { force: true });
+          freshCategoryEdit = freshForumEdit ? await guild.channels.fetch(approvedForum.parentId, { force: true }) : null;
         if (!freshForumEdit || freshForumEdit.id !== approvedForum.id
           || freshForumEdit.type !== ChannelType.GuildForum
           || freshForumEdit.name !== approvedForum.name
@@ -350,13 +366,41 @@ export async function publishAquapediaCards(guild, result, authority = null) {
         }
       }
       if (thread.archived) {
+      // Check expiry before each private mutation.
+      if (!publicResearch && Date.now() >= authorization.approvedUntil) {
+        skipped += 1; continue;
+      }
         // Reopening an archived thread also consumes a guild-wide active slot.
         if (publicResearch) {
           const capacity = await probePublicThreadCapacity(guild);
           if (!capacity.allowed) { capacityBlocked = true; skipped += 1; break; }
         }
         await thread.setArchived(false, 'Update approved Aquapedia evidence');
+        if (!publicResearch && Date.now() >= authorization.approvedUntil) {
+          skipped += 1; continue;
+        }
       }
+        // Re-validate destination after reopen, before edit.
+        if (!publicResearch && typeof guild.channels?.fetch === 'function') {
+          let freshForumReopen, freshCategoryReopen;
+          try {
+            freshForumReopen = await guild.channels.fetch(approvedForum.id, { force: true });
+            freshCategoryReopen = freshForumReopen ? await guild.channels.fetch(approvedForum.parentId, { force: true }) : null;
+          } catch { skipped += 1; continue; }
+          if (!freshForumReopen || freshForumReopen.id !== approvedForum.id
+            || freshForumReopen.type !== ChannelType.GuildForum
+            || freshForumReopen.name !== approvedForum.name
+            || String(freshForumReopen.guildId ?? freshForumReopen.guild?.id ?? '') !== String(guild.id ?? '')
+            || freshForumReopen.parentId !== approvedForum.parentId
+            || !freshCategoryReopen || freshCategoryReopen.id !== approvedForum.parentId
+            || freshCategoryReopen.type !== ChannelType.GuildCategory
+            || freshCategoryReopen.name !== approvedForum.categoryName) {
+            skipped += 1; continue;
+          }
+        }
+        if (!publicResearch && Date.now() >= authorization.approvedUntil) {
+          skipped += 1; continue;
+        }
       await previous.edit(payload);
       priorMessageId = previous.id;
     } else {
@@ -366,6 +410,27 @@ export async function publishAquapediaCards(guild, result, authority = null) {
         if (!capacity.allowed) { capacityBlocked = true; skipped += 1; break; }
       }
       thread = await forum.threads.create({ name, message: payload, reason: 'Approved Aquapedia breeder or strain dossier' });
+      // Re-validate destination after thread enumeration, before create.
+      if (!publicResearch && typeof guild.channels?.fetch === 'function') {
+        let freshForumCreate, freshCategoryCreate;
+        try {
+          freshForumCreate = await guild.channels.fetch(approvedForum.id, { force: true });
+          freshCategoryCreate = freshForumCreate ? await guild.channels.fetch(approvedForum.parentId, { force: true }) : null;
+        } catch { skipped += 1; continue; }
+        if (!freshForumCreate || freshForumCreate.id !== approvedForum.id
+          || freshForumCreate.type !== ChannelType.GuildForum
+          || freshForumCreate.name !== approvedForum.name
+          || String(freshForumCreate.guildId ?? freshForumCreate.guild?.id ?? '') !== String(guild.id ?? '')
+          || freshForumCreate.parentId !== approvedForum.parentId
+          || !freshCategoryCreate || freshCategoryCreate.id !== approvedForum.parentId
+          || freshCategoryCreate.type !== ChannelType.GuildCategory
+          || freshCategoryCreate.name !== approvedForum.categoryName) {
+          skipped += 1; continue;
+        }
+      }
+      if (!publicResearch && Date.now() >= authorization.approvedUntil) {
+        skipped += 1; continue;
+      }
     }
     let readback = null;
     try {

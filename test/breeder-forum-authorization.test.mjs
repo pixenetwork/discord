@@ -180,4 +180,3 @@ test('mismatched claim metadata jobId is denied', async () => {
   const result = await check(f);
   assert.ok(!result.ok);
 });
-});

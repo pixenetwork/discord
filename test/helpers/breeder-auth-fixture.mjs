@@ -68,7 +68,7 @@ export function signedBreederFixture(guild, originalResult, overrides = {}) {
     publicKey, expectedSourceHeadSha: EXPECTED_SHA,
     async loadAllowlist() { return overrides.allowlistEnvelope ?? allowlistEnvelope; },
     async loadReviewReceipt() { return overrides.receiptEnvelope ?? receiptEnvelope; },
-    async claimReceiptOnce() {
+    async claimReceiptOnce(id, meta) {
       if (id !== result.reviewReceiptId) return false;
       if (!meta || meta.jobId !== result.jobId || meta.guildId !== guild.id
         || meta.cardsSha256 !== receiptData.cardsSha256

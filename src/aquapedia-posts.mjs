@@ -331,6 +331,24 @@ export async function publishAquapediaCards(guild, result, authority = null) {
         && message.embeds?.some((embed) => embed.footer?.text?.startsWith(`Aquapedia • ${recordId} •`))
         && typeof message.edit === 'function');
       if (!previous) { skipped += 1; continue; }
+      // Re-validate destination after message-history fetch, before edit/reopen.
+      if (!publicResearch && typeof guild.channels?.fetch === 'function') {
+        let freshForumEdit, freshCategoryEdit;
+        try {
+          freshForumEdit = await guild.channels.fetch(approvedForum.id);
+          freshCategoryEdit = freshForumEdit ? await guild.channels.fetch(approvedForum.parentId) : null;
+        } catch { skipped += 1; continue; }
+        if (!freshForumEdit || freshForumEdit.id !== approvedForum.id
+          || freshForumEdit.type !== ChannelType.GuildForum
+          || freshForumEdit.name !== approvedForum.name
+          || String(freshForumEdit.guildId ?? freshForumEdit.guild?.id ?? '') !== String(guild.id ?? '')
+          || freshForumEdit.parentId !== approvedForum.parentId
+          || !freshCategoryEdit || freshCategoryEdit.id !== approvedForum.parentId
+          || freshCategoryEdit.type !== ChannelType.GuildCategory
+          || freshCategoryEdit.name !== approvedForum.categoryName) {
+          skipped += 1; continue;
+        }
+      }
       if (thread.archived) {
         // Reopening an archived thread also consumes a guild-wide active slot.
         if (publicResearch) {

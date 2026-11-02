@@ -166,7 +166,9 @@ export function createResearchService({ jarvis, aquapedia, store }) {
           publicShrimpResearch: status === 'completed' && result.publicShrimpResearch === true,
           publicArowanaResearch: status === 'completed' && result.publicArowanaResearch === true,
           publicGuppyResearch: status === 'completed' && result.publicGuppyResearch === true,
-          cards: Array.isArray(result.cards) ? result.cards.slice(0, 30) : [],
+          // Preserve the full signed card set; the publisher rejects oversized
+          // private batches before authorization so the digest is never truncated.
+          cards: Array.isArray(result.cards) ? result.cards : [],
         };
       } catch (error) {
         // Preserve the original request for human review; do not silently strand it

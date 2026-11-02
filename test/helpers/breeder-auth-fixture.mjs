@@ -69,10 +69,17 @@ export function signedBreederFixture(guild, originalResult, overrides = {}) {
     async loadAllowlist() { return overrides.allowlistEnvelope ?? allowlistEnvelope; },
     async loadReviewReceipt() { return overrides.receiptEnvelope ?? receiptEnvelope; },
     async claimReceiptOnce() {
+      if (id !== result.reviewReceiptId) return false;
+      if (!meta || meta.jobId !== result.jobId || meta.guildId !== guild.id
+        || meta.cardsSha256 !== receiptData.cardsSha256
+        || meta.sourceHeadSha !== receiptData.sourceHeadSha) return false;
       if (claimed) return false;
       claimed = true;
       return true;
     },
   };
+  if (typeof guild.channels.fetch !== 'function') {
+    guild.channels.fetch = async (id) => guild.channels.cache.get(id) ?? null;
+  }
   return { guild, result, authority, receiptData, allowlistData, getClaimed: () => claimed };
 }

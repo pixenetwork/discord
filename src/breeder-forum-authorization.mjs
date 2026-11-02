@@ -120,23 +120,35 @@ export async function authorizePrivateBreederCards(guild, result, cards, authori
 
   for (const card of cards) {
     if (!card || typeof card !== 'object') return deny('forum_binding_not_authorized');
-    const breeder = card.entityType === 'breeder' ? card.name : card.breederName;
+    // For breeder-type cards the embed renders breederName first; validate every
+    // populated identity field against the signed alias map so a contradictory
+    // card (name→Tarumi, breederName→Wang Xin) cannot slip through.
+    const primaryBreeder = card.entityType === 'breeder' ? card.name : card.breederName;
+    const secondaryBreeder = card.entityType === 'breeder' ? card.breederName : undefined;
     if (Object.hasOwn(card, 'breederForumName')
       && (typeof card.breederForumName !== 'string' || !card.breederForumName.trim())) {
       return deny('forum_binding_not_authorized');
     }
     const requestedForum = typeof card.breederForumName === 'string' ? card.breederForumName.trim() : '';
     let binding;
-    if (breeder == null || !String(breeder).trim()) {
+    if (primaryBreeder == null || !String(primaryBreeder).trim()) {
       if (card.entityType === 'breeder' || requestedForum !== 'unknown-breeders'
         || card.breederIdentityStatus !== 'unverified') return deny('forum_binding_not_authorized');
       binding = forumByName.get('unknown-breeders');
       if (binding?.canonicalBreederKey !== 'unknown-breeders') return deny('forum_binding_not_authorized');
     } else {
-      binding = breederByAlias.get(aliasKey(breeder));
+      binding = breederByAlias.get(aliasKey(primaryBreeder));
       if (!binding || (requestedForum && requestedForum !== binding.forumName)
         || binding.canonicalBreederKey === 'unknown-breeders') {
         return deny('forum_binding_not_authorized');
+      }
+      // Also validate the secondary identity field (breederName on a breeder entity)
+      // when it is populated.  Both fields must resolve to the same binding.
+      if (secondaryBreeder != null && String(secondaryBreeder).trim()) {
+        const secondaryBinding = breederByAlias.get(aliasKey(secondaryBreeder));
+        if (!secondaryBinding || secondaryBinding !== binding) {
+          return deny('forum_binding_not_authorized');
+        }
       }
     }
     const matchingForum = channels.filter((c) => c.type === 15 && c.name === binding.forumName);
@@ -148,6 +160,7 @@ export async function authorizePrivateBreederCards(guild, result, cards, authori
     }
     approvedForumsByCard.set(card, {
       name: binding.forumName, id: binding.forumId, parentId: binding.categoryId,
+      categoryName: binding.categoryName,
     });
   }
 
@@ -161,5 +174,14 @@ export async function authorizePrivateBreederCards(guild, result, cards, authori
     if (claimed !== true) return deny('review_receipt_replayed_or_unavailable');
   } catch { return deny('review_receipt_replayed_or_unavailable'); }
 
-  return { ok: true, approvedForumsByCard };
+  // Recheck both validity windows with a fresh clock after the claim I/O.
+  // A slow atomic-store round-trip cannot revive an already-expired approval.
+  const claimedAt = Date.now();
+  if (!liveApproval(allowlist, claimedAt) || !liveApproval(receipt, claimedAt)) {
+    return deny('review_receipt_expired_after_claim');
+  }
+  const approvedUntil = Math.min(
+    Date.parse(allowlist.expiresAt), Date.parse(receipt.expiresAt));
+
+  return { ok: true, approvedForumsByCard, approvedUntil };
 }

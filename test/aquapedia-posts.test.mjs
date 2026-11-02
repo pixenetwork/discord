@@ -161,4 +161,78 @@ test('oversized private batch is denied as a whole, not silently truncated', asy
   assert.equal(result.posted, 0);
   assert.equal(result.reason, 'breeder_batch_exceeds_limit');
   assert.equal(events.length, 0);
+
+test('forum parent changes during fetchActive produces zero mutations (create path)', async () => {
+  const events = [];
+  const category = { id: 'cat-original', type: 4, name: '🔬・BREEDER RESEARCH' };
+  const otherCategory = { id: 'cat-intruder', type: 4, name: '🔬・BREEDER RESEARCH II' };
+  const forum = {
+    id: 'forum-tarumi', type: 15, name: 'tarumi-medaka', parentId: 'cat-original',
+    threads: {
+      async fetchActive() {
+        // Simulate parent change during fetchActive
+        forum.parentId = 'cat-intruder';
+        return { threads: new Map() };
+      },
+      async fetchArchived() { return { threads: new Map(), hasMore: false }; },
+      async create() { events.push('create'); return {}; },
+    },
+  };
+  const gld = {
+    id: 'test-guild',
+    client: { user: { id: 'test-bot' } },
+    channels: {
+      cache: new Map([['cat', category], ['cat2', otherCategory], ['f', forum]]),
+      async fetch(id) {
+        if (id === 'forum-tarumi') return { ...forum };
+        if (id === 'cat-original') return category;
+        if (id === 'cat-intruder') return otherCategory;
+        return null;
+      },
+    },
+  };
+  const { result, authority } = signedBreederFixture(gld, {
+    status: 'completed', discordPublicationApproved: true,
+    cards: [{ id: 'STRAIN-1', entityType: 'strain', name: 'Fromage',
+      breederName: 'Tarumi Medaka', breederForumName: 'tarumi-medaka',
+      sources: ['https://piscesbook.com/archives/25276'] }],
+  });
+  const r = await publishAquapediaCards(gld, result, authority);
+  assert.equal(r.posted, 0);
+  assert.equal(events.length, 0);
+});
+
+test('whole-batch preflight: malformed second card returns posted=0, zero events, receipt unclaimed', async () => {
+  const events = [];
+  const category = { id: 'cat-1', type: 4, name: '🔬・BREEDER RESEARCH' };
+  const forum = {
+    id: 'forum-tarumi', type: 15, name: 'tarumi-medaka', parentId: 'cat-1',
+    threads: {
+      async fetchActive() { return { threads: new Map() }; },
+      async fetchArchived() { return { threads: new Map(), hasMore: false }; },
+      async create() { events.push('create'); return {}; },
+    },
+  };
+  const gld = {
+    id: 'test-guild',
+    client: { user: { id: 'test-bot' } },
+    channels: {
+      cache: new Map([['cat', category], ['f', forum]]),
+      async fetch(id) { return gld.channels.cache.get(id) ?? null; },
+    },
+  };
+  const validCard = { id: 'STRAIN-OK', entityType: 'strain', name: 'Fromage',
+    breederName: 'Tarumi Medaka', breederForumName: 'tarumi-medaka',
+    sources: ['https://piscesbook.com/archives/25276'] };
+  const badCard = { id: '', entityType: 'strain', name: '',
+    breederName: 'Tarumi Medaka', breederForumName: 'tarumi-medaka' };
+  const { result, authority, getClaimed } = signedBreederFixture(gld, {
+    status: 'completed', discordPublicationApproved: true,
+    cards: [validCard, badCard],
+  });
+  const r = await publishAquapediaCards(gld, result, authority);
+  assert.equal(r.posted, 0);
+  assert.equal(events.length, 0);
+  assert.equal(getClaimed(), false);
+});
 });

@@ -126,4 +126,58 @@ test('empty category ID invalidates entire signed allowlist before the claim', a
   });
   assert.equal((await check(f)).reason, 'breeder_allowlist_ambiguous');
   assert.equal(f.getClaimed(), false);
+
+test('breeder card with same name and breederName resolves to same binding (positive)', async () => {
+  const f = signedBreederFixture(guild(), publication([
+    { id: 'strain-same', entityType: 'breeder', name: 'Tarumi Medaka', breederName: 'Tarumi Medaka',
+      breederForumName: 'tarumi-medaka' },
+  ]));
+  const result = await check(f);
+  assert.equal(result.ok, true);
+  assert.equal(f.getClaimed(), true);
+});
+
+test('breeder card name resolves tarumi but breederName resolves wang-xin is denied before claim', async () => {
+  const f = signedBreederFixture(guild(), publication([
+    { id: 'strain-contradict', entityType: 'breeder', name: 'Tarumi Medaka', breederName: 'Wang Xin',
+      breederForumName: 'tarumi-medaka' },
+  ]));
+  assert.equal((await check(f)).reason, 'forum_binding_not_authorized');
+  assert.equal(f.getClaimed(), false);
+});
+
+test('approval expired inside claimReceiptOnce delay returns denial', async () => {
+  const now = Date.now();
+  const f = signedBreederFixture(guild(), publication([
+    { id: 'strain-claim-expire', entityType: 'strain', breederName: 'Wang Xin',
+      breederForumName: 'wang-xin-jiangyu' },
+  ]), {
+    receiptTransform: (r) => ({
+      ...r,
+      issuedAt: new Date(now - 5000).toISOString(),
+      expiresAt: new Date(now + 150).toISOString(),
+    }),
+  });
+  const originalClaim = f.authority.claimReceiptOnce;
+  f.authority.claimReceiptOnce = async (...args) => {
+    await new Promise((resolve) => setTimeout(resolve, 250));
+    return originalClaim(...args);
+  };
+  const result = await check(f);
+  assert.equal(result.reason, 'review_receipt_expired_after_claim');
+});
+
+test('mismatched claim metadata jobId is denied', async () => {
+  const f = signedBreederFixture(guild(), publication([
+    { id: 'strain-meta', entityType: 'strain', breederName: 'Wang Xin',
+      breederForumName: 'wang-xin-jiangyu' },
+  ]));
+  const originalClaim = f.authority.claimReceiptOnce;
+  f.authority.claimReceiptOnce = async (id, meta) => {
+    if (meta?.jobId !== 'test-job') return false;
+    return originalClaim(id, { ...meta, jobId: 'wrong-job' });
+  };
+  const result = await check(f);
+  assert.ok(!result.ok);
+});
 });

@@ -156,11 +156,22 @@ export function createResearchService({ jarvis, aquapedia, store }) {
           duplicateOf: result.duplicateOf ?? null,
           files: written,
           discordPublicationApproved: status === 'completed' && result.discordPublicationApproved === true,
+          // Opaque governed-review references only; the publisher separately verifies
+          // signed receipts against its trusted external authorizer before any private write.
+          reviewReceiptId: status === 'completed' && /^[A-Za-z0-9._:-]{1,128}$/.test(String(result.reviewReceiptId ?? ''))
+            ? result.reviewReceiptId : null,
+          sourceHeadSha: status === 'completed' && /^[a-f0-9]{40}$/.test(String(result.sourceHeadSha ?? ''))
+            ? result.sourceHeadSha : null,
           publicAudienceApproved: status === 'completed' && result.publicAudienceApproved === true,
           publicShrimpResearch: status === 'completed' && result.publicShrimpResearch === true,
           publicArowanaResearch: status === 'completed' && result.publicArowanaResearch === true,
           publicGuppyResearch: status === 'completed' && result.publicGuppyResearch === true,
-          cards: Array.isArray(result.cards) ? result.cards.slice(0, 30) : [],
+          // Preserve full private signed batches so the publisher can reject >30
+          // before digest authorization; retain the public response cap unchanged.
+          cards: Array.isArray(result.cards)
+            ? (result.publicShrimpResearch === true || result.publicArowanaResearch === true
+              || result.publicGuppyResearch === true ? result.cards.slice(0, 30) : result.cards)
+            : [],
         };
       } catch (error) {
         // Preserve the original request for human review; do not silently strand it

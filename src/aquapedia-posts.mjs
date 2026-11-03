@@ -1,5 +1,6 @@
 import { probePublicThreadCapacity } from './thread-capacity.mjs';
-import { ChannelType, PermissionFlagsBits } from 'discord.js';
+import { authorizePrivateBreederCards } from './breeder-forum-authorization.mjs';
+import { ChannelType, MessageFlags, PermissionFlagsBits } from 'discord.js';
 
 // Source-backed, permission-gated Aquapedia messages for *existing* breeder forums.
 const CATEGORY_NAME = '🔬・BREEDER RESEARCH';
@@ -203,9 +204,35 @@ function matchingThread(threads, record, publicResearch = false) {
   return { name, existing: threads.find((thread) => thread.name === name) ?? null };
 }
 
+function privateApprovalFresh(authorization) {
+  return Number.isFinite(authorization?.approvedUntil) && Date.now() < authorization.approvedUntil;
+}
+
+async function fetchApprovedPrivateForum(guild, approvedForum) {
+  if (typeof guild?.channels?.fetch !== 'function' || !guild?.id || !approvedForum) return null;
+  let forum, category;
+  try {
+    // Read the category first: the forum's parent must be verified using the
+    // latest forced forum response, after any awaited category lookup.
+    category = await guild.channels.fetch(approvedForum.parentId, { force: true });
+    if (!category) return null;
+    forum = await guild.channels.fetch(approvedForum.id, { force: true });
+    if (!forum) return null;
+  } catch { return null; }
+  const guildId = String(guild.id);
+  if (forum.id !== approvedForum.id || forum.type !== ChannelType.GuildForum
+    || forum.name !== approvedForum.name
+    || String(forum.guildId ?? forum.guild?.id ?? '') !== guildId
+    || forum.parentId !== approvedForum.parentId
+    || !category || category.id !== approvedForum.parentId
+    || category.type !== ChannelType.GuildCategory
+    || category.name !== approvedForum.categoryName
+    || String(category.guildId ?? category.guild?.id ?? '') !== guildId) return null;
+  return forum;
+}
 // A breeder forum already exists under "🔬・BREEDER RESEARCH" in the live guild.
 // Do NOT create competing breeder forums or guess which farm founded a strain.
-export async function publishAquapediaCards(guild, result) {
+export async function publishAquapediaCards(guild, result, authority = null) {
   if (result?.status !== 'completed' || result.discordPublicationApproved !== true) {
     return { posted: 0, reason: 'review_or_completion_pending' };
   }
@@ -217,8 +244,35 @@ export async function publishAquapediaCards(guild, result) {
   if (publicResearch && result.publicAudienceApproved !== true) {
     return { posted: 0, reason: 'public_audience_approval_pending' };
   }
-  const cards = Array.isArray(result.cards) ? result.cards.slice(0, MAX_RECORDS) : [];
+  const allCards = Array.isArray(result.cards) ? result.cards : [];
+  if (!publicResearch && allCards.length > MAX_RECORDS) {
+    // Reject the whole signed private batch; do not truncate the approved digest.
+    return { posted: 0, reason: 'breeder_batch_exceeds_limit' };
+  }
+  const cards = allCards.slice(0, MAX_RECORDS);
   if (!cards.length) return { posted: 0, reason: 'no_structured_cards' };
+  // Whole-batch static preflight for private routes: prebuild every card payload
+  // before the one-use receipt is claimed. Any invalid card denies the entire
+  // batch with zero Discord calls and the receipt unclaimed.
+  const prebuiltPayloads = new Map();
+  if (!publicResearch) {
+    for (const card of cards) {
+      let builtPayload;
+      try {
+        builtPayload = buildAquapediaPost(card);
+      } catch {
+        return { posted: 0, reason: 'invalid_card_payload' };
+      }
+      prebuiltPayloads.set(card, builtPayload);
+    }
+  }
+  // Private breeder publication requires externally signed identity/forum binding
+  // and an atomically claimed review receipt. Public routes remain unchanged.
+  const authorization = publicResearch ? null
+    : await authorizePrivateBreederCards(guild, result, cards, authority);
+  if (!publicResearch && (!authorization || !authorization.ok)) {
+    return { posted: 0, reason: authorization?.reason ?? 'breeder_binding_authority_unavailable' };
+  }
   if (publicResearch) {
     const ids = new Set();
     for (const card of cards) {
@@ -263,7 +317,8 @@ export async function publishAquapediaCards(guild, result) {
     // Name-derived routing works only with an EXACT matching forum slug.
     // An unknown/contested breeder requires explicitly named "unknown-breeders".
     const fallback = forumSlug(breeder);
-    const target = desired || fallback;
+    const approvedForum = publicResearch ? null : authorization.approvedForumsByCard.get(card);
+    const target = publicResearch ? (desired || fallback) : approvedForum?.name;
     // Existing hand-published Guppypedia topic guides are not recreated as new threads.
     // This lane accepts only source-reviewed indexed entries, not arbitrary destinations.
     if (publicGuppy && (
@@ -284,11 +339,14 @@ export async function publishAquapediaCards(guild, result) {
     }
     const matchingForums = publicResearch ? [] : forums.filter((c) => c.name === target);
     // Fail closed if multiple breeder forums share an identical name.
-    const forum = publicResearch ? publicForum : matchingForums.length === 1 ? matchingForums[0] : null;
+    const forum = publicResearch ? publicForum : matchingForums.length === 1
+      && matchingForums[0].id === approvedForum?.id
+      && matchingForums[0].parentId === approvedForum?.parentId ? matchingForums[0] : null;
     if (!forum || (!publicResearch && !breeder && target !== 'unknown-breeders')) { skipped += 1; continue; }
     let payload;
     try {
-      payload = buildAquapediaPost(card);
+      payload = publicResearch ? buildAquapediaPost(card) : prebuiltPayloads.get(card);
+      if (!payload) { skipped += 1; continue; }
     } catch {
       skipped += 1;
       continue;
@@ -315,23 +373,39 @@ export async function publishAquapediaCards(guild, result) {
         && message.embeds?.some((embed) => embed.footer?.text?.startsWith(`Aquapedia • ${recordId} •`))
         && typeof message.edit === 'function');
       if (!previous) { skipped += 1; continue; }
+      // A history fetch or thread reopen may race with a moved destination.
+      if (!publicResearch && (!(await fetchApprovedPrivateForum(guild, approvedForum))
+        || !privateApprovalFresh(authorization))) { skipped += 1; continue; }
       if (thread.archived) {
-        // Reopening an archived thread also consumes a guild-wide active slot.
         if (publicResearch) {
           const capacity = await probePublicThreadCapacity(guild);
           if (!capacity.allowed) { capacityBlocked = true; skipped += 1; break; }
         }
+        if (!publicResearch && !privateApprovalFresh(authorization)) { skipped += 1; continue; }
         await thread.setArchived(false, 'Update approved Aquapedia evidence');
+        // A successful reopen does not authorize a subsequent edit to a moved forum.
+        if (!publicResearch && (!(await fetchApprovedPrivateForum(guild, approvedForum))
+          || !privateApprovalFresh(authorization))) { skipped += 1; continue; }
       }
+      if (!publicResearch && !privateApprovalFresh(authorization)) { skipped += 1; continue; }
       await previous.edit(payload);
       priorMessageId = previous.id;
     } else {
+      let creationForum = forum;
       if (publicResearch) {
-        // The active-thread ceiling is GUILD-wide, not specific to this forum.
         const capacity = await probePublicThreadCapacity(guild);
         if (!capacity.allowed) { capacityBlocked = true; skipped += 1; break; }
+      } else {
+        // Forced live destination read happens after all thread lookups and before the write.
+        if (!privateApprovalFresh(authorization)) { skipped += 1; continue; }
+        creationForum = await fetchApprovedPrivateForum(guild, approvedForum);
+        if (!creationForum || !privateApprovalFresh(authorization)) { skipped += 1; continue; }
       }
-      thread = await forum.threads.create({ name, message: payload, reason: 'Approved Aquapedia breeder or strain dossier' });
+      thread = await creationForum.threads.create({
+        name,
+        message: publicResearch ? payload : { ...payload, flags: MessageFlags.SuppressNotifications },
+        reason: 'Approved Aquapedia breeder or strain dossier',
+      });
     }
     let readback = null;
     try {

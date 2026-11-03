@@ -394,3 +394,89 @@ test('private create without fresh-channel capability fails closed before write'
   assert.equal(outcome.posted, 0);
   assert.deepEqual(events, []);
 });
+
+for (const path of ['create', 'edit', 'reopen']) {
+  test('private ' + path + ' denies forum move during awaited category fetch with stale cached parent', async () => {
+    const events = [];
+    const requests = [];
+    let serverParentId = 'cat-original';
+    const category = { id: 'cat-original', guildId: 'test-guild', type: 4, name: '🔬・BREEDER RESEARCH' };
+    const previous = {
+      id: 'message-race', author: { id: 'test-bot' },
+      embeds: [{ footer: { text: 'Aquapedia • STRAIN-RACE • photos pending rights review' } }],
+      async edit() { events.push('edit'); },
+    };
+    const existingThread = {
+      id: 'thread-race', name: 'Fromage', archived: path === 'reopen',
+      messages: {
+        async fetch(key) { return typeof key === 'string' ? previous : new Map([['message-race', previous]]); },
+      },
+      async setArchived() { events.push('reopen'); },
+    };
+    const forum = {
+      id: 'forum-tarumi', guildId: 'test-guild', type: 15,
+      name: 'tarumi-medaka', parentId: 'cat-original',
+      threads: {
+        async fetchActive() {
+          return { threads: path === 'create' ? new Map() : new Map([['thread-race', existingThread]]) };
+        },
+        async fetchArchived() { return { threads: new Map(), hasMore: false }; },
+        async create() {
+          events.push('create');
+          return { id: 'thread-created', async fetchStarterMessage() { return previous; } };
+        },
+      },
+    };
+    const guild = {
+      id: 'test-guild', client: { user: { id: 'test-bot' } },
+      channels: {
+        cache: new Map([['cat-original', category], ['forum-tarumi', forum]]),
+        async fetch(id, options) {
+          requests.push({ id, options });
+          if (options?.force !== true) throw new Error('fresh fetch required');
+          if (id === 'forum-tarumi') {
+            // Server response reflects state at the moment of this request. The
+            // cached forum below intentionally retains its original signed parent.
+            return { ...forum, parentId: serverParentId };
+          }
+          if (id === 'cat-original') {
+            // Relocation happens while the awaited category request is in flight.
+            serverParentId = 'cat-intruder';
+            return category;
+          }
+          return null;
+        },
+      },
+    };
+    const card = {
+      id: 'STRAIN-RACE', entityType: 'strain', name: 'Fromage',
+      breederName: 'Tarumi Medaka', breederForumName: 'tarumi-medaka',
+      sources: ['https://piscesbook.com/archives/25276'],
+    };
+    const f = signedBreederFixture(guild, {
+      status: 'completed', discordPublicationApproved: true, cards: [card],
+    });
+    const outcome = await publishAquapediaCards(guild, f.result, f.authority);
+    assert.equal(f.getClaimed(), true, 'authorization must be reached in this regression');
+    assert.equal(serverParentId, 'cat-intruder', 'the server-side move must actually occur');
+    assert.equal(forum.parentId, 'cat-original', 'cache must remain stale during the probe');
+    assert.ok(requests.length >= 2, 'forced forum and category reads must occur');
+    assert.equal(outcome.posted, 0);
+    assert.deepEqual(events, [], 'no create, reopen or edit under moved server-side parent');
+  });
+}
+
+test('private missing forum REST read after category lookup fails closed without throwing', async () => {
+  const { guild, events } = guildWithForums(['tarumi-medaka']);
+  guild.channels.fetch = async (id, options) => {
+    assert.equal(options?.force, true);
+    if (id === 'category-1') return guild.channels.cache.get('category');
+    return null;
+  };
+  const f = signedBreederFixture(guild, {
+    status: 'completed', discordPublicationApproved: true, cards: [strain],
+  });
+  const outcome = await publishAquapediaCards(guild, f.result, f.authority);
+  assert.equal(outcome.posted, 0);
+  assert.deepEqual(events, []);
+});

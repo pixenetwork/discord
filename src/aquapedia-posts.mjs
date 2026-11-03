@@ -212,9 +212,12 @@ async function fetchApprovedPrivateForum(guild, approvedForum) {
   if (typeof guild?.channels?.fetch !== 'function' || !guild?.id || !approvedForum) return null;
   let forum, category;
   try {
+    // Read the category first: the forum's parent must be verified using the
+    // latest forced forum response, after any awaited category lookup.
+    category = await guild.channels.fetch(approvedForum.parentId, { force: true });
+    if (!category) return null;
     forum = await guild.channels.fetch(approvedForum.id, { force: true });
     if (!forum) return null;
-    category = await guild.channels.fetch(approvedForum.parentId, { force: true });
   } catch { return null; }
   const guildId = String(guild.id);
   if (forum.id !== approvedForum.id || forum.type !== ChannelType.GuildForum

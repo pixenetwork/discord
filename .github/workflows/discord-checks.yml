@@ -1,0 +1,26 @@
+name: Discord checks
+on:
+  pull_request:
+    paths:
+      - 'src/**'
+      - 'test/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/discord-checks.yml'
+  push:
+    branches: [main]
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+      - run: npm ci
+      - run: npm run check
+      - name: Breeder inbox regression tests
+        run: node --test test/breeder-inbox.test.mjs test/breeder-inbox-concurrency.test.mjs test/breeder-inbox-review.test.mjs

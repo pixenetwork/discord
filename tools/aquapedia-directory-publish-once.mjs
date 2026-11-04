@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import {buildAquapediaDirectory,DIRECTORY_MARKER,pinRoute} from '../src/aquapedia-directory.mjs';
+import {buildAquapediaDirectory,DIRECTORY_MARKER,findPinnedDirectoryMessages,pinRoute} from '../src/aquapedia-directory.mjs';
 
 const guild=process.env.AQUAPHORIA_GUILD_ID,token=process.env.DISCORD_TOKEN;
 if(!guild||!token)throw Error('Missing authorized Discord bot runtime environment');
@@ -20,8 +20,15 @@ const [channels,roles,bot]=await Promise.all([
  request('GET','/guilds/'+guild+'/channels'),request('GET','/guilds/'+guild+'/roles'),request('GET','/users/@me')
 ]);
 const plan=buildAquapediaDirectory({guildId:guild,channels,roles});
-const messages=await request('GET','/channels/'+plan.hubId+'/messages?limit=100');
-const prior=messages.filter(m=>(m.content||'').includes(DIRECTORY_MARKER));
+const [pinned,recent]=await Promise.all([
+ findPinnedDirectoryMessages(request,plan.hubId),
+ request('GET','/channels/'+plan.hubId+'/messages?limit=100')
+]);
+const priorById=new Map();
+for(const message of [...pinned,...recent]){
+ if(message?.id&&(message.content||'').includes(DIRECTORY_MARKER))priorById.set(String(message.id),message);
+}
+const prior=[...priorById.values()];
 if(prior.length>1)throw Error('Duplicate index posts exist; refusing another write');
 if(prior.length===1&&String(prior[0].author.id)!==String(bot.id))throw Error('Index marker owned by another author');
 console.log('PREFLIGHT '+JSON.stringify({guild,channel:plan.hubId,targets:plan.targets,oldPosts:prior.length,dryRun:!applying,plannedLength:plan.content.length}));
@@ -42,6 +49,7 @@ if(!read.pinned)await request('PUT',pinRoute(plan.hubId,post.id));
 read=await request('GET',endpoint+'/'+post.id);
 if(!read.pinned||read.content!==plan.content)throw Error('Pinned index verification failed');
 const receipt={status:'verified',timestamp:new Date().toISOString(),guildId:guild,hubId:plan.hubId,messageId:read.id,authorId:read.author.id,pinned:read.pinned,targets:plan.targets.map(x=>x.id),url:'https://discord.com/channels/'+guild+'/'+plan.hubId+'/'+read.id};
-const output='C:/Users/duy/.jarvis-worktrees/discord-d2-recovery-20261002/data/discord-council-index-receipt-20261017.json';
+const output=process.env.AQUAPEDIA_DIRECTORY_RECEIPT_PATH||path.resolve('data','discord-council-index-receipt-20261017.json');
+fs.mkdirSync(path.dirname(output),{recursive:true});
 fs.writeFileSync(output,JSON.stringify(receipt,null,2));
 console.log('VERIFIED '+JSON.stringify(receipt));

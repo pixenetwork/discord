@@ -37,6 +37,19 @@ test('duplicate research targets fail rather than silently choosing the wrong fo
  assert.throws(()=>buildAquapediaDirectory({guildId:GUILD,channels:doubled,roles}),/ambiguous/i);
 });
 
-test('pin uses Discord current channel pins route',()=>{
- assert.equal(pinRoute('hub','message'),'/channels/hub/pins/message');
+test('desynchronized public child does not inherit a category deny at runtime',()=>{
+ const deniedParent={...category,permission_overwrites:[{id:GUILD,deny:'1024',allow:'0'}]};
+ const childAllow={id:GUILD,deny:'0',allow:'1024'};
+ const adjusted=channels.map(c=>{
+  if(c.id==='cat')return deniedParent;
+  if(c.parent_id!=='cat')return c;
+  if(c.id==='genes')return {...c,permission_overwrites:[]};
+  return {...c,permission_overwrites:[childAllow]};
+ });
+ const result=buildAquapediaDirectory({guildId:GUILD,channels:adjusted,roles});
+ assert.ok(result.targetIds.includes('genes'));
+});
+
+test('pin uses Discord current messages pins route',()=>{
+ assert.equal(pinRoute('hub','message'),'/channels/hub/messages/pins/message');
 });

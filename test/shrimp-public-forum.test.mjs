@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { publishAquapediaCards, buildAquapediaPost } from '../src/aquapedia-posts.mjs';
 import { PermissionFlagsBits } from 'discord.js';
+import { RESEARCH_GUILD_ID, RESEARCH_CATEGORY, RESEARCH_FORUMS } from '../src/canonical-research-forums.mjs';
 
 const breeder = {
   id: 'shrimp-breeder-skyfish', entityType: 'breeder', organismGroup: 'shrimp',
@@ -17,9 +18,11 @@ const contest = {
 
 function fakeGuild({ visible = true, historyReadable = true, categoryName = '📚・AQUAPEDIA', forumName = '🦐・shrimp-research', activeCount = 0 } = {}) {
   const created = [];
-  const category = { id: 'public-category', name: categoryName, type: 4 };
+  const category = { id: RESEARCH_CATEGORY.id, name: categoryName === '📚・AQUAPEDIA' ? RESEARCH_CATEGORY.name : categoryName, type: 4,
+    permissionsFor() { return { has: () => true }; } };
+  const duplicate = { id: '1562207090670305280', name: '🦐・shrimp-research', parentId: '1557338241903099945', type: 15 };
   const forum = {
-    id: 'shrimp-forum', name: forumName, type: 15, parentId: category.id,
+    id: RESEARCH_FORUMS.shrimp.id, name: forumName, type: 15, parentId: category.id,
     permissionsFor(role) { return role?.id === 'everyone' ? { has: (flag) => flag === PermissionFlagsBits.ReadMessageHistory ? historyReadable : visible } : null; },
     threads: {
       async fetchActive() { return { threads: new Map() }; },
@@ -32,8 +35,8 @@ function fakeGuild({ visible = true, historyReadable = true, categoryName = '�
       },
     },
   };
-  const guild = { roles: { everyone: { id: 'everyone' } }, client: { user: { id: 'aquaphoria-bot' } },
-    channels: { cache: new Map([['cat', category], ['forum', forum]]) , async fetchActiveThreads(){return {threads:{size:activeCount}};} } };
+  const guild = { id: RESEARCH_GUILD_ID, roles: { everyone: { id: 'everyone' } }, client: { user: { id: 'aquaphoria-bot' } },
+    channels: { cache: new Map([['cat', category], ['forum', forum], ['duplicate', duplicate]]) , async fetchActiveThreads(){return {threads:{size:activeCount}};} } };
   return { guild, created };
 }
 
@@ -136,4 +139,13 @@ test('global active-thread ceiling stops the shrimp batch before any thread crea
  assert.equal(result.posted,0);
  assert.equal(created.length,0);
  assert.equal(result.reason,'discord_thread_capacity_guard');
+});
+
+test('same-named empty copy cannot replace a missing established shrimp forum', async () => {
+  const { guild, created } = fakeGuild();
+  guild.channels.cache.delete('forum');
+  const result = await publishAquapediaCards(guild, approved);
+  assert.equal(result.posted, 0);
+  assert.equal(result.reason, 'canonical_research_destination_canonical_forum_not_found');
+  assert.equal(created.length, 0);
 });

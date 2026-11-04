@@ -1,13 +1,15 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { PermissionFlagsBits } from 'discord.js';
+import { RESEARCH_GUILD_ID, RESEARCH_CATEGORY, RESEARCH_FORUMS } from '../src/canonical-research-forums.mjs';
 import { publishAquapediaCards } from '../src/aquapedia-posts.mjs';
 
 function guildFixture(visible=true,activeCount=0){
  const created=[];
  const everyone={id:'everyone'};
- const category={id:'cat',type:4,name:'📚・AQUAPEDIA'};
- const forum={id:'arowana-forum',type:15,name:'🐉・arowana-research',parentId:'cat',
+ const category={id:RESEARCH_CATEGORY.id,type:4,name:RESEARCH_CATEGORY.name,permissionsFor(){return {has(){return visible;}};}};
+ const duplicate={id:'1562207092239110264',name:'🐉・arowana-research',type:15,parentId:'1557338241903099945'};
+ const forum={id:RESEARCH_FORUMS.arowana.id,type:15,name:'🐉・arowana-research',parentId:category.id,
    permissionsFor(role){return {has(flag){return role===everyone && visible;}};},
    threads:{
      async fetchActive(){return {threads:new Map()};},
@@ -20,8 +22,8 @@ function guildFixture(visible=true,activeCount=0){
        }};
      }
    }};
- const guild={roles:{everyone},client:{user:{id:'bot'}},
-   channels:{cache:new Map([['category',category],['forum',forum]]), async fetchActiveThreads(){return {threads:{size:activeCount}};} }};
+ const guild={id:RESEARCH_GUILD_ID,roles:{everyone},client:{user:{id:'bot'}},
+   channels:{cache:new Map([['category',category],['forum',forum],['duplicate',duplicate]]), async fetchActiveThreads(){return {threads:{size:activeCount}};} }};
  return {guild,created};
 }
 const card={id:'arowana.asian-arowana',name:'Asian arowana',entityType:'species',
@@ -63,4 +65,13 @@ test('global active-thread ceiling stops arowana forum creation without touching
  assert.equal(result.posted,0);
  assert.equal(created.length,0);
  assert.equal(result.reason,'discord_thread_capacity_guard');
+});
+
+test('same-named empty copy cannot replace a missing established arowana forum', async () => {
+  const { guild, created } = guildFixture();
+  guild.channels.cache.delete('forum');
+  const result = await publishAquapediaCards(guild, approved);
+  assert.equal(result.posted, 0);
+  assert.equal(result.reason, 'canonical_research_destination_canonical_forum_not_found');
+  assert.equal(created.length, 0);
 });

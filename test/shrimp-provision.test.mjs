@@ -1,56 +1,56 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { provisionShrimpPublicResearchForum } from '../src/layout.mjs';
-import { PermissionFlagsBits } from 'discord.js';
+import { provisionShrimpPublicResearchForum, provisionArowanaPublicResearchForum } from '../src/layout.mjs';
+import { RESEARCH_GUILD_ID, RESEARCH_CATEGORY, RESEARCH_FORUMS } from '../src/canonical-research-forums.mjs';
+import { ChannelType, PermissionFlagsBits } from 'discord.js';
 
-function guildFixture({ publicCategory = true, historyReadable = true, hasCategory = true } = {}) {
+function fixture({ otherGuild = false, hidden = false, missing = false, includeCopy = true } = {}) {
   const writes = [];
   const everyone = { id: 'everyone' };
-  const cat = { id: 'c', type: 4, name: '📚・AQUAPEDIA',
-    permissionsFor(role) { return { has(flag) { return role === everyone && publicCategory && (flag !== PermissionFlagsBits.ReadMessageHistory || historyReadable); } }; } };
-  const channels = hasCategory ? [cat] : [];
-  return { writes, guild: {
-    roles: { everyone },
-    channels: {
-      cache: { find(fn) { return channels.find(fn); } },
-      async create(input) {
-        writes.push(input);
-        return { id: 'forum-created', name: input.name,
-          permissionsFor() { return { has(flag) { return publicCategory && (flag !== PermissionFlagsBits.ReadMessageHistory || historyReadable); } }; } };
-      }
-    }
-  }};
+  const allowed = {
+    permissionsFor: () => ({ has: flag => !hidden || flag !== PermissionFlagsBits.ReadMessageHistory }),
+  };
+  const category = { id: RESEARCH_CATEGORY.id, name: RESEARCH_CATEGORY.name, type: ChannelType.GuildCategory, ...allowed };
+  const forums = Object.values(RESEARCH_FORUMS).map(spec => ({
+    ...allowed, id: spec.id, name: spec.name, parentId: category.id, type: ChannelType.GuildForum,
+  }));
+  const copy = { ...allowed, id: '1562207090670305280', name: '🦐・shrimp-research',
+    parentId: '1557338241903099945', type: ChannelType.GuildForum };
+  const all = [category, ...(!missing ? forums : []), ...(includeCopy ? [copy] : [])];
+  return {
+    writes,
+    guild: { id: otherGuild ? '999999999999999999' : RESEARCH_GUILD_ID,
+      roles: { everyone },
+      channels: { cache: new Map(all.map(x => [x.id,x])), async create(spec) { writes.push(spec); throw new Error('channel creation forbidden'); } },
+    },
+  };
 }
 
-test('adds exactly one public shrimp forum under the existing public Aquapedia category', async () => {
-  const x = guildFixture();
-  const response = await provisionShrimpPublicResearchForum(x.guild);
-  assert.equal(response.status, 'ready');
-  assert.equal(x.writes.length, 1);
-  assert.equal(x.writes[0].parent, 'c');
-  assert.equal(x.writes[0].name, '🦐・shrimp-research');
-  assert.equal(x.writes[0].type, 15);
-  assert.match(x.writes[0].reason, /public shrimp research/i);
-  assert.equal(x.writes[0].permissionOverwrites, undefined);
+test('canonical shrimp and arowana provisioning reuses historical forums without edits or channel creation', async () => {
+  const { guild, writes } = fixture();
+  const shrimp = await provisionShrimpPublicResearchForum(guild);
+  const arowana = await provisionArowanaPublicResearchForum(guild);
+  assert.equal(shrimp.status, 'ready');
+  assert.equal(arowana.status, 'ready');
+  assert.equal(shrimp.channelId, RESEARCH_FORUMS.shrimp.id);
+  assert.equal(arowana.channelId, RESEARCH_FORUMS.arowana.id);
+  assert.equal(writes.length, 0);
 });
 
-test('never creates a public forum underneath a private Aquapedia category', async () => {
-  const x = guildFixture({ publicCategory: false });
-  const response = await provisionShrimpPublicResearchForum(x.guild);
-  assert.equal(response.status, 'category_not_public');
-  assert.equal(x.writes.length, 0);
+test('same-named general Aquapedia forum never substitutes for missing canonical forum', async () => {
+  const { guild, writes } = fixture({ missing: true });
+  assert.equal((await provisionShrimpPublicResearchForum(guild)).status, 'canonical_forum_not_found');
+  assert.equal(writes.length, 0);
 });
 
-test('does not create a second Aquapedia category if the intended one is missing', async () => {
-  const x = guildFixture({ hasCategory: false });
-  const response = await provisionShrimpPublicResearchForum(x.guild);
-  assert.equal(response.status, 'category_not_found');
-  assert.equal(x.writes.length, 0);
+test('mismatched configured guild refuses to route or create', async () => {
+  const { guild, writes } = fixture({ otherGuild: true });
+  assert.equal((await provisionShrimpPublicResearchForum(guild)).status, 'canonical_guild_mismatch');
+  assert.equal(writes.length, 0);
 });
 
-test('does not provision a public forum when history is unreadable to everyone', async () => {
- const x=guildFixture({historyReadable:false});
- const r=await provisionShrimpPublicResearchForum(x.guild);
- assert.equal(r.status,'category_not_public');
- assert.equal(x.writes.length,0);
+test('canonical category and forum must expose history to everyone', async () => {
+  const { guild, writes } = fixture({ hidden: true });
+  assert.equal((await provisionShrimpPublicResearchForum(guild)).status, 'canonical_category_not_public');
+  assert.equal(writes.length, 0);
 });

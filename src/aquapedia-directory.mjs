@@ -41,8 +41,8 @@ export async function findPinnedDirectoryMessages(request,channelId,marker=DIREC
  if(typeof request!=='function'||!channelId)throw Error('Invalid pinned-directory lookup');
  const found=new Map();
  const seenCursors=new Set();
- let before=null;
- for(;;){
+ let before=null,exhausted=false;
+ for(let pageIndex=0;pageIndex<5;pageIndex++){
   const endpoint='/channels/'+channelId+'/messages/pins?limit=50'+(before?'&before='+encodeURIComponent(before):'');
   const page=await request('GET',endpoint);
   if(!page||!Array.isArray(page.items)||typeof page.has_more!=='boolean')throw Error('Invalid Discord pins response');
@@ -50,11 +50,24 @@ export async function findPinnedDirectoryMessages(request,channelId,marker=DIREC
    const message=item?.message;
    if(message?.id&&(message.content||'').includes(marker))found.set(String(message.id),message);
   }
-  if(!page.has_more)break;
+  if(!page.has_more){exhausted=true;break;}
   const cursor=page.items.at(-1)?.pinned_at;
   if(!cursor||seenCursors.has(cursor))throw Error('Discord pins pagination did not advance');
   seenCursors.add(cursor);
   before=cursor;
  }
+ if(!exhausted)throw Error('Discord pins exceeded verified bounded search');
+ return [...found.values()];
+}
+export async function findDirectoryIndexPosts(request,channelId,marker=DIRECTORY_MARKER){
+ const pinned=await findPinnedDirectoryMessages(request,channelId,marker);
+ const recent=await request('GET','/channels/'+channelId+'/messages?limit=100');
+ if(!Array.isArray(recent))throw Error('Discord message history was not verified');
+ const found=new Map();
+ for(const message of [...pinned,...recent]){
+  if(message?.id&&(message.content||'').includes(marker))found.set(String(message.id),message);
+ }
+ if(found.size>1)throw Error('Duplicate canonical Aquapedia directory index messages exist');
+ if(!found.size&&recent.length>=100)throw Error('Older unpinned message history is unknown; refusing duplicate directory post');
  return [...found.values()];
 }

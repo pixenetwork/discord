@@ -17,3 +17,32 @@ test('directory lookup paginates the current Discord pins collection',async()=>{
  assert.equal(calls[0][1],'/channels/hub/messages/pins?limit=50');
  assert.match(calls[1][1],/^\/channels\/hub\/messages\/pins\?limit=50&before=/);
 });
+
+test('canonical index lookup includes pins plus recent history and refuses unknown older history',async()=>{
+ assert.equal(typeof mod.findDirectoryIndexPosts,'function','canonical index search must be exported');
+ const marker=mod.DIRECTORY_MARKER;
+ const pinned=await mod.findDirectoryIndexPosts(async(_method,endpoint)=>{
+  if(endpoint.includes('/messages/pins?'))return {items:[{pinned_at:'2026-10-01T00:00:00.000Z',message:{id:'canonical',content:marker,author:{id:'bot'}}}],has_more:false};
+  return Array.from({length:100},(_,i)=>({id:'recent-'+i,content:'other'}));
+ },'hub');
+ assert.deepEqual(pinned.map(x=>x.id),['canonical']);
+
+ await assert.rejects(
+  mod.findDirectoryIndexPosts(async(_method,endpoint)=>{
+   if(endpoint.includes('/messages/pins?'))return {items:[],has_more:false};
+   return Array.from({length:100},(_,i)=>({id:'recent-'+i,content:'other'}));
+  },'hub'),
+  /older|history|unknown|complete/i
+ );
+});
+
+test('canonical index lookup refuses duplicate markers across pins and recent history',async()=>{
+ const marker=mod.DIRECTORY_MARKER;
+ await assert.rejects(
+  mod.findDirectoryIndexPosts(async(_method,endpoint)=>{
+   if(endpoint.includes('/messages/pins?'))return {items:[{pinned_at:'2026-10-01T00:00:00.000Z',message:{id:'pin',content:marker}}],has_more:false};
+   return [{id:'recent',content:marker}];
+  },'hub'),
+  /duplicate/i
+ );
+});

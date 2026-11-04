@@ -48,3 +48,15 @@ test('census fails closed when the expected archive cardinality is incomplete',(
  assert.equal(report,null);
  assert.match(child.stderr,/census incomplete/i);
 });
+
+test('census refuses output that aliases the source file identity',()=>{
+ const root=fs.mkdtempSync(path.join(os.tmpdir(),'discord-census-alias-'));roots.push(root);
+ const input=path.join(root,'snapshot.json'),output=path.join(root,'inventory-hardlink.json');
+ const original=JSON.stringify(makeSnapshot());
+ fs.writeFileSync(input,original);
+ fs.linkSync(input,output);
+ const child=spawnSync(process.execPath,[tool],{encoding:'utf8',env:{...process.env,AQUAPEDIA_SNAPSHOT_PATH:input,AQUAPEDIA_ALIAS_INVENTORY_PATH:output,AQUAPEDIA_MIGRATION_HOLD_EXPECTED_COUNT:'31'}});
+ assert.notEqual(child.status,0,'aliased output must fail closed');
+ assert.match(child.stderr,/different files|same file|identity/i);
+ assert.equal(fs.readFileSync(input,'utf8'),original,'source snapshot must stay unchanged');
+});

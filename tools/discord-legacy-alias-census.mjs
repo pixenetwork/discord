@@ -1,10 +1,15 @@
 import fs from 'node:fs';
 import path from 'node:path';
 const V=1024n;
-const source=process.env.AQUAPEDIA_SNAPSHOT_PATH||path.resolve('data','discord-council-prechange-20261017.json');
-const output=process.env.AQUAPEDIA_ALIAS_INVENTORY_PATH||path.resolve('data','discord-council-legacy-alias-inventory-20261017.json');
+const source=path.resolve(process.env.AQUAPEDIA_SNAPSHOT_PATH||process.env.DISCORD_COUNCIL_SNAPSHOT_PATH||path.resolve('data','discord-council-prechange-20261017.json'));
+const output=path.resolve(process.env.AQUAPEDIA_ALIAS_INVENTORY_PATH||process.env.DISCORD_COUNCIL_ALIAS_RECEIPT_PATH||path.resolve('data','discord-council-legacy-alias-inventory-20261017.json'));
 const expectedCount=Number(process.env.AQUAPEDIA_MIGRATION_HOLD_EXPECTED_COUNT||31);
 if(!Number.isInteger(expectedCount)||expectedCount<1)throw Error('Invalid expected Migration Hold channel count');
+const sourceIdentity=fs.statSync(source);
+if(fs.existsSync(output)){
+ const outputIdentity=fs.statSync(output);
+ if(sourceIdentity.dev===outputIdentity.dev&&sourceIdentity.ino===outputIdentity.ino)throw Error('Snapshot input and evidence output must be different files');
+}
 const snap=JSON.parse(fs.readFileSync(source,'utf8'));
 const hold=snap.channels.filter(x=>x.type===4 && x.name.includes('MIGRATION HOLD'));
 if(hold.length!==1)throw Error('Missing or ambiguous historic private hold');

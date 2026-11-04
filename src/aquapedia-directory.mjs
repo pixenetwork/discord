@@ -71,3 +71,31 @@ export async function findDirectoryIndexPosts(request,channelId,marker=DIRECTORY
  if(!found.size&&recent.length>=100)throw Error('Older unpinned message history is unknown; refusing duplicate directory post');
  return [...found.values()];
 }
+
+function discordSnowflake(value,label){
+ const text=String(value??'');
+ if(!/^[1-9]\d{0,19}$/.test(text))throw Error('Invalid Discord snowflake: '+label);
+ return BigInt(text).toString();
+}
+export function buildDirectoryReceipt({guildId,hubId,messageId,authorId,pinned,targetIds,timestamp=new Date().toISOString()}){
+ if(pinned!==true)throw Error('Discord directory receipt requires pinned readback');
+ if(!Array.isArray(targetIds)||targetIds.length<1||targetIds.length>32)throw Error('Invalid Discord target snowflakes');
+ const guild=discordSnowflake(guildId,'guildId');
+ const hub=discordSnowflake(hubId,'hubId');
+ const message=discordSnowflake(messageId,'messageId');
+ const author=discordSnowflake(authorId,'authorId');
+ const targets=targetIds.map((value,index)=>discordSnowflake(value,'targetIds['+index+']'));
+ const checkedAt=new Date(timestamp);
+ if(Number.isNaN(checkedAt.getTime()))throw Error('Invalid receipt timestamp');
+ return {
+  status:'verified',
+  timestamp:checkedAt.toISOString(),
+  guildId:guild,
+  hubId:hub,
+  messageId:message,
+  authorId:author,
+  pinned:true,
+  targets,
+  url:'https://discord.com/channels/'+guild+'/'+hub+'/'+message
+ };
+}

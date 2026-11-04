@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
-import {buildAquapediaDirectory,findDirectoryIndexPosts,pinRoute} from '../src/aquapedia-directory.mjs';
+import {buildAquapediaDirectory,buildDirectoryReceipt,findDirectoryIndexPosts,pinRoute} from '../src/aquapedia-directory.mjs';
 
 const guild=process.env.AQUAPHORIA_GUILD_ID,token=process.env.DISCORD_TOKEN;
 if(!guild||!token)throw Error('Missing authorized Discord bot runtime environment');
@@ -12,6 +12,20 @@ const repo=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const output=path.resolve(process.env.AQUAPEDIA_DIRECTORY_RECEIPT_PATH||path.join(os.homedir(),'.pixelnetwork','discord','receipts','discord-council-index-receipt-20261017.json'));
 if(output===repo||output.startsWith(repo+path.sep))throw Error('Receipt must not be written inside the source checkout');
 if(applying)fs.mkdirSync(path.dirname(output),{recursive:true});
+function writeJsonAtomic(file,value){
+ const temp=file+'.tmp-'+process.pid+'-'+Date.now();
+ let fd=null;
+ try{
+  fd=fs.openSync(temp,'wx',0o600);
+  fs.writeFileSync(fd,JSON.stringify(value,null,2),'utf8');
+  fs.fsyncSync(fd);
+  fs.closeSync(fd);fd=null;
+  fs.renameSync(temp,file);
+ }finally{
+  if(fd!==null){try{fs.closeSync(fd)}catch{}}
+  fs.rmSync(temp,{force:true});
+ }
+}
 const base='https://discord.com/api/v10';
 async function request(method,endpoint,body){
  const res=await fetch(base+endpoint,{
@@ -46,6 +60,9 @@ if(read.content!==plan.content || String(read.author?.id)!==String(bot.id))throw
 if(!read.pinned)await request('PUT',pinRoute(plan.hubId,post.id));
 read=await request('GET',endpoint+'/'+post.id);
 if(!read.pinned||read.content!==plan.content)throw Error('Pinned index verification failed');
-const receipt={status:'verified',timestamp:new Date().toISOString(),guildId:guild,hubId:plan.hubId,messageId:read.id,authorId:read.author.id,pinned:read.pinned,targets:plan.targets.map(x=>x.id),url:'https://discord.com/channels/'+guild+'/'+plan.hubId+'/'+read.id};
-fs.writeFileSync(output,JSON.stringify(receipt,null,2));
+const receipt=buildDirectoryReceipt({
+ guildId:guild,hubId:plan.hubId,messageId:read.id,authorId:read.author?.id,
+ pinned:read.pinned,targetIds:plan.targets.map(x=>x.id)
+});
+writeJsonAtomic(output,receipt);
 console.log('VERIFIED '+JSON.stringify(receipt));

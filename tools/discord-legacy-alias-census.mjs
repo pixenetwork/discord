@@ -5,12 +5,22 @@ const source=path.resolve(process.env.AQUAPEDIA_SNAPSHOT_PATH||process.env.DISCO
 const output=path.resolve(process.env.AQUAPEDIA_ALIAS_INVENTORY_PATH||process.env.DISCORD_COUNCIL_ALIAS_RECEIPT_PATH||path.resolve('data','discord-council-legacy-alias-inventory-20261017.json'));
 const expectedCount=Number(process.env.AQUAPEDIA_MIGRATION_HOLD_EXPECTED_COUNT||31);
 if(!Number.isInteger(expectedCount)||expectedCount<1)throw Error('Invalid expected Migration Hold channel count');
-const sourceIdentity=fs.statSync(source);
-if(fs.existsSync(output)){
- const outputIdentity=fs.statSync(output);
- if(sourceIdentity.dev===outputIdentity.dev&&sourceIdentity.ino===outputIdentity.ino)throw Error('Snapshot input and evidence output must be different files');
+const sourceFd=fs.openSync(source,'r');
+let sourceIdentity,snapshotText;
+try{
+ sourceIdentity=fs.fstatSync(sourceFd);
+ snapshotText=fs.readFileSync(sourceFd,'utf8');
+}finally{fs.closeSync(sourceFd);}
+try{
+ const outputFd=fs.openSync(output,'r');
+ try{
+  const outputIdentity=fs.fstatSync(outputFd);
+  if(sourceIdentity.dev===outputIdentity.dev&&sourceIdentity.ino===outputIdentity.ino)throw Error('Snapshot input and evidence output must be different files');
+ }finally{fs.closeSync(outputFd);}
+}catch(error){
+ if(error?.code!=='ENOENT')throw error;
 }
-const snap=JSON.parse(fs.readFileSync(source,'utf8'));
+const snap=JSON.parse(snapshotText);
 const hold=snap.channels.filter(x=>x.type===4 && x.name.includes('MIGRATION HOLD'));
 if(hold.length!==1)throw Error('Missing or ambiguous historic private hold');
 const guild=snap.id;
@@ -38,5 +48,19 @@ for(const e of entries){const k=e.key;if(!families.has(k))families.set(k,[]);fam
 const duplicateGroups=[...families.values()].filter(x=>x.length>1);
 const report={status:'read_only',capturedAt:new Date().toISOString(),sourceSnapshot:snap.when,guild,category:hold[0].name,channelCount:entries.length,entries,confirmedExactNameCollisions:duplicateGroups,decision:'No channel moved, renamed, or deleted. Similar but nonidentical lineage/trade names need breeder-source reconciliation.'};
 fs.mkdirSync(path.dirname(output),{recursive:true});
-fs.writeFileSync(output,JSON.stringify(report,null,2));
+function writeJsonAtomic(file,value){
+ const temp=file+'.tmp-'+process.pid+'-'+Date.now();
+ let fd=null;
+ try{
+  fd=fs.openSync(temp,'wx',0o600);
+  fs.writeFileSync(fd,JSON.stringify(value,null,2),'utf8');
+  fs.fsyncSync(fd);
+  fs.closeSync(fd);fd=null;
+  fs.renameSync(temp,file);
+ }finally{
+  if(fd!==null){try{fs.closeSync(fd)}catch{}}
+  fs.rmSync(temp,{force:true});
+ }
+}
+writeJsonAtomic(output,report);
 console.log('ALIAS_INVENTORY '+JSON.stringify({count:report.channelCount,collisionGroups:duplicateGroups,allNames:entries.map(x=>x.name),path:output}));

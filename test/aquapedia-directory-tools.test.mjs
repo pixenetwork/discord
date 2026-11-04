@@ -25,10 +25,19 @@ test('publisher fails closed on malformed prior authors and keeps default receip
 });
 
 test('census protects snapshot input from aliased output identities',()=>{
- assert.match(census,/statSync|realpathSync/);
+ assert.match(census,/openSync\(source/);
+ assert.match(census,/fstatSync/);
  assert.match(census,/\.dev/);
  assert.match(census,/\.ino/);
  assert.match(census,/different files|same file/i);
+ assert.doesNotMatch(census,/existsSync\(output\)/);
+ assert.match(census,/renameSync/);
+});
+
+test('publisher writes the validated receipt atomically with owner-only file mode',()=>{
+ assert.match(publisher,/buildDirectoryReceipt/);
+ assert.match(publisher,/renameSync/);
+ assert.match(publisher,/0o600/);
 });
 
 test('legacy census requires a complete 31-channel child set and child-level privacy evidence',()=>{

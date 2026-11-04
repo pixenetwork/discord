@@ -79,7 +79,8 @@ export function createVerifiedBreederReleaseService({
         const complete = count === 4;
         const canaryDone = verified.has(IDS[0]);
         const status = {
-          stage: complete ? 'completed' : canaryDone ? 'canary_verified' : 'not_started',
+          stage: previous.releaseStage === 'needs_manual_review' ? 'manual_review_required'
+            : complete ? 'completed' : canaryDone ? 'canary_verified' : count ? 'partial' : 'not_started',
           verifiedCount: count, total: 4, sourceSha256: batch.sourceSha256,
         };
         if (mode === 'status') return status;

@@ -154,3 +154,52 @@ test('concurrent owner actions are serialized per service instance',async()=>{
   await pending;
   assert.equal(x.calls.length,1);
 });
+
+test('status preserves persisted manual-review holds regardless of receipt count', async () => {
+  const batch = await loadBatch();
+  for (const count of [0, 1, 4]) {
+    const x = sandbox();
+    const record = {
+      id: 'breeder-social-public:' + batch.sourceSha256 + ':' + guild.id,
+      guildId: guild.id,
+      releaseStage: 'needs_manual_review',
+      discordPublicationReceipts: batch.cards.slice(0, count).map((card, i) => ({
+        recordId: card.id,
+        threadId: String(123456789012345680n + BigInt(i)),
+        messageId: String(123456789012345690n + BigInt(i)),
+        verified: true,
+      })),
+    };
+    x.state.set(record.id, record);
+    const before = JSON.stringify([...x.state.entries()]);
+    const status = await x.service.run({ mode: 'status', guild, store: x.store });
+    assert.equal(status.stage, 'manual_review_required', 'receipt count ' + count);
+    assert.equal(status.verifiedCount, count);
+    assert.equal(status.sourceSha256, batch.sourceSha256);
+    assert.equal(x.calls.length, 0);
+    assert.equal(JSON.stringify([...x.state.entries()]), before);
+  }
+});
+
+test('status reports partial receipts without a canary and finish stays blocked', async () => {
+  const batch = await loadBatch();
+  const x = sandbox();
+  const record = {
+    id: 'breeder-social-public:' + batch.sourceSha256 + ':' + guild.id,
+    guildId: guild.id,
+    discordPublicationReceipts: [{
+      recordId: batch.cards[1].id,
+      threadId: '123456789012345681',
+      messageId: '123456789012345691',
+      verified: true,
+    }],
+  };
+  x.state.set(record.id, record);
+  const status = await x.service.run({ mode: 'status', guild, store: x.store });
+  assert.equal(status.stage, 'partial');
+  assert.equal(status.verifiedCount, 1);
+  const finish = await x.service.run({ mode: 'finish', guild, store: x.store, ownerApproved: true });
+  assert.equal(finish.stage, 'blocked_canary_required');
+  assert.equal(x.calls.length, 0);
+});
+

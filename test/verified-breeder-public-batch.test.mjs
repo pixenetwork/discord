@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { ChannelType, PermissionFlagsBits } from 'discord.js';
 import { publishVerifiedBreederPublicBatch, VERIFIED_BREEDER_ROUTES } from '../src/verified-breeder-public-batch.mjs';
+import { RESEARCH_GUILD_ID, RESEARCH_CATEGORY, RESEARCH_FORUMS } from '../src/canonical-research-forums.mjs';
 
 const queue = JSON.parse(readFileSync(new URL('./fixtures-verified-breeders.json', import.meta.url), 'utf8'));
 const originalCards = queue.cards;
@@ -43,7 +44,7 @@ function fixture({
   if(duplicateTarumi) activeMedaka.set('duplicate',mkThread('Breeder profile - Masaharu Tarumi','duplicate',true));
   const activeShrimp = new Map();
   const catMedaka={id:'category-medaka',type:ChannelType.GuildCategory,name:wrongCategory?'🔬・AQUAPEDIA RESEARCH':'📚・AQUAPEDIA — SPECIES & GENETICS'};
-  const catShrimp={id:'category-shrimp',type:ChannelType.GuildCategory,name:'📚・AQUAPEDIA'};
+  const catShrimp={...RESEARCH_CATEGORY,type:ChannelType.GuildCategory};
   const permission=(role)=>{
     if(role?.id==='everyone')return {has(flag){return !hidden && (flag===PermissionFlagsBits.ViewChannel||flag===PermissionFlagsBits.ReadMessageHistory)}};
     if(role?.id==='our-bot')return {has(flag){return !noBotWrite
@@ -54,6 +55,7 @@ function fixture({
     ].includes(flag)}};
     return {has(){return false}};
   };
+  catShrimp.permissionsFor=permission;
   const mkForum=(name,parentId,threads)=>{
     const forum={id:name, name, type:ChannelType.GuildForum, parentId, permissionsFor:permission, threads:{
       async fetchActive(){return {threads}},
@@ -70,8 +72,10 @@ function fixture({
     }};return forum;
   };
   const medakaForum=mkForum('🐟・medaka-research',catMedaka.id,activeMedaka);
-  const shrimpForum=mkForum('🦐・shrimp-research',catShrimp.id,activeShrimp);
+  const shrimpForum=mkForum(RESEARCH_FORUMS.shrimp.name,catShrimp.id,activeShrimp);
+  shrimpForum.id=RESEARCH_FORUMS.shrimp.id;
   const guild={
+    id:RESEARCH_GUILD_ID,
     client:{user:{id:'our-bot'}},roles:{everyone:{id:'everyone'}},
     channels:{cache:new Map([[catMedaka.id,catMedaka],[catShrimp.id,catShrimp],[medakaForum.id,medakaForum],[shrimpForum.id,shrimpForum]]),
       async fetchActiveThreads(){return {threads:{size:0}}}}
@@ -81,6 +85,105 @@ function fixture({
 const request=(cards=originalCards)=>({
   status:'completed',ownerApproved:true,discordPublicationApproved:true,publicAudienceApproved:true,
   cards,routes:VERIFIED_BREEDER_ROUTES
+});
+
+const shrimpCards = originalCards.filter((card) => card.organismGroup === 'shrimp');
+
+function addEmptyGeneralShrimpCopy(f) {
+  const writes = [];
+  const category = {
+    id: 'general-aquapedia-category',
+    name: '📚・AQUAPEDIA',
+    type: ChannelType.GuildCategory,
+    permissionsFor: f.shrimpForum.permissionsFor,
+  };
+  const copy = {
+    id: 'same-name-empty-shrimp-copy',
+    name: RESEARCH_FORUMS.shrimp.name,
+    type: ChannelType.GuildForum,
+    parentId: category.id,
+    permissionsFor: f.shrimpForum.permissionsFor,
+    threads: {
+      async fetchActive() { return { threads: new Map() }; },
+      async fetchArchived() { return { threads: new Map(), hasMore: false }; },
+      async create(payload) {
+        writes.push(payload);
+        throw new Error('Unexpected write to noncanonical forum');
+      },
+    },
+  };
+  f.guild.channels.cache.set(category.id, category);
+  f.guild.channels.cache.set(copy.id, copy);
+  return { copy, writes };
+}
+
+test('canonical shrimp forum is selected even when an empty same-name copy exists', async () => {
+  const f = fixture();
+  const decoy = addEmptyGeneralShrimpCopy(f);
+  const result = await publishVerifiedBreederPublicBatch(f.guild, request(shrimpCards));
+  assert.equal(result.posted, 2, JSON.stringify(result));
+  assert.equal(f.creates.length, 2);
+  assert.equal(decoy.writes.length, 0);
+});
+
+test('empty same-name shrimp copy cannot substitute for the canonical forum', async () => {
+  const f = fixture();
+  const decoy = addEmptyGeneralShrimpCopy(f);
+  f.guild.channels.cache.delete(RESEARCH_FORUMS.shrimp.id);
+  const result = await publishVerifiedBreederPublicBatch(f.guild, request(shrimpCards));
+  assert.equal(result.posted, 0);
+  assert.equal(result.reason, 'target_forum_not_verified_public_and_writable');
+  assert.equal(decoy.writes.length, 0);
+  assert.equal(f.sends.length + f.creates.length, 0);
+});
+
+const invalidCanonicalIdentities = [
+  ['guild ID', (f) => { f.guild.id = 'different-guild'; }],
+  ['category ID', (f) => {
+    const category = f.guild.channels.cache.get(RESEARCH_CATEGORY.id);
+    category.id = 'different-category';
+    f.shrimpForum.parentId = category.id;
+  }],
+  ['category name', (f) => {
+    f.guild.channels.cache.get(RESEARCH_CATEGORY.id).name = '📚・AQUAPEDIA — SPECIES & GENETICS';
+  }],
+  ['forum ID', (f) => { f.shrimpForum.id = 'different-shrimp-forum'; }],
+  ['forum name', (f) => { f.shrimpForum.name = '🦐・SHRIMP-RESEARCH'; }],
+  ['parent binding', (f) => {
+    const category = { id: 'different-parent', name: '📚・AQUAPEDIA', type: ChannelType.GuildCategory,
+      permissionsFor: f.shrimpForum.permissionsFor };
+    f.guild.channels.cache.set(category.id, category);
+    f.shrimpForum.parentId = category.id;
+  }],
+];
+for (const [label, mutate] of invalidCanonicalIdentities) {
+  test('canonical shrimp '+label+' must match before any write', async () => {
+    const f = fixture();
+    mutate(f);
+    const result = await publishVerifiedBreederPublicBatch(f.guild, request(shrimpCards));
+    assert.equal(result.posted, 0);
+    assert.equal(result.reason, 'target_forum_not_verified_public_and_writable');
+    assert.equal(f.sends.length + f.creates.length, 0);
+  });
+}
+
+for (const flag of [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.ReadMessageHistory]) {
+  test('canonical shrimp category requires public permission '+String(flag), async () => {
+    const f = fixture();
+    f.guild.channels.cache.get(RESEARCH_CATEGORY.id).permissionsFor = () => ({ has: (value) => value !== flag });
+    const result = await publishVerifiedBreederPublicBatch(f.guild, request(shrimpCards));
+    assert.equal(result.posted, 0);
+    assert.equal(result.reason, 'target_forum_not_verified_public_and_writable');
+    assert.equal(f.sends.length + f.creates.length, 0);
+  });
+}
+
+test('canonical shrimp resolution retains the bot thread-write permission gate', async () => {
+  const f = fixture({ noBotWrite: true });
+  const result = await publishVerifiedBreederPublicBatch(f.guild, request(shrimpCards));
+  assert.equal(result.posted, 0);
+  assert.equal(result.reason, 'target_forum_not_verified_public_and_writable');
+  assert.equal(f.sends.length + f.creates.length, 0);
 });
 
 test('actual queue is not publishable until owner + audience authorization',async()=>{

@@ -4,6 +4,7 @@
 import { ChannelType, PermissionFlagsBits } from 'discord.js';
 import { buildAquapediaPost } from './aquapedia-posts.mjs';
 import { probePublicThreadCapacity } from './thread-capacity.mjs';
+import { resolveCanonicalResearchForum } from './canonical-research-forums.mjs';
 
 const MAX_CARDS = 4;
 const ALLOWED_FORUMS = Object.freeze({
@@ -46,13 +47,20 @@ function validRoute(card, route) {
 
 function visiblePublicForum(guild, card, route) {
   const all = [...(guild?.channels?.cache?.values?.() ?? [])];
-  const candidates = all.filter((x) => x.type === ChannelType.GuildForum
-    && normalized(x.name) === route.forum.replace(/-/g, ' '));
-  if (candidates.length !== 1) return null;
-  const forum = candidates[0];
-  const parent = all.find((x) => x.id === forum.parentId && x.type === ChannelType.GuildCategory);
-  const pname = normalized(parent?.name);
-  if (!pname.startsWith('aquapedia') || pname.includes('research') || pname.includes('private')) return null;
+  let forum;
+  if (card.organismGroup === 'shrimp') {
+    const canonical = resolveCanonicalResearchForum(guild, card.organismGroup);
+    if (canonical.status !== 'ready') return null;
+    forum = all.find((x) => x.type === ChannelType.GuildForum && x.id === canonical.channelId);
+  } else {
+    const candidates = all.filter((x) => x.type === ChannelType.GuildForum
+      && normalized(x.name) === route.forum.replace(/-/g, ' '));
+    if (candidates.length !== 1) return null;
+    forum = candidates[0];
+    const parent = all.find((x) => x.id === forum.parentId && x.type === ChannelType.GuildCategory);
+    const pname = normalized(parent?.name);
+    if (!pname.startsWith('aquapedia') || pname.includes('research') || pname.includes('private')) return null;
+  }
   const everyone = guild?.roles?.everyone;
   const permissions = everyone && forum.permissionsFor?.(everyone);
   if (!permissions?.has(PermissionFlagsBits.ViewChannel)

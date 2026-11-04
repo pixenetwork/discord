@@ -4,7 +4,9 @@ import { publishVerifiedBreederPublicBatch, VERIFIED_BREEDER_ROUTES } from './ve
 
 // The source is a copy of the reviewer-approved Aquapedia 4-card queue.
 // Public posting always requires a fresh, owner-authenticated Discord action.
-export const VERIFIED_BREEDER_SOURCE_SHA256 = '627c0befed40d313ad45adc36f407ac61efeb42f3eb86243ee8ae25aea74aee2';
+// Integrity digest of the checked-in review-closed JSON, not an authentication secret.
+// The pinned-source and mutation regressions verify this literal checksum.
+export const VERIFIED_BREEDER_SOURCE_SHA256 = '627c0befed40d313ad45adc36f407ac61efeb42f3eb86243ee8ae25aea74aee2'; // guardrails-disable-line
 const IDS = [
   'verified-savanna-2026-elsa-and-show',
   'verified-tarumi-2026-kuro-rintou',

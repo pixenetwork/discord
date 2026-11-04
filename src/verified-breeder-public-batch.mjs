@@ -38,7 +38,7 @@ function validRoute(card, route) {
     && card.sources.every((x) => {
       try {
         const u = new URL(x);
-        return u.protocol === 'https:' && !/(^|\.)reddit\.com$/i.test(u.hostname)
+        return u.protocol === 'https:' && !/(^|\.)reddit\.com$/i.test(u.hostname.replace(/\.$/, ''))
           && !u.username && !u.password;
       } catch { return false; }
     }));
@@ -138,6 +138,26 @@ export async function publishVerifiedBreederPublicBatch(guild, request) {
   if (new Set(cards.map((c) => c.id)).size !== cards.length
     || cards.some((c) => !validRoute(c, routes[c.id]))) return blocked('route_source_or_rights_invalid');
 
+  // Validate every rendered card before the first Discord write. The builder
+  // owns public-URL filtering; require its citation fields to preserve each source.
+  const payloads = new Map();
+  try {
+    for (const card of cards) {
+      const payload = buildAquapediaPost(card);
+      const citations = payload.embeds.flatMap((embed) => embed.fields ?? [])
+        .filter((field) => /^Research sources(?: \(\d+\))?$/.test(field.name))
+        .map((field) => field.value).join(' • ');
+      const expectedCitations = card.sources.map((source, index) =>
+        '[' + (index + 1) + '](' + new URL(source).href + ')').join(' • ');
+      if (citations !== expectedCitations) {
+        return blocked('card_source_not_preserved_in_payload');
+      }
+      payload.content += '\n' + recordMarker(card.id);
+      payload.allowedMentions = { parse: [] };
+      payloads.set(card.id, payload);
+    }
+  } catch { return blocked('card_payload_invalid'); }
+
   const receipts = [];
   let skipped = 0;
   for (const card of cards) {
@@ -151,16 +171,18 @@ export async function publishVerifiedBreederPublicBatch(guild, request) {
     if (matches.length > 1) return blocked('ambiguous_existing_breeder_threads', receipts, skipped);
 
     const marker = recordMarker(card.id);
-    const payload = buildAquapediaPost(card);
-    payload.content += '\n' + marker;
-    payload.allowedMentions = { parse: [] };
+    const payload = payloads.get(card.id);
     const botId = guild.client.user.id;
     let thread = matches[0];
     if (thread) {
       let history;
       try { history = await fullMessageHistory(thread); }
       catch { return blocked('thread_history_incomplete', receipts, skipped); }
-      if (history.some((m) => safe(m.content).includes(marker))) {
+      const prior = history.filter((m) => safe(m.content).includes(marker));
+      if (prior.length) {
+        if (prior.length !== 1 || !verifiedBotReply(prior[0], botId, card.id)) {
+          return blocked('existing_breeder_message_unverified_needs_review', receipts, skipped);
+        }
         skipped += 1;
         continue;
       }
@@ -189,8 +211,8 @@ export async function publishVerifiedBreederPublicBatch(guild, request) {
       return blocked('potential_duplicate_breeder_subject_needs_review', receipts, skipped);
     }
     const createPermissions = forum.permissionsFor?.(guild.client.user);
-    if (!createPermissions?.has(PermissionFlagsBits.CreatePublicThreads)) {
-      return blocked('bot_missing_public_thread_creation_permission', receipts, skipped);
+    if (!createPermissions?.has(PermissionFlagsBits.SendMessages)) {
+      return blocked('bot_missing_forum_post_creation_permission', receipts, skipped);
     }
     const capacity = await probePublicThreadCapacity(guild);
     if (!capacity.allowed) return blocked('discord_active_thread_capacity_guard', receipts, skipped);

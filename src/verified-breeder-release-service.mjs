@@ -52,6 +52,19 @@ function validReceipt(receipt, id) {
   return Boolean(receipt?.verified === true && receipt.recordId === id
     && idCheck(receipt.threadId) && idCheck(receipt.messageId));
 }
+
+function publicationClaimFor(batch, guildId, mode, selected) {
+  const recordIds = selected.map((card) => card.id);
+  const payload = {
+    sourceSha256: batch.sourceSha256,
+    guildId: String(guildId),
+    mode,
+    recordIds,
+  };
+  const claimId = 'breeder-publication:' + createHash('sha256')
+    .update(JSON.stringify(payload)).digest('hex');
+  return Object.freeze({ claimId, ...payload, recordIds: Object.freeze(recordIds) });
+}
 export function createVerifiedBreederReleaseService({
   loadBatch = loadPinnedVerifiedBreeders,
   publish = publishVerifiedBreederPublicBatch,
@@ -94,6 +107,81 @@ export function createVerifiedBreederReleaseService({
         const selected = mode === 'canary' ? batch.cards.slice(0, 1)
           : batch.cards.filter((c) => !verified.has(c.id));
         if (mode === 'finish' && selected.some((c) => c.id === IDS[0])) throw Error('Canary was not verified');
+
+        // Cross-process exclusion and crash-safe intent persistence must come
+        // from the governed durable authority. The local JSON store intentionally
+        // does not synthesize either capability.
+        if (typeof store.claimResearchPublicationOnce !== 'function'
+          || typeof store.commitResearchPublicationResult !== 'function') {
+          return {
+            stage: 'publication_claim_required', verifiedCount: count, total: 4,
+            reason: 'atomic_publication_claim_required',
+          };
+        }
+        const claim = publicationClaimFor(batch, guild.id, mode, selected);
+        const intent = Object.freeze({
+          id: key,
+          sourceSha256: batch.sourceSha256,
+          guildId: guild.id,
+          discordPublicationReceipts: Object.freeze([...verified.values()]),
+          discordPublishedCount: count,
+          releaseStage: 'needs_manual_review',
+          publicationClaimId: claim.claimId,
+          publicationClaimMode: mode,
+          publicationSelectedRecordIds: claim.recordIds,
+          publicationClaimStatus: 'in_flight',
+        });
+        let claimResult = null;
+        try {
+          claimResult = await store.claimResearchPublicationOnce(claim.claimId, {
+            ...claim,
+            key,
+            intent,
+          });
+        } catch {
+          claimResult = null;
+        }
+        const claimAccepted = claimResult === true || claimResult?.claimed === true;
+        if (!claimAccepted) {
+          return {
+            stage: 'manual_review_required', verifiedCount: count, total: 4,
+            reason: 'publication_claim_replayed_or_unavailable',
+          };
+        }
+        const fence = claimResult && typeof claimResult === 'object'
+          && typeof claimResult.fence === 'string' ? claimResult.fence.trim() : '';
+        if (!fence) {
+          return {
+            stage: 'manual_review_required', verifiedCount: count, total: 4,
+            reason: 'publication_intent_not_durable',
+          };
+        }
+        let durableIntent;
+        try {
+          durableIntent = await store.getResearchJob(key);
+        } catch {
+          durableIntent = null;
+        }
+        const durableSelected = durableIntent?.publicationSelectedRecordIds;
+        const durableIntentMatches = durableIntent
+          && durableIntent.id === key
+          && durableIntent.sourceSha256 === batch.sourceSha256
+          && durableIntent.guildId === guild.id
+          && durableIntent.releaseStage === 'needs_manual_review'
+          && durableIntent.publicationClaimId === claim.claimId
+          && durableIntent.publicationClaimFence === fence
+          && durableIntent.publicationClaimMode === mode
+          && durableIntent.publicationClaimStatus === 'in_flight'
+          && Array.isArray(durableSelected)
+          && durableSelected.length === claim.recordIds.length
+          && durableSelected.every((id, index) => id === claim.recordIds[index]);
+        if (!durableIntentMatches) {
+          return {
+            stage: 'manual_review_required', verifiedCount: count, total: 4,
+            reason: 'publication_intent_not_durable',
+          };
+        }
+
         const result = await publish(guild, {
           status: 'completed',
           ownerApproved: true, discordPublicationApproved: true,
@@ -118,14 +206,34 @@ export function createVerifiedBreederReleaseService({
           && !result?.skipped && !suspicious;
         const reviewNeeded = suspicious || (newReceipts.length !== selected.length)
           || Boolean(result?.skipped);
-        if (newReceipts.length || reviewNeeded) {
-          await store.recordResearchJob({
-            id: key, sourceSha256: batch.sourceSha256, guildId: guild.id,
-            discordPublicationReceipts: updated, discordPublishedCount: updated.length,
-            discordVerifiedAt: new Date().toISOString(),
-            releaseStage: reviewNeeded ? 'needs_manual_review'
-              : isComplete ? 'completed' : 'canary_verified',
+        const releaseStage = reviewNeeded ? 'needs_manual_review'
+          : isComplete ? 'completed' : 'canary_verified';
+        const nextRecord = {
+          id: key, sourceSha256: batch.sourceSha256, guildId: guild.id,
+          discordPublicationReceipts: updated, discordPublishedCount: updated.length,
+          discordVerifiedAt: new Date().toISOString(),
+          releaseStage,
+          publicationClaimId: claim.claimId,
+          publicationClaimFence: fence,
+          publicationClaimMode: mode,
+          publicationSelectedRecordIds: [...claim.recordIds],
+          publicationClaimStatus: reviewNeeded ? 'needs_manual_review' : 'committed',
+        };
+        let resultCommitted = false;
+        try {
+          resultCommitted = await store.commitResearchPublicationResult(key, nextRecord, {
+            claimId: claim.claimId,
+            fence,
           });
+        } catch {
+          resultCommitted = false;
+        }
+        if (resultCommitted !== true) {
+          return {
+            stage: 'manual_review_required', verifiedCount: count, total: 4,
+            receipts: newReceipts,
+            reason: 'publication_result_commit_failed',
+          };
         }
         return {
           stage: reviewNeeded ? 'manual_review_required'

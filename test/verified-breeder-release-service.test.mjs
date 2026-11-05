@@ -24,9 +24,40 @@ function sandbox(resultFactory) {
       return { posted: receipts.length, skipped: 0, receipts, reason: 'verified_readback_receipts' };
     }
   });
+  let fenceSequence = 0;
+  const activeClaims = new Set();
   const store = {
     async getResearchJob(key) { return state.get(key) ?? null; },
     async recordResearchJob(r) { if (!r?.id) throw Error('Record id missing'); state.set(r.id, { ...r }); },
+    async claimResearchPublicationOnce(claimId, claim) {
+      if (!claim?.key || !claim?.intent || activeClaims.has(claimId)) {
+        return { claimed: false, reason: 'replayed_or_unavailable' };
+      }
+      const current = state.get(claim.key);
+      if (current?.releaseStage === 'needs_manual_review') {
+        return { claimed: false, reason: 'manual_review_required' };
+      }
+      activeClaims.add(claimId);
+      const fence = 'fence-' + (++fenceSequence);
+      state.set(claim.key, {
+        ...claim.intent,
+        publicationClaimFence: fence,
+      });
+      return { claimed: true, fence };
+    },
+    async commitResearchPublicationResult(key, record, { claimId, fence } = {}) {
+      const current = state.get(key);
+      if (!current || current.publicationClaimId !== claimId
+        || current.publicationClaimFence !== fence
+        || current.publicationClaimStatus !== 'in_flight') return false;
+      state.set(key, {
+        ...record,
+        publicationClaimId: claimId,
+        publicationClaimFence: fence,
+        publicationClaimStatus: 'committed',
+      });
+      return true;
+    },
   };
   return { service, store, state, calls };
 }
@@ -203,3 +234,152 @@ test('status reports partial receipts without a canary and finish stays blocked'
   assert.equal(x.calls.length, 0);
 });
 
+
+test('separate release-service instances require one shared atomic claim before publishing', async () => {
+  const state = new Map();
+  const claimed = new Set();
+  let reads = 0;
+  let releaseReads;
+  const readsReady = new Promise((resolve) => { releaseReads = resolve; });
+  const store = {
+    async getResearchJob(key) {
+      reads += 1;
+      if (reads === 2) releaseReads();
+      await readsReady;
+      return state.get(key) ?? null;
+    },
+    async recordResearchJob(record) {
+      state.set(record.id, { ...record });
+    },
+    async claimResearchPublicationOnce(claimId, claim) {
+      if (claimed.has(claimId)) return { claimed: false };
+      claimed.add(claimId);
+      const fence = 'shared-fence-' + claimed.size;
+      state.set(claim.key, {
+        ...claim.intent,
+        publicationClaimFence: fence,
+      });
+      return { claimed: true, fence };
+    },
+    async commitResearchPublicationResult(key, record, { claimId, fence } = {}) {
+      const current = state.get(key);
+      if (!current || current.publicationClaimId !== claimId
+        || current.publicationClaimFence !== fence
+        || current.publicationClaimStatus !== 'in_flight') return false;
+      state.set(key, {
+        ...record,
+        publicationClaimId: claimId,
+        publicationClaimFence: fence,
+        publicationClaimStatus: 'committed',
+      });
+      return true;
+    },
+  };
+  let publishCalls = 0;
+  const publish = async (currentGuild, request) => {
+    publishCalls += 1;
+    const card = request.cards[0];
+    return {
+      posted: 1, skipped: 0, reason: 'verified_readback_receipts',
+      receipts: [{
+        recordId: card.id,
+        threadId: '123456789012345681',
+        messageId: String(123456789012345693n + BigInt(publishCalls)),
+        verified: true,
+      }],
+    };
+  };
+  const first = createVerifiedBreederReleaseService({ loadBatch, publish });
+  const second = createVerifiedBreederReleaseService({ loadBatch, publish });
+  const results = await Promise.all([
+    first.run({ mode: 'canary', guild, store, ownerApproved: true }),
+    second.run({ mode: 'canary', guild, store, ownerApproved: true }),
+  ]);
+  assert.equal(publishCalls, 1, 'only the durable-claim winner may enter publish');
+  assert.equal(results.filter((result) => result.stage === 'canary_verified').length, 1);
+  assert.equal(results.filter((result) => result.stage === 'manual_review_required').length, 1);
+});
+
+test('missing atomic publication claim capability blocks canary before publish', async () => {
+  const state = new Map();
+  let publishCalls = 0;
+  const store = {
+    async getResearchJob(key) { return state.get(key) ?? null; },
+    async recordResearchJob(record) { state.set(record.id, { ...record }); },
+  };
+  const service = createVerifiedBreederReleaseService({
+    loadBatch,
+    async publish() {
+      publishCalls += 1;
+      return { posted: 0, skipped: 0, receipts: [], reason: 'unexpected_publish' };
+    },
+  });
+  const result = await service.run({ mode: 'canary', guild, store, ownerApproved: true });
+  assert.equal(result.stage, 'publication_claim_required');
+  assert.equal(result.reason, 'atomic_publication_claim_required');
+  assert.equal(publishCalls, 0);
+});
+
+test('atomic publication claim must durably persist a fenced intent before Discord publish', async () => {
+  let publishCalls = 0;
+  const store = {
+    async getResearchJob() { return null; },
+    async recordResearchJob() {},
+    async claimResearchPublicationOnce() { return true; },
+    async commitResearchPublicationResult() { return true; },
+  };
+  const service = createVerifiedBreederReleaseService({
+    loadBatch,
+    async publish() {
+      publishCalls += 1;
+      return { posted: 0, skipped: 0, receipts: [], reason: 'unexpected_publish' };
+    },
+  });
+  const result = await service.run({ mode: 'canary', guild, store, ownerApproved: true });
+  assert.equal(result.stage, 'manual_review_required');
+  assert.equal(result.reason, 'publication_intent_not_durable');
+  assert.equal(publishCalls, 0);
+});
+
+test('fenced result commit failure leaves restart-safe manual-review hold', async () => {
+  const batch = await loadBatch();
+  const key = 'breeder-social-public:' + batch.sourceSha256 + ':' + guild.id;
+  const state = new Map();
+  let publishCalls = 0;
+  const store = {
+    async getResearchJob(id) { return state.get(id) ?? null; },
+    async recordResearchJob(record) { state.set(record.id, { ...record }); },
+    async claimResearchPublicationOnce(claimId, claim) {
+      const fence = 'commit-failure-fence';
+      state.set(claim.key, { ...claim.intent, publicationClaimFence: fence });
+      return { claimed: true, fence };
+    },
+    async commitResearchPublicationResult() { return false; },
+  };
+  const publish = async (_currentGuild, request) => {
+    publishCalls += 1;
+    return {
+      posted: 1, skipped: 0, reason: 'verified_readback_receipts',
+      receipts: [{
+        recordId: request.cards[0].id,
+        threadId: '123456789012345681',
+        messageId: '123456789012345693',
+        verified: true,
+      }],
+    };
+  };
+  const service = createVerifiedBreederReleaseService({ loadBatch, publish });
+  const first = await service.run({ mode: 'canary', guild, store, ownerApproved: true });
+  assert.equal(first.stage, 'manual_review_required');
+  assert.equal(first.reason, 'publication_result_commit_failed');
+  assert.equal(publishCalls, 1);
+  assert.equal(state.get(key)?.releaseStage, 'needs_manual_review');
+  assert.equal(state.get(key)?.publicationClaimStatus, 'in_flight');
+
+  const fresh = createVerifiedBreederReleaseService({ loadBatch, publish });
+  const status = await fresh.run({ mode: 'status', guild, store });
+  assert.equal(status.stage, 'manual_review_required');
+  const retry = await fresh.run({ mode: 'canary', guild, store, ownerApproved: true });
+  assert.equal(retry.stage, 'manual_review_required');
+  assert.equal(publishCalls, 1);
+});

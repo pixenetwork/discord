@@ -12,11 +12,35 @@ const ALLOWED_FORUMS = Object.freeze({
   shrimp: 'shrimp-research',
 });
 
+const MEDAKA_PUBLIC_CATEGORY = 'aquapedia species genetics';
+const guildPublicationLocks = new Map();
 const safe = (s) => String(s ?? '').trim();
 const normalized = (s) => safe(s).normalize('NFKC').toLowerCase()
   .replace(/[^a-z0-9]+/g, ' ').trim().replace(/\s+/g, ' ');
-const suffix = (s) => normalized(s).replace(/^.*? /, '');
 const recordMarker = (id) => '[AQ-BREEDER:' + id + ']';
+
+function publicSourceUrl(value) {
+  try {
+    const u = new URL(value);
+    if (u.protocol !== 'https:' || u.username || u.password) return false;
+    const hostname = u.hostname.toLowerCase().replace(/\.$/, '');
+    return !/(^|\.)reddit\.com$/i.test(hostname)
+      && !hostname.startsWith('[')
+      && !/^\d{1,3}(?:\.\d{1,3}){3}$/.test(hostname)
+      && hostname !== 'localhost' && !hostname.endsWith('.localhost')
+      && !hostname.endsWith('.local') && !hostname.endsWith('.internal');
+  } catch { return false; }
+}
+
+function serializeGuildPublication(guildId, task) {
+  const key = String(guildId ?? 'unknown');
+  const prior = guildPublicationLocks.get(key) ?? Promise.resolve();
+  const current = prior.catch(() => {}).then(task);
+  guildPublicationLocks.set(key, current);
+  return current.finally(() => {
+    if (guildPublicationLocks.get(key) === current) guildPublicationLocks.delete(key);
+  });
+}
 const blocked = (reason, receipts = [], skipped = 0) => ({
   posted: receipts.length, receipts, skipped, reason,
 });
@@ -36,13 +60,7 @@ function validRoute(card, route) {
     && card.entityType === 'breeder'
     && Array.isArray(card.photos) && card.photos.length === 0
     && Array.isArray(card.sources) && card.sources.length > 0
-    && card.sources.every((x) => {
-      try {
-        const u = new URL(x);
-        return u.protocol === 'https:' && !/(^|\.)reddit\.com$/i.test(u.hostname.replace(/\.$/, ''))
-          && !u.username && !u.password;
-      } catch { return false; }
-    }));
+    && card.sources.every(publicSourceUrl));
 }
 
 function visiblePublicForum(guild, card, route) {
@@ -58,8 +76,7 @@ function visiblePublicForum(guild, card, route) {
     if (candidates.length !== 1) return null;
     forum = candidates[0];
     const parent = all.find((x) => x.id === forum.parentId && x.type === ChannelType.GuildCategory);
-    const pname = normalized(parent?.name);
-    if (!pname.startsWith('aquapedia') || pname.includes('research') || pname.includes('private')) return null;
+    if (normalized(parent?.name) !== MEDAKA_PUBLIC_CATEGORY) return null;
   }
   const everyone = guild?.roles?.everyone;
   const permissions = everyone && forum.permissionsFor?.(everyone);
@@ -134,7 +151,7 @@ function verifiedBotReply(message, botId, id) {
 
 // The batch is intentionally review-closed in the research repo. A separately
 // authenticated owner action must make ALL three approvals true at dispatch time.
-export async function publishVerifiedBreederPublicBatch(guild, request) {
+async function publishVerifiedBreederPublicBatchUnlocked(guild, request) {
   if (request?.status !== 'completed' || request.ownerApproved !== true
     || request.discordPublicationApproved !== true || request.publicAudienceApproved !== true) {
     return blocked('owner_and_publication_approval_required');
@@ -241,6 +258,10 @@ export async function publishVerifiedBreederPublicBatch(guild, request) {
     posted: receipts.length, skipped, receipts,
     reason: receipts.length ? 'verified_readback_receipts' : 'all_matching_cards_already_present',
   };
+}
+
+export function publishVerifiedBreederPublicBatch(guild, request) {
+  return serializeGuildPublication(guild?.id, () => publishVerifiedBreederPublicBatchUnlocked(guild, request));
 }
 
 // Routing must be reviewed against actual live forums, never inferred from an

@@ -211,6 +211,18 @@ test('repeat dispatch never duplicates any of four records',async()=>{
   assert.equal(again.posted,0);assert.equal(again.skipped,4);
   assert.equal(f.sends.length,2);assert.equal(f.creates.length,2);
 });
+
+test('simultaneous dispatches serialize the same breeder record before history scan and write',async()=>{
+  const f=fixture();
+  const card=originalCards[1];
+  const [a,b]=await Promise.all([
+    publishVerifiedBreederPublicBatch(f.guild,request([card])),
+    publishVerifiedBreederPublicBatch(f.guild,request([card])),
+  ]);
+  assert.equal(f.sends.length,1,'same-process overlap must produce one Discord write');
+  assert.equal(a.posted+b.posted,1);
+  assert.equal(a.skipped+b.skipped,1);
+});
 test('no alternative medaka thread is created if exact breeder thread cannot be found',async()=>{
   const f=fixture({omitTarumi:true});const res=await publishVerifiedBreederPublicBatch(f.guild,request([originalCards[1]]));
   assert.equal(res.posted,0);assert.equal(res.reason,'required_existing_breeder_thread_missing');
@@ -223,6 +235,17 @@ test('duplicate breeder threads stop without guessing which one is authoritative
 test('private/incorrect category fails closed',async()=>{
   const f=fixture({wrongCategory:true});const res=await publishVerifiedBreederPublicBatch(f.guild,request([originalCards[1]]));
   assert.equal(res.posted,0);assert.equal(res.reason,'target_forum_not_verified_public_and_writable');
+});
+
+test('Aquapedia staging/archive categories cannot substitute for the canonical Medaka parent',async()=>{
+  for(const name of ['📚・AQUAPEDIA STAGING','📚・AQUAPEDIA ARCHIVE']){
+    const f=fixture();
+    f.guild.channels.cache.get('category-medaka').name=name;
+    const res=await publishVerifiedBreederPublicBatch(f.guild,request([originalCards[1]]));
+    assert.equal(res.posted,0,name);
+    assert.equal(res.reason,'target_forum_not_verified_public_and_writable',name);
+    assert.equal(f.sends.length+f.creates.length,0,name);
+  }
 });
 test('public forum must allow everyone read and bot thread-writing',async()=>{
   for(const config of [{hidden:true},{noBotWrite:true}]){
@@ -321,7 +344,18 @@ for(const [name,invalid] of [
   });
 }
 
-test('sources the builder would discard fail the entire batch before writes',async()=>{
+test('unsafe literal/local sources fail route validation before payload building',async()=>{
+  for(const source of ['https://127.0.0.1/evidence','https://localhost/evidence','https://fish.internal/evidence']){
+    const f=fixture();
+    const invalid={...originalCards[1],sources:[source]};
+    const res=await publishVerifiedBreederPublicBatch(f.guild,request([invalid]));
+    assert.equal(res.reason,'route_source_or_rights_invalid',source);
+    assert.equal(res.posted,0);
+    assert.equal(f.sends.length+f.creates.length,0);
+  }
+});
+
+test('sources the builder would discard fail route validation before writes',async()=>{
   for(const source of [
     'https://127.0.0.1/evidence','https://[::1]/evidence',
     'https://localhost/evidence','https://fish.localhost/evidence',
@@ -330,7 +364,7 @@ test('sources the builder would discard fail the entire batch before writes',asy
     const f=fixture();
     const invalid={...originalCards[1],sources:[source]};
     const res=await publishVerifiedBreederPublicBatch(f.guild,request([originalCards[0],invalid]));
-    assert.equal(res.reason,'card_source_not_preserved_in_payload',source);
+    assert.equal(res.reason,'route_source_or_rights_invalid',source);
     assert.equal(res.posted,0);
     assert.equal(f.sends.length+f.creates.length,0);
   }
@@ -343,7 +377,7 @@ test('a discarded source cannot be disguised inside another citation URL',async(
     'https://localhost/evidence',
   ]};
   const res=await publishVerifiedBreederPublicBatch(f.guild,request([card]));
-  assert.equal(res.reason,'card_source_not_preserved_in_payload');
+  assert.equal(res.reason,'route_source_or_rights_invalid');
   assert.equal(res.posted,0);
   assert.equal(f.sends.length+f.creates.length,0);
 });

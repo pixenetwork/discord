@@ -8,7 +8,9 @@ import { calculateRetailBreakdown, centsToMoney, moneyToCents } from './pricing.
 import { ensureVendorWorkspace, provisionAquaphoriaLayout } from './layout.mjs';
 import { publishAquapediaCards, persistVerifiedReceipts } from './aquapedia-posts.mjs';
 import { createShrimpReleaseService } from './shrimp-release-service.mjs';
+import { createVerifiedBreederReleaseService } from './verified-breeder-release-service.mjs';
 const shrimpReleaseService = createShrimpReleaseService();
+const verifiedBreederReleaseService = createVerifiedBreederReleaseService();
 import {
   getCanonicalStaffRole,
   isCanonicalStaff,
@@ -328,6 +330,14 @@ function commandDefinitions() {
     .addSubcommand((sub) => sub.setName('canary').setDescription('Owner approval: publish and verify one breeder post'))
     .addSubcommand((sub) => sub.setName('finish').setDescription('Owner approval: publish remaining 21 after verified canary'));
 
+  const breederEvidence = new SlashCommandBuilder()
+    .setName('breeder-evidence')
+    .setDescription('Owner-only verified Aquapedia breeder source release')
+    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
+    .addSubcommand((sub) => sub.setName('status').setDescription('Show verified breeder research receipt progress; no posts sent'))
+    .addSubcommand((sub) => sub.setName('canary').setDescription('Owner: post one breeder canary and verify its receipt'))
+    .addSubcommand((sub) => sub.setName('finish').setDescription('Owner: post remaining three only after verified canary'));
+
   const order = new SlashCommandBuilder()
     .setName('order')
     .setDescription('Manage your Aquaphoria fulfillment tickets')
@@ -379,7 +389,7 @@ function commandDefinitions() {
         ))
       .addStringOption((option) => option.setName('details').setDescription('Tell us what you need help with').setRequired(true).setMaxLength(1000)));
 
-  return [aquaphoria, vendor, catalog, product, research, shrimpRelease, order, payout, ticket, aquapediaDmCommand()];
+  return [aquaphoria, vendor, catalog, product, research, shrimpRelease, breederEvidence, order, payout, ticket, aquapediaDmCommand()];
 }
 
 async function requireVendor(interaction, store) {
@@ -811,6 +821,34 @@ async function handleShrimpRelease(interaction, deps) {
   return interaction.editReply({ content: body.slice(0, 1800) });
 }
 
+async function handleBreederEvidence(interaction, deps) {
+  if (!isOwner(interaction, deps.config)) {
+    return interaction.reply({ content: 'Only the verified Aquaphoria owner can release breeder research.', ephemeral: true });
+  }
+  if (!interaction.guild?.id || interaction.guild.id !== deps.config.discord.guildId) {
+    return interaction.reply({ content: 'Breeder release is limited to the configured Aquapedia Discord server.', ephemeral: true });
+  }
+  const mode = interaction.options.getSubcommand(true);
+  await interaction.deferReply({ ephemeral: true });
+  const result = await verifiedBreederReleaseService.run({
+    mode, guild: interaction.guild, store: deps.store,
+    ownerApproved: mode !== 'status',
+  });
+  const count = result.verifiedCount ?? 0;
+  const text = result.stage === 'completed'
+    ? '✅ All four breeder cards have verified Discord message receipts.'
+    : result.stage === 'canary_verified'
+      ? '✅ Canary verified. ' + count + '/4 receipts saved. Use `/breeder-evidence finish` to request the remaining posts.'
+      : result.stage === 'not_started'
+        ? '📖 Four reviewed breeder cards pinned; no verified posts saved.'
+        : result.stage === 'blocked_canary_required'
+          ? '⛔ Canary must be posted and read back before remaining posts.'
+          : result.stage === 'manual_review_required'
+            ? '⚠️ Possible partial/uncertain Discord delivery; human review required before any retry. ' + count + '/4 verified.'
+            : 'ℹ️ Breeder release stage: ' + result.stage + '. ' + count + '/4 verified.';
+  return interaction.editReply({ content: text.slice(0, 1800) });
+}
+
 async function handleTicket(interaction, deps) {
   const type = interaction.options.getString('type', true);
   const details = interaction.options.getString('details', true);
@@ -889,6 +927,7 @@ export function createCommandRouter(deps) {
         if (interaction.commandName === 'product') return await handleProduct(interaction, deps);
         if (interaction.commandName === 'research') return await handleResearch(interaction, deps);
         if (interaction.commandName === 'shrimp-release') return await handleShrimpRelease(interaction, deps);
+        if (interaction.commandName === 'breeder-evidence') return await handleBreederEvidence(interaction, deps);
         if (interaction.commandName === 'order') return await handleOrder(interaction, deps);
         if (interaction.commandName === 'payout') return await handlePayout(interaction, deps);
         if (interaction.commandName === 'ticket') return await handleTicket(interaction, deps);

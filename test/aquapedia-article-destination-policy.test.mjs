@@ -1,6 +1,11 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {requiredChannelKinds,articleWriteAction,ARTICLE_UPDATE_HEADING,normalizeAquapediaArticleName,acquireArticleWriterLock,guardArticleBulkChange} from '../tools/aquapedia-article-destination-policy.mjs';
+import * as policy from '../tools/aquapedia-article-destination-policy.mjs';
+const {requiredChannelKinds,articleWriteAction,ARTICLE_UPDATE_HEADING,normalizeAquapediaArticleName,acquireArticleWriterLock,guardArticleBulkChange}=policy;
+const normalizeArticleMainForDigest=(...args)=>{
+ assert.equal(typeof policy.normalizeArticleMainForDigest,'function','digest normalizer must be exported');
+ return policy.normalizeArticleMainForDigest(...args);
+};
 
 test('only Medaka updates require the private research destination, not public shrimp-guides',()=>{
  assert.deepEqual(requiredChannelKinds([
@@ -34,6 +39,18 @@ test('human-readable article heading and Unicode name normalization are not corr
  assert.equal(normalizeAquapediaArticleName('Silver Hikari Daruma (Kirameki \u2014 Oba)'),'silverhikaridaruma');
  assert.equal(normalizeAquapediaArticleName('White Internal Light \u2014 Saiko'),'whiteinternallight');
  assert.equal(normalizeAquapediaArticleName('Name \uff08other\uff09'),'name');
+});
+
+test('article digest normalizer removes comments and raw script/style blocks without regex sanitization',()=>{
+ const html='<p>Alpha</p><!-- private note --><SCRIPT type="application/json">{"x":"<style>nested</style>"}</SCRIPT   ><style media="screen">.x{display:none}</style ><p>Beta</p>';
+ assert.equal(normalizeArticleMainForDigest(html),'<p>Alpha</p><p>Beta</p>');
+ assert.equal(normalizeArticleMainForDigest('  <p>A</p>\n\t<p>B</p>  '),'<p>A</p> <p>B</p>');
+});
+
+test('article digest normalizer fails closed on unterminated ignored blocks',()=>{
+ assert.throws(()=>normalizeArticleMainForDigest('<p>A</p><!-- missing'),/unterminated article comment/i);
+ assert.throws(()=>normalizeArticleMainForDigest('<script>missing close'),/unterminated script block/i);
+ assert.throws(()=>normalizeArticleMainForDigest('<style>missing close'),/unterminated style block/i);
 });
 
 test('writer lock cleans up after metadata write failure, but never unlinks a competing lock',()=>{

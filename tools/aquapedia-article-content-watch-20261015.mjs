@@ -11,7 +11,7 @@ import path from 'node:path';
 import {createHash} from 'node:crypto';
 import {REST,Routes,ChannelType,PermissionFlagsBits} from 'discord.js';
 import {renderAquapediaCard} from './aquapedia-post-card.mjs';
-import {requiredChannelKinds,articleWriteAction,ARTICLE_UPDATE_HEADING,normalizeAquapediaArticleName,acquireArticleWriterLock,guardArticleBulkChange} from './aquapedia-article-destination-policy.mjs';
+import {requiredChannelKinds,articleWriteAction,ARTICLE_UPDATE_HEADING,normalizeAquapediaArticleName,normalizeArticleMainForDigest,acquireArticleWriterLock,guardArticleBulkChange} from './aquapedia-article-destination-policy.mjs';
 
 const mode=process.argv.includes('--seed')?'seed':process.argv.includes('--apply')?'apply':'check';
 const base='https://aquapedia.app';
@@ -30,12 +30,6 @@ function pagePath(v){
  return typeof v==='string'&&/^\/(?:medakapedia|shrimpapedia|arowanapedia)\//.test(v)
   && !/\.\.|[?#<>"']/g.test(v)&&v.endsWith('/')?v:null;
 }
-function meaningful(main){
- return main.replace(/<!--[^]*?-->/g,'')
-  .replace(/<script\b[^>]*>[^]*?<\/script>/gi,'')
-  .replace(/<style\b[^>]*>[^]*?<\/style>/gi,'')
-  .replace(/\s+/g,' ').trim();
-}
 async function getPage(url){
  const resp=await fetch(base+url+'?article_audit='+Date.now(),{
   headers:{'user-agent':'Aquapedia/1.0 verified-content-diff (private Discord)'},
@@ -45,7 +39,7 @@ async function getPage(url){
  const html=await resp.text();
  const found=html.match(/<main\s+id="main"[^>]*>([\s\S]*?)<\/main>/i);
  if(!found||found[1].length<180)throw Error('No meaningful article main section');
- const main=meaningful(found[1]);
+ const main=normalizeArticleMainForDigest(found[1]);
  const title=html.match(/<title>([^<]{1,250})<\/title>/i)?.[1]?.trim()||url;
  return {digest:hash(main),title,bytes:main.length};
 }

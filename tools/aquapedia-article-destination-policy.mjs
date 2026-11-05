@@ -7,6 +7,57 @@ export function articleWriteAction({previousReceipt,existingMessage,changed}){
 }
 
 export const ARTICLE_UPDATE_HEADING='**AQUAPEDIA — UPDATED RESEARCH ARTICLE**';
+function rawTextTagAt(lower,index,tag){
+ if(!lower.startsWith('<'+tag,index))return false;
+ const next=lower[index+tag.length+1];
+ return next===undefined||next==='>'||next==='/'||/\s/.test(next);
+}
+
+function rawTextBlockEnd(lower,tag,from){
+ const needle='</'+tag;
+ let cursor=from;
+ while(cursor<lower.length){
+  const start=lower.indexOf(needle,cursor);
+  if(start<0)return -1;
+  let end=start+needle.length;
+  const next=lower[end];
+  if(next==='>'||/\s/.test(next||'')){
+   while(end<lower.length&&/\s/.test(lower[end]))end++;
+   if(lower[end]==='>')return end+1;
+  }
+  cursor=start+needle.length;
+ }
+ return -1;
+}
+
+export function normalizeArticleMainForDigest(value){
+ const source=String(value??'');
+ const lower=source.toLowerCase();
+ let index=0;
+ let output='';
+ while(index<source.length){
+  if(lower.startsWith('<!--',index)){
+   const end=lower.indexOf('-->',index+4);
+   if(end<0)throw Error('Unterminated article comment');
+   index=end+3;
+   continue;
+  }
+  let tag=null;
+  if(rawTextTagAt(lower,index,'script'))tag='script';
+  else if(rawTextTagAt(lower,index,'style'))tag='style';
+  if(tag){
+   const openEnd=lower.indexOf('>',index+tag.length+1);
+   if(openEnd<0)throw Error('Unterminated '+tag+' block');
+   const closeEnd=rawTextBlockEnd(lower,tag,openEnd+1);
+   if(closeEnd<0)throw Error('Unterminated '+tag+' block');
+   index=closeEnd;
+   continue;
+  }
+  output+=source[index++];
+ }
+ return output.replace(/\s+/g,' ').trim();
+}
+
 export function normalizeAquapediaArticleName(name){
  return String(name??'').normalize('NFKC').split(/[\/|—–(]/)[0]
   .replace(/[^\p{L}\p{N}]/gu,'').toLocaleLowerCase();

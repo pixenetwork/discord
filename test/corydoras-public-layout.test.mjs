@@ -39,7 +39,7 @@ test('Aquapedia public research assistance channels have unique names', () => {
     assert.equal(names.filter(x=>x===name).length,1);
   }
   assert.match(pub.channels.find(([name])=>name==='🐟・corydoras-guides')[1],/Species & Genetics/);
-  const all=sections.flatMap(s=>s.channels.map(([name])=>name));
+  const all=sections.flatMap(s=>(s.channels??[]).map(([name])=>name));
   assert.equal(new Set(all).size,all.length,'Public text channel names must remain unique');
 });
 

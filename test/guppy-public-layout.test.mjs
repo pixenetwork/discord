@@ -19,7 +19,7 @@ test('guppy provisioning refuses to mutate a private Aquapedia category', async 
   let created = 0;
   const everyone = { id: 'everyone' };
   const category = {
-    id: 'aquapedia', name: '📚・AQUAPEDIA', type: ChannelType.GuildCategory,
+    id: '1557338241903099945', name: '📚・AQUAPEDIA', type: ChannelType.GuildCategory,
     permissionsFor: () => ({ has: (permission) => permission !== PermissionFlagsBits.ReadMessageHistory }),
   };
   const guild = {

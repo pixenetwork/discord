@@ -15,11 +15,11 @@ const contest = {
   sources: ['https://aquapedia.app/shrimpapedia/competitions/german-international-shrimp-contest-tgisc/']
 };
 
-function fakeGuild({ visible = true, historyReadable = true, categoryName = '📚・AQUAPEDIA', forumName = '🦐・shrimp-research', activeCount = 0 } = {}) {
+function fakeGuild({ visible = true, historyReadable = true, categoryName = '🧬・AQUAPEDIA — SPECIES & GENETICS', forumName = '🦐・shrimp-research', activeCount = 0 } = {}) {
   const created = [];
-  const category = { id: 'public-category', name: categoryName, type: 4 };
+  const category = { id: '1561430495680667719', name: categoryName, type: 4 };
   const forum = {
-    id: 'shrimp-forum', name: forumName, type: 15, parentId: category.id,
+    id: '1561189288090140743', name: forumName, type: 15, parentId: category.id,
     permissionsFor(role) { return role?.id === 'everyone' ? { has: (flag) => flag === PermissionFlagsBits.ReadMessageHistory ? historyReadable : visible } : null; },
     threads: {
       async fetchActive() { return { threads: new Map() }; },
@@ -136,4 +136,31 @@ test('global active-thread ceiling stops the shrimp batch before any thread crea
  assert.equal(result.posted,0);
  assert.equal(created.length,0);
  assert.equal(result.reason,'discord_thread_capacity_guard');
+});
+
+test('public shrimp publisher targets the canonical forum despite a same-named legacy duplicate', async () => {
+  const { guild, created } = fakeGuild();
+  const canonical = guild.channels.cache.get('forum');
+  const legacy = {
+    ...canonical,
+    id: '1562207090670305280',
+    parentId: '1557338241903099945',
+    threads: { async create() { throw new Error('must never publish to legacy duplicate'); } },
+  };
+  guild.channels.cache = new Map([
+    ['legacy-parent', { id: '1557338241903099945', name: '📚・AQUAPEDIA', type: 4 }],
+    ['legacy-forum', legacy],
+    ...guild.channels.cache.entries(),
+  ]);
+  const result = await publishAquapediaCards(guild, approved);
+  assert.equal(result.posted, 2);
+  assert.equal(created.length, 2);
+});
+
+test('public shrimp publisher refuses a replaced forum with the correct name but wrong ID', async () => {
+  const { guild, created } = fakeGuild();
+  guild.channels.cache.get('forum').id = '1562207090670305280';
+  const result = await publishAquapediaCards(guild, approved);
+  assert.equal(result.posted, 0);
+  assert.equal(created.length, 0);
 });

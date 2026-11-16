@@ -7,6 +7,13 @@ const PUBLIC_CATEGORY_NAME = '📚・AQUAPEDIA';
 const PUBLIC_FORUM_NAME = '🦐・shrimp-research';
 const PUBLIC_AROWANA_FORUM_NAME = '🐉・arowana-research';
 const PUBLIC_GUPPY_FORUM_NAME = '🐠・guppy-research';
+// Canonical live Discord destinations; names alone are ambiguous when old forums survive.
+const PUBLIC_SPECIES_CATEGORY_NAME = '🧬・AQUAPEDIA — SPECIES & GENETICS';
+const PUBLIC_INTRO_CATEGORY_ID = '1557338241903099945';
+const PUBLIC_SPECIES_CATEGORY_ID = '1561430495680667719';
+const PUBLIC_SHRIMP_FORUM_ID = '1561189288090140743';
+const PUBLIC_AROWANA_FORUM_ID = '1561193084899819680';
+const PUBLIC_GUPPY_FORUM_ID = '1562195139353645146';
 const ALLOWED_RIGHTS = new Set(['owner_owned', 'licensed', 'permission_granted', 'public_domain', 'cc0']);
 const MAX_RECORDS = 30;
 
@@ -231,11 +238,21 @@ export async function publishAquapediaCards(guild, result) {
   const botId = guild?.client?.user?.id;
   if (!botId) return { posted: 0, reason: 'bot_identity_missing' };
   const channels = [...(guild?.channels?.cache?.values?.() ?? [])];
-  const category = channels.find((c) => c.type === ChannelType.GuildCategory && c.name === (publicResearch ? PUBLIC_CATEGORY_NAME : CATEGORY_NAME));
+  const speciesResearch = publicShrimp || publicArowana;
+  const categoryName = publicResearch
+    ? speciesResearch ? PUBLIC_SPECIES_CATEGORY_NAME : PUBLIC_CATEGORY_NAME
+    : CATEGORY_NAME;
+  const categoryId = publicResearch
+    ? speciesResearch ? PUBLIC_SPECIES_CATEGORY_ID : PUBLIC_INTRO_CATEGORY_ID
+    : null;
+  const category = channels.find((c) => c.type === ChannelType.GuildCategory
+    && c.name === categoryName && (!categoryId || c.id === categoryId));
   if (!category) return { posted: 0, reason: 'research_category_not_found' };
   const forums = channels.filter((c) => c.type === ChannelType.GuildForum && c.parentId === category.id);
   if (!forums.length) return { posted: 0, reason: 'research_forums_not_found' };
-  const publicForum = publicResearch ? forums.find((c) => c.name === (publicShrimp ? PUBLIC_FORUM_NAME : publicArowana ? PUBLIC_AROWANA_FORUM_NAME : PUBLIC_GUPPY_FORUM_NAME)) : null;
+  const forumId = publicShrimp ? PUBLIC_SHRIMP_FORUM_ID : publicArowana ? PUBLIC_AROWANA_FORUM_ID : PUBLIC_GUPPY_FORUM_ID;
+  const forumName = publicShrimp ? PUBLIC_FORUM_NAME : publicArowana ? PUBLIC_AROWANA_FORUM_NAME : PUBLIC_GUPPY_FORUM_NAME;
+  const publicForum = publicResearch ? forums.find((c) => c.id === forumId && c.name === forumName) : null;
   if (publicResearch) {
     const everyone = guild?.roles?.everyone;
     if (!publicForum || !everyone || (!publicForum.permissionsFor?.(everyone)?.has(PermissionFlagsBits.ViewChannel)

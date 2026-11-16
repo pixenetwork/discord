@@ -1,6 +1,7 @@
 import { createServer } from 'node:http';
 import { Client, Events, GatewayIntentBits, Partials } from 'discord.js';
 import { createBreederInbox, pruneBreederInbox } from './breeder-inbox.mjs';
+import { createOwnerDmDiagnostic } from './owner-dm-diagnostic.mjs';
 import { loadConfig, assertDiscordConfig } from './config.mjs';
 import { createStore } from './store.mjs';
 import { createShopifyClient } from './shopify.mjs';
@@ -13,6 +14,7 @@ import { createPaidOrderWebhookHandler } from './webhook-handler.mjs';
 import { handleInteraction, registerGuildCommands } from './commands.mjs';
 import { provisionTranslatedPublicationsForum, provisionShrimpPublicResearchForum, provisionArowanaPublicResearchForum, provisionGuppyPublicResearchResources } from './layout.mjs';
 
+const AQUAPEDIA_ONLY = process.env.AQUAPEDIA_ONLY === 'true';
 const config = loadConfig();
 assertDiscordConfig(config);
 
@@ -28,7 +30,16 @@ const gpt = createGptController(deps);
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.DirectMessages], partials: [Partials.Channel] });
 const breederInboxDir = process.env.BREEDER_INBOX_DIR || `${config.runtime.dataDir}/breeder-inbox`;
 const breederInbox = createBreederInbox({ recipientIds: (process.env.BREEDER_INBOX_ALLOWED_IDS ?? '').split(',').map(id => id.trim()).filter(Boolean), outputDir: breederInboxDir });
-client.on(Events.MessageCreate, (message) => { void breederInbox(message).catch((error) => console.error('Breeder inbox capture failed:', error.message)); });
+const ownerDmDiagnostic = createOwnerDmDiagnostic({
+  ownerUserId: config.discord.ownerUserId,
+  onStatus: (status, code) => console.log(`Owner DM diagnostic: ${status}${code ? ' code=' + code : ''}`),
+});
+client.on(Events.MessageCreate, (message) => {
+  void (async () => {
+    if (await ownerDmDiagnostic.handleIncoming(message)) return;
+    await breederInbox(message);
+  })().catch((error) => console.error('DM routing failed:', error.message));
+});
 const inboxDir = breederInboxDir;
 const inboxPrune = () => { void pruneBreederInbox({ outputDir: inboxDir }).catch((error) => console.error('Breeder inbox retention cleanup failed:', error.message)); };
 inboxPrune();
@@ -63,7 +74,11 @@ client.once(Events.ClientReady, async (readyClient) => {
     // Resolve the configured member via Discord before creating private permission overwrites.
     // A valid member may be absent from the Gateway's cold-start cache.
     await guild.members.fetch(config.discord.ownerUserId);
-    await provisionTranslatedPublicationsForum(guild, { ownerUserId: config.discord.ownerUserId, store });
+    // Aquapedia-only mode retains the existing private translations; it must not
+    // recreate obsolete vendor/staff roles or the old commerce layout.
+    if (!AQUAPEDIA_ONLY) {
+      await provisionTranslatedPublicationsForum(guild, { ownerUserId: config.discord.ownerUserId, store });
+    }
     // The shared public Shrimpapedia forum is safe to provision only if Aquapedia is already public.
     // Unlike the private publications forum, a missing/nonpublic category must not block worker startup.
     const publicShrimp = await provisionShrimpPublicResearchForum(guild).catch(() => ({ status: 'setup_unavailable' }));
@@ -73,7 +88,7 @@ client.once(Events.ClientReady, async (readyClient) => {
     const publicGuppy = await provisionGuppyPublicResearchResources(guild).catch(() => ({ status: 'setup_unavailable' }));
     if (publicGuppy.status !== 'ready') console.warn(`Guppypedia public resources not provisioned: ${publicGuppy.status}`);
     await registerGuildCommands(guild);
-    await gpt.register(guild);
+    if (!AQUAPEDIA_ONLY) await gpt.register(guild);
     bootstrapComplete = true;
     console.log(`Aquaphoria Discord worker ready as ${readyClient.user.tag} in ${guild.name}`);
   } catch (error) {
@@ -84,7 +99,8 @@ client.once(Events.ClientReady, async (readyClient) => {
 
 client.on(Events.InteractionCreate, (interaction) => {
   void (async () => {
-    const handledByGpt = await gpt.handle(interaction);
+    if (await ownerDmDiagnostic.handleCommand(interaction)) return;
+    const handledByGpt = AQUAPEDIA_ONLY ? false : await gpt.handle(interaction);
     if (!handledByGpt) await handleInteraction(interaction, deps);
   })().catch((error) => logBotError(`Interaction routing failed: ${error.stack ?? error.message}`));
 });
@@ -109,13 +125,13 @@ const server = createServer(async (request, response) => {
     const url = new URL(request.url ?? '/', `http://${request.headers.host ?? 'localhost'}`);
     if (request.method === 'GET' && url.pathname === '/health') {
       response.writeHead(client.isReady() ? 200 : 503, { 'Content-Type': 'application/json' });
-      return response.end(JSON.stringify({ ok: client.isReady(), initialized: bootstrapComplete, startupFailed: bootstrapFailed, service: 'aquaphoria-discord', gptConfigured: Boolean(config.openai.apiKey) }));
+      return response.end(JSON.stringify({ ok: client.isReady(), initialized: bootstrapComplete, startupFailed: bootstrapFailed, service: AQUAPEDIA_ONLY ? 'aquapedia-discord' : 'aquaphoria-discord', gptConfigured: Boolean(config.openai.apiKey) }));
     }
 
     if (request.method === 'GET' && url.pathname === '/ready') {
       const ready = client.isReady() && bootstrapComplete;
       response.writeHead(ready ? 200 : 503, { 'Content-Type': 'application/json' });
-      return response.end(JSON.stringify({ ok: ready, initialized: bootstrapComplete, startupFailed: bootstrapFailed, service: 'aquaphoria-discord' }));
+      return response.end(JSON.stringify({ ok: ready, initialized: bootstrapComplete, startupFailed: bootstrapFailed, service: AQUAPEDIA_ONLY ? 'aquapedia-discord' : 'aquaphoria-discord' }));
     }
 
     if (request.method === 'POST' && url.pathname === '/webhooks/shopify/orders-paid') {

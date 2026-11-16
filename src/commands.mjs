@@ -22,6 +22,7 @@ import {
 
 import { aquapediaDmCommand, aquapediaDmController } from './breeder-dm.mjs';
 import { ownerDmDiagnosticCommand } from './owner-dm-diagnostic.mjs';
+import { acknowledgeUnsupportedAquaphoriaCommand } from './unsupported-command.mjs';
 
 const PRODUCT_CATEGORIES = [
   ['Live fish', 'live_fish'],
@@ -928,6 +929,9 @@ export function createCommandRouter(deps) {
       try {
         if (await aquapediaDmController.handle(interaction, deps)) return;
         if (!interaction.isChatInputCommand()) return;
+        if (interaction.commandName === 'jarvishost') {
+          return await acknowledgeUnsupportedAquaphoriaCommand(interaction);
+        }
         if (process.env.AQUAPEDIA_ONLY === 'true'
           && !AQUAPEDIA_ONLY_COMMANDS.has(interaction.commandName)) {
           return interaction.reply({ content: 'This server is Aquapedia-only. Commerce commands have been retired.', ephemeral: true });
@@ -942,6 +946,7 @@ export function createCommandRouter(deps) {
         if (interaction.commandName === 'order') return await handleOrder(interaction, deps);
         if (interaction.commandName === 'payout') return await handlePayout(interaction, deps);
         if (interaction.commandName === 'ticket') return await handleTicket(interaction, deps);
+        return await acknowledgeUnsupportedAquaphoriaCommand(interaction);
       } catch (error) {
         const message = `❌ ${error?.message ?? 'Something went wrong.'}`.slice(0, 1900);
         if (interaction.deferred || interaction.replied) await interaction.editReply(message).catch(() => undefined);

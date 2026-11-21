@@ -6,6 +6,7 @@ const CATEGORY_NAME = '🔬・BREEDER RESEARCH';
 const PUBLIC_CATEGORY_NAME = '📚・AQUAPEDIA';
 const PUBLIC_FORUM_NAME = '🦐・shrimp-research';
 const PUBLIC_AROWANA_FORUM_NAME = '🐉・arowana-research';
+const PUBLIC_GUPPY_FORUM_NAME = '🐠・guppy-research';
 const ALLOWED_RIGHTS = new Set(['owner_owned', 'licensed', 'permission_granted', 'public_domain', 'cc0']);
 const MAX_RECORDS = 30;
 
@@ -150,7 +151,7 @@ export function buildAquapediaPost(record) {
   const embeds = [embed, ...extraEmbeds];
   ensureDiscordEmbedLimits(embeds);
   return {
-    content: `🧬 **${title}** — ${record.entityType === 'breeder' ? 'breeder profile' : record.entityType === 'species' ? 'species dossier' : record.entityType === 'research' ? 'research guide' : 'strain dossier'}${photos.length ? '' : '\n📷 Original specimen images pending documented reuse permission.'}${record.organismGroup === 'arowana' && httpsUrl(record.websiteUrl) ? '\nFull research: ' + httpsUrl(record.websiteUrl) : ''}`,
+    content: `🧬 **${title}** — ${record.entityType === 'breeder' ? 'breeder profile' : record.entityType === 'species' ? 'species dossier' : record.entityType === 'research' ? 'research guide' : 'strain dossier'}${photos.length ? '' : '\n📷 Original specimen images pending documented reuse permission.'}${['arowana', 'guppy'].includes(record.organismGroup) && httpsUrl(record.websiteUrl) ? '\nFull research: ' + httpsUrl(record.websiteUrl) : ''}`,
     embeds,
     allowedMentions: { parse: [] },
   };
@@ -209,8 +210,9 @@ export async function publishAquapediaCards(guild, result) {
   }
   const publicShrimp = result.publicShrimpResearch === true;
   const publicArowana = result.publicArowanaResearch === true;
-  if (publicShrimp && publicArowana) return { posted: 0, reason: 'conflicting_public_destinations' };
-  const publicResearch = publicShrimp || publicArowana;
+  const publicGuppy = result.publicGuppyResearch === true;
+  if ([publicShrimp, publicArowana, publicGuppy].filter(Boolean).length > 1) return { posted: 0, reason: 'conflicting_public_destinations' };
+  const publicResearch = publicShrimp || publicArowana || publicGuppy;
   if (publicResearch && result.publicAudienceApproved !== true) {
     return { posted: 0, reason: 'public_audience_approval_pending' };
   }
@@ -233,12 +235,12 @@ export async function publishAquapediaCards(guild, result) {
   if (!category) return { posted: 0, reason: 'research_category_not_found' };
   const forums = channels.filter((c) => c.type === ChannelType.GuildForum && c.parentId === category.id);
   if (!forums.length) return { posted: 0, reason: 'research_forums_not_found' };
-  const publicForum = publicResearch ? forums.find((c) => c.name === (publicShrimp ? PUBLIC_FORUM_NAME : PUBLIC_AROWANA_FORUM_NAME)) : null;
+  const publicForum = publicResearch ? forums.find((c) => c.name === (publicShrimp ? PUBLIC_FORUM_NAME : publicArowana ? PUBLIC_AROWANA_FORUM_NAME : PUBLIC_GUPPY_FORUM_NAME)) : null;
   if (publicResearch) {
     const everyone = guild?.roles?.everyone;
     if (!publicForum || !everyone || (!publicForum.permissionsFor?.(everyone)?.has(PermissionFlagsBits.ViewChannel)
       || !publicForum.permissionsFor?.(everyone)?.has(PermissionFlagsBits.ReadMessageHistory))) {
-      return { posted: 0, reason: publicShrimp ? 'public_shrimp_forum_missing_or_not_public' : 'public_arowana_forum_missing_or_not_public' };
+      return { posted: 0, reason: publicShrimp ? 'public_shrimp_forum_missing_or_not_public' : publicArowana ? 'public_arowana_forum_missing_or_not_public' : 'public_guppy_forum_missing_or_not_public' };
     }
   }
   let posted = 0;
@@ -255,7 +257,17 @@ export async function publishAquapediaCards(guild, result) {
     // An unknown/contested breeder requires explicitly named "unknown-breeders".
     const fallback = forumSlug(breeder);
     const target = desired || fallback;
-    if (publicResearch && (card.organismGroup !== (publicShrimp ? 'shrimp' : 'arowana')
+    // Existing hand-published Guppypedia topic guides are not recreated as new threads.
+    // This lane accepts only source-reviewed indexed entries, not arbitrary destinations.
+    if (publicGuppy && (
+      !Array.isArray(card.photos) || card.photos.length !== 0
+      || !/^https:\/\/aquapedia\.app\/guppypedia\/entries\/gup-[0-9]{3}\/$/.test(String(card.websiteUrl ?? ''))
+      || !String(card.websiteUrl ?? '').endsWith('/' + String(card.id ?? '').toLowerCase() + '/')
+    )) {
+      skipped += 1;
+      continue;
+    }
+    if (publicResearch && (card.organismGroup !== (publicShrimp ? 'shrimp' : publicArowana ? 'arowana' : 'guppy')
       || !(publicShrimp ? ['breeder', 'competition', 'strain'] : ['species', 'research', 'strain']).includes(card.entityType)
       || (publicArowana && (!Array.isArray(card.photos) || card.photos.length !== 0))
       || !Array.isArray(card.sources) || !card.sources.some((source) => httpsUrl(typeof source === 'string' ? source : source?.url))

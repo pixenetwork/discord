@@ -1,0 +1,157 @@
+{
+  "schema_version": 1,
+  "prepared": "2026-10-15",
+  "repo": "pixenetwork/aquapedia",
+  "source_pr": 54,
+  "publication_status": "NOT_POSTED",
+  "constraints": [
+    "Use existing Aquaphoria Discord bot, not separate webhook/bot",
+    "Resolve private forum and deduplicate before posting",
+    "Return channel/thread/message IDs and readback receipts",
+    "Only link copyright-protected breeder imagery; no rehosting without license",
+    "Do not claim creator when only holder, retailer or exhibitor is known"
+  ],
+  "records": [
+    {
+      "id": "aquapedia-tb-shrimp-the-brothers",
+      "target": "existing_private_breeder_research_forum",
+      "kind": "breeder",
+      "title": "TB Shrimp / The Brothers Shrimp",
+      "provenance": "source-backed-secondary",
+      "message": "🦐 **TB Shrimp / The Brothers Shrimp** (Asia (Vietnam reported; farm unverified))\n**Strains / line associations:** Orange Bolts; Red Galaxy Fishbone Snowflakes; Red Fancy Tiger; Orange Metallic Boa; Red/Black Blizzard; Red/Black Snowfall; Orange-base Wasp\n**Documented methods:** Generational selective grading for color/pattern and colony stability (distributor). Social breeder posts show deliberate next-generation Blizzard selection; exact crossing/pH not public.\n**Competition record:** NAISC 2024: 1st Orange Bolts (Cat 8), 1st Red Galaxy Fishbone Snowflakes (Cat 9), 2nd Red Fancy Tiger (Cat 11), 3rd Orange Metallic Boa (Cat 13), 2nd Innovation (line unspecified).\n**Sources:** https://rareshrimp.com/north-american-international-shrimp-competition-naisc-2024/ | https://shrimpcove.com/2-home\n**Full dossier:** https://aquapedia.app/shrimpapedia/breeders/tb-shrimp-the-brothers-shrimp/ • Breeder Batch 002.\n**Evidence:** source-backed-secondary. Maintained stocks ≠ original creation.",
+      "links": [
+        "https://rareshrimp.com/north-american-international-shrimp-competition-naisc-2024/",
+        "https://shrimpcove.com/2-home"
+      ]
+    },
+    {
+      "id": "aquapedia-galactic-shrimps-marcin-stadnik",
+      "target": "existing_private_breeder_research_forum",
+      "kind": "breeder",
+      "title": "Galactic Shrimps / Marcin Stadnik",
+      "provenance": "first-party-self-reported",
+      "message": "🦐 **Galactic Shrimps / Marcin Stadnik** (Poland)\n**Strains / line associations:** Red/Black Snowfall; Red Fancy Tiger; Pure Red Line GS Line 2; Galactic Red Stardust; OE Blue Bolt; Hornet; Red/Black Nanashi; Blue Boa; Metallic Blue Boa (seller catalog)\n**Documented methods:** First-person breeding-room account: >100 tanks (~80L average); UGF with ADA Amazonia, notes improved stability in own system; does not establish superiority from a controlled trial.\n**Competition record:** TGISC Dortmund 2023: brewer's retrospective credits Marcin 4 gold + 4 silver + 2 bronze; individual strain-to-medal matching still pending official score sheets. Also judged Italy 2023.\n**Sources:** https://www.galacticshrimps.pl/en/ | https://www.galacticshrimps.pl/en/under-gravel-filtration-ugf-in-a-shrimp-tank-the-best-method-for-your-aquarium/ | https://www.galacticshrimps.pl/en/the-german-international-shrimp-contest-dortmund-2023/\n**Full dossier:** https://aquapedia.app/shrimpapedia/breeders/galactic-shrimps-marcin-stadnik/ • Breeder Batch 002.\n**Evidence:** first-party-self-reported. Maintained stocks ≠ original creation.",
+      "links": [
+        "https://www.galacticshrimps.pl/en/",
+        "https://www.galacticshrimps.pl/en/under-gravel-filtration-ugf-in-a-shrimp-tank-the-best-method-for-your-aquarium/",
+        "https://www.galacticshrimps.pl/en/the-german-international-shrimp-contest-dortmund-2023/"
+      ]
+    },
+    {
+      "id": "aquapedia-marcel-netherlands-identity-provisional",
+      "target": "existing_private_breeder_research_forum",
+      "kind": "breeder",
+      "title": "Marcel — OE White Caridina",
+      "provenance": "identity-provisional",
+      "message": "🦐 **Marcel — OE White Caridina** (Netherlands (first-name-only interview))\n**Strains / line associations:** Orange-eye white-pigment Caridina (interviewer-described innovation)\n**Documented methods:** Producer visited Marcel's breeding setup and discussed development; full parent crosses, number of generations, water parameters, and surname are unverified.\n**Competition record:** No verifiable contest award found; do not attach achievements of Marcel Wientges or other unrelated people.\n**Sources:** https://www.youtube.com/watch?v=cOGDNH7G72g\n**Full dossier:** https://aquapedia.app/shrimpapedia/breeders/marcel-oe-white-caridina/ • Breeder Batch 002.\n**Evidence:** identity-provisional. Maintained stocks ≠ original creation.",
+      "links": [
+        "https://www.youtube.com/watch?v=cOGDNH7G72g"
+      ]
+    },
+    {
+      "id": "aquapedia-sixi-shrimp-unverified-operator",
+      "target": "existing_private_breeder_research_forum",
+      "kind": "breeder",
+      "title": "SIXI Shrimp",
+      "provenance": "line-provenance-provisional",
+      "message": "🦐 **SIXI Shrimp** (Unknown; reseller listing country is insufficient)\n**Strains / line associations:** Klein Blue/Extreme Blue Bolt; Red Snowfall; Black Snowfall; 3-band Crystal Red; Blue/Green Boa; Blood Red Galaxy Fishbone Boa\n**Documented methods:** Line-source descriptions emphasize clean crystal banding, intense blue and tight snowflake/fishbone patterns; no directly documented breeding crosses/water parameters.\n**Competition record:** US exhibitor Shrimp Studio reports winning with SIXI-source Red Snowfalls in Chicago Aquashella 2026; this is NOT proof SIXI personally entered. Official results pending.\n**Sources:** https://www.globuya.com/US/Santa-Cruz/108477804262025/Shrimp-Studio | https://www.ebay.com/itm/235490019689\n**Full dossier:** https://aquapedia.app/shrimpapedia/breeders/sixi-shrimp/ • Breeder Batch 002.\n**Evidence:** line-provenance-provisional. Maintained stocks ≠ original creation.",
+      "links": [
+        "https://www.globuya.com/US/Santa-Cruz/108477804262025/Shrimp-Studio",
+        "https://www.ebay.com/itm/235490019689"
+      ]
+    },
+    {
+      "id": "aquapedia-contest-tgisc",
+      "target": "existing_private_research_competitions_forum_or_thread",
+      "kind": "competition",
+      "title": "The German International Shrimp Contest (TGISC)",
+      "provenance": "event-sourced",
+      "message": "🏆 **The German International Shrimp Contest (TGISC)**\n**Region:** Europe — Germany\n**Verified years:** 2017–2026 documented; Apr 17–19 2026 Hamm\n**Scope:** Hamm 2026 ~200 tanks/19 categories; requires self-bred entries.\n**Organizer / source:** https://tgisc.aqua-expo-xxl.de/ | https://garnele-online.de/articles/tgisc-2026\n**Full source-linked competition index:** https://aquapedia.app/shrimpapedia/competitions/german-international-shrimp-contest-tgisc/ • European & Americas Championships.\n*Past edition does not guarantee a future event. Contest entrants ≠ original creators.*",
+      "links": [
+        "https://tgisc.aqua-expo-xxl.de/",
+        "https://garnele-online.de/articles/tgisc-2026"
+      ]
+    },
+    {
+      "id": "aquapedia-contest-igch-hannover",
+      "target": "existing_private_research_competitions_forum_or_thread",
+      "kind": "competition",
+      "title": "Internationales Garnelenchampionat Hannover (IGCH)",
+      "provenance": "event-sourced",
+      "message": "🏆 **Internationales Garnelenchampionat Hannover (IGCH)**\n**Region:** Europe — Germany\n**Verified years:** historical, established 2009\n**Scope:** Historical Hanover international contest distinct from TGISC; current edition not confirmed.\n**Organizer / source:** https://www.garnelenhaus.de/wiki/das-internationale-garnelenchampionat-hannover\n**Full source-linked competition index:** https://aquapedia.app/shrimpapedia/competitions/internationales-garnelenchampionat-igch/ • European & Americas Championships.\n*Past edition does not guarantee a future event. Contest entrants ≠ original creators.*",
+      "links": [
+        "https://www.garnelenhaus.de/wiki/das-internationale-garnelenchampionat-hannover"
+      ]
+    },
+    {
+      "id": "aquapedia-contest-international-shrimp-contest-italy",
+      "target": "existing_private_research_competitions_forum_or_thread",
+      "kind": "competition",
+      "title": "International Shrimp Contest Italy (ISCI)",
+      "provenance": "event-sourced",
+      "message": "🏆 **International Shrimp Contest Italy (ISCI)**\n**Region:** Europe — Italy\n**Verified years:** Cremona 2023/2024 confirmed\n**Scope:** 2026 PetsFestival is scheduled but current shrimp contest participation unconfirmed.\n**Organizer / source:** https://www.cremonaoggi.it/2024/10/20/con-i-premi-alla-migliore-toelettatura-canina-si-e-chiuso-petsfestival/ | https://petsfestival.eu/eventi-in-fiera/\n**Full source-linked competition index:** https://aquapedia.app/shrimpapedia/competitions/international-shrimp-contest-italy/ • European & Americas Championships.\n*Past edition does not guarantee a future event. Contest entrants ≠ original creators.*",
+      "links": [
+        "https://www.cremonaoggi.it/2024/10/20/con-i-premi-alla-migliore-toelettatura-canina-si-e-chiuso-petsfestival/",
+        "https://petsfestival.eu/eventi-in-fiera/"
+      ]
+    },
+    {
+      "id": "aquapedia-contest-spanish-international-shrimp-contest",
+      "target": "existing_private_research_competitions_forum_or_thread",
+      "kind": "competition",
+      "title": "Spanish International Shrimp Contest",
+      "provenance": "event-sourced",
+      "message": "🏆 **Spanish International Shrimp Contest**\n**Region:** Europe — Spain\n**Verified years:** 2018 second edition documented\n**Scope:** Pinto, Madrid region; recurrence in 2026 not verified.\n**Organizer / source:** https://laventanaverde.wordpress.com/2018/05/15/resultados-de-la-segunda-edicion-del-spanish-international-shrimp-contest/\n**Full source-linked competition index:** https://aquapedia.app/shrimpapedia/competitions/spanish-international-shrimp-contest/ • European & Americas Championships.\n*Past edition does not guarantee a future event. Contest entrants ≠ original creators.*",
+      "links": [
+        "https://laventanaverde.wordpress.com/2018/05/15/resultados-de-la-segunda-edicion-del-spanish-international-shrimp-contest/"
+      ]
+    },
+    {
+      "id": "aquapedia-contest-naisc",
+      "target": "existing_private_research_competitions_forum_or_thread",
+      "kind": "competition",
+      "title": "North American International Shrimp Contest (NAISC)",
+      "provenance": "event-sourced",
+      "message": "🏆 **North American International Shrimp Contest (NAISC)**\n**Region:** Americas — USA\n**Verified years:** Charlotte 2024 verified\n**Scope:** International entries; 14 categories; 3–5 self-bred shrimp per group; 2026 recurrence unverified.\n**Organizer / source:** https://www.theaquaticexpo.com/naisc-competition/ | https://rareshrimp.com/north-american-international-shrimp-competition-naisc-2024/\n**Full source-linked competition index:** https://aquapedia.app/shrimpapedia/competitions/north-american-international-shrimp-competition-naisc/ • European & Americas Championships.\n*Past edition does not guarantee a future event. Contest entrants ≠ original creators.*",
+      "links": [
+        "https://www.theaquaticexpo.com/naisc-competition/",
+        "https://rareshrimp.com/north-american-international-shrimp-competition-naisc-2024/"
+      ]
+    },
+    {
+      "id": "aquapedia-contest-american-shrimp-contest",
+      "target": "existing_private_research_competitions_forum_or_thread",
+      "kind": "competition",
+      "title": "The American Shrimp Contest — Aquashella",
+      "provenance": "event-sourced",
+      "message": "🏆 **The American Shrimp Contest — Aquashella**\n**Region:** Americas — USA\n**Verified years:** 2024 Daytona, 2026 Orlando documented; Sept 2026 NJ/Chicago socially reported\n**Scope:** USA breeder showcase; confirm each festival stop and exact official winners independently.\n**Organizer / source:** https://aquashella.com/aquashella-shrimp-contest-entry/ | https://americanshrimpcontest.com/\n**Full source-linked competition index:** https://aquapedia.app/shrimpapedia/competitions/american-shrimp-contest/ • European & Americas Championships.\n*Past edition does not guarantee a future event. Contest entrants ≠ original creators.*",
+      "links": [
+        "https://aquashella.com/aquashella-shrimp-contest-entry/",
+        "https://americanshrimpcontest.com/"
+      ]
+    },
+    {
+      "id": "aquapedia-contest-isc-usa-historical",
+      "target": "existing_private_research_competitions_forum_or_thread",
+      "kind": "competition",
+      "title": "International Shrimp Contest USA (historical)",
+      "provenance": "event-sourced",
+      "message": "🏆 **International Shrimp Contest USA (historical)**\n**Region:** Americas — USA\n**Verified years:** Chicago/Schaumburg 2016–2019 documented; site references 2023\n**Scope:** Distinct from American Shrimp Contest and NAISC; active 2026 edition unverified.\n**Organizer / source:** https://shrimpcontestusa.com/ | https://shrimpcontestusa.com/guidelines-2019/\n**Full source-linked competition index:** https://aquapedia.app/shrimpapedia/competitions/international-shrimp-contest-usa/ • European & Americas Championships.\n*Past edition does not guarantee a future event. Contest entrants ≠ original creators.*",
+      "links": [
+        "https://shrimpcontestusa.com/",
+        "https://shrimpcontestusa.com/guidelines-2019/"
+      ]
+    },
+    {
+      "id": "aquapedia-contest-warsaw-shrimp-contest",
+      "target": "existing_private_research_competitions_forum_or_thread",
+      "kind": "competition",
+      "title": "Warsaw Shrimp Contest / Mistrzostwa Krewetek Ozdobnych",
+      "provenance": "organizer-confirmed-2024",
+      "message": "🏆 **Warsaw Shrimp Contest / Mistrzostwa Krewetek Ozdobnych**\n**Region:** Poland, Warsaw (SGGW)\n**Verified edition:** May 18–19, 2024.\n**Judging:** Organizer confirms 14 Caridina/Neocaridina categories, international jury, attention to coloration and pattern.\n**Official source:** https://aquariumshow.pl/\n**Aquapedia research:** https://aquapedia.app/shrimpapedia/competitions/warsaw-shrimp-contest/\n*This 2024 page does not establish the next edition's date.*",
+      "links": [
+        "https://aquariumshow.pl/"
+      ]
+    }
+  ]
+}

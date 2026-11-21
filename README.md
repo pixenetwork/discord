@@ -123,3 +123,11 @@ npm test
 Node.js 20+ is required.
 
 > Never commit credentials. Discord tokens, Shopify Admin tokens, OpenAI API keys, webhook secrets, Aquapedia credentials and Jarvis integration keys are runtime environment variables only.
+
+## Owner-only Aquapedia breeder DMs
+
+The existing bot now exposes `/aquapedia-dm draft recipient:<guild member> message:<text>`. It prepares a **private, unsent** preview containing the exact Discord user ID, message, and Aquapedia research signature with https://aquapedia.app/. Nothing is sent until the **server owner** clicks **Confirm and send DM** within five minutes. The owner may cancel instead. No scheduled sends, mass sends, or automatic retries are supported.
+
+Only a resolved, non-bot member of the configured guild can be selected, and the identity is checked again immediately before sending. An existing private `🧾・audit-log` channel is required; the bot writes a pre-send attempt and an ID-based Discord send receipt (without the private message body). Owner-only permissions are checked both at draft and confirmation. This sends as the **Discord bot**, not a person's Discord profile or the Aquapedia email address. The receiver may block DMs or share no mutual guild; errors do not assert delivery. Discord's `message.id` confirms acceptance, not that a person read the message.
+
+For Medaka Fein, SNR Medaka, and Medaka Cesar: identify their exact accounts in the guild and use separate drafts. Do **not** infer identities from display names or automatically send unsolicited messages.

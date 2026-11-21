@@ -15,7 +15,7 @@ const contest = {
   sources: ['https://aquapedia.app/shrimpapedia/competitions/german-international-shrimp-contest-tgisc/']
 };
 
-function fakeGuild({ visible = true, historyReadable = true, categoryName = '📚・AQUAPEDIA', forumName = '🦐・shrimp-research' } = {}) {
+function fakeGuild({ visible = true, historyReadable = true, categoryName = '📚・AQUAPEDIA', forumName = '🦐・shrimp-research', activeCount = 0 } = {}) {
   const created = [];
   const category = { id: 'public-category', name: categoryName, type: 4 };
   const forum = {
@@ -33,7 +33,7 @@ function fakeGuild({ visible = true, historyReadable = true, categoryName = '�
     },
   };
   const guild = { roles: { everyone: { id: 'everyone' } }, client: { user: { id: 'aquaphoria-bot' } },
-    channels: { cache: new Map([['cat', category], ['forum', forum]]) } };
+    channels: { cache: new Map([['cat', category], ['forum', forum]]) , async fetchActiveThreads(){return {threads:{size:activeCount}};} } };
   return { guild, created };
 }
 
@@ -128,4 +128,12 @@ test('public publisher fails closed if two IDs collide after shortening',async()
  ]});
  assert.equal(result.posted,0);
  assert.equal(created.length,0);
+});
+
+test('global active-thread ceiling stops the shrimp batch before any thread creation',async()=>{
+ const {guild,created}=fakeGuild({activeCount:1000});
+ const result=await publishAquapediaCards(guild,approved);
+ assert.equal(result.posted,0);
+ assert.equal(created.length,0);
+ assert.equal(result.reason,'discord_thread_capacity_guard');
 });

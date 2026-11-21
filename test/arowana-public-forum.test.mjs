@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { PermissionFlagsBits } from 'discord.js';
 import { publishAquapediaCards } from '../src/aquapedia-posts.mjs';
 
-function guildFixture(visible=true){
+function guildFixture(visible=true,activeCount=0){
  const created=[];
  const everyone={id:'everyone'};
  const category={id:'cat',type:4,name:'📚・AQUAPEDIA'};
@@ -21,7 +21,7 @@ function guildFixture(visible=true){
      }
    }};
  const guild={roles:{everyone},client:{user:{id:'bot'}},
-   channels:{cache:new Map([['category',category],['forum',forum]])}};
+   channels:{cache:new Map([['category',category],['forum',forum]]), async fetchActiveThreads(){return {threads:{size:activeCount}};} }};
  return {guild,created};
 }
 const card={id:'arowana.asian-arowana',name:'Asian arowana',entityType:'species',
@@ -55,4 +55,12 @@ test('arowana blocks mixed organism records and external article links',async()=
   const result=await publishAquapediaCards(guild,{...approved,cards:[{...card,...patch}]});
   assert.equal(result.posted,0);assert.equal(created.length,0);
  }
+});
+
+test('global active-thread ceiling stops arowana forum creation without touching existing messages',async()=>{
+ const {guild,created}=guildFixture(true,950);
+ const result=await publishAquapediaCards(guild,approved);
+ assert.equal(result.posted,0);
+ assert.equal(created.length,0);
+ assert.equal(result.reason,'discord_thread_capacity_guard');
 });

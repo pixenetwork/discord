@@ -1,5 +1,6 @@
 import { mkdir, readFile, rename, writeFile } from 'node:fs/promises';
 import path from 'node:path';
+import { readPublicationEvidence, writePublicationEvidence } from './research-evidence-store.mjs';
 
 const EMPTY_STATE = Object.freeze({
   version: 2,
@@ -97,6 +98,7 @@ function saveTicket(state, ticket, now = new Date()) {
 
 export function createStore({ dataDir }) {
   const statePath = path.resolve(dataDir, 'aquaphoria-discord.json');
+  const evidenceDir = path.resolve(dataDir, 'research-publication-evidence');
   let writeQueue = Promise.resolve();
 
   async function load() {
@@ -441,6 +443,56 @@ export function createStore({ dataDir }) {
         };
         return state.productSubmissions[key];
       });
+    },
+
+    async getResearchPublicationEvidence(jobId) {
+      return readPublicationEvidence(evidenceDir, jobId);
+    },
+
+    async recordResearchPublicationEvidence(jobId, evidence) {
+      const job = await this.getResearchJob(jobId);
+      if (!job || job.status !== 'queued') {
+        throw new Error('Only an existing queued research job accepts external publication evidence');
+      }
+      return writePublicationEvidence(evidenceDir, jobId, evidence);
+    },
+
+    async listResearchJobs({ limit = 15 } = {}) {
+      if (!Number.isSafeInteger(limit) || limit < 1 || limit > 50) {
+        throw new RangeError('Research list limit must be 1–50');
+      }
+      const state = await load();
+      const all = Object.values(state.researchJobs);
+      const counts = {};
+      for (const job of all) {
+        const status = String(job.status ?? 'unknown');
+        counts[status] = (counts[status] ?? 0) + 1;
+      }
+      // Count distinct requested topics across the *full* persisted inbox, not
+      // merely the page of latest jobs. This is advisory: no status is changed.
+      const grouped = new Map();
+      for (const job of all) {
+        const entityType = String(job.entityType ?? '').normalize('NFKC').trim().toLowerCase();
+        const normalizedName = String(job.name ?? '').normalize('NFKC').trim()
+          .replace(/\s+/g, ' ').toLowerCase();
+        const key = JSON.stringify([entityType, normalizedName]);
+        const current = grouped.get(key);
+        if (current) current.count += 1;
+        else grouped.set(key, { entityType, name: String(job.name ?? ''), count: 1 });
+      }
+      const topics = Array.from(grouped.values()).sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
+      const distinctTopics = topics.length;
+      const repeatRequests = all.length - distinctTopics;
+      all.sort((a, b) => String(b.updatedAt || b.createdAt || '').localeCompare(String(a.updatedAt || a.createdAt || '')));
+      const jobs = await Promise.all(all.slice(0, limit).map(async ({ id, name, entityType, status, createdAt, updatedAt }) => {
+        const proof = /^[0-9a-f-]{36}$/i.test(String(id))
+          ? await this.getResearchPublicationEvidence(id) : null;
+        return { id, name, entityType, status, createdAt, updatedAt,
+          ...(proof ? { publicationEvidence: { evidenceStatus: proof.evidenceStatus,
+            siteUrl: proof.siteUrl, discordThreadId: proof.discordThreadId } } : {}),
+        };
+      }));
+      return { total: all.length, counts, jobs, topics, distinctTopics, repeatRequests };
     },
 
     async getResearchJob(jobId) {

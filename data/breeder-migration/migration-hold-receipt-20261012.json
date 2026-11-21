@@ -1,0 +1,42 @@
+{
+  "issue": "pixenetwork/discord#20",
+  "guildId": "1519337502379475095",
+  "migrationHoldCategoryId": "1559260638801301585",
+  "migrationHoldCategoryName": "🔐・MIGRATION HOLD — STRAINS",
+  "movedChannelCount": 31,
+  "messageCount": 82,
+  "attachmentCount": 68,
+  "verifiedForumStrainPosts": 28,
+  "fullyVerifiedForumPosts": 26,
+  "previewOnlyLargeMediaPosts": 2,
+  "previewOnlyTopics": [
+    {
+      "canonicalKey": "flamingo-or-pink-sapphire-kagami",
+      "forumTopicId": "1559257697956798464",
+      "starterMessageId": "1559260182809284628"
+    },
+    {
+      "canonicalKey": "leather-kagami",
+      "forumTopicId": "1559257860985061488",
+      "starterMessageId": "1559260199318192138"
+    }
+  ],
+  "libraryLegacyStrainChannelsRemaining": 0,
+  "deletedChannelCount": 0,
+  "sourceChannelIds": [],
+  "independentCloudBackup": {
+    "verified": true,
+    "bytes": 206148396,
+    "sha256": "502818127a12e3e2f4d3f42ece79f11105c0302d003f911b906e67cf14e69fe3",
+    "md5": "25cd0fe8652e90b189e5f8bb144cdf04",
+    "remotePath": "alliesdrive:ChatGPT/Aquaphoria/Discord-Legacy-2026-10-12/aquaphoria-legacy-strains-2026-10-12.tar.gz"
+  },
+  "localMasterBackup": {
+    "bytes": 206148396,
+    "sha256": "502818127a12e3e2f4d3f42ece79f11105c0302d003f911b906e67cf14e69fe3",
+    "md5": "25cd0fe8652e90b189e5f8bb144cdf04",
+    "pathHint": "D:\\PixelNetwork\\Backups\\Aquaphoria\\discord-legacy-strains-20261012.tar.gz"
+  },
+  "irreversibleDeletionExecuted": false,
+  "notes": "Populate sourceChannelIds from an authenticated guild enumeration before any destructive cleanup. An empty list intentionally blocks apply."
+}

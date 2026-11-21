@@ -129,3 +129,8 @@ The code/repository deployment and the Discord publication are separate
 release phases. Real public posts are confirmed only by their Discord
 thread/message IDs and successful durable-store writes; simulation IDs
 do not count.
+
+For the full controlled cutover sequence (runtime discovery through owner
+canary), see `docs/AQUAPHORIA_CONTROLLED_LIVE_WORKER_HANDOFF.md` and run
+`node tools/verify-aquaphoria-handoff-preflight.mjs` offline before any
+live worker change.

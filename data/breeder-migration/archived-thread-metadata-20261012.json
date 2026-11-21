@@ -1,0 +1,16 @@
+{
+  "guildId": "1519337502379475095",
+  "archivedThreads": [
+    {
+      "threadId": "1519384123314274305",
+      "sourceChannelId": "1519340319399874580",
+      "canonicalStrainKey": "ryurin",
+      "forumTopicId": "1559258142154555563",
+      "name": "ryurin",
+      "messageCount": 0,
+      "attachmentCount": 0,
+      "auditLabel": "zero-message archived discussion preserved before irreversible cleanup",
+      "documentedAt": "2026-10-12T23:25:00-05:00"
+    }
+  ]
+}
